@@ -1,0 +1,29 @@
+# flutter_launcher_icons 配置文件
+# 文档: https://pub.dev/packages/flutter_launcher_icons
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  web:
+    generate: true
+    background_color: "#0f172a"
+    theme_color: "#0f172a"
+  windows:
+    generate: true
+    icon_size: 256
+  macos:
+    generate: true
+  linux:
+    generate: true
+
+  image_path: "assets/icons/icon.png"
+
+  # Android 自适应图标
+  adaptive_icon_background: "#0f172a"
+  adaptive_icon_foreground: "assets/icons/android/mipmap-xxxhdpi/ic_launcher_foreground.png"
+
+  # iOS 配置
+  remove_alpha_ios: true
+
+  # 额外的图标配置
+  min_sdk_android: 21

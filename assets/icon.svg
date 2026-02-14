@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <!-- ================= 核心材质定义 ================= -->
+
+    <!-- 1. 虚空奇点背景 -->
+    <radialGradient id="void-core" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#000000" />
+      <stop offset="70%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </radialGradient>
+
+    <!-- 2. 全息光谱流 (Holo-Spectrum) -->
+    <linearGradient id="neon-stream" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2ff" /> <!-- Cyber Cyan -->
+      <stop offset="50%" stop-color="#7000ff" /> <!-- Electric Violet -->
+      <stop offset="100%" stop-color="#ff0055" /> <!-- Neon Pink -->
+    </linearGradient>
+
+    <!-- 3. 金属拉丝质感 -->
+    <linearGradient id="brushed-metal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155" />
+      <stop offset="25%" stop-color="#475569" />
+      <stop offset="50%" stop-color="#1e293b" />
+      <stop offset="75%" stop-color="#475569" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+
+    <!-- ================= 高级滤镜系统 ================= -->
+
+    <!-- 1. 量子辉光 (Quantum Glow) -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur" />
+      <feMerge>
+        <feMergeNode in="coloredBlur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- 2. 玻璃折射与噪点 (Glass & Noise) -->
+    <filter id="glass-distortion">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise" />
+      <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise" />
+      <feComposite operator="in" in="grayNoise" in2="SourceGraphic" result="textured" />
+      <feGaussianBlur stdDeviation="0.5" in="textured" />
+      <feSpecularLighting surfaceScale="5" specularConstant="1" specularExponent="20"
+        lighting-color="#ffffff" in="textured">
+        <fePointLight x="-500" y="-1000" z="600" />
+      </feSpecularLighting>
+    </filter>
+
+    <!-- 3. 内部阴影 (Inner Depth) -->
+    <filter id="inset-shadow">
+      <feOffset dx="0" dy="0" />
+      <feGaussianBlur stdDeviation="5" result="offset-blur" />
+      <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse" />
+      <feFlood flood-color="black" flood-opacity="1" result="color" />
+      <feComposite operator="in" in="color" in2="inverse" result="shadow" />
+      <feComponentTransfer in="shadow" result="shadow">
+        <feFuncA type="linear" slope="1" />
+      </feComponentTransfer>
+      <feComposite operator="over" in="shadow" in2="SourceGraphic" />
+    </filter>
+  </defs>
+
+  <!-- 层级 1: 外部底盘 -->
+  <rect x="20" y="20" width="472" height="472" rx="120" fill="url(#void-core)" />
+  <rect x="20" y="20" width="472" height="472" rx="120" fill="url(#brushed-metal)" opacity="0.3"
+    style="mix-blend-mode: overlay" />
+
+  <!-- 外框发光线 -->
+  <rect x="20" y="20" width="472" height="472" rx="120" fill="none" stroke="url(#neon-stream)"
+    stroke-width="4" stroke-opacity="0.6" filter="url(#glow)" />
+
+  <!-- 层级 2: 复杂数据轨道 (Orbit) -->
+  <g transform="translate(256 256)">
+    <!-- 刻度盘 -->
+    <circle r="190" fill="none" stroke="#64748b" stroke-width="1" stroke-dasharray="2 8"
+      opacity="0.5" />
+    <circle r="170" fill="none" stroke="#475569" stroke-width="20" stroke-dasharray="60 120"
+      opacity="0.4" transform="rotate(45)" />
+    <circle r="160" fill="none" stroke="url(#neon-stream)" stroke-width="4" stroke-linecap="round"
+      stroke-dasharray="100 400" transform="rotate(-90)" filter="url(#glow)" />
+  </g>
+
+  <!-- 层级 3: Spectra 棱镜反应堆 (Reactor) -->
+  <g transform="translate(256 256)" filter="url(#inset-shadow)">
+    <!-- 复杂的几何遮罩 -->
+    <path
+      d="M 0,-140 C 80,-140 140,-80 140,0 C 140,80 80,140 0,140 C -80,140 -140,80 -140,0 C -140,-80 -80,-140 0,-140 Z"
+      fill="#0f172a" />
+
+    <!-- 内部的三色涡轮 -->
+    <g>
+      <path d="M 0,0 L 0,-140 A 140,140 0 0 1 121,-70 Z" fill="#06b6d4" opacity="0.8"
+        style="mix-blend-mode: screen" /> <!-- Cyan -->
+      <path d="M 0,0 L 121,-70 A 140,140 0 0 1 121,70 Z" fill="#8b5cf6" opacity="0.8"
+        style="mix-blend-mode: screen" />  <!-- Violet -->
+      <path d="M 0,0 L 121,70 A 140,140 0 0 1 0,140 Z" fill="#f43f5e" opacity="0.8"
+        style="mix-blend-mode: screen" />   <!-- Pink -->
+      <!-- 旋转重复覆盖以制造复杂重叠 -->
+      <path d="M 0,0 L 0,140 A 140,140 0 0 1 -121,70 Z" fill="#06b6d4" opacity="0.5"
+        style="mix-blend-mode: overlay" />
+      <path d="M 0,0 L -121,70 A 140,140 0 0 1 -121,-70 Z" fill="#8b5cf6" opacity="0.5"
+        style="mix-blend-mode: overlay" />
+      <path d="M 0,0 L -121,-70 A 140,140 0 0 1 0,-140 Z" fill="#f43f5e" opacity="0.5"
+        style="mix-blend-mode: overlay" />
+    </g>
+
+    <!-- 核心晶体 (The Core) -->
+    <!-- 代表最终提炼的数据 -->
+    <path d="M -50,-30 L 70,0 L -50,30 Z" fill="white" filter="url(#glow)" />
+    <path d="M -50,-30 L 70,0 L -50,30 Z" fill="url(#glass-distortion)" opacity="0.6" />
+  </g>
+
+  <!-- 层级 4: 顶层反光 (Gloss) -->
+  <path d="M 20,20 Q 256,150 492,20 L 492,200 Q 256,100 20,200 Z" fill="white" opacity="0.05" />
+</svg>

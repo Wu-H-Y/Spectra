@@ -1,0 +1,12 @@
+{
+    "mcpServers": {
+        "dart": {
+            "args": [
+                "mcp-server"
+            ],
+            "command": "dart",
+            "env": {},
+            "type": "stdio"
+        }
+    }
+}
