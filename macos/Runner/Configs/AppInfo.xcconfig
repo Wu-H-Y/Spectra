@@ -8,7 +8,7 @@
 PRODUCT_NAME = Spectra
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.github.Wu-H-Y.spectra
+PRODUCT_BUNDLE_IDENTIFIER = com.github.wuhy.spectra
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2025 Wu-H-Y. All rights reserved.
