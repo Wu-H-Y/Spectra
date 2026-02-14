@@ -37,9 +37,9 @@
 | ------- | -------- | ------------------------ |
 | Android | `.apk`   | 直接安装                 |
 | iOS     | `.ipa`   | 需要自签名安装           |
-| Windows | `.zip`   | 解压后运行 `spectra.exe` |
-| macOS   | `.zip`   | 解压后运行 `spectra.app` |
-| Linux   | `.zip`   | 解压后运行 `./spectra`   |
+| Windows | `.zip`   | 解压后运行 `Spectra.exe` |
+| macOS   | `.zip`   | 解压后运行 `Spectra.app` |
+| Linux   | `.zip`   | 解压后运行 `./Spectra`   |
 | Web     | -        | 部署到 Web 服务器        |
 
 ### 从源码构建
