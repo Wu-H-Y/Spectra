@@ -92,7 +92,7 @@ BEGIN
             VALUE "CompanyName", "Wu-H-Y" "\0"
             VALUE "FileDescription", "Spectra - 现代化多媒体数据采集应用" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "Spectra" "\0"
+            VALUE "InternalName", "com.github.wuhy.spectra" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 Wu-H-Y. All rights reserved." "\0"
             VALUE "OriginalFilename", "spectra.exe" "\0"
             VALUE "ProductName", "Spectra" "\0"
