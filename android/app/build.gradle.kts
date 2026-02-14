@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.github.Wu-H-Y.spectra"
+    namespace = "com.github.wuhy.spectra"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.github.Wu-H-Y.spectra"
+        applicationId = "com.github.wuhy.spectra"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

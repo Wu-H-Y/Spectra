@@ -1,4 +1,4 @@
-package com.github.Wu-H-Y.spectra
+package com.github.wuhy.spectra
 
 import io.flutter.embedding.android.FlutterActivity
 
