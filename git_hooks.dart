@@ -22,7 +22,7 @@ Future<bool> commitMsg() async {
   // 格式: <type>(<scope>): <description>
   // scope 是可选的
   final pattern = RegExp(
-    r'^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)'
+    r'^(feat|fix|deps|docs|style|refactor|perf|test|build|ci|chore|revert)'
     r'(\([\w\-]+\))?:\s.{1,50}',
   );
 
@@ -37,8 +37,9 @@ Future<bool> commitMsg() async {
 格式: <type>(<scope>): <description>
 
 类型 (type):
-  feat      新功能
-  fix       Bug 修复
+  feat      新功能 (进入 CHANGELOG)
+  fix       Bug 修复 (进入 CHANGELOG)
+  deps      依赖更新 (进入 CHANGELOG)
   docs      文档更新
   style     代码格式 (不影响代码运行的变动)
   refactor  重构 (既不是新增功能，也不是修改 bug 的代码变动)
@@ -54,6 +55,7 @@ Future<bool> commitMsg() async {
 示例:
   feat: 添加用户登录功能
   fix: 修复登录页面崩溃的问题
+  deps: 更新 http 包到最新版本
   docs: 更新 README 安装说明
   feat(auth): 添加第三方登录支持
   fix(ios): 修复 iOS 15 下的兼容性问题

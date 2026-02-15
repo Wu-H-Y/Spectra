@@ -88,13 +88,12 @@
 >    - ✅ Require branches to be up to date before merging
 >    - 选择需要的 status checks: analyze, test
 >    - ✅ Do not allow bypassing the above settings
->
 > 4. 进入 Settings → Actions → General
 > 5. 配置 Actions 权限：
 >    - ✅ Allow all actions and reusable workflows
 >    - 或根据需要限制为 "Actions created by GitHub" + "Allow actions created by verified creators"
 
-- [ ] 11.1 配置 main 分支保护规则
-- [ ] 11.2 启用必须通过 PR 才能合并
-- [ ] 11.3 启用必须通过 CI 检查
-- [ ] 11.4 配置 GitHub Actions 权限
+- [x] 11.1 配置 main 分支保护规则
+- [x] 11.2 启用必须通过 PR 才能合并
+- [x] 11.3 启用必须通过 CI 检查
+- [x] 11.4 配置 GitHub Actions 权限

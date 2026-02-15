@@ -22,19 +22,22 @@
 
 ## 提交类型
 
-| 类型 | 说明 | 版本影响 |
-|------|------|----------|
-| `feat` | 新功能 | minor (1.0.0 → 1.1.0) |
-| `fix` | Bug 修复 | patch (1.0.0 → 1.0.1) |
-| `docs` | 文档更新 | 无 |
-| `style` | 代码格式 (不影响逻辑) | 无 |
-| `refactor` | 重构 (不是新功能也不是修复) | 无 |
-| `perf` | 性能优化 | patch |
-| `test` | 添加/修改测试 | 无 |
-| `build` | 构建系统或依赖变更 | patch |
-| `ci` | CI 配置变更 | 无 |
-| `chore` | 其他不修改 src 的变更 | 无 |
-| `revert` | 回滚之前的提交 | 视情况 |
+| 类型 | 说明 | 版本影响 | Releasable |
+|------|------|----------|:----------:|
+| `feat` | 新功能 | minor | ✓ |
+| `fix` | Bug 修复 | patch | ✓ |
+| `deps` | 依赖更新 | patch | ✓ |
+| `docs` | 文档更新 | 无 | ✗ |
+| `style` | 代码格式 (不影响逻辑) | 无 | ✗ |
+| `refactor` | 重构 (不是新功能也不是修复) | 无 | ✗ |
+| `perf` | 性能优化 | 无 | ✗ |
+| `test` | 添加/修改测试 | 无 | ✗ |
+| `build` | 构建系统变更 | 无 | ✗ |
+| `ci` | CI 配置变更 | 无 | ✗ |
+| `chore` | 其他不修改 src 的变更 | 无 | ✗ |
+| `revert` | 回滚之前的提交 | 视情况 | ✗ |
+
+> **Releasable** 列表示该类型是否会被 release-please 识别并纳入 CHANGELOG。
 
 ### 类型详解
 
@@ -56,6 +59,16 @@ feat(api): 添加用户头像上传接口
 fix: 修复登录页面崩溃问题
 fix(auth): 修复 token 过期后未自动刷新
 fix(ios): 修复 iOS 15 下的兼容性问题
+```
+
+#### deps - 依赖更新
+
+更新项目依赖。
+
+```bash
+deps: 升级 Flutter SDK 到 3.19
+deps: 更新 http 包到最新版本
+deps(deps): 修复安全漏洞 CVE-2024-xxxx
 ```
 
 #### docs - 文档更新
@@ -170,7 +183,7 @@ docs(README): 更新安装说明
 
 ## Breaking Changes (破坏性变更)
 
-当提交包含破坏性变更时，需要在 footer 中添加 `BREAKING CHANGE:` 说明。
+当提交包含破坏性变更时，需要在 footer 中添加 `BREAKING CHANGE:` 说明，或在类型后加 `!`。
 
 ### 格式
 
@@ -183,7 +196,7 @@ BREAKING CHANGE: 完全重构了 API 接口，旧接口不再兼容。
 
 ### 版本影响
 
-包含 `BREAKING CHANGE` 的提交会触发 **major** 版本更新 (1.0.0 → 2.0.0)。
+包含 `BREAKING CHANGE` 的提交会触发 **major** 版本更新 (0.1.0 → 1.0.0 或 1.0.0 → 2.0.0)。
 
 ### 示例
 
@@ -201,6 +214,64 @@ refactor(auth)!: 移除旧版认证 API
 
 BREAKING CHANGE: `/api/v1/auth` 接口已移除，请使用 `/api/v2/auth`
 ```
+
+## Releasable Units (可发布单元)
+
+本项目使用 [release-please](https://github.com/googleapis/release-please) 自动管理版本和 CHANGELOG。只有特定类型的提交会被识别为 "releasable units" 并纳入 CHANGELOG。
+
+### 进入 CHANGELOG 的类型
+
+| 类型 | 版本影响 | CHANGELOG 分组 |
+|------|----------|----------------|
+| `feat` | minor | Features |
+| `fix` | patch | Bug Fixes |
+| `deps` | patch | Dependencies |
+| `feat!` / `fix!` / `deps!` | major | ⚠ Breaking Changes |
+
+### 不进入 CHANGELOG 的类型
+
+以下类型**不会**触发版本更新或出现在 CHANGELOG 中：
+- `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
+
+### 开发期间控制发布节奏
+
+如果开发期间不想触发 Release PR，可以使用非 releasable 类型：
+
+```bash
+# 这些不会触发 Release PR
+chore: 重构内部实现
+refactor: 优化代码结构
+docs: 更新文档
+```
+
+如果想发布新功能或修复，使用 releasable 类型：
+
+```bash
+# 这些会触发 Release PR
+feat: 添加新功能
+fix: 修复 Bug
+deps: 更新依赖
+```
+
+## 单提交多变更
+
+当一个提交需要包含多个独立的变更时，可以使用 footer 形式添加额外的变更条目：
+
+```bash
+feat: 添加 v4 UUID 支持
+
+这是主要变更的描述。
+
+fix(utils): unicode 不再抛出异常
+feat(utils): 更新 encode 支持 unicode
+```
+
+上面的提交会在 CHANGELOG 中生成三条记录：
+1. `feat: 添加 v4 UUID 支持` → Features
+2. `fix(utils): unicode 不再抛出异常` → Bug Fixes
+3. `feat(utils): 更新 encode 支持 unicode` → Features
+
+> **注意**: 额外的变更条目必须添加在提交消息的底部。
 
 ## 描述规范
 
@@ -317,3 +388,53 @@ Related #123
 3. **清晰描述**: 让别人一看就知道做了什么
 4. **遵循规范**: 保持提交历史的一致性
 5. **及时推送**: 避免本地积累太多未推送的提交
+6. **使用 Squash-Merge**: 合并 PR 时推荐使用 squash-merge
+
+## Squash-Merge 最佳实践
+
+本项目**强烈推荐**使用 squash-merge 方式合并 Pull Request。
+
+### 为什么使用 Squash-Merge
+
+| 优势 | 说明 |
+|------|------|
+| **线性历史** | main 分支历史按合并日期排序，清晰易读 |
+| **便于追踪** | `git bisect` 可以快速定位引入问题的变更 |
+| **CHANGELOG 友好** | PR 内的临时提交（如 "fix typo"、"wip"）不会进入 CHANGELOG |
+| **原子性回滚** | 如需回滚，整个 PR 作为一个单元回滚 |
+
+### PR 合并流程
+
+1. PR 作者在分支中随意提交（可以包含 "wip"、"fix typo" 等）
+2. PR 审查通过后，维护者在合并时选择 **Squash and merge**
+3. 编辑 squash commit 消息，确保符合 Conventional Commits 规范
+4. 合并后，release-please 会根据这个 squash commit 消息生成 CHANGELOG
+
+### 示例
+
+```
+PR #123: 添加用户登录功能
+
+PR 内的提交:
+├── feat: 添加登录页面 UI
+├── fix: 修复表单验证
+├── wip: 测试中
+├── fix: 修复拼写错误
+└── feat: 添加登录 API 集成
+
+Squash 后的 commit:
+feat(auth): 添加用户登录功能
+
+- 支持用户名/密码登录
+- 支持记住登录状态
+- 添加表单验证
+```
+
+### GitHub 设置建议
+
+建议在仓库设置中启用 squash-merge：
+
+1. 进入 Settings → General → Pull Requests
+2. 勾选 "Allow squash merging"
+3. 选择 "Default to PR title and description for squash commit messages"
+
