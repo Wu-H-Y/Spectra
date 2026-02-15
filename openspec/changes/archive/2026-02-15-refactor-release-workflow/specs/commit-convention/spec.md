@@ -1,22 +1,6 @@
 # 提交消息规范
 
-## Requirements
-
-### Requirement: Conventional Commits 格式
-
-所有提交消息 SHALL 遵循 Conventional Commits 规范格式。
-
-#### Scenario: 标准格式
-- **WHEN** 用户创建提交
-- **THEN** 消息格式为 `<type>(<scope>): <description>`
-
-#### Scenario: 带 scope 的格式
-- **WHEN** 用户指定影响范围
-- **THEN** 消息格式为 `feat(auth): add biometric login`
-
-#### Scenario: 无 scope 的格式
-- **WHEN** 用户不指定影响范围
-- **THEN** 消息格式为 `feat: add new feature`
+## MODIFIED Requirements
 
 ### Requirement: 提交类型定义
 
@@ -48,10 +32,6 @@
 #### Scenario: fix 类型
 - **WHEN** 提交修复 Bug
 - **THEN** 使用 `fix:` 前缀，触发 patch 版本更新
-
-#### Scenario: docs 类型
-- **WHEN** 提交仅修改文档
-- **THEN** 使用 `docs:` 前缀，不触发版本更新
 
 ### Requirement: Releasable Units 定义
 
@@ -97,36 +77,3 @@
   - 按合并日期排序，历史清晰
   - 便于 git bisect 追踪问题
   - 避免 PR 内的临时提交污染 main
-
-### Requirement: Breaking Change 标记
-
-包含破坏性变更的提交 SHALL 在 footer 中标记 `BREAKING CHANGE:`。
-
-#### Scenario: Breaking Change 格式
-- **WHEN** 提交包含破坏性变更
-- **THEN** 消息包含 `BREAKING CHANGE:` 描述，触发 major 版本更新
-
-#### Scenario: Breaking Change 示例
-- **WHEN** 用户提交破坏性变更
-- **THEN** 格式为：
-  ```
-  feat: redesign API
-
-  BREAKING CHANGE: 完全重构了 API 接口，旧接口不再兼容
-  ```
-
-### Requirement: 中文描述
-
-提交消息的 description 部分 SHOULD 使用中文描述。
-
-#### Scenario: 中文描述
-- **WHEN** 用户编写提交描述
-- **THEN** 推荐使用中文，如 `feat: 添加用户登录功能`
-
-### Requirement: 描述长度限制
-
-提交消息的 description 部分 SHALL 不超过 50 个字符。
-
-#### Scenario: 描述过长被拒绝
-- **WHEN** description 超过 50 个字符
-- **THEN** commit 被 hook 拒绝并提示缩短描述

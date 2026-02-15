@@ -1,6 +1,6 @@
 # 发布工作流规范
 
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: 版本号管理
 
