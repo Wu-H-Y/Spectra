@@ -3,6 +3,7 @@
 ## Why
 
 Spectra 是一个面向国内用户的纯中文开源 Flutter 项目，需要接受外部贡献者参与开发。目前项目缺乏规范的 Git 工作流文档和自动化工具，这会导致：
+
 - 提交消息格式混乱，难以自动生成 CHANGELOG
 - 分支管理不规范，容易产生冲突
 - 发布流程不清晰，版本管理混乱
@@ -13,23 +14,27 @@ Spectra 是一个面向国内用户的纯中文开源 Flutter 项目，需要接
 ## What Changes
 
 ### 新增文档
+
 - **CONTRIBUTING.md**: 主贡献指南，包含开发环境搭建、提交流程、PR 规范
 - **docs/BRANCHING.md**: 分支规则文档，定义分支命名、保护规则、合并策略
 - **docs/COMMIT_CONVENTION.md**: 提交消息规范，基于 Conventional Commits
 - **docs/RELEASE.md**: 发布指南，说明版本管理和发布流程
 
 ### 新增配置文件
+
 - **git_hooks.dart**: Git hooks 配置 (commit-msg + pre-commit)，使用纯 Dart 实现
 - **.github/workflows/ci.yml**: CI 工作流，验证 PR 的代码质量
 - **.github/workflows/release-please.yml**: 自动管理 Release PR
 - **.github/workflows/release.yml**: 全平台构建和 GitHub Release 发布
 
 ### 新增模板
+
 - **.github/PULL_REQUEST_TEMPLATE.md**: PR 模板
 - **.github/ISSUE_TEMPLATE/bug_report.yml**: Bug 报告模板
 - **.github/ISSUE_TEMPLATE/feature_request.yml**: 功能请求模板
 
 ### 自动生成
+
 - **CHANGELOG.md**: 由 release-please 根据提交记录自动生成
 
 ## Capabilities
@@ -49,22 +54,25 @@ Spectra 是一个面向国内用户的纯中文开源 Flutter 项目，需要接
 ## Impact
 
 ### 依赖变更
+
 - `pubspec.yaml`: 添加 `git_hooks` 作为 dev_dependency
 
 ### 受影响的开发者工作流
+
 - 所有提交必须符合 Conventional Commits 格式
 - 提交前自动运行 `flutter analyze`
 - PR 必须通过 CI 检查才能合并
 - 发布由维护者通过合并 Release PR 触发
 
 ### GitHub 配置
+
 - main 分支需要设置保护规则 (需要 PR + review + CI 通过)
 - 需要 GitHub Actions 权限
 
 ### 目标平台支持
+
 - Android (APK)
 - iOS (IPA, 无签名)
-- Web
 - Windows (EXE, 无签名)
 - macOS (APP, 无签名)
 - Linux (AppImage/DEB)

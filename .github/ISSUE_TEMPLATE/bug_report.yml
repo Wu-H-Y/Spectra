@@ -56,7 +56,6 @@ body:
       options:
         - Android
         - iOS
-        - Web
         - Windows
         - macOS
         - Linux

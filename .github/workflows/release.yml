@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to release (e.g., v0.3.0)'
+        description: "Tag to release (e.g., v0.3.0)"
         required: true
         type: string
 
@@ -24,8 +24,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
-          channel: 'stable'
+          flutter-version: "3.x"
+          channel: "stable"
           cache: true
 
       - name: Get dependencies
@@ -59,8 +59,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
-          channel: 'stable'
+          flutter-version: "3.x"
+          channel: "stable"
           cache: true
 
       - name: Get dependencies
@@ -82,37 +82,6 @@ jobs:
           name: ios-ipa
           path: Runner.ipa
 
-  build-web:
-    name: Build Web
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.x'
-          channel: 'stable'
-          cache: true
-
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Build Web
-        run: flutter build web --release
-
-      - name: Archive Web
-        run: |
-          cd build
-          zip -r ../web-release.zip web
-
-      - name: Upload Web
-        uses: actions/upload-artifact@v4
-        with:
-          name: web
-          path: web-release.zip
-
   build-windows:
     name: Build Windows
     runs-on: windows-latest
@@ -123,8 +92,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
-          channel: 'stable'
+          flutter-version: "3.x"
+          channel: "stable"
           cache: true
 
       - name: Get dependencies
@@ -152,8 +121,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
-          channel: 'stable'
+          flutter-version: "3.x"
+          channel: "stable"
           cache: true
 
       - name: Get dependencies
@@ -183,8 +152,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
-          channel: 'stable'
+          flutter-version: "3.x"
+          channel: "stable"
           cache: true
 
       - name: Install Linux dependencies
@@ -215,7 +184,6 @@ jobs:
     needs:
       - build-android
       - build-ios
-      - build-web
       - build-windows
       - build-macos
       - build-linux
@@ -247,7 +215,6 @@ jobs:
             artifacts/android-apk/*
             artifacts/android-aab/*
             artifacts/ios-ipa/*
-            artifacts/web/*
             artifacts/windows/*
             artifacts/macos/*
             artifacts/linux/*

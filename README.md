@@ -9,7 +9,7 @@
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart)](https://dart.dev)
 [![License](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Windows%20%7C%20macOS%20%7C%20Linux-blue)]()
+[![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Windows%20%7C%20macOS%20%7C%20Linux-blue)]()
 
 <img src="assets/icon.svg" alt="Spectra Logo" width="128" height="128">
 
@@ -25,7 +25,7 @@
 - 📖 **漫画采集** - 漫画资源采集与阅读
 - 🖼️ **图片采集** - 图片批量采集和管理
 - 🔧 **自定义规则** - 灵活的爬虫规则系统，支持用户自定义
-- 📱 **跨平台** - 支持 Android、iOS、Web、Windows、macOS、Linux
+- 📱 **跨平台** - 支持 Android、iOS、Windows、macOS、Linux
 
 ## 📥 安装
 
@@ -40,7 +40,6 @@
 | Windows | `.zip`   | 解压后运行 `Spectra.exe` |
 | macOS   | `.zip`   | 解压后运行 `Spectra.app` |
 | Linux   | `.zip`   | 解压后运行 `./Spectra`   |
-| Web     | -        | 部署到 Web 服务器        |
 
 ### 从源码构建
 
