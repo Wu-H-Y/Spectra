@@ -16,17 +16,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Bug Fixes
 
 * **android:** 修复 Java 包名无效问题 ([#1](https://github.com/Wu-H-Y/Spectra/issues/1)) ([813b389](https://github.com/Wu-H-Y/Spectra/commit/813b389f32b3e2014067fe690837656e092379a4))
-
-## [Unreleased]
-
-### Added
-- Git hooks for enforcing Conventional Commits format
-- GitHub Actions CI workflow for code quality checks
-- GitHub Actions release workflow for multi-platform builds
-- Release Please automation for version management
-- Contributing guidelines (CONTRIBUTING.md)
-- Branch rules documentation (docs/BRANCHING.md)
-- Commit convention documentation (docs/COMMIT_CONVENTION.md)
-- Release guide documentation (docs/RELEASE.md)
-- Pull request template
-- Bug report and feature request issue templates
