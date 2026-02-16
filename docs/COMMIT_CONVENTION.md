@@ -22,20 +22,20 @@
 
 ## 提交类型
 
-| 类型 | 说明 | 版本影响 | Releasable |
-|------|------|----------|:----------:|
-| `feat` | 新功能 | minor | ✓ |
-| `fix` | Bug 修复 | patch | ✓ |
-| `deps` | 依赖更新 | patch | ✓ |
-| `docs` | 文档更新 | 无 | ✗ |
-| `style` | 代码格式 (不影响逻辑) | 无 | ✗ |
-| `refactor` | 重构 (不是新功能也不是修复) | 无 | ✗ |
-| `perf` | 性能优化 | 无 | ✗ |
-| `test` | 添加/修改测试 | 无 | ✗ |
-| `build` | 构建系统变更 | 无 | ✗ |
-| `ci` | CI 配置变更 | 无 | ✗ |
-| `chore` | 其他不修改 src 的变更 | 无 | ✗ |
-| `revert` | 回滚之前的提交 | 视情况 | ✗ |
+| 类型       | 说明                        | 版本影响 | Releasable |
+| ---------- | --------------------------- | -------- | :--------: |
+| `feat`     | 新功能                      | minor    |     ✓      |
+| `fix`      | Bug 修复                    | patch    |     ✓      |
+| `deps`     | 依赖更新                    | patch    |     ✓      |
+| `docs`     | 文档更新                    | 无       |     ✗      |
+| `style`    | 代码格式 (不影响逻辑)       | 无       |     ✗      |
+| `refactor` | 重构 (不是新功能也不是修复) | 无       |     ✗      |
+| `perf`     | 性能优化                    | 无       |     ✗      |
+| `test`     | 添加/修改测试               | 无       |     ✗      |
+| `build`    | 构建系统变更                | 无       |     ✗      |
+| `ci`       | CI 配置变更                 | 无       |     ✗      |
+| `chore`    | 其他不修改 src 的变更       | 无       |     ✗      |
+| `revert`   | 回滚之前的提交              | 视情况   |     ✗      |
 
 > **Releasable** 列表示该类型是否会被 release-please 识别并纳入 CHANGELOG。
 
@@ -168,7 +168,7 @@ Scope 用于说明提交影响的范围，是可选的。
 ### 常见的 Scope
 
 - **模块名**: `auth`, `user`, `home`, `settings`
-- **平台名**: `ios`, `android`, `web`, `windows`, `macos`, `linux`
+- **平台名**: `ios`, `android`, `windows`, `macos`, `linux`
 - **层级名**: `ui`, `api`, `db`, `utils`
 - **文件名**: 当只修改单个文件时使用
 
@@ -221,16 +221,17 @@ BREAKING CHANGE: `/api/v1/auth` 接口已移除，请使用 `/api/v2/auth`
 
 ### 进入 CHANGELOG 的类型
 
-| 类型 | 版本影响 | CHANGELOG 分组 |
-|------|----------|----------------|
-| `feat` | minor | Features |
-| `fix` | patch | Bug Fixes |
-| `deps` | patch | Dependencies |
-| `feat!` / `fix!` / `deps!` | major | ⚠ Breaking Changes |
+| 类型                       | 版本影响 | CHANGELOG 分组     |
+| -------------------------- | -------- | ------------------ |
+| `feat`                     | minor    | Features           |
+| `fix`                      | patch    | Bug Fixes          |
+| `deps`                     | patch    | Dependencies       |
+| `feat!` / `fix!` / `deps!` | major    | ⚠ Breaking Changes |
 
 ### 不进入 CHANGELOG 的类型
 
 以下类型**不会**触发版本更新或出现在 CHANGELOG 中：
+
 - `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
 
 ### 开发期间控制发布节奏
@@ -267,6 +268,7 @@ feat(utils): 更新 encode 支持 unicode
 ```
 
 上面的提交会在 CHANGELOG 中生成三条记录：
+
 1. `feat: 添加 v4 UUID 支持` → Features
 2. `fix(utils): unicode 不再抛出异常` → Bug Fixes
 3. `feat(utils): 更新 encode 支持 unicode` → Features
@@ -289,10 +291,12 @@ feat(utils): 更新 encode 支持 unicode
 使用**祈使句**，描述"做了什么"而不是"做了..."。
 
 **好的示例：**
+
 - `feat: 添加用户登录功能` (添加)
 - `fix: 修复页面崩溃问题` (修复)
 
 **不好的示例：**
+
 - `feat: 添加了用户登录功能` (使用了"了")
 - `fix: 修复了页面崩溃` (使用了"了")
 
@@ -396,12 +400,12 @@ Related #123
 
 ### 为什么使用 Squash-Merge
 
-| 优势 | 说明 |
-|------|------|
-| **线性历史** | main 分支历史按合并日期排序，清晰易读 |
-| **便于追踪** | `git bisect` 可以快速定位引入问题的变更 |
+| 优势               | 说明                                                      |
+| ------------------ | --------------------------------------------------------- |
+| **线性历史**       | main 分支历史按合并日期排序，清晰易读                     |
+| **便于追踪**       | `git bisect` 可以快速定位引入问题的变更                   |
 | **CHANGELOG 友好** | PR 内的临时提交（如 "fix typo"、"wip"）不会进入 CHANGELOG |
-| **原子性回滚** | 如需回滚，整个 PR 作为一个单元回滚 |
+| **原子性回滚**     | 如需回滚，整个 PR 作为一个单元回滚                        |
 
 ### PR 合并流程
 
@@ -437,4 +441,3 @@ feat(auth): 添加用户登录功能
 1. 进入 Settings → General → Pull Requests
 2. 勾选 "Allow squash merging"
 3. 选择 "Default to PR title and description for squash commit messages"
-

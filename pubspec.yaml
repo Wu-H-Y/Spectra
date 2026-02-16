@@ -37,6 +37,18 @@ dependencies:
   talker: ^5.1.13
   talker_flutter: ^5.1.13
 
+  # Material 3 theme system with dark/light mode support
+  flex_color_scheme: ^8.4.0
+
+  # Google Fonts for brand typography
+  google_fonts: ^8.0.1
+
+  # Window manager for desktop platforms (Windows, macOS, Linux)
+  window_manager: ^0.4.3
+
+  # Native splash screen control (runtime)
+  flutter_native_splash: ^2.4.7
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -52,7 +64,7 @@ dev_dependencies:
   git_hooks: ^1.0.2
 
   # Generate launcher icons for all platforms
-  flutter_launcher_icons: ^0.14.3
+  flutter_launcher_icons: ^0.14.4
 
   # CLI tool for renaming Flutter app name and bundle ID
   rename: ^3.1.0
@@ -97,3 +109,30 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# Native splash screen configuration
+flutter_native_splash:
+  # 背景色（与 App 主题一致）
+  color: "#0B0E14"
+  color_dark: "#0B0E14"
+
+  # 品牌 Logo
+  image: assets/splash.png
+  image_dark: assets/splash.png
+
+  # 图片居中显示
+  android_gravity: center
+  ios_content_mode: center
+
+  # 平台开关
+  android: true
+  ios: true
+  web: false
+
+  # 全屏模式
+  fullscreen: true
+
+  # Android 12+ 配置
+  android_12:
+    image: assets/splash.png
+    color: "#0B0E14"

@@ -39,13 +39,13 @@ major.minor.patch+build
 
 ## 版本更新规则
 
-| 提交类型 | 版本更新 | 进入 CHANGELOG | 示例 |
-|----------|----------|:--------------:|------|
-| `feat` | minor +1 | ✓ | 0.1.0 → 0.2.0 |
-| `fix` | patch +1 | ✓ | 0.1.0 → 0.1.1 |
-| `deps` | patch +1 | ✓ | 0.1.0 → 0.1.1 |
-| `BREAKING CHANGE` | major +1 | ✓ | 0.1.0 → 1.0.0 |
-| 其他类型 | 无更新 | ✗ | - |
+| 提交类型          | 版本更新 | 进入 CHANGELOG | 示例          |
+| ----------------- | -------- | :------------: | ------------- |
+| `feat`            | minor +1 |       ✓        | 0.1.0 → 0.2.0 |
+| `fix`             | patch +1 |       ✓        | 0.1.0 → 0.1.1 |
+| `deps`            | patch +1 |       ✓        | 0.1.0 → 0.1.1 |
+| `BREAKING CHANGE` | major +1 |       ✓        | 0.1.0 → 1.0.0 |
+| 其他类型          | 无更新   |       ✗        | -             |
 
 > **Releasable Units**: 只有 `feat`、`fix`、`deps` 类型会触发版本更新并进入 CHANGELOG。
 > 其他类型（`docs`、`refactor`、`chore` 等）不会触发发布。
@@ -105,11 +105,11 @@ Spectra 使用 **release-please** 自动管理版本和发布。
 
 只有以下类型的提交会触发 Release PR 创建：
 
-| 类型 | 版本影响 | CHANGELOG 分组 |
-|------|----------|----------------|
-| `feat` | minor | Features |
-| `fix` | patch | Bug Fixes |
-| `deps` | patch | Dependencies |
+| 类型   | 版本影响 | CHANGELOG 分组 |
+| ------ | -------- | -------------- |
+| `feat` | minor    | Features       |
+| `fix`  | patch    | Bug Fixes      |
+| `deps` | patch    | Dependencies   |
 
 其他类型（`docs`、`chore`、`refactor` 等）**不会**触发 Release PR。
 
@@ -147,6 +147,7 @@ git commit -m "fix: 修复设置保存失败问题"
 #### 3. 等待 Release PR
 
 release-please 会自动创建或更新 Release PR，包含：
+
 - 版本号更新
 - CHANGELOG 更新
 - 变更摘要
@@ -154,6 +155,7 @@ release-please 会自动创建或更新 Release PR，包含：
 #### 4. 审查 Release PR
 
 在合并前，检查：
+
 - 版本号是否正确
 - CHANGELOG 是否完整
 - 变更摘要是否准确
@@ -161,6 +163,7 @@ release-please 会自动创建或更新 Release PR，包含：
 #### 5. 合并 Release PR
 
 合并后自动触发：
+
 - 创建 Git tag
 - 触发 release.yml 工作流
 - 构建所有平台
@@ -171,21 +174,25 @@ release-please 会自动创建或更新 Release PR，包含：
 合并 Release PR 前，请确认：
 
 ### 代码质量
+
 - [ ] 所有 CI 检查通过
 - [ ] 代码通过 `flutter analyze`
 - [ ] 测试通过 `flutter test`
 - [ ] 无未解决的 Issue
 
 ### 版本管理
+
 - [ ] 版本号正确
 - [ ] CHANGELOG 完整
 - [ ] Breaking Changes 已说明
 
 ### 文档
+
 - [ ] README.md 已更新 (如有需要)
 - [ ] 迁移指南已提供 (如有 Breaking Changes)
 
 ### 发布后
+
 - [ ] 验证 GitHub Release 已创建
 - [ ] 验证所有平台安装包已上传
 - [ ] 验证 Release Notes 正确
@@ -194,40 +201,44 @@ release-please 会自动创建或更新 Release PR，包含：
 
 Spectra 发布到 GitHub Release，支持以下平台：
 
-| 平台 | 文件格式 | 说明 |
-|------|----------|------|
-| Android | APK, AAB | 通用版本 |
-| iOS | IPA | 无签名版本 |
-| Web | ZIP | 静态文件 |
-| Windows | ZIP | 无签名版本 |
-| macOS | ZIP | 无签名版本 |
-| Linux | ZIP | AppImage/DEB |
+| 平台    | 文件格式 | 说明         |
+| ------- | -------- | ------------ |
+| Android | APK, AAB | 通用版本     |
+| iOS     | IPA      | 无签名版本   |
+| Windows | ZIP      | 无签名版本   |
+| macOS   | ZIP      | 无签名版本   |
+| Linux   | ZIP      | AppImage/DEB |
 
 ### 安装说明
 
 #### Android
+
 1. 下载 APK 文件
 2. 允许安装未知来源应用
 3. 安装 APK
 
 #### iOS
+
 1. 下载 IPA 文件
 2. 使用 AltStore 或其他工具安装
 3. 注意：无签名版本需要自行签名
 
 #### Windows
+
 1. 下载 ZIP 文件
 2. 解压到任意目录
 3. 运行 `spectra.exe`
 4. 可能会遇到 SmartScreen 警告，选择"仍要运行"
 
 #### macOS
+
 1. 下载 ZIP 文件
 2. 解压
 3. 右键点击 `spectra.app`，选择"打开"
 4. 如果提示"无法验证开发者"，在系统偏好设置中允许
 
 #### Linux
+
 1. 下载 ZIP 文件
 2. 解压
 3. 运行 `./spectra`
@@ -288,6 +299,7 @@ git push origin v1.1.0
 - **安全更新**: 立即发布
 
 不建议：
+
 - 每个 commit 都发布
 - 长时间不发布
 
