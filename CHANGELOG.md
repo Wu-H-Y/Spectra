@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0](https://github.com/Wu-H-Y/Spectra/compare/v0.3.2...v0.4.0) (2026-02-16)
+
+
+### Features
+
+* **theme:** 添加 Spectra Cyber 主题系统 ([#11](https://github.com/Wu-H-Y/Spectra/issues/11)) ([417ea63](https://github.com/Wu-H-Y/Spectra/commit/417ea630ff8edd51fa6dc090fc8319385bb50102))
+
 ## [0.3.2](https://github.com/Wu-H-Y/Spectra/compare/v0.3.1...v0.3.2) (2026-02-15)
 
 
