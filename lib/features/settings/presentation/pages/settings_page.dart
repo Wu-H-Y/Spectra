@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../../core/constants/locale_constants.dart';
@@ -18,7 +17,6 @@ class SettingsPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.deepVoid,
       appBar: _buildAppBar(context, l10n),
       body: _buildBody(context, ref, l10n),
     );
@@ -27,19 +25,13 @@ class SettingsPage extends ConsumerWidget {
   PreferredSizeWidget _buildAppBar(BuildContext context, AppLocalizations l10n) {
     return AppBar(
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        icon: const Icon(Icons.arrow_back),
         onPressed: () => context.go('/'),
       ),
       title: Text(
         l10n.settingsTitle,
-        style: GoogleFonts.orbitron(
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
-        ),
+        style: Theme.of(context).textTheme.titleLarge,
       ),
-      backgroundColor: AppColors.electricViolet,
-      elevation: 0,
       centerTitle: true,
     );
   }
@@ -50,14 +42,14 @@ class SettingsPage extends ConsumerWidget {
         padding: AppSpacing.paddingMd,
         children: [
           // 外观设置
-          _buildSectionHeader(l10n.appearanceSettings),
+          _buildSectionHeader(context, l10n.appearanceSettings),
           AppSpacing.verticalGapSm,
           _buildThemeTile(context, ref, l10n),
           _buildLanguageTile(context, ref, l10n),
           AppSpacing.verticalGapLg,
 
           // 关于
-          _buildSectionHeader(l10n.about),
+          _buildSectionHeader(context, l10n.about),
           AppSpacing.verticalGapSm,
           _buildAboutTile(context, l10n),
         ],
@@ -65,16 +57,14 @@ class SettingsPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.only(left: AppSpacing.xs),
       child: Text(
         title,
-        style: GoogleFonts.orbitron(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: AppColors.cyberCyan,
-        ),
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+            ),
       ),
     );
   }
@@ -85,7 +75,7 @@ class SettingsPage extends ConsumerWidget {
 
     return _SettingsTile(
       icon: Icons.palette_outlined,
-      iconColor: AppColors.cyberCyan,
+      iconColor: Theme.of(context).colorScheme.primary,
       title: l10n.themeMode,
       subtitle: themeModeName,
       onTap: () => _showThemeDialog(context, ref, l10n),
@@ -98,7 +88,7 @@ class SettingsPage extends ConsumerWidget {
 
     return _SettingsTile(
       icon: Icons.language,
-      iconColor: AppColors.electricViolet,
+      iconColor: Theme.of(context).colorScheme.secondary,
       title: l10n.language,
       subtitle: languageName,
       onTap: () => _showLanguageDialog(context, ref, l10n),
@@ -112,7 +102,7 @@ class SettingsPage extends ConsumerWidget {
         final version = snapshot.data?.version ?? '...';
         return _SettingsTile(
           icon: Icons.info_outline,
-          iconColor: AppColors.neonPink,
+          iconColor: Theme.of(context).colorScheme.tertiary,
           title: l10n.about,
           subtitle: '${l10n.version}: $version',
           onTap: () {
@@ -138,11 +128,7 @@ class SettingsPage extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: Text(
-          l10n.themeMode,
-          style: const TextStyle(color: Colors.white),
-        ),
+        title: Text(l10n.themeMode),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -164,11 +150,12 @@ class SettingsPage extends ConsumerWidget {
   ) {
     final currentMode = ref.watch(persistedThemeModeProvider);
     final isSelected = currentMode == mode;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return ListTile(
-      title: Text(label, style: const TextStyle(color: Colors.white)),
+      title: Text(label),
       trailing: isSelected
-          ? const Icon(Icons.check, color: AppColors.cyberCyan)
+          ? Icon(Icons.check, color: colorScheme.primary)
           : null,
       onTap: () {
         ref.read(persistedThemeModeProvider.notifier).state = mode;
@@ -181,11 +168,7 @@ class SettingsPage extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: Text(
-          l10n.language,
-          style: const TextStyle(color: Colors.white),
-        ),
+        title: Text(l10n.language),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -205,11 +188,12 @@ class SettingsPage extends ConsumerWidget {
   ) {
     final currentLocale = ref.watch(persistedLocaleProvider);
     final isSelected = currentLocale.languageCode == locale.languageCode;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return ListTile(
-      title: Text(label, style: const TextStyle(color: Colors.white)),
+      title: Text(label),
       trailing: isSelected
-          ? const Icon(Icons.check, color: AppColors.electricViolet)
+          ? Icon(Icons.check, color: colorScheme.secondary)
           : null,
       onTap: () {
         ref.read(persistedLocaleProvider.notifier).state = locale;
@@ -237,60 +221,59 @@ class _SettingsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-      color: AppColors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
+      decoration: AppEffects.card(context).copyWith(
+        border: Border.all(
           color: iconColor.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Padding(
-          padding: AppSpacing.paddingMd,
-          child: Row(
-            children: [
-              Container(
-                padding: AppSpacing.paddingSm,
-                decoration: BoxDecoration(
-                  color: iconColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: AppRadius.borderRadiusLg,
+          onTap: onTap,
+          child: Padding(
+            padding: AppSpacing.paddingMd,
+            child: Row(
+              children: [
+                Container(
+                  padding: AppSpacing.paddingSm,
+                  decoration: BoxDecoration(
+                    color: iconColor.withValues(alpha: 0.1),
+                    borderRadius: AppRadius.borderRadiusSm,
+                  ),
+                  child: Icon(icon, color: iconColor, size: 24),
                 ),
-                child: Icon(icon, color: iconColor, size: 24),
-              ),
-              AppSpacing.horizontalGapMd,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: GoogleFonts.notoSansSc(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                AppSpacing.horizontalGapMd,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: textTheme.titleSmall,
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: GoogleFonts.notoSansSc(
-                        fontSize: 12,
-                        color: Colors.white60,
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Icon(
-                Icons.chevron_right,
-                color: Colors.white38,
-              ),
-            ],
+                Icon(
+                  Icons.chevron_right,
+                  color: colorScheme.onSurface.withValues(alpha: 0.38),
+                ),
+              ],
+            ),
           ),
         ),
       ),

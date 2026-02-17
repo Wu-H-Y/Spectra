@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/theme/theme.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -17,7 +16,6 @@ class HomePage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: AppColors.deepVoid,
       appBar: _buildAppBar(context, l10n),
       body: _buildBody(context, l10n),
     );
@@ -27,18 +25,12 @@ class HomePage extends ConsumerWidget {
     return AppBar(
       title: Text(
         l10n.appName,
-        style: GoogleFonts.orbitron(
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
-        ),
+        style: Theme.of(context).textTheme.titleLarge,
       ),
-      backgroundColor: AppColors.electricViolet,
-      elevation: 0,
       centerTitle: true,
       actions: [
         IconButton(
-          icon: const Icon(Icons.settings_outlined, color: Colors.white),
+          icon: const Icon(Icons.settings_outlined),
           onPressed: () => context.go('/settings'),
           tooltip: l10n.settingsTitle,
         ),
@@ -73,15 +65,13 @@ class HomePage extends ConsumerWidget {
       children: [
         Text(
           l10n.homeTitle,
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: Colors.white,
-              ),
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
         AppSpacing.verticalGapSm,
         Text(
           l10n.homeSubtitle,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.white70,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
               ),
         ),
       ],
@@ -89,41 +79,43 @@ class HomePage extends ConsumerWidget {
   }
 
   Widget _buildFeatureGrid(BuildContext context, AppLocalizations l10n) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     final features = [
       _FeatureItem(
         icon: Icons.video_library,
         title: l10n.featureVideo,
-        color: AppColors.cyberCyan,
+        color: colorScheme.primary,
         route: '/video',
       ),
       _FeatureItem(
         icon: Icons.music_note,
         title: l10n.featureMusic,
-        color: AppColors.electricViolet,
+        color: colorScheme.secondary,
         route: '/music',
       ),
       _FeatureItem(
         icon: Icons.book,
         title: l10n.featureNovel,
-        color: AppColors.neonPink,
+        color: colorScheme.tertiary,
         route: '/novel',
       ),
       _FeatureItem(
         icon: Icons.image,
         title: l10n.featureImage,
-        color: AppColors.cyberCyan,
+        color: colorScheme.primary,
         route: '/image',
       ),
       _FeatureItem(
         icon: Icons.menu_book,
         title: l10n.featureComic,
-        color: AppColors.electricViolet,
+        color: colorScheme.secondary,
         route: '/comic',
       ),
       _FeatureItem(
         icon: Icons.settings,
         title: l10n.settingsTitle,
-        color: AppColors.neonPink,
+        color: colorScheme.tertiary,
         route: '/settings',
       ),
     ];
@@ -143,42 +135,47 @@ class HomePage extends ConsumerWidget {
   }
 
   Widget _buildFeatureCard(BuildContext context, _FeatureItem feature) {
-    return Card(
-      elevation: 2,
-      color: AppColors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: feature.color.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () {
-          context.go(feature.route);
-        },
-        child: Padding(
-          padding: AppSpacing.paddingMd,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                feature.icon,
-                size: 40,
-                color: feature.color,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      decoration: isDark
+          ? AppEffects.glassCardDark.copyWith(
+              border: Border.all(
+                color: feature.color.withValues(alpha: 0.3),
+                width: 1,
               ),
-              AppSpacing.verticalGapMd,
-              Text(
-                feature.title,
-                style: GoogleFonts.notoSansSc(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
+            )
+          : AppEffects.softCardLight.copyWith(
+              border: Border.all(
+                color: feature.color.withValues(alpha: 0.2),
+                width: 1,
+              ),
+            ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: AppRadius.borderRadiusLg,
+          onTap: () {
+            context.go(feature.route);
+          },
+          child: Padding(
+            padding: AppSpacing.paddingMd,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  feature.icon,
+                  size: 40,
+                  color: feature.color,
                 ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+                AppSpacing.verticalGapMd,
+                Text(
+                  feature.title,
+                  style: Theme.of(context).textTheme.labelLarge,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
       ),

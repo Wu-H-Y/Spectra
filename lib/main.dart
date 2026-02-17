@@ -39,13 +39,7 @@ void main() async {
   await _initializeHeavyTasks();
 
   // 5. 启动应用（使用 ProviderScope 包裹）
-  runApp(
-    ProviderScope(
-      child: const AppReadyHandler(
-        child: SpectraApp(),
-      ),
-    ),
-  );
+  runApp(ProviderScope(child: const AppReadyHandler(child: SpectraApp())));
 }
 
 /// 执行繁重的初始化任务
@@ -93,10 +87,7 @@ class SpectraApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('zh', 'CN'),
-      ],
+      supportedLocales: const [Locale('en', 'US'), Locale('zh', 'CN')],
       locale: locale,
 
       // 主题配置
