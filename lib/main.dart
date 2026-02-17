@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'pages/home/home_page.dart';
-import 'theme/spectra_theme.dart';
+import 'core/database/drift/app_database.dart';
+import 'core/database/hive/hive_service.dart';
+import 'core/router/app_router.dart';
+import 'core/theme/theme.dart';
+import 'l10n/generated/app_localizations.dart';
+import 'shared/providers/settings_provider.dart';
 
 void main() async {
   // 1. 确保 Flutter 绑定初始化
@@ -32,7 +38,14 @@ void main() async {
   // 4. 执行后台初始化任务
   await _initializeHeavyTasks();
 
-  runApp(const SpectraApp());
+  // 5. 启动应用（使用 ProviderScope 包裹）
+  runApp(
+    ProviderScope(
+      child: const AppReadyHandler(
+        child: SpectraApp(),
+      ),
+    ),
+  );
 }
 
 /// 执行繁重的初始化任务
@@ -43,20 +56,68 @@ void main() async {
 /// - 引擎预热
 /// - 检查更新
 Future<void> _initializeHeavyTasks() async {
-  // TODO: 添加实际的初始化任务
-  // 模拟耗时任务
-  await Future.delayed(const Duration(milliseconds: 3000));
+  // 初始化 Hive
+  await HiveService.instance.initialize();
+
+  // 初始化 Drift 数据库
+  // ignore: unused_local_variable
+  final db = AppDatabase();
+
+  // TODO: 添加其他初始化任务
 }
 
 /// Spectra 应用入口
-class SpectraApp extends StatefulWidget {
+class SpectraApp extends ConsumerWidget {
   const SpectraApp({super.key});
 
   @override
-  State<SpectraApp> createState() => _SpectraAppState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 监听路由
+    final router = ref.watch(routerProvider);
+
+    // 监听持久化的主题模式和语言
+    final themeMode = ref.watch(persistedThemeModeProvider);
+    final locale = ref.watch(persistedLocaleProvider);
+
+    return MaterialApp.router(
+      title: 'Spectra',
+      debugShowCheckedModeBanner: false,
+
+      // 路由配置
+      routerConfig: router,
+
+      // 本地化配置
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('zh', 'CN'),
+      ],
+      locale: locale,
+
+      // 主题配置
+      theme: SpectraTheme.light,
+      darkTheme: SpectraTheme.dark,
+      themeMode: themeMode.flutterThemeMode,
+    );
+  }
 }
 
-class _SpectraAppState extends State<SpectraApp> {
+/// 启动完成后显示窗口的辅助类
+class AppReadyHandler extends StatefulWidget {
+  const AppReadyHandler({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  State<AppReadyHandler> createState() => _AppReadyHandlerState();
+}
+
+class _AppReadyHandlerState extends State<AppReadyHandler> {
   @override
   void initState() {
     super.initState();
@@ -73,18 +134,5 @@ class _SpectraAppState extends State<SpectraApp> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Spectra',
-      debugShowCheckedModeBanner: false,
-
-      // 主题配置
-      theme: SpectraTheme.light,
-      darkTheme: SpectraTheme.dark,
-      themeMode: ThemeMode.dark, // 默认深色模式
-
-      // 主页作为首页
-      home: const HomePage(),
-    );
-  }
+  Widget build(BuildContext context) => widget.child;
 }

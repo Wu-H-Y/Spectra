@@ -1,0 +1,16 @@
+# Build configuration for code generation
+targets:
+  $default:
+    builders:
+      # Riverpod generator
+      riverpod_generator:
+        generate_for:
+          - lib/**/*.dart
+          - '!lib/**/*.g.dart'
+          - '!lib/**/*.freezed.dart'
+
+      # Drift database generator
+      drift_dev:
+        options:
+          apply_converters_on_variables: true
+          generate_connect_constructor: true
