@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spectra/core/database/drift/app_database.dart';
+import 'package:spectra/core/database/hive/hive_service.dart';
+import 'package:spectra/core/router/app_router.dart';
+import 'package:spectra/core/theme/theme.dart';
+import 'package:spectra/l10n/generated/app_localizations.dart';
+import 'package:spectra/shared/providers/settings_provider.dart';
 import 'package:window_manager/window_manager.dart';
-
-import 'core/database/drift/app_database.dart';
-import 'core/database/hive/hive_service.dart';
-import 'core/router/app_router.dart';
-import 'core/theme/theme.dart';
-import 'l10n/generated/app_localizations.dart';
-import 'shared/providers/settings_provider.dart';
 
 void main() async {
   // 1. 确保 Flutter 绑定初始化
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
   // 2. 保持原生启动屏（遮挡初始化过程）
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -39,7 +38,7 @@ void main() async {
   await _initializeHeavyTasks();
 
   // 5. 启动应用（使用 ProviderScope 包裹）
-  runApp(ProviderScope(child: const AppReadyHandler(child: SpectraApp())));
+  runApp(const ProviderScope(child: AppReadyHandler(child: SpectraApp())));
 }
 
 /// 执行繁重的初始化任务
@@ -57,11 +56,17 @@ Future<void> _initializeHeavyTasks() async {
   // ignore: unused_local_variable
   final db = AppDatabase();
 
-  // TODO: 添加其他初始化任务
+  // TODO(developer): 添加其他初始化任务
 }
 
 /// Spectra 应用入口
+///
+/// 这是应用的主 Widget，负责配置：
+/// - 路由
+/// - 本地化
+/// - 主题
 class SpectraApp extends ConsumerWidget {
+  /// 创建 Spectra 应用实例
   const SpectraApp({super.key});
 
   @override
@@ -99,9 +104,15 @@ class SpectraApp extends ConsumerWidget {
 }
 
 /// 启动完成后显示窗口的辅助类
+///
+/// 在第一帧渲染完成后显示窗口并移除启动屏
 class AppReadyHandler extends StatefulWidget {
-  const AppReadyHandler({super.key, required this.child});
+  /// 创建启动完成处理器
+  ///
+  /// [child] 是应用的主 Widget
+  const AppReadyHandler({required this.child, super.key});
 
+  /// 子 Widget
   final Widget child;
 
   @override

@@ -3,7 +3,7 @@ import 'package:git_hooks/git_hooks.dart';
 import 'package:talker/talker.dart';
 
 final _talker = Talker(
-  settings: TalkerSettings(useConsoleLogs: true),
+  settings: TalkerSettings(),
 );
 
 void main(List<String> arguments) {
@@ -22,7 +22,7 @@ Future<bool> commitMsg() async {
   // 格式: <type>(<scope>): <description>
   // scope 是可选的
   final pattern = RegExp(
-    r'^(feat|fix|deps|docs|style|refactor|perf|test|build|ci|chore|revert)'
+    '^(feat|fix|deps|docs|style|refactor|perf|test|build|ci|chore|revert)'
     r'(\([\w\-]+\))?:\s.{1,50}',
   );
 
@@ -98,9 +98,10 @@ Future<bool> preCommit() async {
 
     _talker.info('代码分析通过');
     return true;
-  } catch (e) {
-    _talker.warning('无法运行 flutter analyze: $e');
-    _talker.warning('跳过代码分析，请确保代码质量');
+  } on Exception catch (e) {
+    _talker
+      ..warning('无法运行 flutter analyze: $e')
+      ..warning('跳过代码分析，请确保代码质量');
     return true; // 找不到 flutter 时跳过而不是失败
   }
 }

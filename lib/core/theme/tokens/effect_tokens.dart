@@ -1,9 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-
-import 'color_tokens.dart';
-import 'app_radius.dart';
+import 'package:spectra/core/theme/tokens/app_radius.dart';
+import 'package:spectra/core/theme/tokens/color_tokens.dart';
 
 /// Spectra 视觉效果令牌
 ///
@@ -35,13 +34,12 @@ class AppEffects {
   ///
   /// **性能警告**: 如需添加 backdrop blur，请使用 [glassCardDarkWithBlur]
   static BoxDecoration get glassCardDark => BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: AppRadius.borderRadiusLg,
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
-          width: 1,
-        ),
-      );
+    color: Colors.white.withValues(alpha: 0.05),
+    borderRadius: AppRadius.borderRadiusLg,
+    border: Border.all(
+      color: Colors.white.withValues(alpha: 0.1),
+    ),
+  );
 
   /// Glassmorphism 卡片效果 (带模糊) - 深色主题
   ///
@@ -53,7 +51,6 @@ class AppEffects {
         borderRadius: AppRadius.borderRadiusLg,
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.1),
-          width: 1,
         ),
       );
 
@@ -97,7 +94,6 @@ class AppEffects {
       borderRadius: AppRadius.borderRadiusLg,
       border: Border.all(
         color: color.withValues(alpha: 0.3),
-        width: 1,
       ),
       boxShadow: [
         BoxShadow(
@@ -115,16 +111,16 @@ class AppEffects {
   ///
   /// 特点：纯白背景 + 柔和阴影
   static BoxDecoration get softCardLight => BoxDecoration(
-        color: Colors.white,
-        borderRadius: AppRadius.borderRadiusLg,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      );
+    color: Colors.white,
+    borderRadius: AppRadius.borderRadiusLg,
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withValues(alpha: 0.05),
+        blurRadius: 10,
+        offset: const Offset(0, 4),
+      ),
+    ],
+  );
 
   /// Soft Glass 效果 - 浅色主题
   ///
@@ -132,33 +128,32 @@ class AppEffects {
   ///
   /// **性能警告**: 如需添加 backdrop blur，请自行在 ClipRRect 中使用 BackdropFilter
   static BoxDecoration get softGlassLight => BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.8),
-        borderRadius: AppRadius.borderRadiusLg,
-        border: Border.all(
-          color: Colors.grey.withValues(alpha: 0.2),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      );
+    color: Colors.white.withValues(alpha: 0.8),
+    borderRadius: AppRadius.borderRadiusLg,
+    border: Border.all(
+      color: Colors.grey.withValues(alpha: 0.2),
+    ),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withValues(alpha: 0.05),
+        blurRadius: 10,
+        offset: const Offset(0, 4),
+      ),
+    ],
+  );
 
   /// Soft Shadow 效果 - 浅色主题
   ///
   /// 仅提供阴影，不设置背景色
   static BoxDecoration get softShadow => BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      );
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withValues(alpha: 0.05),
+        blurRadius: 10,
+        offset: const Offset(0, 4),
+      ),
+    ],
+  );
 
   // ============ 主题自适应效果 ============
 
@@ -186,15 +181,13 @@ class AppEffects {
 
   /// 微妙边框 - 深色主题
   static Border subtleBorderDark() => Border.all(
-        color: Colors.white.withValues(alpha: 0.1),
-        width: 1,
-      );
+    color: Colors.white.withValues(alpha: 0.1),
+  );
 
   /// 微妙边框 - 浅色主题
   static Border subtleBorderLight() => Border.all(
-        color: Colors.grey.withValues(alpha: 0.2),
-        width: 1,
-      );
+    color: Colors.grey.withValues(alpha: 0.2),
+  );
 
   /// 主题自适应微妙边框
   static Border subtleBorder(BuildContext context) {
@@ -214,26 +207,45 @@ class AppEffects {
 /// )
 /// ```
 class GlassContainer extends StatelessWidget {
+  /// 创建玻璃效果容器
+  ///
+  /// [child] 是必须的子组件
+  /// [blurAmount] 默认为 10.0
+  /// [borderRadius] 默认使用 AppRadius.borderRadiusLg
+  /// [padding] 可选的内边距
+  /// [backgroundColor] 可选的背景色，默认根据主题自适应
   const GlassContainer({
-    super.key,
     required this.child,
+    super.key,
     this.blurAmount = 10.0,
     this.borderRadius,
     this.padding,
     this.backgroundColor,
   });
 
+  /// 子组件
   final Widget child;
+
+  /// 模糊程度
   final double blurAmount;
+
+  /// 边框圆角
   final BorderRadius? borderRadius;
+
+  /// 内边距
   final EdgeInsetsGeometry? padding;
+
+  /// 背景颜色
   final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bg = backgroundColor ??
-        (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.8));
+    final bg =
+        backgroundColor ??
+        (isDark
+            ? Colors.white.withValues(alpha: 0.05)
+            : Colors.white.withValues(alpha: 0.8));
     final radius = borderRadius ?? AppRadius.borderRadiusLg;
 
     return ClipRRect(

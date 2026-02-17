@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../features/home/presentation/pages/home_page.dart';
-import '../../features/settings/presentation/pages/settings_page.dart';
-import '../../l10n/generated/app_localizations.dart';
+import 'package:spectra/features/home/presentation/pages/home_page.dart';
+import 'package:spectra/features/settings/presentation/pages/settings_page.dart';
+import 'package:spectra/l10n/generated/app_localizations.dart';
 
 part 'app_router.g.dart';
 
@@ -25,8 +25,11 @@ GoRouter router(Ref ref) {
 }
 
 /// 首页路由
+///
+/// 应用的根路由，导航到首页
 @TypedGoRoute<HomeRoute>(path: '/')
 class HomeRoute extends GoRouteData with $HomeRoute {
+  /// 创建首页路由实例
   const HomeRoute();
 
   @override
@@ -36,8 +39,11 @@ class HomeRoute extends GoRouteData with $HomeRoute {
 }
 
 /// 设置路由
+///
+/// 导航到设置页面
 @TypedGoRoute<SettingsRoute>(path: '/settings')
 class SettingsRoute extends GoRouteData with $SettingsRoute {
+  /// 创建设置路由实例
   const SettingsRoute();
 
   @override
@@ -47,9 +53,15 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
 }
 
 /// 404 错误页面
+///
+/// 当用户导航到不存在的路由时显示此页面
 class NotFoundPage extends StatelessWidget {
+  /// 创建 404 错误页面
+  ///
+  /// [error] 可选的错误信息，将显示在页面上
   const NotFoundPage({super.key, this.error});
 
+  /// 路由错误信息
   final Exception? error;
 
   @override

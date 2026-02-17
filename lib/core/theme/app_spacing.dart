@@ -9,22 +9,22 @@ class AppSpacing {
   // ============ 基础间距值 ============
 
   /// 超小间距 - 4dp
-  static const double xs = 4.0;
+  static const double xs = 4;
 
   /// 小间距 - 8dp
-  static const double sm = 8.0;
+  static const double sm = 8;
 
   /// 中等间距 - 16dp (默认)
-  static const double md = 16.0;
+  static const double md = 16;
 
   /// 大间距 - 24dp
-  static const double lg = 24.0;
+  static const double lg = 24;
 
   /// 超大间距 - 32dp
-  static const double xl = 32.0;
+  static const double xl = 32;
 
   /// 特大间距 - 48dp
-  static const double xxl = 48.0;
+  static const double xxl = 48;
 
   // ============ EdgeInsets 快捷方式 ============
 
@@ -46,13 +46,16 @@ class AppSpacing {
   // ============ 水平/垂直 EdgeInsets ============
 
   /// 水平 sm 间距
-  static EdgeInsets get horizontalSm => const EdgeInsets.symmetric(horizontal: sm);
+  static EdgeInsets get horizontalSm =>
+      const EdgeInsets.symmetric(horizontal: sm);
 
   /// 水平 md 间距
-  static EdgeInsets get horizontalMd => const EdgeInsets.symmetric(horizontal: md);
+  static EdgeInsets get horizontalMd =>
+      const EdgeInsets.symmetric(horizontal: md);
 
   /// 水平 lg 间距
-  static EdgeInsets get horizontalLg => const EdgeInsets.symmetric(horizontal: lg);
+  static EdgeInsets get horizontalLg =>
+      const EdgeInsets.symmetric(horizontal: lg);
 
   /// 垂直 sm 间距
   static EdgeInsets get verticalSm => const EdgeInsets.symmetric(vertical: sm);

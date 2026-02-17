@@ -10,23 +10,23 @@ class AppRadius {
 
   /// 小圆角 - 8dp
   /// 用于：Chips, Tags, Small buttons
-  static const double sm = 8.0;
+  static const double sm = 8;
 
   /// 中等圆角 - 12dp
   /// 用于：Buttons, Inputs, Medium cards
-  static const double md = 12.0;
+  static const double md = 12;
 
   /// 大圆角 - 16dp
   /// 用于：Cards, Dialogs, Large containers
-  static const double lg = 16.0;
+  static const double lg = 16;
 
   /// 超大圆角 - 24dp
   /// 用于：Modals, Bottom sheets, Feature cards
-  static const double xl = 24.0;
+  static const double xl = 24;
 
   /// 全圆角 - 9999dp
   /// 用于：Circular avatars, Pills, Fab
-  static const double full = 9999.0;
+  static const double full = 9999;
 
   // ============ Radius 快捷方式 ============
 

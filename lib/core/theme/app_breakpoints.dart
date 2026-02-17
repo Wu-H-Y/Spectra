@@ -11,22 +11,22 @@ class AppBreakpoints {
   /// 移动端断点 - 0dp
   ///
   /// 用于：手机竖屏
-  static const double mobile = 0.0;
+  static const double mobile = 0;
 
   /// 平板断点 - 600dp
   ///
   /// 用于：手机横屏、小平板
-  static const double tablet = 600.0;
+  static const double tablet = 600;
 
   /// 桌面断点 - 900dp
   ///
   /// 用于：平板横屏、小桌面
-  static const double desktop = 900.0;
+  static const double desktop = 900;
 
   /// 大桌面断点 - 1200dp
   ///
   /// 用于：大屏幕桌面
-  static const double desktopLarge = 1200.0;
+  static const double desktopLarge = 1200;
 
   // ============ 布局列数 ============
 
@@ -42,13 +42,13 @@ class AppBreakpoints {
   // ============ 布局边距 ============
 
   /// 移动端边距
-  static const double mobileMargin = 16.0;
+  static const double mobileMargin = 16;
 
   /// 平板边距
-  static const double tabletMargin = 32.0;
+  static const double tabletMargin = 32;
 
   /// 桌面边距
-  static const double desktopMargin = 64.0;
+  static const double desktopMargin = 64;
 }
 
 /// 响应式布局助手扩展

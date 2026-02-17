@@ -3,13 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../../../../core/constants/locale_constants.dart';
-import '../../../../core/theme/theme.dart';
-import '../../../../l10n/generated/app_localizations.dart';
-import '../../../../shared/providers/settings_provider.dart';
+import 'package:spectra/core/constants/locale_constants.dart';
+import 'package:spectra/core/theme/theme.dart';
+import 'package:spectra/l10n/generated/app_localizations.dart';
+import 'package:spectra/shared/providers/settings_provider.dart';
 
 /// 设置页面
+///
+/// 提供应用设置功能，包括：
+/// - 主题模式切换（深色/浅色/跟随系统）
+/// - 语言切换（中文/英文）
+/// - 关于信息
 class SettingsPage extends ConsumerWidget {
+  /// 创建设置页面实例
   const SettingsPage({super.key});
 
   @override
@@ -22,7 +28,10 @@ class SettingsPage extends ConsumerWidget {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context, AppLocalizations l10n) {
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
     return AppBar(
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
@@ -36,7 +45,11 @@ class SettingsPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildBody(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  Widget _buildBody(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
     return SafeArea(
       child: ListView(
         padding: AppSpacing.paddingMd,
@@ -63,13 +76,17 @@ class SettingsPage extends ConsumerWidget {
       child: Text(
         title,
         style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }
 
-  Widget _buildThemeTile(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  Widget _buildThemeTile(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
     final themeMode = ref.watch(persistedThemeModeProvider);
     final themeModeName = _getThemeModeName(l10n, themeMode);
 
@@ -82,9 +99,15 @@ class SettingsPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildLanguageTile(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  Widget _buildLanguageTile(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
     final locale = ref.watch(persistedLocaleProvider);
-    final languageName = locale.isChinese ? l10n.languageChinese : l10n.languageEnglish;
+    final languageName = locale.isChinese
+        ? l10n.languageChinese
+        : l10n.languageEnglish;
 
     return _SettingsTile(
       icon: Icons.language,
@@ -106,7 +129,7 @@ class SettingsPage extends ConsumerWidget {
           title: l10n.about,
           subtitle: '${l10n.version}: $version',
           onTap: () {
-            // TODO: 显示关于页面
+            // TODO(developer): 显示关于页面
           },
         );
       },
@@ -124,17 +147,39 @@ class SettingsPage extends ConsumerWidget {
     }
   }
 
-  void _showThemeDialog(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
-    showDialog(
+  Future<void> _showThemeDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) async {
+    await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.themeMode),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildThemeOption(context, ref, l10n, AppThemeMode.dark, l10n.themeModeDark),
-            _buildThemeOption(context, ref, l10n, AppThemeMode.light, l10n.themeModeLight),
-            _buildThemeOption(context, ref, l10n, AppThemeMode.system, l10n.themeModeSystem),
+            _buildThemeOption(
+              context,
+              ref,
+              l10n,
+              AppThemeMode.dark,
+              l10n.themeModeDark,
+            ),
+            _buildThemeOption(
+              context,
+              ref,
+              l10n,
+              AppThemeMode.light,
+              l10n.themeModeLight,
+            ),
+            _buildThemeOption(
+              context,
+              ref,
+              l10n,
+              AppThemeMode.system,
+              l10n.themeModeSystem,
+            ),
           ],
         ),
       ),
@@ -157,23 +202,39 @@ class SettingsPage extends ConsumerWidget {
       trailing: isSelected
           ? Icon(Icons.check, color: colorScheme.primary)
           : null,
-      onTap: () {
-        ref.read(persistedThemeModeProvider.notifier).state = mode;
-        Navigator.of(context).pop();
+      onTap: () async {
+        await ref.read(persistedThemeModeProvider.notifier).setThemeMode(mode);
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
       },
     );
   }
 
-  void _showLanguageDialog(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
-    showDialog(
+  Future<void> _showLanguageDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) async {
+    await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.language),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildLanguageOption(context, ref, const Locale('en', 'US'), l10n.languageEnglish),
-            _buildLanguageOption(context, ref, const Locale('zh', 'CN'), l10n.languageChinese),
+            _buildLanguageOption(
+              context,
+              ref,
+              const Locale('en', 'US'),
+              l10n.languageEnglish,
+            ),
+            _buildLanguageOption(
+              context,
+              ref,
+              const Locale('zh', 'CN'),
+              l10n.languageChinese,
+            ),
           ],
         ),
       ),
@@ -195,9 +256,11 @@ class SettingsPage extends ConsumerWidget {
       trailing: isSelected
           ? Icon(Icons.check, color: colorScheme.secondary)
           : null,
-      onTap: () {
-        ref.read(persistedLocaleProvider.notifier).state = locale;
-        Navigator.of(context).pop();
+      onTap: () async {
+        await ref.read(persistedLocaleProvider.notifier).setLocale(locale);
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
       },
     );
   }
@@ -229,7 +292,6 @@ class _SettingsTile extends StatelessWidget {
       decoration: AppEffects.card(context).copyWith(
         border: Border.all(
           color: iconColor.withValues(alpha: 0.2),
-          width: 1,
         ),
       ),
       child: Material(

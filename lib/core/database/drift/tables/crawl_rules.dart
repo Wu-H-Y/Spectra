@@ -29,7 +29,7 @@ class CrawlRules extends Table {
   TextColumn get name => text().withLength(min: 1, max: 100)();
 
   /// 规则类型 (video, music, novel, comic, image)
-  IntColumn get type => integer().map(CrawlRuleTypeConverter())();
+  IntColumn get type => integer().map(const CrawlRuleTypeConverter())();
 
   /// 目标网站 URL 模式
   TextColumn get pattern => text()();
@@ -48,7 +48,10 @@ class CrawlRules extends Table {
 }
 
 /// CrawlRuleType 转换器
+///
+/// 用于将 [CrawlRuleType] 枚举与数据库整数相互转换
 class CrawlRuleTypeConverter extends TypeConverter<CrawlRuleType, int> {
+  /// 创建转换器实例
   const CrawlRuleTypeConverter();
 
   @override

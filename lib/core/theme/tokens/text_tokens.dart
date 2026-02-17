@@ -41,86 +41,79 @@ class TextTokens {
   static TextStyle displayLarge({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.orbitron(
-        fontSize: 57,
-        fontWeight: FontWeight.bold,
-        letterSpacing: -0.25,
-        height: height ?? 1.12,
-        color: color,
-      );
+  }) => GoogleFonts.orbitron(
+    fontSize: 57,
+    fontWeight: FontWeight.bold,
+    letterSpacing: -0.25,
+    height: height ?? 1.12,
+    color: color,
+  );
 
   /// Display Medium - 45dp, Bold
   static TextStyle displayMedium({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.orbitron(
-        fontSize: 45,
-        fontWeight: FontWeight.bold,
-        height: height ?? 1.16,
-        color: color,
-      );
+  }) => GoogleFonts.orbitron(
+    fontSize: 45,
+    fontWeight: FontWeight.bold,
+    height: height ?? 1.16,
+    color: color,
+  );
 
   /// Display Small - 36dp, Bold
   static TextStyle displaySmall({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.orbitron(
-        fontSize: 36,
-        fontWeight: FontWeight.bold,
-        height: height ?? 1.22,
-        color: color,
-      );
+  }) => GoogleFonts.orbitron(
+    fontSize: 36,
+    fontWeight: FontWeight.bold,
+    height: height ?? 1.22,
+    color: color,
+  );
 
   /// Headline Large - 32dp, SemiBold
   static TextStyle headlineLarge({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.orbitron(
-        fontSize: 32,
-        fontWeight: FontWeight.w600,
-        height: height ?? 1.25,
-        color: color,
-      );
+  }) => GoogleFonts.orbitron(
+    fontSize: 32,
+    fontWeight: FontWeight.w600,
+    height: height ?? 1.25,
+    color: color,
+  );
 
   /// Headline Medium - 28dp, SemiBold
   static TextStyle headlineMedium({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.orbitron(
-        fontSize: 28,
-        fontWeight: FontWeight.w600,
-        height: height ?? 1.29,
-        color: color,
-      );
+  }) => GoogleFonts.orbitron(
+    fontSize: 28,
+    fontWeight: FontWeight.w600,
+    height: height ?? 1.29,
+    color: color,
+  );
 
   /// Headline Small - 24dp, SemiBold
   static TextStyle headlineSmall({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.orbitron(
-        fontSize: 24,
-        fontWeight: FontWeight.w600,
-        height: height ?? 1.33,
-        color: color,
-      );
+  }) => GoogleFonts.orbitron(
+    fontSize: 24,
+    fontWeight: FontWeight.w600,
+    height: height ?? 1.33,
+    color: color,
+  );
 
   /// Title Large - 22dp, SemiBold
   static TextStyle titleLarge({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.orbitron(
-        fontSize: 22,
-        fontWeight: FontWeight.w600,
-        height: height ?? 1.27,
-        color: color,
-      );
+  }) => GoogleFonts.orbitron(
+    fontSize: 22,
+    fontWeight: FontWeight.w600,
+    height: height ?? 1.27,
+    color: color,
+  );
 
   // ============ Body 文字样式 (Noto Sans SC) ============
 
@@ -128,97 +121,89 @@ class TextTokens {
   static TextStyle titleMedium({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.notoSansSc(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        height: height ?? chineseLineHeight,
-        color: color,
-      );
+  }) => GoogleFonts.notoSansSc(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    height: height ?? chineseLineHeight,
+    color: color,
+  );
 
   /// Title Small - 14dp, SemiBold
   static TextStyle titleSmall({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.notoSansSc(
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-        height: height ?? chineseLineHeight,
-        color: color,
-      );
+  }) => GoogleFonts.notoSansSc(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    height: height ?? chineseLineHeight,
+    color: color,
+  );
 
   /// Body Large - 16dp, Regular
   static TextStyle bodyLarge({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.notoSansSc(
-        fontSize: 16,
-        fontWeight: FontWeight.normal,
-        height: height ?? chineseLineHeight,
-        color: color,
-      );
+  }) => GoogleFonts.notoSansSc(
+    fontSize: 16,
+    fontWeight: FontWeight.normal,
+    height: height ?? chineseLineHeight,
+    color: color,
+  );
 
   /// Body Medium - 14dp, Regular
   static TextStyle bodyMedium({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.notoSansSc(
-        fontSize: 14,
-        fontWeight: FontWeight.normal,
-        height: height ?? chineseLineHeight,
-        color: color,
-      );
+  }) => GoogleFonts.notoSansSc(
+    fontSize: 14,
+    fontWeight: FontWeight.normal,
+    height: height ?? chineseLineHeight,
+    color: color,
+  );
 
   /// Body Small - 12dp, Regular
   static TextStyle bodySmall({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.notoSansSc(
-        fontSize: 12,
-        fontWeight: FontWeight.normal,
-        height: height ?? chineseLineHeight,
-        color: color,
-      );
+  }) => GoogleFonts.notoSansSc(
+    fontSize: 12,
+    fontWeight: FontWeight.normal,
+    height: height ?? chineseLineHeight,
+    color: color,
+  );
 
   /// Label Large - 14dp, Medium
   static TextStyle labelLarge({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.notoSansSc(
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        height: height ?? 1.43,
-        color: color,
-      );
+  }) => GoogleFonts.notoSansSc(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    height: height ?? 1.43,
+    color: color,
+  );
 
   /// Label Medium - 12dp, Medium
   static TextStyle labelMedium({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.notoSansSc(
-        fontSize: 12,
-        fontWeight: FontWeight.w500,
-        height: height ?? 1.33,
-        color: color,
-      );
+  }) => GoogleFonts.notoSansSc(
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    height: height ?? 1.33,
+    color: color,
+  );
 
   /// Label Small - 11dp, Medium
   static TextStyle labelSmall({
     Color? color,
     double? height,
-  }) =>
-      GoogleFonts.notoSansSc(
-        fontSize: 11,
-        fontWeight: FontWeight.w500,
-        height: height ?? 1.45,
-        color: color,
-      );
+  }) => GoogleFonts.notoSansSc(
+    fontSize: 11,
+    fontWeight: FontWeight.w500,
+    height: height ?? 1.45,
+    color: color,
+  );
 
   // ============ Code 文字样式 (JetBrains Mono) ============
 
@@ -226,25 +211,23 @@ class TextTokens {
   static TextStyle codeRegular({
     Color? color,
     double fontSize = 14,
-  }) =>
-      GoogleFonts.jetBrainsMono(
-        fontSize: fontSize,
-        fontWeight: FontWeight.normal,
-        height: 1.5,
-        color: color,
-      );
+  }) => GoogleFonts.jetBrainsMono(
+    fontSize: fontSize,
+    fontWeight: FontWeight.normal,
+    height: 1.5,
+    color: color,
+  );
 
   /// Code Medium - 14dp
   static TextStyle codeMedium({
     Color? color,
     double fontSize = 14,
-  }) =>
-      GoogleFonts.jetBrainsMono(
-        fontSize: fontSize,
-        fontWeight: FontWeight.w500,
-        height: 1.5,
-        color: color,
-      );
+  }) => GoogleFonts.jetBrainsMono(
+    fontSize: fontSize,
+    fontWeight: FontWeight.w500,
+    height: 1.5,
+    color: color,
+  );
 
   // ============ TextTheme 构建器 ============
 
@@ -278,15 +261,14 @@ class TextTokens {
 
   /// 构建深色主题 TextTheme
   static TextTheme buildDarkTextTheme() => buildTextTheme(
-        textColor: Colors.white,
-        secondaryColor: Colors.white70,
-      );
+    secondaryColor: Colors.white70,
+  );
 
   /// 构建浅色主题 TextTheme
   static TextTheme buildLightTextTheme() => buildTextTheme(
-        textColor: const Color(0xFF0F172A),
-        secondaryColor: const Color(0xFF64748B),
-      );
+    textColor: const Color(0xFF0F172A),
+    secondaryColor: const Color(0xFF64748B),
+  );
 }
 
 /// TextTheme 中文优化扩展
@@ -296,7 +278,8 @@ extension ChineseTextStyles on TextTheme {
   /// 中文正文样式 - 优化行高
   ///
   /// 返回 bodyLarge 并应用中文优化的行高 (1.6)
-  TextStyle? get chineseBody => bodyLarge?.copyWith(height: TextTokens.chineseLineHeight);
+  TextStyle? get chineseBody =>
+      bodyLarge?.copyWith(height: TextTokens.chineseLineHeight);
 
   /// 中文次级正文样式 - 优化行高
   TextStyle? get chineseBodyMedium =>
@@ -307,7 +290,8 @@ extension ChineseTextStyles on TextTheme {
       bodySmall?.copyWith(height: TextTokens.chineseLineHeight);
 
   /// 中文标题样式 - 优化行高
-  TextStyle? get chineseTitle => titleMedium?.copyWith(height: TextTokens.chineseLineHeight);
+  TextStyle? get chineseTitle =>
+      titleMedium?.copyWith(height: TextTokens.chineseLineHeight);
 
   /// 中文小标题样式 - 优化行高
   TextStyle? get chineseTitleSmall =>
@@ -320,5 +304,6 @@ extension CodeTextStyles on TextTheme {
   TextStyle? get code => TextTokens.codeRegular();
 
   /// 代码块样式 (指定颜色)
-  TextStyle codeWithColor([Color? color]) => TextTokens.codeRegular(color: color);
+  TextStyle codeWithColor([Color? color]) =>
+      TextTokens.codeRegular(color: color);
 }

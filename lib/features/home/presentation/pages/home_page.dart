@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/theme.dart';
-import '../../../../l10n/generated/app_localizations.dart';
+import 'package:spectra/core/theme/theme.dart';
+import 'package:spectra/l10n/generated/app_localizations.dart';
 
 /// Spectra 主页
 ///
 /// 应用的主入口页面，展示品牌风格 UI。
+///
+/// 包含欢迎区域和功能卡片网格，支持深色/浅色主题。
 class HomePage extends ConsumerWidget {
+  /// 创建主页实例
   const HomePage({super.key});
 
   @override
@@ -21,7 +24,10 @@ class HomePage extends ConsumerWidget {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context, AppLocalizations l10n) {
+  PreferredSizeWidget _buildAppBar(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
     return AppBar(
       title: Text(
         l10n.appName,
@@ -71,8 +77,10 @@ class HomePage extends ConsumerWidget {
         Text(
           l10n.homeSubtitle,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-              ),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.7),
+          ),
         ),
       ],
     );
@@ -142,13 +150,11 @@ class HomePage extends ConsumerWidget {
           ? AppEffects.glassCardDark.copyWith(
               border: Border.all(
                 color: feature.color.withValues(alpha: 0.3),
-                width: 1,
               ),
             )
           : AppEffects.softCardLight.copyWith(
               border: Border.all(
                 color: feature.color.withValues(alpha: 0.2),
-                width: 1,
               ),
             ),
       child: Material(
@@ -185,15 +191,14 @@ class HomePage extends ConsumerWidget {
 
 /// 功能项数据类
 class _FeatureItem {
-  final IconData icon;
-  final String title;
-  final Color color;
-  final String route;
-
   const _FeatureItem({
     required this.icon,
     required this.title,
     required this.color,
     required this.route,
   });
+  final IconData icon;
+  final String title;
+  final Color color;
+  final String route;
 }

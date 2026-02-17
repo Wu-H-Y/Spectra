@@ -27,19 +27,17 @@ library;
 
 import 'package:flutter/material.dart';
 
-// Core Theme
-export 'spectra_theme.dart';
-
-// Design Tokens
-export 'tokens/color_tokens.dart';
-export 'tokens/app_radius.dart';
-export 'tokens/text_tokens.dart';
-export 'tokens/effect_tokens.dart';
-
 // Other Tokens
 export 'app_breakpoints.dart';
 export 'app_durations.dart';
 export 'app_spacing.dart';
+// Core Theme
+export 'spectra_theme.dart';
+export 'tokens/app_radius.dart';
+// Design Tokens
+export 'tokens/color_tokens.dart';
+export 'tokens/effect_tokens.dart';
+export 'tokens/text_tokens.dart';
 
 /// 主题模式枚举
 enum AppThemeMode {

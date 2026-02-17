@@ -1,9 +1,8 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-
-import 'tokens/color_tokens.dart';
-import 'tokens/text_tokens.dart';
-import 'tokens/app_radius.dart';
+import 'package:spectra/core/theme/tokens/app_radius.dart';
+import 'package:spectra/core/theme/tokens/color_tokens.dart';
+import 'package:spectra/core/theme/tokens/text_tokens.dart';
 
 /// Spectra 主题配置
 ///
@@ -57,7 +56,6 @@ class SpectraTheme {
         useTertiary: true,
       ),
       visualDensity: FlexColorScheme.comfortablePlatformDensity,
-      useMaterial3: true,
       // 使用新的字体令牌系统
       textTheme: TextTokens.buildDarkTextTheme(),
     );
@@ -89,7 +87,6 @@ class SpectraTheme {
       blendLevel: 7,
       subThemesData: const FlexSubThemesData(
         blendOnLevel: 10,
-        blendOnColors: false,
         useMaterial3Typography: true,
         useM2StyleDividerInM3: true,
         defaultRadius: AppRadius.lg,
@@ -103,7 +100,6 @@ class SpectraTheme {
         useTertiary: true,
       ),
       visualDensity: FlexColorScheme.comfortablePlatformDensity,
-      useMaterial3: true,
       // 使用新的字体令牌系统
       textTheme: TextTokens.buildLightTextTheme(),
     );

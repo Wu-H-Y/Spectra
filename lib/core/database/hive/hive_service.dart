@@ -7,6 +7,8 @@ class HiveService {
   HiveService._();
 
   static final HiveService _instance = HiveService._();
+
+  /// 获取 HiveService 单例实例
   static HiveService get instance => _instance;
 
   /// 是否已初始化

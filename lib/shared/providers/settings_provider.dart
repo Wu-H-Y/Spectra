@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../core/database/hive/hive_service.dart';
-import '../../core/database/hive/settings_keys.dart';
-import '../../core/theme/theme.dart';
+import 'package:spectra/core/database/hive/hive_service.dart';
+import 'package:spectra/core/database/hive/settings_keys.dart';
+import 'package:spectra/core/theme/theme.dart';
 
 part 'settings_provider.g.dart';
 
@@ -25,20 +25,10 @@ class PersistedThemeMode extends _$PersistedThemeMode {
     return _stringToThemeMode(savedMode);
   }
 
-  @override
-  set state(AppThemeMode value) {
-    super.state = value;
-    _persist(value);
-  }
-
-  /// 设置主题模式
-  void setThemeMode(AppThemeMode mode) {
+  /// 设置主题模式并持久化
+  Future<void> setThemeMode(AppThemeMode mode) async {
     state = mode;
-  }
-
-  /// 持久化到 Hive
-  void _persist(AppThemeMode mode) {
-    HiveService.instance.settingsBox.put(
+    await HiveService.instance.settingsBox.put(
       SettingsKeys.themeMode,
       _themeModeToString(mode),
     );
@@ -88,20 +78,10 @@ class PersistedLocale extends _$PersistedLocale {
     return _stringToLocale(savedLocale);
   }
 
-  @override
-  set state(Locale value) {
-    super.state = value;
-    _persist(value);
-  }
-
-  /// 设置语言
-  void setLocale(Locale locale) {
+  /// 设置语言并持久化
+  Future<void> setLocale(Locale locale) async {
     state = locale;
-  }
-
-  /// 持久化到 Hive
-  void _persist(Locale locale) {
-    HiveService.instance.settingsBox.put(
+    await HiveService.instance.settingsBox.put(
       SettingsKeys.locale,
       '${locale.languageCode}_${locale.countryCode ?? ''}',
     );
