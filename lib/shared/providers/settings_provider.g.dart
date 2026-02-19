@@ -51,7 +51,7 @@ final class PersistedThemeModeProvider
 }
 
 String _$persistedThemeModeHash() =>
-    r'65fe5964f4d5352d1819ea68ec0dfa3feffb6368';
+    r'dde39be17faa0660c0d89fdbe11ada10041a493b';
 
 /// 持久化的主题模式 Provider
 ///
@@ -117,7 +117,7 @@ final class PersistedLocaleProvider
   }
 }
 
-String _$persistedLocaleHash() => r'57e3541da291ba5e217f1f2a485b272167859116';
+String _$persistedLocaleHash() => r'5ca45e3910be130dbbd110cba1316744a57ddee2';
 
 /// 持久化的语言 Provider
 ///

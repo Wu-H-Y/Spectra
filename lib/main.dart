@@ -6,8 +6,10 @@ import 'package:spectra/core/database/drift/app_database.dart';
 import 'package:spectra/core/database/hive/hive_service.dart';
 import 'package:spectra/core/router/app_router.dart';
 import 'package:spectra/core/theme/theme.dart';
-import 'package:spectra/l10n/generated/app_localizations.dart';
+import 'package:spectra/l10n/generated/l10n.dart';
 import 'package:spectra/shared/providers/settings_provider.dart';
+import 'package:spectra/shared/providers/talker_provider.dart';
+import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -37,8 +39,17 @@ void main() async {
   // 4. 执行后台初始化任务
   await _initializeHeavyTasks();
 
-  // 5. 启动应用（使用 ProviderScope 包裹）
-  runApp(const ProviderScope(child: AppReadyHandler(child: SpectraApp())));
+  // 5. 创建 Talker 实例并启动应用
+  final talker = createTalker();
+  runApp(
+    ProviderScope(
+      observers: [TalkerRiverpodObserver(talker: talker)],
+      overrides: [
+        talkerProvider.overrideWithValue(talker),
+      ],
+      child: const AppReadyHandler(child: SpectraApp()),
+    ),
+  );
 }
 
 /// 执行繁重的初始化任务
@@ -87,12 +98,12 @@ class SpectraApp extends ConsumerWidget {
 
       // 本地化配置
       localizationsDelegates: const [
-        AppLocalizations.delegate,
+        S.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('en', 'US'), Locale('zh', 'CN')],
+      supportedLocales: S.delegate.supportedLocales,
       locale: locale,
 
       // 主题配置

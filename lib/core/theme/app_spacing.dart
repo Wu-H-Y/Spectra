@@ -43,7 +43,20 @@ class AppSpacing {
   /// 所有方向 xl 间距
   static EdgeInsets get paddingXl => const EdgeInsets.all(xl);
 
+  /// 底部 sm 间距
+  static EdgeInsets get paddingBottomSm => const EdgeInsets.only(bottom: sm);
+
+  /// 底部 xs 间距
+  static EdgeInsets get paddingBottomXs => const EdgeInsets.only(bottom: xs);
+
+  /// 底部 md 间距
+  static EdgeInsets get paddingBottomMd => const EdgeInsets.only(bottom: md);
+
   // ============ 水平/垂直 EdgeInsets ============
+
+  /// 水平 xs 间距
+  static EdgeInsets get horizontalXs =>
+      const EdgeInsets.symmetric(horizontal: xs);
 
   /// 水平 sm 间距
   static EdgeInsets get horizontalSm =>
@@ -57,6 +70,9 @@ class AppSpacing {
   static EdgeInsets get horizontalLg =>
       const EdgeInsets.symmetric(horizontal: lg);
 
+  /// 垂直 xs 间距
+  static EdgeInsets get verticalXs => const EdgeInsets.symmetric(vertical: xs);
+
   /// 垂直 sm 间距
   static EdgeInsets get verticalSm => const EdgeInsets.symmetric(vertical: sm);
 
@@ -67,6 +83,9 @@ class AppSpacing {
   static EdgeInsets get verticalLg => const EdgeInsets.symmetric(vertical: lg);
 
   // ============ SizedBox 快捷方式 ============
+
+  /// 水平 xs 间距
+  static SizedBox get horizontalGapXs => const SizedBox(width: xs);
 
   /// 水平 sm 间距
   static SizedBox get horizontalGapSm => const SizedBox(width: sm);
@@ -88,4 +107,7 @@ class AppSpacing {
 
   /// 垂直 lg 间距
   static SizedBox get verticalGapLg => const SizedBox(height: lg);
+
+  /// 垂直 xl 间距
+  static SizedBox get verticalGapXl => const SizedBox(height: xl);
 }
