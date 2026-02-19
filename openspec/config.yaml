@@ -1,20 +1,15 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+# Project context
+context: |
+  Tech stack: Flutter, Dart
+  Code Quality: Strict static analysis enforced.
+  Workflow: Run analysis after completing all sub-tasks of a main task.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+# Per-artifact rules
+rules:
+  tasks:
+    - Run `flutter analyze` ONLY after ALL sub-tasks of a main task are completed (e.g., finish 1.1, 1.2, 1.3 -> then analyze).
+    - Fix ALL reported issues, including `info` level hints, before marking the main task as complete.
+    - Do not proceed to the next main task until `flutter analyze` passes cleanly with zero issues.
+    - Ensure no `info`, `warning`, or `error` level issues remain in the codebase related to the implemented tasks.
