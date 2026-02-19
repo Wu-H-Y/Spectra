@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/lintstagedrc.schema.json",
+  "*.dart": [
+    "dart format --fix",
+    "flutter analyze"
+  ],
+  "web-editor/**/*.{ts,tsx}": [
+    "cd web-editor && bun run lint:fix",
+    "cd web-editor && bun run fmt"
+  ],
+  "web-editor/**/*.{json,css,scss,md}": [
+    "cd web-editor && bun run fmt"
+  ],
+  "!(**/*.g.dart)": "",
+  "!(**/*.freezed.dart)": "",
+  "!(**/lib/l10n/generated/**)": ""
+}
