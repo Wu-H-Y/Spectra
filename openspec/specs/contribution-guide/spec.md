@@ -85,7 +85,3 @@ CONTRIBUTING.md SHALL 包含完整的开发环境搭建指南。
 #### Scenario: 依赖安装
 - **WHEN** 新贡献者阅读文档
 - **THEN** 包含 `flutter pub get` 命令说明
-
-#### Scenario: Git Hooks 安装
-- **WHEN** 新贡献者阅读文档
-- **THEN** 包含 git_hooks 安装和激活命令
