@@ -8,7 +8,7 @@ part 'app_database.g.dart';
 /// Spectra 应用数据库
 ///
 /// 使用 Drift (SQLite) 管理关系型数据
-@DriftDatabase(tables: [CrawlRules])
+@DriftDatabase(tables: [CrawlRules, CachedContent])
 class AppDatabase extends _$AppDatabase {
   /// 创建数据库实例
   ///
@@ -16,7 +16,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   /// 数据库迁移
   @override
@@ -26,7 +26,21 @@ class AppDatabase extends _$AppDatabase {
         await m.createAll();
       },
       onUpgrade: (m, from, to) async {
-        // 未来版本迁移逻辑
+        // V1 -> V2: 添加新字段和 CachedContent 表
+        if (from < 2) {
+          // 添加 crawl_rules 表新字段
+          await m.addColumn(crawlRules, crawlRules.ruleId);
+          await m.addColumn(crawlRules, crawlRules.description);
+          await m.addColumn(crawlRules, crawlRules.version);
+          await m.addColumn(crawlRules, crawlRules.globalConfig);
+          await m.addColumn(crawlRules, crawlRules.displayConfig);
+          await m.addColumn(crawlRules, crawlRules.source);
+          await m.addColumn(crawlRules, crawlRules.iconUrl);
+          await m.addColumn(crawlRules, crawlRules.author);
+
+          // 创建 CachedContent 表
+          await m.createTable(cachedContent);
+        }
       },
     );
   }
