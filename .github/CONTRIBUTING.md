@@ -43,19 +43,31 @@ flutter pub get
 
 ### 4. 安装 Git Hooks
 
-本项目使用 [git_hooks](https://github.com/xuzhongpeng/git_hooks) 来强制执行提交规范。
+本项目使用 [Husky](https://typicode.github.io/husky/) + [lint-staged](https://github.com/lint-staged/lint-staged) 来强制执行代码质量和提交规范。
+
+#### 安装 Bun
 
 ```bash
-# 激活 git_hooks
-dart pub global activate git_hooks
+# macOS/Linux
+curl -fsSL https://bun.sh/install | bash
 
-# 创建 Git hooks
-dart run git_hooks create git_hooks.dart
+# Windows (使用 Scoop)
+scoop install bun
+```
+
+#### 安装依赖
+
+```bash
+# 安装 Node.js 依赖（包含 Husky）
+bun install
 ```
 
 安装完成后，每次 commit 时会自动：
+- 格式化暂存的代码
+- 运行 lint 检查
 - 验证提交消息格式是否符合 Conventional Commits
-- 运行 `flutter analyze` 检查代码质量
+
+跳过检查（不推荐）：`git commit --no-verify`
 
 ### 5. 运行项目
 

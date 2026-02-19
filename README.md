@@ -43,17 +43,36 @@
 
 ### 从源码构建
 
+#### 环境要求
+
+- [Flutter 3.x](https://flutter.dev/) + Dart 3.x
+- [Bun](https://bun.sh/) (用于 Git Hooks)
+
+#### Bun 安装
+
+```bash
+# macOS/Linux
+curl -fsSL https://bun.sh/install | bash
+
+# Windows (使用 Scoop)
+scoop install bun
+
+# 或使用 npm
+npm install -g bun
+```
+
+#### 构建步骤
+
 ```bash
 # 克隆仓库
 git clone https://github.com/Wu-H-Y/spectra.git
 cd spectra
 
-# 安装依赖
+# 安装 Flutter 依赖
 flutter pub get
 
-# 安装 Git Hooks (可选，用于提交规范检查)
-dart pub global activate git_hooks
-dart run git_hooks create git_hooks.dart
+# 安装 Node.js 依赖并初始化 Git Hooks
+bun install
 
 # 运行应用
 flutter run
@@ -61,6 +80,15 @@ flutter run
 # 构建 release 版本
 flutter build <platform> --release
 ```
+
+#### Git Hooks 说明
+
+项目使用 Husky + lint-staged 管理代码质量：
+
+- **pre-commit**: 自动格式化代码并运行 lint 检查
+- **commit-msg**: 验证提交信息符合 [Conventional Commits](docs/COMMIT_CONVENTION.md) 规范
+
+跳过检查：`git commit --no-verify`
 
 ## 🚀 快速开始
 
