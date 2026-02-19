@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import 'package:spectra/features/home/presentation/pages/home_page.dart';
 import 'package:spectra/features/settings/presentation/pages/settings_page.dart';
-import 'package:spectra/l10n/generated/app_localizations.dart';
+import 'package:spectra/l10n/generated/l10n.dart';
+import 'package:spectra/shared/providers/talker_provider.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 part 'app_router.g.dart';
 
@@ -14,13 +15,17 @@ part 'app_router.g.dart';
 /// - 类型安全路由
 /// - 深度链接
 /// - 路由守卫
+/// - Talker 路由日志
 @riverpod
 GoRouter router(Ref ref) {
+  final talker = ref.watch(talkerProvider);
+
   return GoRouter(
     routes: $appRoutes,
     errorBuilder: (context, state) => NotFoundPage(error: state.error),
     debugLogDiagnostics: true,
     initialLocation: '/',
+    observers: [TalkerRouteObserver(talker)],
   );
 }
 
@@ -66,7 +71,7 @@ class NotFoundPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     return Scaffold(
       appBar: AppBar(

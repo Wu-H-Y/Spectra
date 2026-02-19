@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:spectra/core/theme/theme.dart';
-import 'package:spectra/l10n/generated/app_localizations.dart';
+import 'package:spectra/l10n/generated/l10n.dart';
 
 /// Spectra 主页
 ///
@@ -16,7 +16,7 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     return Scaffold(
       appBar: _buildAppBar(context, l10n),
@@ -26,7 +26,7 @@ class HomePage extends ConsumerWidget {
 
   PreferredSizeWidget _buildAppBar(
     BuildContext context,
-    AppLocalizations l10n,
+    S l10n,
   ) {
     return AppBar(
       title: Text(
@@ -45,7 +45,7 @@ class HomePage extends ConsumerWidget {
     );
   }
 
-  Widget _buildBody(BuildContext context, AppLocalizations l10n) {
+  Widget _buildBody(BuildContext context, S l10n) {
     return SafeArea(
       child: Padding(
         padding: AppSpacing.paddingLg,
@@ -65,7 +65,7 @@ class HomePage extends ConsumerWidget {
     );
   }
 
-  Widget _buildWelcomeSection(BuildContext context, AppLocalizations l10n) {
+  Widget _buildWelcomeSection(BuildContext context, S l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -86,44 +86,14 @@ class HomePage extends ConsumerWidget {
     );
   }
 
-  Widget _buildFeatureGrid(BuildContext context, AppLocalizations l10n) {
+  Widget _buildFeatureGrid(BuildContext context, S l10n) {
     final colorScheme = Theme.of(context).colorScheme;
 
     final features = [
       _FeatureItem(
-        icon: Icons.video_library,
-        title: l10n.featureVideo,
-        color: colorScheme.primary,
-        route: '/video',
-      ),
-      _FeatureItem(
-        icon: Icons.music_note,
-        title: l10n.featureMusic,
-        color: colorScheme.secondary,
-        route: '/music',
-      ),
-      _FeatureItem(
-        icon: Icons.book,
-        title: l10n.featureNovel,
-        color: colorScheme.tertiary,
-        route: '/novel',
-      ),
-      _FeatureItem(
-        icon: Icons.image,
-        title: l10n.featureImage,
-        color: colorScheme.primary,
-        route: '/image',
-      ),
-      _FeatureItem(
-        icon: Icons.menu_book,
-        title: l10n.featureComic,
-        color: colorScheme.secondary,
-        route: '/comic',
-      ),
-      _FeatureItem(
         icon: Icons.settings,
         title: l10n.settingsTitle,
-        color: colorScheme.tertiary,
+        color: colorScheme.outline,
         route: '/settings',
       ),
     ];

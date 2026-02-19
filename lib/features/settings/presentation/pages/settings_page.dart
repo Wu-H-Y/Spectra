@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
 import 'package:spectra/core/constants/locale_constants.dart';
+import 'package:spectra/core/server/server_provider.dart';
 import 'package:spectra/core/theme/theme.dart';
-import 'package:spectra/l10n/generated/app_localizations.dart';
+import 'package:spectra/l10n/generated/l10n.dart';
 import 'package:spectra/shared/providers/settings_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// 设置页面
 ///
@@ -20,7 +21,7 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     return Scaffold(
       appBar: _buildAppBar(context, l10n),
@@ -30,7 +31,7 @@ class SettingsPage extends ConsumerWidget {
 
   PreferredSizeWidget _buildAppBar(
     BuildContext context,
-    AppLocalizations l10n,
+    S l10n,
   ) {
     return AppBar(
       leading: IconButton(
@@ -48,7 +49,7 @@ class SettingsPage extends ConsumerWidget {
   Widget _buildBody(
     BuildContext context,
     WidgetRef ref,
-    AppLocalizations l10n,
+    S l10n,
   ) {
     return SafeArea(
       child: ListView(
@@ -59,6 +60,12 @@ class SettingsPage extends ConsumerWidget {
           AppSpacing.verticalGapSm,
           _buildThemeTile(context, ref, l10n),
           _buildLanguageTile(context, ref, l10n),
+          AppSpacing.verticalGapLg,
+
+          // 开发者工具
+          _buildSectionHeader(context, l10n.developerTools),
+          AppSpacing.verticalGapSm,
+          _buildRuleEditorTile(context, ref, l10n),
           AppSpacing.verticalGapLg,
 
           // 关于
@@ -85,7 +92,7 @@ class SettingsPage extends ConsumerWidget {
   Widget _buildThemeTile(
     BuildContext context,
     WidgetRef ref,
-    AppLocalizations l10n,
+    S l10n,
   ) {
     final themeMode = ref.watch(persistedThemeModeProvider);
     final themeModeName = _getThemeModeName(l10n, themeMode);
@@ -102,7 +109,7 @@ class SettingsPage extends ConsumerWidget {
   Widget _buildLanguageTile(
     BuildContext context,
     WidgetRef ref,
-    AppLocalizations l10n,
+    S l10n,
   ) {
     final locale = ref.watch(persistedLocaleProvider);
     final languageName = locale.isChinese
@@ -118,7 +125,167 @@ class SettingsPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildAboutTile(BuildContext context, AppLocalizations l10n) {
+  Widget _buildRuleEditorTile(
+    BuildContext context,
+    WidgetRef ref,
+    S l10n,
+  ) {
+    final serverStatus = ref.watch(serverProvider);
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      decoration: AppEffects.card(context).copyWith(
+        border: Border.all(
+          color: colorScheme.tertiary.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: Padding(
+          padding: AppSpacing.paddingMd,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: AppSpacing.paddingSm,
+                    decoration: BoxDecoration(
+                      color: colorScheme.tertiary.withValues(alpha: 0.1),
+                      borderRadius: AppRadius.borderRadiusSm,
+                    ),
+                    child: Icon(
+                      Icons.code,
+                      color: colorScheme.tertiary,
+                      size: 24,
+                    ),
+                  ),
+                  AppSpacing.horizontalGapMd,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.ruleEditor,
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.ruleEditorDescription,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                            color: colorScheme.onSurface
+                                .withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Row(
+                children: [
+                  // Server status indicator
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: AppSpacing.xs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: serverStatus.isRunning
+                          ? Colors.green.withValues(alpha: 0.1)
+                          : colorScheme.surfaceContainerHighest,
+                      borderRadius: AppRadius.borderRadiusSm,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          serverStatus.isRunning
+                              ? Icons.circle
+                              : Icons.circle_outlined,
+                          size: 8,
+                          color: serverStatus.isRunning
+                              ? Colors.green
+                              : colorScheme.onSurface.withValues(alpha: 0.5),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          serverStatus.isRunning
+                              ? l10n.serverRunning
+                              : l10n.serverStopped,
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelSmall
+                              ?.copyWith(
+                            color: serverStatus.isRunning
+                                ? Colors.green
+                                : colorScheme.onSurface
+                                    .withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  // Start/Stop button
+                  FilledButton.tonal(
+                    onPressed: () async {
+                      final notifier = ref.read(serverProvider.notifier);
+                      if (serverStatus.isRunning) {
+                        await notifier.stop();
+                      } else {
+                        await notifier.start();
+                      }
+                    },
+                    child: Text(
+                      serverStatus.isRunning
+                          ? l10n.serverStop
+                          : l10n.serverStart,
+                    ),
+                  ),
+                ],
+              ),
+              if (serverStatus.isRunning && serverStatus.url != null) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '${l10n.serverUrl}: ${serverStatus.url}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: colorScheme.primary,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    IconButton(
+                      icon: const Icon(Icons.open_in_browser, size: 18),
+                      onPressed: () async {
+                        final uri = Uri.parse(serverStatus.url!);
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri);
+                        }
+                      },
+                      tooltip: l10n.openInBrowser,
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAboutTile(BuildContext context, S l10n) {
     return FutureBuilder<PackageInfo>(
       future: PackageInfo.fromPlatform(),
       builder: (context, snapshot) {
@@ -136,7 +303,7 @@ class SettingsPage extends ConsumerWidget {
     );
   }
 
-  String _getThemeModeName(AppLocalizations l10n, AppThemeMode mode) {
+  String _getThemeModeName(S l10n, AppThemeMode mode) {
     switch (mode) {
       case AppThemeMode.dark:
         return l10n.themeModeDark;
@@ -150,7 +317,7 @@ class SettingsPage extends ConsumerWidget {
   Future<void> _showThemeDialog(
     BuildContext context,
     WidgetRef ref,
-    AppLocalizations l10n,
+    S l10n,
   ) async {
     await showDialog<void>(
       context: context,
@@ -189,7 +356,7 @@ class SettingsPage extends ConsumerWidget {
   Widget _buildThemeOption(
     BuildContext context,
     WidgetRef ref,
-    AppLocalizations l10n,
+    S l10n,
     AppThemeMode mode,
     String label,
   ) {
@@ -214,7 +381,7 @@ class SettingsPage extends ConsumerWidget {
   Future<void> _showLanguageDialog(
     BuildContext context,
     WidgetRef ref,
-    AppLocalizations l10n,
+    S l10n,
   ) async {
     await showDialog<void>(
       context: context,

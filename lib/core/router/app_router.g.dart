@@ -66,6 +66,7 @@ mixin $SettingsRoute on GoRouteData {
 /// - 类型安全路由
 /// - 深度链接
 /// - 路由守卫
+/// - Talker 路由日志
 
 @ProviderFor(router)
 final routerProvider = RouterProvider._();
@@ -76,6 +77,7 @@ final routerProvider = RouterProvider._();
 /// - 类型安全路由
 /// - 深度链接
 /// - 路由守卫
+/// - Talker 路由日志
 
 final class RouterProvider
     extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
@@ -86,6 +88,7 @@ final class RouterProvider
   /// - 类型安全路由
   /// - 深度链接
   /// - 路由守卫
+  /// - Talker 路由日志
   RouterProvider._()
     : super(
         from: null,
@@ -119,4 +122,4 @@ final class RouterProvider
   }
 }
 
-String _$routerHash() => r'b9c277b9a746930dc1f63a149514b08bb3671aa5';
+String _$routerHash() => r'1db0f611e1d2a1dcae5e1daf350c379b66ea319f';
