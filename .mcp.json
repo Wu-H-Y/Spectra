@@ -2,9 +2,11 @@
     "mcpServers": {
         "dart": {
             "args": [
+                "/c",
+                "dart",
                 "mcp-server"
             ],
-            "command": "dart",
+            "command": "cmd",
             "env": {},
             "type": "stdio"
         }

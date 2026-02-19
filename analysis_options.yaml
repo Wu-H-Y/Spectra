@@ -22,6 +22,9 @@ analyzer:
     # 排除构建工具目录
     - ".dart_tool/**"
     - "build/**"
+  errors:
+    # Freezed 生成的代码会触发此警告,禁用以避免噪音
+    invalid_annotation_target: ignore
 
 linter:
   # The lint rules applied to this project can be customized in the

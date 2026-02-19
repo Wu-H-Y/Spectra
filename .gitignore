@@ -46,3 +46,4 @@ app.*.map.json
 
 # AI
 .claude/settings.local.json
+.playwright-mcp
