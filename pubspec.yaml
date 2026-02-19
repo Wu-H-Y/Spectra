@@ -8,26 +8,46 @@ environment:
   sdk: ^3.11.0
 
 dependencies:
+  crypto: 3.0.7 # 加密算法库
   cupertino_icons: ^1.0.8 # iOS 风格图标
+  dio: ^5.9.1 # HTTP 客户端
   drift: ^2.22.1 # SQLite ORM 关系型数据库
   drift_flutter: ^0.2.4 # Drift Flutter 支持
   flex_color_scheme: ^8.4.0 # Material 3 主题系统
   flutter:
     sdk: flutter
+  flutter_js: ^0.8.7 # JavaScript 脚本执行引擎
   flutter_localizations:
     sdk: flutter # Flutter 官方本地化
   flutter_native_splash: ^2.4.7 # 原生启动屏
   flutter_riverpod: ^3.2.1 # Riverpod 状态管理
+  freezed_annotation: ^3.1.0 # Freezed 注解
   go_router: ^17.1.0 # 声明式路由
-  google_fonts: ^8.0.1 # Google 字体
+  google_fonts: ^8.0.2 # Google 字体
   hive_ce: ^2.15.0 # Hive CE 键值存储
   hive_ce_flutter: ^2.3.3 # Hive CE Flutter 支持
+  html: ^0.15.6 # HTML 解析和 CSS 选择器
   intl: ^0.20.2 # 国际化
+  json_annotation: ^4.10.0 # JSON 序列化注解
+  meta: 1.17.0 # Dart 元数据注解
   package_info_plus: ^9.0.0 # 应用信息
+  pub_semver: ^2.1.5 # 语义化版本
+  qs_dart: ^1.7.0 # URL 参数编解码
   riverpod_annotation: ^4.0.2 # Riverpod 注解
+  shelf: ^1.4.0 # HTTP 服务器框架
+  shelf_router: ^1.1.4 # Shelf 路由
+  shelf_static: ^1.1.3 # Shelf 静态文件服务
+  shelf_web_socket: ^2.0.0 # Shelf WebSocket 支持
   talker: ^5.1.13 # 日志和错误处理
+  talker_dio_logger: ^5.1.13 # Talker Dio 日志拦截器
   talker_flutter: ^5.1.13 # Talker Flutter 支持
+  talker_riverpod_logger: ^5.1.13 # Talker Riverpod 日志观察者
+  url_launcher: ^6.3.1 # URL 启动器
+  uuid: ^4.5.1 # UUID 生成
+  web_socket_channel: ^3.0.1 # WebSocket 通道
   window_manager: ^0.5.1 # 桌面窗口管理
+  xpath_selector: ^3.0.1 # XPath 解析器
+  xpath_selector_html_parser: ^3.0.1 # XPath HTML 解析器
 
 dev_dependencies:
   build_runner: ^2.11.1 # 代码生成
@@ -36,15 +56,21 @@ dev_dependencies:
   flutter_lints: ^6.0.0 # Flutter Lint 规则
   flutter_test:
     sdk: flutter
+  freezed: ^3.2.5 # Freezed 不可变数据类生成器
   git_hooks: ^1.0.2 # Git 钩子
   go_router_builder: ^4.2.0 # go_router 路由生成器
   hive_ce_generator: ^1.11.0 # Hive CE 类型适配器生成器
+  intl_utils: ^2.8.14 # Intl 代码生成
+  json_serializable: ^6.12.0 # JSON 序列化代码生成器
   riverpod_generator: ^4.0.3 # Riverpod 代码生成器
   very_good_analysis: ^10.2.0 # Very Good Analysis Lint 规则
 
 flutter:
   uses-material-design: true
   generate: true
+
+plugins:
+  riverpod_lint: ^3.1.3
 
 # 原生启动屏配置
 flutter_native_splash:
@@ -72,3 +98,10 @@ flutter_native_splash:
   android_12:
     image: assets/splash.png
     color: "#0B0E14"
+
+flutter_intl:
+  enabled: true
+  class_name: S # 生成的类名
+  main_locale: zh # 默认语言
+  arb_dir: lib/l10n # ARB文件目录
+  output_dir: lib/l10n/generated # 生成代码的目录
