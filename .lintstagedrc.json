@@ -1,8 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/lintstagedrc.schema.json",
   "*.dart": [
-    "dart format --fix",
-    "dart fix --apply"
+    "dart format"
   ],
   "web-editor/**/*.{ts,tsx,json,css,scss,md}": [
     "bun run --cwd web-editor lint:fix",

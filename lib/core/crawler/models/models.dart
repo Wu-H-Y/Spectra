@@ -1,4 +1,4 @@
-/// Crawler rule DSL models for defining extraction rules.
+/// 用于定义提取规则的爬虫规则 DSL 模型。
 library;
 
 export 'action.dart';

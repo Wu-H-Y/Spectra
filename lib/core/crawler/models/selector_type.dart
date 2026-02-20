@@ -1,20 +1,20 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-/// Selector type for content extraction.
+/// 内容提取的选择器类型。
 @JsonEnum()
 enum SelectorType {
-  /// CSS selector (e.g., ".video-title", "#content").
+  /// CSS 选择器（例如 ".video-title", "#content"）。
   css,
 
-  /// XPath expression (e.g., "//div[@class='title']").
+  /// XPath 表达式（例如 "//div[@class='title']"）。
   xpath,
 
-  /// Regular expression pattern.
+  /// 正则表达式模式。
   regex,
 
-  /// JSONPath expression (e.g., `$.data.items[*]`).
+  /// JSONPath 表达式（例如 `$.data.items[*]`）。
   jsonpath,
 
-  /// JavaScript expression (e.g., "__playinfo__.dash.video[0].url").
+  /// JavaScript 表达式（例如 "__playinfo__.dash.video[0].url"）。
   js,
 }

@@ -25,6 +25,7 @@ Spectra 需要一套灵活、可扩展的爬虫规则系统，支持用户自定
 - **Web 规则编辑器** - React + shadcn/ui + Tailwind CSS 实现，支持可视化规则编辑
 - **页面预览功能** - Flutter 应用内预览目标页面，点选元素生成选择器，通过 WebSocket 返回编辑器
 - **Flutter HTTP Server** - 内嵌 Shelf 服务器，支持 localhost 和局域网访问
+- **响应式 UI 设计** - 使用 sizer 包实现跨设备自适应布局，支持桌面端和移动端
 
 ### 技术约束
 - **所有数据模型必须使用 freezed** - 包括规则模型、媒体内容模型、API 请求/响应模型
@@ -46,6 +47,7 @@ Spectra 需要一套灵活、可扩展的爬虫规则系统，支持用户自定
 - **web-rule-editor**: Web 规则编辑器 (React + shadcn/ui)，可视化创建/编辑规则
 - **page-preview**: 页面预览功能，Flutter 应用内预览目标页面并点选生成选择器
 - **embedded-http-server**: Flutter 内嵌 HTTP 服务器，支持 localhost 和局域网访问
+- **responsive-ui**: 响应式 UI 设计，使用 sizer 包实现跨设备自适应布局
 
 ### Modified Capabilities
 
@@ -120,6 +122,7 @@ spectra/
 | shelf_router | 路由支持 | 需新增 |
 | shelf_websocket | WebSocket 支持 | 需新增 |
 | flutter_inappwebview | WebView 容器 | 需新增 |
+| sizer | 响应式 UI 布局 | 需新增 |
 
 ### API 接口
 

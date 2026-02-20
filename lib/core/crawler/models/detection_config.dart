@@ -3,26 +3,26 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'detection_config.freezed.dart';
 part 'detection_config.g.dart';
 
-/// Anti-crawl detection configuration.
+/// 反爬虫检测配置。
 @freezed
 sealed class DetectionConfig with _$DetectionConfig {
   const factory DetectionConfig({
-    /// Captcha detection config.
+    /// 验证码检测配置。
     CaptchaDetection? captcha,
 
-    /// Rate limit detection config.
+    /// 频率限制检测配置。
     RateLimitDetection? rateLimit,
 
-    /// Login detection config.
+    /// 登录检测配置。
     LoginDetection? login,
 
-    /// Cloudflare detection config.
+    /// Cloudflare 检测。
     @Default(true) bool detectCloudflare,
 
-    /// Auto-retry on detection.
+    /// 检测到时自动重试。
     @Default(true) bool autoRetry,
 
-    /// Maximum retry attempts.
+    /// 最大重试次数。
     @Default(3) int maxRetries,
   }) = _DetectionConfig;
 
@@ -30,23 +30,23 @@ sealed class DetectionConfig with _$DetectionConfig {
       _$DetectionConfigFromJson(json);
 }
 
-/// Captcha detection configuration.
+/// 验证码检测配置。
 @freezed
 sealed class CaptchaDetection with _$CaptchaDetection {
   const factory CaptchaDetection({
-    /// Whether to detect reCAPTCHA.
+    /// 是否检测 reCAPTCHA。
     @Default(true) bool detectRecaptcha,
 
-    /// Whether to detect hCaptcha.
+    /// 是否检测 hCaptcha。
     @Default(true) bool detectHcaptcha,
 
-    /// Whether to detect generic captcha images.
+    /// 是否检测通用验证码图片。
     @Default(true) bool detectGeneric,
 
-    /// Third-party captcha solver API key.
+    /// 第三方验证码破解服务 API 密钥。
     String? solverApiKey,
 
-    /// Solver service type (2captcha, anticaptcha, etc.).
+    /// 破解服务类型（2captcha、anticaptcha 等）。
     String? solverService,
   }) = _CaptchaDetection;
 
@@ -54,23 +54,23 @@ sealed class CaptchaDetection with _$CaptchaDetection {
       _$CaptchaDetectionFromJson(json);
 }
 
-/// Rate limit detection configuration.
+/// 频率限制检测配置。
 @freezed
 sealed class RateLimitDetection with _$RateLimitDetection {
   const factory RateLimitDetection({
-    /// HTTP status codes to treat as rate limited.
+    /// 视为频率限制的 HTTP 状态码。
     @Default([429, 503, 520, 521, 522, 523, 524]) List<int> statusCodes,
 
-    /// Response text patterns indicating rate limit.
+    /// 表示频率限制的响应文本模式。
     List<String>? textPatterns,
 
-    /// Minimum delay between requests (ms).
+    /// 请求之间的最小延迟（毫秒）。
     @Default(1000) int minDelayMs,
 
-    /// Maximum delay between requests (ms).
+    /// 请求之间的最大延迟（毫秒）。
     @Default(5000) int maxDelayMs,
 
-    /// Whether to use exponential backoff.
+    /// 是否使用指数退避。
     @Default(true) bool exponentialBackoff,
   }) = _RateLimitDetection;
 
@@ -78,17 +78,17 @@ sealed class RateLimitDetection with _$RateLimitDetection {
       _$RateLimitDetectionFromJson(json);
 }
 
-/// Login detection configuration.
+/// 登录检测配置。
 @freezed
 sealed class LoginDetection with _$LoginDetection {
   const factory LoginDetection({
-    /// Whether to detect login pages.
+    /// 是否检测登录页面。
     @Default(true) bool detectLoginPage,
 
-    /// Selectors indicating login page.
+    /// 表示登录页面的选择器。
     List<String>? loginSelectors,
 
-    /// Whether to pause on login required.
+    /// 需要登录时是否暂停。
     @Default(true) bool pauseOnLogin,
   }) = _LoginDetection;
 

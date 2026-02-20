@@ -15,12 +15,12 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DetectionConfig {
 
-/// Captcha detection config.
- CaptchaDetection? get captcha;/// Rate limit detection config.
- RateLimitDetection? get rateLimit;/// Login detection config.
- LoginDetection? get login;/// Cloudflare detection config.
- bool get detectCloudflare;/// Auto-retry on detection.
- bool get autoRetry;/// Maximum retry attempts.
+/// 验证码检测配置。
+ CaptchaDetection? get captcha;/// 频率限制检测配置。
+ RateLimitDetection? get rateLimit;/// 登录检测配置。
+ LoginDetection? get login;/// Cloudflare 检测。
+ bool get detectCloudflare;/// 检测到时自动重试。
+ bool get autoRetry;/// 最大重试次数。
  int get maxRetries;
 /// Create a copy of DetectionConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -253,17 +253,17 @@ class _DetectionConfig implements DetectionConfig {
   const _DetectionConfig({this.captcha, this.rateLimit, this.login, this.detectCloudflare = true, this.autoRetry = true, this.maxRetries = 3});
   factory _DetectionConfig.fromJson(Map<String, dynamic> json) => _$DetectionConfigFromJson(json);
 
-/// Captcha detection config.
+/// 验证码检测配置。
 @override final  CaptchaDetection? captcha;
-/// Rate limit detection config.
+/// 频率限制检测配置。
 @override final  RateLimitDetection? rateLimit;
-/// Login detection config.
+/// 登录检测配置。
 @override final  LoginDetection? login;
-/// Cloudflare detection config.
+/// Cloudflare 检测。
 @override@JsonKey() final  bool detectCloudflare;
-/// Auto-retry on detection.
+/// 检测到时自动重试。
 @override@JsonKey() final  bool autoRetry;
-/// Maximum retry attempts.
+/// 最大重试次数。
 @override@JsonKey() final  int maxRetries;
 
 /// Create a copy of DetectionConfig
@@ -371,11 +371,11 @@ $LoginDetectionCopyWith<$Res>? get login {
 /// @nodoc
 mixin _$CaptchaDetection {
 
-/// Whether to detect reCAPTCHA.
- bool get detectRecaptcha;/// Whether to detect hCaptcha.
- bool get detectHcaptcha;/// Whether to detect generic captcha images.
- bool get detectGeneric;/// Third-party captcha solver API key.
- String? get solverApiKey;/// Solver service type (2captcha, anticaptcha, etc.).
+/// 是否检测 reCAPTCHA。
+ bool get detectRecaptcha;/// 是否检测 hCaptcha。
+ bool get detectHcaptcha;/// 是否检测通用验证码图片。
+ bool get detectGeneric;/// 第三方验证码破解服务 API 密钥。
+ String? get solverApiKey;/// 破解服务类型（2captcha、anticaptcha 等）。
  String? get solverService;
 /// Create a copy of CaptchaDetection
 /// with the given fields replaced by the non-null parameter values.
@@ -571,15 +571,15 @@ class _CaptchaDetection implements CaptchaDetection {
   const _CaptchaDetection({this.detectRecaptcha = true, this.detectHcaptcha = true, this.detectGeneric = true, this.solverApiKey, this.solverService});
   factory _CaptchaDetection.fromJson(Map<String, dynamic> json) => _$CaptchaDetectionFromJson(json);
 
-/// Whether to detect reCAPTCHA.
+/// 是否检测 reCAPTCHA。
 @override@JsonKey() final  bool detectRecaptcha;
-/// Whether to detect hCaptcha.
+/// 是否检测 hCaptcha。
 @override@JsonKey() final  bool detectHcaptcha;
-/// Whether to detect generic captcha images.
+/// 是否检测通用验证码图片。
 @override@JsonKey() final  bool detectGeneric;
-/// Third-party captcha solver API key.
+/// 第三方验证码破解服务 API 密钥。
 @override final  String? solverApiKey;
-/// Solver service type (2captcha, anticaptcha, etc.).
+/// 破解服务类型（2captcha、anticaptcha 等）。
 @override final  String? solverService;
 
 /// Create a copy of CaptchaDetection
@@ -650,11 +650,11 @@ as String?,
 /// @nodoc
 mixin _$RateLimitDetection {
 
-/// HTTP status codes to treat as rate limited.
- List<int> get statusCodes;/// Response text patterns indicating rate limit.
- List<String>? get textPatterns;/// Minimum delay between requests (ms).
- int get minDelayMs;/// Maximum delay between requests (ms).
- int get maxDelayMs;/// Whether to use exponential backoff.
+/// 视为频率限制的 HTTP 状态码。
+ List<int> get statusCodes;/// 表示频率限制的响应文本模式。
+ List<String>? get textPatterns;/// 请求之间的最小延迟（毫秒）。
+ int get minDelayMs;/// 请求之间的最大延迟（毫秒）。
+ int get maxDelayMs;/// 是否使用指数退避。
  bool get exponentialBackoff;
 /// Create a copy of RateLimitDetection
 /// with the given fields replaced by the non-null parameter values.
@@ -850,18 +850,18 @@ class _RateLimitDetection implements RateLimitDetection {
   const _RateLimitDetection({final  List<int> statusCodes = const [429, 503, 520, 521, 522, 523, 524], final  List<String>? textPatterns, this.minDelayMs = 1000, this.maxDelayMs = 5000, this.exponentialBackoff = true}): _statusCodes = statusCodes,_textPatterns = textPatterns;
   factory _RateLimitDetection.fromJson(Map<String, dynamic> json) => _$RateLimitDetectionFromJson(json);
 
-/// HTTP status codes to treat as rate limited.
+/// 视为频率限制的 HTTP 状态码。
  final  List<int> _statusCodes;
-/// HTTP status codes to treat as rate limited.
+/// 视为频率限制的 HTTP 状态码。
 @override@JsonKey() List<int> get statusCodes {
   if (_statusCodes is EqualUnmodifiableListView) return _statusCodes;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_statusCodes);
 }
 
-/// Response text patterns indicating rate limit.
+/// 表示频率限制的响应文本模式。
  final  List<String>? _textPatterns;
-/// Response text patterns indicating rate limit.
+/// 表示频率限制的响应文本模式。
 @override List<String>? get textPatterns {
   final value = _textPatterns;
   if (value == null) return null;
@@ -870,11 +870,11 @@ class _RateLimitDetection implements RateLimitDetection {
   return EqualUnmodifiableListView(value);
 }
 
-/// Minimum delay between requests (ms).
+/// 请求之间的最小延迟（毫秒）。
 @override@JsonKey() final  int minDelayMs;
-/// Maximum delay between requests (ms).
+/// 请求之间的最大延迟（毫秒）。
 @override@JsonKey() final  int maxDelayMs;
-/// Whether to use exponential backoff.
+/// 是否使用指数退避。
 @override@JsonKey() final  bool exponentialBackoff;
 
 /// Create a copy of RateLimitDetection
@@ -945,9 +945,9 @@ as bool,
 /// @nodoc
 mixin _$LoginDetection {
 
-/// Whether to detect login pages.
- bool get detectLoginPage;/// Selectors indicating login page.
- List<String>? get loginSelectors;/// Whether to pause on login required.
+/// 是否检测登录页面。
+ bool get detectLoginPage;/// 表示登录页面的选择器。
+ List<String>? get loginSelectors;/// 需要登录时是否暂停。
  bool get pauseOnLogin;
 /// Create a copy of LoginDetection
 /// with the given fields replaced by the non-null parameter values.
@@ -1141,11 +1141,11 @@ class _LoginDetection implements LoginDetection {
   const _LoginDetection({this.detectLoginPage = true, final  List<String>? loginSelectors, this.pauseOnLogin = true}): _loginSelectors = loginSelectors;
   factory _LoginDetection.fromJson(Map<String, dynamic> json) => _$LoginDetectionFromJson(json);
 
-/// Whether to detect login pages.
+/// 是否检测登录页面。
 @override@JsonKey() final  bool detectLoginPage;
-/// Selectors indicating login page.
+/// 表示登录页面的选择器。
  final  List<String>? _loginSelectors;
-/// Selectors indicating login page.
+/// 表示登录页面的选择器。
 @override List<String>? get loginSelectors {
   final value = _loginSelectors;
   if (value == null) return null;
@@ -1154,7 +1154,7 @@ class _LoginDetection implements LoginDetection {
   return EqualUnmodifiableListView(value);
 }
 
-/// Whether to pause on login required.
+/// 需要登录时是否暂停。
 @override@JsonKey() final  bool pauseOnLogin;
 
 /// Create a copy of LoginDetection

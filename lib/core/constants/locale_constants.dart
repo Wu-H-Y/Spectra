@@ -2,7 +2,7 @@ import 'dart:ui';
 
 /// 支持的语言列表
 const supportedLocales = [
-  Locale('en', 'US'), // English
+  Locale('en', 'US'), // 英语
   Locale('zh', 'CN'), // 简体中文
 ];
 

@@ -1,161 +1,293 @@
 import 'dart:convert';
 
-import 'package:shelf/shelf.dart';
-import 'package:shelf_router/shelf_router.dart';
+import 'package:relic/relic.dart';
 
-/// Routes for rule CRUD operations.
+import 'package:spectra/core/crawler/executor/executor.dart';
+
+/// 规则 CRUD 操作路由。
 class RulesRoutes {
-  /// Creates rules routes.
-  const RulesRoutes();
+  /// 创建规则路由。
+  RulesRoutes({
+    RuleParser? ruleParser,
+  }) : _ruleParser = ruleParser ?? RuleParser();
 
-  /// Create router with all routes.
-  Router get router => Router()
-    // GET /api/rules - List all rules
+  final RuleParser _ruleParser;
+
+  /// 创建包含所有路由的路由器。
+  Router<Handler> get router => Router<Handler>()
+    // GET /api/rules - 列出所有规则
     ..get('/api/rules', _listRules)
-    // GET /api/rules/<id> - Get a single rule
-    ..get('/api/rules/<id>', _getRule)
-    // POST /api/rules - Create a new rule
+    // GET /api/rules/:id - 获取单个规则
+    ..get('/api/rules/:id', _getRule)
+    // POST /api/rules - 创建新规则
     ..post('/api/rules', _createRule)
-    // PUT /api/rules/<id> - Update an existing rule
-    ..put('/api/rules/<id>', _updateRule)
-    // DELETE /api/rules/<id> - Delete a rule
-    ..delete('/api/rules/<id>', _deleteRule)
-    // POST /api/validate - Validate a rule
+    // PUT /api/rules/:id - 更新已有规则
+    ..put('/api/rules/:id', _updateRule)
+    // DELETE /api/rules/:id - 删除规则
+    ..delete('/api/rules/:id', _deleteRule)
+    // POST /api/validate - 验证规则
     ..post('/api/validate', _validateRule)
-    // POST /api/execute - Execute a rule against a URL
+    // POST /api/execute - 对 URL 执行规则
     ..post('/api/execute', _executeRule);
 
-  /// Get all rules.
+  /// 获取所有规则。
   Future<Response> _listRules(Request request) async {
-    // TODO(developer): Implement actual database query
+    // TODO(developer): 实现实际的数据库查询
     return Response.ok(
-      jsonEncode([]),
-      headers: {'content-type': 'application/json'},
+      body: Body.fromString(
+        jsonEncode([]),
+        mimeType: MimeType.json,
+      ),
     );
   }
 
-  /// Get a single rule by ID.
-  Future<Response> _getRule(Request request, String id) async {
-    // TODO(developer): Implement actual database query
+  /// 根据 ID 获取单个规则。
+  Future<Response> _getRule(Request request) async {
+    final id = request.rawPathParameters[#id];
+    // TODO(developer): 实现实际的数据库查询
     return Response.notFound(
-      jsonEncode({'error': 'Rule not found', 'id': id}),
-      headers: {'content-type': 'application/json'},
+      body: Body.fromString(
+        jsonEncode({'error': 'Rule not found', 'id': id}),
+        mimeType: MimeType.json,
+      ),
     );
   }
 
-  /// Create a new rule.
+  /// 创建新规则。
   Future<Response> _createRule(Request request) async {
     try {
       final body = await request.readAsString();
-      final data = jsonDecode(body) as Map<String, dynamic>;
+      final result = _ruleParser.parseAndValidate(body);
 
-      // TODO(developer): Validate and save to database
+      if (!result.isSuccess) {
+        return Response.badRequest(
+          body: Body.fromString(
+            jsonEncode({
+              'valid': false,
+              'errors': result.errors,
+            }),
+            mimeType: MimeType.json,
+          ),
+        );
+      }
+
+      // TODO(developer): 保存到数据库
 
       return Response.ok(
-        jsonEncode(data),
-        headers: {'content-type': 'application/json'},
+        body: Body.fromString(
+          _ruleParser.toJsonString(result.rule!),
+          mimeType: MimeType.json,
+        ),
+      );
+    } on FormatException catch (e) {
+      return Response.badRequest(
+        body: Body.fromString(
+          jsonEncode({'error': 'Invalid JSON', 'message': e.message}),
+          mimeType: MimeType.json,
+        ),
       );
     } on Exception catch (e) {
       return Response.badRequest(
-        body: jsonEncode({'error': 'Invalid JSON', 'message': e.toString()}),
-        headers: {'content-type': 'application/json'},
+        body: Body.fromString(
+          jsonEncode({'error': 'Invalid request', 'message': e.toString()}),
+          mimeType: MimeType.json,
+        ),
       );
     }
   }
 
-  /// Update an existing rule.
-  Future<Response> _updateRule(Request request, String id) async {
+  /// 更新已有规则。
+  Future<Response> _updateRule(Request request) async {
     try {
       final body = await request.readAsString();
-      final data = jsonDecode(body) as Map<String, dynamic>;
+      final result = _ruleParser.parseAndValidate(body);
 
-      // TODO(developer): Validate and update in database
+      if (!result.isSuccess) {
+        return Response.badRequest(
+          body: Body.fromString(
+            jsonEncode({
+              'valid': false,
+              'errors': result.errors,
+            }),
+            mimeType: MimeType.json,
+          ),
+        );
+      }
+
+      // TODO(developer): 在数据库中更新
 
       return Response.ok(
-        jsonEncode({...data, 'id': id}),
-        headers: {'content-type': 'application/json'},
+        body: Body.fromString(
+          _ruleParser.toJsonString(result.rule!),
+          mimeType: MimeType.json,
+        ),
+      );
+    } on FormatException catch (e) {
+      return Response.badRequest(
+        body: Body.fromString(
+          jsonEncode({'error': 'Invalid JSON', 'message': e.message}),
+          mimeType: MimeType.json,
+        ),
       );
     } on Exception catch (e) {
       return Response.badRequest(
-        body: jsonEncode({'error': 'Invalid JSON', 'message': e.toString()}),
-        headers: {'content-type': 'application/json'},
+        body: Body.fromString(
+          jsonEncode({'error': 'Invalid request', 'message': e.toString()}),
+          mimeType: MimeType.json,
+        ),
       );
     }
   }
 
-  /// Delete a rule.
-  Future<Response> _deleteRule(Request request, String id) async {
-    // TODO(developer): Implement actual database deletion
+  /// 删除规则。
+  Future<Response> _deleteRule(Request request) async {
+    final id = request.rawPathParameters[#id];
+    // TODO(developer): 实现实际的数据库删除
 
     return Response.ok(
-      jsonEncode({'deleted': true, 'id': id}),
-      headers: {'content-type': 'application/json'},
+      body: Body.fromString(
+        jsonEncode({'deleted': true, 'id': id}),
+        mimeType: MimeType.json,
+      ),
     );
   }
 
-  /// Validate a rule.
+  /// 验证规则。
   Future<Response> _validateRule(Request request) async {
     try {
       final body = await request.readAsString();
-      // The parsed data will be used for validation in future implementation.
-      // ignore: unused_local_variable
-      final data = jsonDecode(body) as Map<String, dynamic>;
-
-      // TODO(developer): Implement actual validation
+      final result = _ruleParser.parseAndValidate(body);
 
       return Response.ok(
-        jsonEncode({'valid': true, 'errors': <String>[]}),
-        headers: {'content-type': 'application/json'},
+        body: Body.fromString(
+          jsonEncode({
+            'valid': result.isSuccess,
+            'errors': result.errors,
+            'rule': result.rule?.toJson(),
+          }),
+          mimeType: MimeType.json,
+        ),
+      );
+    } on FormatException catch (e) {
+      return Response.badRequest(
+        body: Body.fromString(
+          jsonEncode({
+            'valid': false,
+            'errors': [
+              {'path': '', 'message': 'Invalid JSON: ${e.message}'},
+            ],
+          }),
+          mimeType: MimeType.json,
+        ),
       );
     } on Exception catch (e) {
       return Response.badRequest(
-        body: jsonEncode({
-          'valid': false,
-          'errors': [
-            {'path': '', 'message': e.toString()}
-          ],
-        }),
-        headers: {'content-type': 'application/json'},
+        body: Body.fromString(
+          jsonEncode({
+            'valid': false,
+            'errors': [
+              {'path': '', 'message': e.toString()},
+            ],
+          }),
+          mimeType: MimeType.json,
+        ),
       );
     }
   }
 
-  /// Execute a rule against a URL.
+  /// 对 URL 执行规则。
   Future<Response> _executeRule(Request request) async {
     try {
       final body = await request.readAsString();
       final data = jsonDecode(body) as Map<String, dynamic>;
-      final ruleId = data['ruleId'] as String?;
-      final url = data['url'] as String?;
 
-      if (ruleId == null || url == null) {
+      final ruleJson = data['rule'] as Map<String, dynamic>?;
+      final url = data['url'] as String?;
+      final html = data['html'] as String?;
+      final extractionType = data['type'] as String? ?? 'list';
+
+      if (ruleJson == null) {
         return Response.badRequest(
-          body: jsonEncode({
-            'error': 'Missing required fields',
-            'required': ['ruleId', 'url'],
-          }),
-          headers: {'content-type': 'application/json'},
+          body: Body.fromString(
+            jsonEncode({
+              'error': 'Missing required field: rule',
+            }),
+            mimeType: MimeType.json,
+          ),
         );
       }
 
-      // TODO(developer): Implement actual rule execution
+      // 解析并验证规则
+      final parseResult = _ruleParser.parseJson(ruleJson);
+      if (!parseResult.isSuccess) {
+        return Response.badRequest(
+          body: Body.fromString(
+            jsonEncode({
+              'success': false,
+              'errors': parseResult.errors,
+            }),
+            mimeType: MimeType.json,
+          ),
+        );
+      }
+
+      final rule = parseResult.rule!;
+
+      // 目前返回模拟执行结果
+      // 完整执行需要从 URL 获取 HTML
+      if (html == null && url == null) {
+        return Response.badRequest(
+          body: Body.fromString(
+            jsonEncode({
+              'error': 'Either url or html must be provided',
+            }),
+            mimeType: MimeType.json,
+          ),
+        );
+      }
+
+      // TODO(developer): 实现完整执行：
+      // 1. 如需要则从 URL 获取 HTML
+      // 2. 执行 before actions
+      // 3. 根据类型运行提取
+      // 4. 执行 after actions
+      // 5. 返回提取的数据
 
       return Response.ok(
-        jsonEncode({
-          'success': true,
-          'data': null,
-          'extractedCount': 0,
-        }),
-        headers: {'content-type': 'application/json'},
+        body: Body.fromString(
+          jsonEncode({
+            'success': true,
+            'executionId': DateTime.now().millisecondsSinceEpoch.toString(),
+            'ruleId': rule.id,
+            'ruleName': rule.name,
+            'mediaType': rule.mediaType.name,
+            'extractionType': extractionType,
+            'data': <dynamic>[],
+            'extractedCount': 0,
+            'errors': <String>[],
+          }),
+          mimeType: MimeType.json,
+        ),
+      );
+    } on FormatException catch (e) {
+      return Response.badRequest(
+        body: Body.fromString(
+          jsonEncode({
+            'success': false,
+            'error': 'Invalid JSON: ${e.message}',
+          }),
+          mimeType: MimeType.json,
+        ),
       );
     } on Exception catch (e) {
       return Response.internalServerError(
-        body: jsonEncode({
-          'success': false,
-          'error': e.toString(),
-          'extractedCount': 0,
-        }),
-        headers: {'content-type': 'application/json'},
+        body: Body.fromString(
+          jsonEncode({
+            'success': false,
+            'error': e.toString(),
+          }),
+          mimeType: MimeType.json,
+        ),
       );
     }
   }

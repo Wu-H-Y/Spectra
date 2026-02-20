@@ -9,6 +9,7 @@ part of 'base_content.dart';
 _BaseContent _$BaseContentFromJson(Map<String, dynamic> json) => _BaseContent(
   id: json['id'] as String,
   title: json['title'] as String,
+  source: ContentSource.fromJson(json['source'] as Map<String, dynamic>),
   cover: json['cover'] as String?,
   description: json['description'] as String?,
   author: json['author'] == null
@@ -25,13 +26,13 @@ _BaseContent _$BaseContentFromJson(Map<String, dynamic> json) => _BaseContent(
   updatedAt: json['updatedAt'] == null
       ? null
       : DateTime.parse(json['updatedAt'] as String),
-  source: ContentSource.fromJson(json['source'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$BaseContentToJson(_BaseContent instance) =>
     <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
+      'source': instance.source,
       'cover': instance.cover,
       'description': instance.description,
       'author': instance.author,
@@ -40,5 +41,4 @@ Map<String, dynamic> _$BaseContentToJson(_BaseContent instance) =>
       'stats': instance.stats,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
-      'source': instance.source,
     };

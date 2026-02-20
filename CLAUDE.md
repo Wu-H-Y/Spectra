@@ -6,7 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Spectra 是一款跨平台多媒体数据采集应用，支持视频、音乐、小说、漫画、图片的采集，通过自定义爬虫规则系统实现灵活的数据提取。
 
-**技术栈**: Flutter 3.x / Dart 3.x / Material 3
+**技术栈**: Flutter 3.x / Dart 3.x / Material 3 / Riverpod 3.x / fpdart 1.x
+
+**状态管理**: hooks_riverpod + flutter_hooks
+
+**函数式编程**: fpdart (Either, TaskEither, Option)
+
+**HTTP 服务器**: relic 1.x
 
 **平台**: Android, iOS, Windows, macOS, Linux
 
@@ -131,6 +137,78 @@ class Example extends _$Example {
 
 - 使用 `flutter_lints` + `very_good_analysis`
 - 生成的代码 (`*.g.dart`, `*.freezed.dart`) 已排除分析
+
+### Documentation Language Standards
+
+项目采用统一的中文文档和注释规范：
+
+#### 代码注释
+
+所有 Dart 源代码中的注释**必须使用中文**：
+
+```dart
+/// 用户服务
+/// 
+/// 提供用户相关的业务逻辑处理。
+class UserService {
+  /// 当前登录用户
+  User? currentUser;
+  
+  /// 获取用户信息
+  /// 
+  /// [userId] 用户唯一标识
+  /// 返回用户信息，如果用户不存在则返回 null
+  Future<User?> getUser(String userId) async {
+    // 实现逻辑...
+  }
+}
+```
+
+#### 日志输出
+
+所有日志输出**必须使用中文**：
+
+```dart
+// 正确 ✓
+talker.info('用户登录成功: ${user.name}');
+talker.error('网络请求失败: $e');
+
+// 错误 ✗
+talker.info('User logged in: ${user.name}');
+```
+
+#### UI 文本国际化
+
+UI 上显示的文本**必须通过国际化系统访问**，禁止硬编码：
+
+```dart
+// 正确 ✓
+Text(S.current.loginButton)
+Text(AppLocalizations.of(context)!.welcomeMessage)
+
+// 错误 ✗
+Text('登录')
+Text('Login')
+```
+
+新增 UI 文本时必须同时更新：
+- `lib/l10n/app_zh.arb` - 中文翻译
+- `lib/l10n/app_en.arb` - 英文翻译
+
+#### OpenSpec 文档
+
+所有 OpenSpec 变更文档**必须使用中文**：
+- `proposal.md`
+- `design.md`
+- `specs/**/*.md`
+- `tasks.md`
+
+#### 例外情况
+
+以下情况不强制使用中文：
+- 第三方库或生成代码中的注释
+- 测试代码中的断言消息
+- 技术术语（如 API、HTTP、JSON）
 
 ## Commit Convention
 

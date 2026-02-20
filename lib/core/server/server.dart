@@ -1,10 +1,10 @@
-/// HTTP server module for web editor.
+/// Web 编辑器的 HTTP 服务器模块。
 ///
-/// This module provides:
-/// - HTTP server with CORS support
-/// - REST API for rule CRUD operations
-/// - WebSocket support for real-time communication
-/// - Static file serving for the web editor
+/// 此模块提供：
+/// - 带 CORS 支持的 HTTP 服务器
+/// - 规则 CRUD 操作的 REST API
+/// - 实时通信的 WebSocket 支持
+/// - Web 编辑器的静态文件服务
 library;
 
 export 'handlers/static_handler.dart';

@@ -7,24 +7,26 @@ import 'package:spectra/core/media/models/content_stats.dart';
 part 'novel_content.freezed.dart';
 part 'novel_content.g.dart';
 
-/// Novel chapter.
+/// 小说章节。
 @freezed
 sealed class NovelChapter with _$NovelChapter {
   const factory NovelChapter({
-    /// Chapter ID.
+    /// 章节 ID。
     required String id,
 
-    /// Chapter title.
+    /// 章节标题。
     required String title,
 
-    /// Chapter index/number.
-    required int index, /// Chapter URL (if separate page).
+    /// 章节索引/编号。
+    required int index,
+
+    /// 章节 URL（如果为单独页面）。
     String? url,
 
-    /// Chapter text content.
+    /// 章节文本内容。
     String? content,
 
-    /// Word count for this chapter.
+    /// 本章字数。
     int? wordCount,
   }) = _NovelChapter;
 
@@ -32,67 +34,71 @@ sealed class NovelChapter with _$NovelChapter {
       _$NovelChapterFromJson(json);
 }
 
-/// Novel content status.
+/// 小说内容状态。
 enum NovelStatus {
-  /// Currently updating.
+  /// 正在更新。
   ongoing,
 
-  /// Completed series.
+  /// 已完结。
   completed,
 
-  /// On hiatus/break.
+  /// 暂停/休载。
   hiatus,
 
-  /// Cancelled/discontinued.
+  /// 取消/停更。
   cancelled,
 }
 
-/// Novel/fiction content model.
+/// 小说/虚构内容模型。
 @freezed
 sealed class NovelContent with _$NovelContent {
   const factory NovelContent({
-    /// Unique identifier.
+    /// 唯一标识符。
     required String id,
 
-    /// Novel title.
+    /// 小说标题。
     required String title,
 
-    /// Source information.
-    required ContentSource source, /// Chapter list.
-    required List<NovelChapter> chapters, /// Cover image URL.
+    /// 来源信息。
+    required ContentSource source,
+
+    /// 章节列表。
+    required List<NovelChapter> chapters,
+
+    /// 封面图片 URL。
     String? cover,
 
-    /// Description/summary.
+    /// 描述/摘要。
     String? description,
 
-    /// Author information.
+    /// 作者信息。
     Author? author,
 
-    /// Tags.
+    /// 标签。
     List<String>? tags,
 
-    /// Category.
+    /// 分类。
     String? category,
 
-    /// Statistics.
+    /// 统计信息。
     ContentStats? stats,
 
-    /// Publish date.
+    /// 发布日期。
     DateTime? createdAt,
 
-    /// Update date.
+    /// 更新日期。
     DateTime? updatedAt,
 
-    /// Novel status.
+    /// 小说状态。
     NovelStatus? status,
 
-    /// Total word count.
+    /// 总字数。
     int? wordCount,
 
-    /// Latest chapter info.
+    /// 最新章节信息。
     NovelChapter? lastChapter,
 
-    /// Total chapter count.
+    /// 总章节数。
     int? chapterCount,
   }) = _NovelContent;
 

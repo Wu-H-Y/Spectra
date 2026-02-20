@@ -15,13 +15,13 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$VideoQuality {
 
-/// Quality label (e.g., "1080p", "720p", "480p").
- String get label;/// Video stream URL.
- String get url;/// Video codec (e.g., "h264", "h265", "vp9").
- String? get codec;/// Bitrate in kbps.
- int? get bitrate;/// Resolution width.
- int? get width;/// Resolution height.
- int? get height;/// File size in bytes.
+/// 画质标签（如 "1080p"、"720p"、"480p"）。
+ String get label;/// 视频流 URL。
+ String get url;/// 视频编码（如 "h264"、"h265"、"vp9"）。
+ String? get codec;/// 码率（kbps）。
+ int? get bitrate;/// 分辨率宽度。
+ int? get width;/// 分辨率高度。
+ int? get height;/// 文件大小（字节）。
  int? get fileSize;
 /// Create a copy of VideoQuality
 /// with the given fields replaced by the non-null parameter values.
@@ -219,19 +219,19 @@ class _VideoQuality implements VideoQuality {
   const _VideoQuality({required this.label, required this.url, this.codec, this.bitrate, this.width, this.height, this.fileSize});
   factory _VideoQuality.fromJson(Map<String, dynamic> json) => _$VideoQualityFromJson(json);
 
-/// Quality label (e.g., "1080p", "720p", "480p").
+/// 画质标签（如 "1080p"、"720p"、"480p"）。
 @override final  String label;
-/// Video stream URL.
+/// 视频流 URL。
 @override final  String url;
-/// Video codec (e.g., "h264", "h265", "vp9").
+/// 视频编码（如 "h264"、"h265"、"vp9"）。
 @override final  String? codec;
-/// Bitrate in kbps.
+/// 码率（kbps）。
 @override final  int? bitrate;
-/// Resolution width.
+/// 分辨率宽度。
 @override final  int? width;
-/// Resolution height.
+/// 分辨率高度。
 @override final  int? height;
-/// File size in bytes.
+/// 文件大小（字节）。
 @override final  int? fileSize;
 
 /// Create a copy of VideoQuality
@@ -304,12 +304,12 @@ as int?,
 /// @nodoc
 mixin _$VideoChapter {
 
-/// Chapter ID.
- String get id;/// Chapter title.
- String get title;/// Chapter URL (if separate page).
- String? get url;/// Duration in seconds.
- int? get duration;/// Chapter index/number.
- int get index;
+/// 章节 ID。
+ String get id;/// 章节标题。
+ String get title;/// 章节索引/编号。
+ int get index;/// 章节 URL（如果为单独页面）。
+ String? get url;/// 时长（秒）。
+ int? get duration;
 /// Create a copy of VideoChapter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -322,16 +322,16 @@ $VideoChapterCopyWith<VideoChapter> get copyWith => _$VideoChapterCopyWithImpl<V
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is VideoChapter&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.url, url) || other.url == url)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.index, index) || other.index == index));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is VideoChapter&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.index, index) || other.index == index)&&(identical(other.url, url) || other.url == url)&&(identical(other.duration, duration) || other.duration == duration));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,url,duration,index);
+int get hashCode => Object.hash(runtimeType,id,title,index,url,duration);
 
 @override
 String toString() {
-  return 'VideoChapter(id: $id, title: $title, url: $url, duration: $duration, index: $index)';
+  return 'VideoChapter(id: $id, title: $title, index: $index, url: $url, duration: $duration)';
 }
 
 
@@ -342,7 +342,7 @@ abstract mixin class $VideoChapterCopyWith<$Res>  {
   factory $VideoChapterCopyWith(VideoChapter value, $Res Function(VideoChapter) _then) = _$VideoChapterCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? url, int? duration, int index
+ String id, String title, int index, String? url, int? duration
 });
 
 
@@ -359,14 +359,14 @@ class _$VideoChapterCopyWithImpl<$Res>
 
 /// Create a copy of VideoChapter
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? url = freezed,Object? duration = freezed,Object? index = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? index = null,Object? url = freezed,Object? duration = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as String,index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
+as int,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,duration: freezed == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
-as int?,index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
-as int,
+as int?,
   ));
 }
 
@@ -448,10 +448,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? url,  int? duration,  int index)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  int index,  String? url,  int? duration)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _VideoChapter() when $default != null:
-return $default(_that.id,_that.title,_that.url,_that.duration,_that.index);case _:
+return $default(_that.id,_that.title,_that.index,_that.url,_that.duration);case _:
   return orElse();
 
 }
@@ -469,10 +469,10 @@ return $default(_that.id,_that.title,_that.url,_that.duration,_that.index);case 
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? url,  int? duration,  int index)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  int index,  String? url,  int? duration)  $default,) {final _that = this;
 switch (_that) {
 case _VideoChapter():
-return $default(_that.id,_that.title,_that.url,_that.duration,_that.index);}
+return $default(_that.id,_that.title,_that.index,_that.url,_that.duration);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -486,10 +486,10 @@ return $default(_that.id,_that.title,_that.url,_that.duration,_that.index);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? url,  int? duration,  int index)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  int index,  String? url,  int? duration)?  $default,) {final _that = this;
 switch (_that) {
 case _VideoChapter() when $default != null:
-return $default(_that.id,_that.title,_that.url,_that.duration,_that.index);case _:
+return $default(_that.id,_that.title,_that.index,_that.url,_that.duration);case _:
   return null;
 
 }
@@ -501,19 +501,19 @@ return $default(_that.id,_that.title,_that.url,_that.duration,_that.index);case 
 @JsonSerializable()
 
 class _VideoChapter implements VideoChapter {
-  const _VideoChapter({required this.id, required this.title, this.url, this.duration, required this.index});
+  const _VideoChapter({required this.id, required this.title, required this.index, this.url, this.duration});
   factory _VideoChapter.fromJson(Map<String, dynamic> json) => _$VideoChapterFromJson(json);
 
-/// Chapter ID.
+/// 章节 ID。
 @override final  String id;
-/// Chapter title.
+/// 章节标题。
 @override final  String title;
-/// Chapter URL (if separate page).
-@override final  String? url;
-/// Duration in seconds.
-@override final  int? duration;
-/// Chapter index/number.
+/// 章节索引/编号。
 @override final  int index;
+/// 章节 URL（如果为单独页面）。
+@override final  String? url;
+/// 时长（秒）。
+@override final  int? duration;
 
 /// Create a copy of VideoChapter
 /// with the given fields replaced by the non-null parameter values.
@@ -528,16 +528,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VideoChapter&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.url, url) || other.url == url)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.index, index) || other.index == index));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VideoChapter&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.index, index) || other.index == index)&&(identical(other.url, url) || other.url == url)&&(identical(other.duration, duration) || other.duration == duration));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,url,duration,index);
+int get hashCode => Object.hash(runtimeType,id,title,index,url,duration);
 
 @override
 String toString() {
-  return 'VideoChapter(id: $id, title: $title, url: $url, duration: $duration, index: $index)';
+  return 'VideoChapter(id: $id, title: $title, index: $index, url: $url, duration: $duration)';
 }
 
 
@@ -548,7 +548,7 @@ abstract mixin class _$VideoChapterCopyWith<$Res> implements $VideoChapterCopyWi
   factory _$VideoChapterCopyWith(_VideoChapter value, $Res Function(_VideoChapter) _then) = __$VideoChapterCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? url, int? duration, int index
+ String id, String title, int index, String? url, int? duration
 });
 
 
@@ -565,14 +565,14 @@ class __$VideoChapterCopyWithImpl<$Res>
 
 /// Create a copy of VideoChapter
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? url = freezed,Object? duration = freezed,Object? index = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? index = null,Object? url = freezed,Object? duration = freezed,}) {
   return _then(_VideoChapter(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as String,index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
+as int,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,duration: freezed == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
-as int?,index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
-as int,
+as int?,
   ));
 }
 
@@ -583,10 +583,10 @@ as int,
 /// @nodoc
 mixin _$Subtitle {
 
-/// Language code (e.g., "en", "zh", "ja").
- String get language;/// Language display name.
- String? get label;/// Subtitle URL (VTT, SRT, ASS format).
- String get url;/// Whether this is the default subtitle.
+/// 语言代码（如 "en"、"zh"、"ja"）。
+ String get language;/// 字幕 URL（VTT、SRT、ASS 格式）。
+ String get url;/// 语言显示名称。
+ String? get label;/// 是否为默认字幕。
  bool get isDefault;
 /// Create a copy of Subtitle
 /// with the given fields replaced by the non-null parameter values.
@@ -600,16 +600,16 @@ $SubtitleCopyWith<Subtitle> get copyWith => _$SubtitleCopyWithImpl<Subtitle>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Subtitle&&(identical(other.language, language) || other.language == language)&&(identical(other.label, label) || other.label == label)&&(identical(other.url, url) || other.url == url)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Subtitle&&(identical(other.language, language) || other.language == language)&&(identical(other.url, url) || other.url == url)&&(identical(other.label, label) || other.label == label)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,language,label,url,isDefault);
+int get hashCode => Object.hash(runtimeType,language,url,label,isDefault);
 
 @override
 String toString() {
-  return 'Subtitle(language: $language, label: $label, url: $url, isDefault: $isDefault)';
+  return 'Subtitle(language: $language, url: $url, label: $label, isDefault: $isDefault)';
 }
 
 
@@ -620,7 +620,7 @@ abstract mixin class $SubtitleCopyWith<$Res>  {
   factory $SubtitleCopyWith(Subtitle value, $Res Function(Subtitle) _then) = _$SubtitleCopyWithImpl;
 @useResult
 $Res call({
- String language, String? label, String url, bool isDefault
+ String language, String url, String? label, bool isDefault
 });
 
 
@@ -637,12 +637,12 @@ class _$SubtitleCopyWithImpl<$Res>
 
 /// Create a copy of Subtitle
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? language = null,Object? label = freezed,Object? url = null,Object? isDefault = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? language = null,Object? url = null,Object? label = freezed,Object? isDefault = null,}) {
   return _then(_self.copyWith(
 language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
+as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,label: freezed == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
-as String?,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
-as String,isDefault: null == isDefault ? _self.isDefault : isDefault // ignore: cast_nullable_to_non_nullable
+as String?,isDefault: null == isDefault ? _self.isDefault : isDefault // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -725,10 +725,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String language,  String? label,  String url,  bool isDefault)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String language,  String url,  String? label,  bool isDefault)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Subtitle() when $default != null:
-return $default(_that.language,_that.label,_that.url,_that.isDefault);case _:
+return $default(_that.language,_that.url,_that.label,_that.isDefault);case _:
   return orElse();
 
 }
@@ -746,10 +746,10 @@ return $default(_that.language,_that.label,_that.url,_that.isDefault);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String language,  String? label,  String url,  bool isDefault)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String language,  String url,  String? label,  bool isDefault)  $default,) {final _that = this;
 switch (_that) {
 case _Subtitle():
-return $default(_that.language,_that.label,_that.url,_that.isDefault);}
+return $default(_that.language,_that.url,_that.label,_that.isDefault);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -763,10 +763,10 @@ return $default(_that.language,_that.label,_that.url,_that.isDefault);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String language,  String? label,  String url,  bool isDefault)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String language,  String url,  String? label,  bool isDefault)?  $default,) {final _that = this;
 switch (_that) {
 case _Subtitle() when $default != null:
-return $default(_that.language,_that.label,_that.url,_that.isDefault);case _:
+return $default(_that.language,_that.url,_that.label,_that.isDefault);case _:
   return null;
 
 }
@@ -778,16 +778,16 @@ return $default(_that.language,_that.label,_that.url,_that.isDefault);case _:
 @JsonSerializable()
 
 class _Subtitle implements Subtitle {
-  const _Subtitle({required this.language, this.label, required this.url, this.isDefault = false});
+  const _Subtitle({required this.language, required this.url, this.label, this.isDefault = false});
   factory _Subtitle.fromJson(Map<String, dynamic> json) => _$SubtitleFromJson(json);
 
-/// Language code (e.g., "en", "zh", "ja").
+/// 语言代码（如 "en"、"zh"、"ja"）。
 @override final  String language;
-/// Language display name.
-@override final  String? label;
-/// Subtitle URL (VTT, SRT, ASS format).
+/// 字幕 URL（VTT、SRT、ASS 格式）。
 @override final  String url;
-/// Whether this is the default subtitle.
+/// 语言显示名称。
+@override final  String? label;
+/// 是否为默认字幕。
 @override@JsonKey() final  bool isDefault;
 
 /// Create a copy of Subtitle
@@ -803,16 +803,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Subtitle&&(identical(other.language, language) || other.language == language)&&(identical(other.label, label) || other.label == label)&&(identical(other.url, url) || other.url == url)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Subtitle&&(identical(other.language, language) || other.language == language)&&(identical(other.url, url) || other.url == url)&&(identical(other.label, label) || other.label == label)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,language,label,url,isDefault);
+int get hashCode => Object.hash(runtimeType,language,url,label,isDefault);
 
 @override
 String toString() {
-  return 'Subtitle(language: $language, label: $label, url: $url, isDefault: $isDefault)';
+  return 'Subtitle(language: $language, url: $url, label: $label, isDefault: $isDefault)';
 }
 
 
@@ -823,7 +823,7 @@ abstract mixin class _$SubtitleCopyWith<$Res> implements $SubtitleCopyWith<$Res>
   factory _$SubtitleCopyWith(_Subtitle value, $Res Function(_Subtitle) _then) = __$SubtitleCopyWithImpl;
 @override @useResult
 $Res call({
- String language, String? label, String url, bool isDefault
+ String language, String url, String? label, bool isDefault
 });
 
 
@@ -840,12 +840,12 @@ class __$SubtitleCopyWithImpl<$Res>
 
 /// Create a copy of Subtitle
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? language = null,Object? label = freezed,Object? url = null,Object? isDefault = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? language = null,Object? url = null,Object? label = freezed,Object? isDefault = null,}) {
   return _then(_Subtitle(
 language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
+as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,label: freezed == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
-as String?,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
-as String,isDefault: null == isDefault ? _self.isDefault : isDefault // ignore: cast_nullable_to_non_nullable
+as String?,isDefault: null == isDefault ? _self.isDefault : isDefault // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -857,9 +857,9 @@ as bool,
 /// @nodoc
 mixin _$DanmakuConfig {
 
-/// Danmaku data URL (XML or JSON format).
- String? get url;/// Raw danmaku data (if embedded).
- String? get rawData;/// Whether danmaku is enabled.
+/// 弹幕数据 URL（XML 或 JSON 格式）。
+ String? get url;/// 原始弹幕数据（如果嵌入）。
+ String? get rawData;/// 是否启用弹幕。
  bool get enabled;
 /// Create a copy of DanmakuConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -1053,11 +1053,11 @@ class _DanmakuConfig implements DanmakuConfig {
   const _DanmakuConfig({this.url, this.rawData, this.enabled = true});
   factory _DanmakuConfig.fromJson(Map<String, dynamic> json) => _$DanmakuConfigFromJson(json);
 
-/// Danmaku data URL (XML or JSON format).
+/// 弹幕数据 URL（XML 或 JSON 格式）。
 @override final  String? url;
-/// Raw danmaku data (if embedded).
+/// 原始弹幕数据（如果嵌入）。
 @override final  String? rawData;
-/// Whether danmaku is enabled.
+/// 是否启用弹幕。
 @override@JsonKey() final  bool enabled;
 
 /// Create a copy of DanmakuConfig
@@ -1126,27 +1126,27 @@ as bool,
 /// @nodoc
 mixin _$VideoContent {
 
-/// Unique identifier.
- String get id;/// Video title.
- String get title;/// Cover image URL.
- String? get cover;/// Description/summary.
- String? get description;/// Author/uploader information.
- Author? get author;/// Tags.
- List<String>? get tags;/// Category.
- String? get category;/// Statistics.
- ContentStats? get stats;/// Publish date.
- DateTime? get createdAt;/// Update date.
- DateTime? get updatedAt;/// Source information.
- ContentSource get source;/// Video duration in seconds.
- int? get duration;/// Primary playback URL.
- String? get playUrl;/// Available quality options.
- List<VideoQuality>? get qualities;/// Episode/chapter list.
- List<VideoChapter>? get chapters;/// Preview/GIF URL.
- String? get previewUrl;/// Subtitle tracks.
- List<Subtitle>? get subtitles;/// Danmaku configuration.
- DanmakuConfig? get danmaku;/// Video status.
- VideoStatus? get status;/// Whether VIP subscription is required.
- bool get isVip;/// Whether payment is required.
+/// 唯一标识符。
+ String get id;/// 视频标题。
+ String get title;/// 来源信息。
+ ContentSource get source;/// 封面图片 URL。
+ String? get cover;/// 描述/摘要。
+ String? get description;/// 作者/上传者信息。
+ Author? get author;/// 标签。
+ List<String>? get tags;/// 分类。
+ String? get category;/// 统计信息。
+ ContentStats? get stats;/// 发布日期。
+ DateTime? get createdAt;/// 更新日期。
+ DateTime? get updatedAt;/// 视频时长（秒）。
+ int? get duration;/// 主要播放 URL。
+ String? get playUrl;/// 可用的画质选项。
+ List<VideoQuality>? get qualities;/// 剧集/章节列表。
+ List<VideoChapter>? get chapters;/// 预览/GIF URL。
+ String? get previewUrl;/// 字幕轨道。
+ List<Subtitle>? get subtitles;/// 弹幕配置。
+ DanmakuConfig? get danmaku;/// 视频状态。
+ VideoStatus? get status;/// 是否需要 VIP 订阅。
+ bool get isVip;/// 是否需要付费。
  bool get isPaid;
 /// Create a copy of VideoContent
 /// with the given fields replaced by the non-null parameter values.
@@ -1160,16 +1160,16 @@ $VideoContentCopyWith<VideoContent> get copyWith => _$VideoContentCopyWithImpl<V
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is VideoContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.source, source) || other.source == source)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.playUrl, playUrl) || other.playUrl == playUrl)&&const DeepCollectionEquality().equals(other.qualities, qualities)&&const DeepCollectionEquality().equals(other.chapters, chapters)&&(identical(other.previewUrl, previewUrl) || other.previewUrl == previewUrl)&&const DeepCollectionEquality().equals(other.subtitles, subtitles)&&(identical(other.danmaku, danmaku) || other.danmaku == danmaku)&&(identical(other.status, status) || other.status == status)&&(identical(other.isVip, isVip) || other.isVip == isVip)&&(identical(other.isPaid, isPaid) || other.isPaid == isPaid));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is VideoContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.source, source) || other.source == source)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.playUrl, playUrl) || other.playUrl == playUrl)&&const DeepCollectionEquality().equals(other.qualities, qualities)&&const DeepCollectionEquality().equals(other.chapters, chapters)&&(identical(other.previewUrl, previewUrl) || other.previewUrl == previewUrl)&&const DeepCollectionEquality().equals(other.subtitles, subtitles)&&(identical(other.danmaku, danmaku) || other.danmaku == danmaku)&&(identical(other.status, status) || other.status == status)&&(identical(other.isVip, isVip) || other.isVip == isVip)&&(identical(other.isPaid, isPaid) || other.isPaid == isPaid));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,cover,description,author,const DeepCollectionEquality().hash(tags),category,stats,createdAt,updatedAt,source,duration,playUrl,const DeepCollectionEquality().hash(qualities),const DeepCollectionEquality().hash(chapters),previewUrl,const DeepCollectionEquality().hash(subtitles),danmaku,status,isVip,isPaid]);
+int get hashCode => Object.hashAll([runtimeType,id,title,source,cover,description,author,const DeepCollectionEquality().hash(tags),category,stats,createdAt,updatedAt,duration,playUrl,const DeepCollectionEquality().hash(qualities),const DeepCollectionEquality().hash(chapters),previewUrl,const DeepCollectionEquality().hash(subtitles),danmaku,status,isVip,isPaid]);
 
 @override
 String toString() {
-  return 'VideoContent(id: $id, title: $title, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, source: $source, duration: $duration, playUrl: $playUrl, qualities: $qualities, chapters: $chapters, previewUrl: $previewUrl, subtitles: $subtitles, danmaku: $danmaku, status: $status, isVip: $isVip, isPaid: $isPaid)';
+  return 'VideoContent(id: $id, title: $title, source: $source, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, duration: $duration, playUrl: $playUrl, qualities: $qualities, chapters: $chapters, previewUrl: $previewUrl, subtitles: $subtitles, danmaku: $danmaku, status: $status, isVip: $isVip, isPaid: $isPaid)';
 }
 
 
@@ -1180,11 +1180,11 @@ abstract mixin class $VideoContentCopyWith<$Res>  {
   factory $VideoContentCopyWith(VideoContent value, $Res Function(VideoContent) _then) = _$VideoContentCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, ContentSource source, int? duration, String? playUrl, List<VideoQuality>? qualities, List<VideoChapter>? chapters, String? previewUrl, List<Subtitle>? subtitles, DanmakuConfig? danmaku, VideoStatus? status, bool isVip, bool isPaid
+ String id, String title, ContentSource source, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, int? duration, String? playUrl, List<VideoQuality>? qualities, List<VideoChapter>? chapters, String? previewUrl, List<Subtitle>? subtitles, DanmakuConfig? danmaku, VideoStatus? status, bool isVip, bool isPaid
 });
 
 
-$AuthorCopyWith<$Res>? get author;$ContentStatsCopyWith<$Res>? get stats;$ContentSourceCopyWith<$Res> get source;$DanmakuConfigCopyWith<$Res>? get danmaku;
+$ContentSourceCopyWith<$Res> get source;$AuthorCopyWith<$Res>? get author;$ContentStatsCopyWith<$Res>? get stats;$DanmakuConfigCopyWith<$Res>? get danmaku;
 
 }
 /// @nodoc
@@ -1197,11 +1197,12 @@ class _$VideoContentCopyWithImpl<$Res>
 
 /// Create a copy of VideoContent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? source = null,Object? duration = freezed,Object? playUrl = freezed,Object? qualities = freezed,Object? chapters = freezed,Object? previewUrl = freezed,Object? subtitles = freezed,Object? danmaku = freezed,Object? status = freezed,Object? isVip = null,Object? isPaid = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? source = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? duration = freezed,Object? playUrl = freezed,Object? qualities = freezed,Object? chapters = freezed,Object? previewUrl = freezed,Object? subtitles = freezed,Object? danmaku = freezed,Object? status = freezed,Object? isVip = null,Object? isPaid = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as ContentSource,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,author: freezed == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
 as Author?,tags: freezed == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
@@ -1209,8 +1210,7 @@ as List<String>?,category: freezed == category ? _self.category : category // ig
 as String?,stats: freezed == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as ContentStats?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
-as ContentSource,duration: freezed == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
+as DateTime?,duration: freezed == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as int?,playUrl: freezed == playUrl ? _self.playUrl : playUrl // ignore: cast_nullable_to_non_nullable
 as String?,qualities: freezed == qualities ? _self.qualities : qualities // ignore: cast_nullable_to_non_nullable
 as List<VideoQuality>?,chapters: freezed == chapters ? _self.chapters : chapters // ignore: cast_nullable_to_non_nullable
@@ -1224,6 +1224,15 @@ as bool,
   ));
 }
 /// Create a copy of VideoContent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ContentSourceCopyWith<$Res> get source {
+  
+  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
+    return _then(_self.copyWith(source: value));
+  });
+}/// Create a copy of VideoContent
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -1246,15 +1255,6 @@ $ContentStatsCopyWith<$Res>? get stats {
 
   return $ContentStatsCopyWith<$Res>(_self.stats!, (value) {
     return _then(_self.copyWith(stats: value));
-  });
-}/// Create a copy of VideoContent
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContentSourceCopyWith<$Res> get source {
-  
-  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
-    return _then(_self.copyWith(source: value));
   });
 }/// Create a copy of VideoContent
 /// with the given fields replaced by the non-null parameter values.
@@ -1347,10 +1347,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source,  int? duration,  String? playUrl,  List<VideoQuality>? qualities,  List<VideoChapter>? chapters,  String? previewUrl,  List<Subtitle>? subtitles,  DanmakuConfig? danmaku,  VideoStatus? status,  bool isVip,  bool isPaid)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  ContentSource source,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  int? duration,  String? playUrl,  List<VideoQuality>? qualities,  List<VideoChapter>? chapters,  String? previewUrl,  List<Subtitle>? subtitles,  DanmakuConfig? danmaku,  VideoStatus? status,  bool isVip,  bool isPaid)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _VideoContent() when $default != null:
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source,_that.duration,_that.playUrl,_that.qualities,_that.chapters,_that.previewUrl,_that.subtitles,_that.danmaku,_that.status,_that.isVip,_that.isPaid);case _:
+return $default(_that.id,_that.title,_that.source,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.duration,_that.playUrl,_that.qualities,_that.chapters,_that.previewUrl,_that.subtitles,_that.danmaku,_that.status,_that.isVip,_that.isPaid);case _:
   return orElse();
 
 }
@@ -1368,10 +1368,10 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source,  int? duration,  String? playUrl,  List<VideoQuality>? qualities,  List<VideoChapter>? chapters,  String? previewUrl,  List<Subtitle>? subtitles,  DanmakuConfig? danmaku,  VideoStatus? status,  bool isVip,  bool isPaid)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  ContentSource source,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  int? duration,  String? playUrl,  List<VideoQuality>? qualities,  List<VideoChapter>? chapters,  String? previewUrl,  List<Subtitle>? subtitles,  DanmakuConfig? danmaku,  VideoStatus? status,  bool isVip,  bool isPaid)  $default,) {final _that = this;
 switch (_that) {
 case _VideoContent():
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source,_that.duration,_that.playUrl,_that.qualities,_that.chapters,_that.previewUrl,_that.subtitles,_that.danmaku,_that.status,_that.isVip,_that.isPaid);}
+return $default(_that.id,_that.title,_that.source,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.duration,_that.playUrl,_that.qualities,_that.chapters,_that.previewUrl,_that.subtitles,_that.danmaku,_that.status,_that.isVip,_that.isPaid);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -1385,10 +1385,10 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source,  int? duration,  String? playUrl,  List<VideoQuality>? qualities,  List<VideoChapter>? chapters,  String? previewUrl,  List<Subtitle>? subtitles,  DanmakuConfig? danmaku,  VideoStatus? status,  bool isVip,  bool isPaid)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  ContentSource source,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  int? duration,  String? playUrl,  List<VideoQuality>? qualities,  List<VideoChapter>? chapters,  String? previewUrl,  List<Subtitle>? subtitles,  DanmakuConfig? danmaku,  VideoStatus? status,  bool isVip,  bool isPaid)?  $default,) {final _that = this;
 switch (_that) {
 case _VideoContent() when $default != null:
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source,_that.duration,_that.playUrl,_that.qualities,_that.chapters,_that.previewUrl,_that.subtitles,_that.danmaku,_that.status,_that.isVip,_that.isPaid);case _:
+return $default(_that.id,_that.title,_that.source,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.duration,_that.playUrl,_that.qualities,_that.chapters,_that.previewUrl,_that.subtitles,_that.danmaku,_that.status,_that.isVip,_that.isPaid);case _:
   return null;
 
 }
@@ -1400,22 +1400,24 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,
 @JsonSerializable()
 
 class _VideoContent implements VideoContent {
-  const _VideoContent({required this.id, required this.title, this.cover, this.description, this.author, final  List<String>? tags, this.category, this.stats, this.createdAt, this.updatedAt, required this.source, this.duration, this.playUrl, final  List<VideoQuality>? qualities, final  List<VideoChapter>? chapters, this.previewUrl, final  List<Subtitle>? subtitles, this.danmaku, this.status, this.isVip = false, this.isPaid = false}): _tags = tags,_qualities = qualities,_chapters = chapters,_subtitles = subtitles;
+  const _VideoContent({required this.id, required this.title, required this.source, this.cover, this.description, this.author, final  List<String>? tags, this.category, this.stats, this.createdAt, this.updatedAt, this.duration, this.playUrl, final  List<VideoQuality>? qualities, final  List<VideoChapter>? chapters, this.previewUrl, final  List<Subtitle>? subtitles, this.danmaku, this.status, this.isVip = false, this.isPaid = false}): _tags = tags,_qualities = qualities,_chapters = chapters,_subtitles = subtitles;
   factory _VideoContent.fromJson(Map<String, dynamic> json) => _$VideoContentFromJson(json);
 
-/// Unique identifier.
+/// 唯一标识符。
 @override final  String id;
-/// Video title.
+/// 视频标题。
 @override final  String title;
-/// Cover image URL.
+/// 来源信息。
+@override final  ContentSource source;
+/// 封面图片 URL。
 @override final  String? cover;
-/// Description/summary.
+/// 描述/摘要。
 @override final  String? description;
-/// Author/uploader information.
+/// 作者/上传者信息。
 @override final  Author? author;
-/// Tags.
+/// 标签。
  final  List<String>? _tags;
-/// Tags.
+/// 标签。
 @override List<String>? get tags {
   final value = _tags;
   if (value == null) return null;
@@ -1424,23 +1426,21 @@ class _VideoContent implements VideoContent {
   return EqualUnmodifiableListView(value);
 }
 
-/// Category.
+/// 分类。
 @override final  String? category;
-/// Statistics.
+/// 统计信息。
 @override final  ContentStats? stats;
-/// Publish date.
+/// 发布日期。
 @override final  DateTime? createdAt;
-/// Update date.
+/// 更新日期。
 @override final  DateTime? updatedAt;
-/// Source information.
-@override final  ContentSource source;
-/// Video duration in seconds.
+/// 视频时长（秒）。
 @override final  int? duration;
-/// Primary playback URL.
+/// 主要播放 URL。
 @override final  String? playUrl;
-/// Available quality options.
+/// 可用的画质选项。
  final  List<VideoQuality>? _qualities;
-/// Available quality options.
+/// 可用的画质选项。
 @override List<VideoQuality>? get qualities {
   final value = _qualities;
   if (value == null) return null;
@@ -1449,9 +1449,9 @@ class _VideoContent implements VideoContent {
   return EqualUnmodifiableListView(value);
 }
 
-/// Episode/chapter list.
+/// 剧集/章节列表。
  final  List<VideoChapter>? _chapters;
-/// Episode/chapter list.
+/// 剧集/章节列表。
 @override List<VideoChapter>? get chapters {
   final value = _chapters;
   if (value == null) return null;
@@ -1460,11 +1460,11 @@ class _VideoContent implements VideoContent {
   return EqualUnmodifiableListView(value);
 }
 
-/// Preview/GIF URL.
+/// 预览/GIF URL。
 @override final  String? previewUrl;
-/// Subtitle tracks.
+/// 字幕轨道。
  final  List<Subtitle>? _subtitles;
-/// Subtitle tracks.
+/// 字幕轨道。
 @override List<Subtitle>? get subtitles {
   final value = _subtitles;
   if (value == null) return null;
@@ -1473,13 +1473,13 @@ class _VideoContent implements VideoContent {
   return EqualUnmodifiableListView(value);
 }
 
-/// Danmaku configuration.
+/// 弹幕配置。
 @override final  DanmakuConfig? danmaku;
-/// Video status.
+/// 视频状态。
 @override final  VideoStatus? status;
-/// Whether VIP subscription is required.
+/// 是否需要 VIP 订阅。
 @override@JsonKey() final  bool isVip;
-/// Whether payment is required.
+/// 是否需要付费。
 @override@JsonKey() final  bool isPaid;
 
 /// Create a copy of VideoContent
@@ -1495,16 +1495,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VideoContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.source, source) || other.source == source)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.playUrl, playUrl) || other.playUrl == playUrl)&&const DeepCollectionEquality().equals(other._qualities, _qualities)&&const DeepCollectionEquality().equals(other._chapters, _chapters)&&(identical(other.previewUrl, previewUrl) || other.previewUrl == previewUrl)&&const DeepCollectionEquality().equals(other._subtitles, _subtitles)&&(identical(other.danmaku, danmaku) || other.danmaku == danmaku)&&(identical(other.status, status) || other.status == status)&&(identical(other.isVip, isVip) || other.isVip == isVip)&&(identical(other.isPaid, isPaid) || other.isPaid == isPaid));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VideoContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.source, source) || other.source == source)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.playUrl, playUrl) || other.playUrl == playUrl)&&const DeepCollectionEquality().equals(other._qualities, _qualities)&&const DeepCollectionEquality().equals(other._chapters, _chapters)&&(identical(other.previewUrl, previewUrl) || other.previewUrl == previewUrl)&&const DeepCollectionEquality().equals(other._subtitles, _subtitles)&&(identical(other.danmaku, danmaku) || other.danmaku == danmaku)&&(identical(other.status, status) || other.status == status)&&(identical(other.isVip, isVip) || other.isVip == isVip)&&(identical(other.isPaid, isPaid) || other.isPaid == isPaid));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,cover,description,author,const DeepCollectionEquality().hash(_tags),category,stats,createdAt,updatedAt,source,duration,playUrl,const DeepCollectionEquality().hash(_qualities),const DeepCollectionEquality().hash(_chapters),previewUrl,const DeepCollectionEquality().hash(_subtitles),danmaku,status,isVip,isPaid]);
+int get hashCode => Object.hashAll([runtimeType,id,title,source,cover,description,author,const DeepCollectionEquality().hash(_tags),category,stats,createdAt,updatedAt,duration,playUrl,const DeepCollectionEquality().hash(_qualities),const DeepCollectionEquality().hash(_chapters),previewUrl,const DeepCollectionEquality().hash(_subtitles),danmaku,status,isVip,isPaid]);
 
 @override
 String toString() {
-  return 'VideoContent(id: $id, title: $title, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, source: $source, duration: $duration, playUrl: $playUrl, qualities: $qualities, chapters: $chapters, previewUrl: $previewUrl, subtitles: $subtitles, danmaku: $danmaku, status: $status, isVip: $isVip, isPaid: $isPaid)';
+  return 'VideoContent(id: $id, title: $title, source: $source, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, duration: $duration, playUrl: $playUrl, qualities: $qualities, chapters: $chapters, previewUrl: $previewUrl, subtitles: $subtitles, danmaku: $danmaku, status: $status, isVip: $isVip, isPaid: $isPaid)';
 }
 
 
@@ -1515,11 +1515,11 @@ abstract mixin class _$VideoContentCopyWith<$Res> implements $VideoContentCopyWi
   factory _$VideoContentCopyWith(_VideoContent value, $Res Function(_VideoContent) _then) = __$VideoContentCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, ContentSource source, int? duration, String? playUrl, List<VideoQuality>? qualities, List<VideoChapter>? chapters, String? previewUrl, List<Subtitle>? subtitles, DanmakuConfig? danmaku, VideoStatus? status, bool isVip, bool isPaid
+ String id, String title, ContentSource source, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, int? duration, String? playUrl, List<VideoQuality>? qualities, List<VideoChapter>? chapters, String? previewUrl, List<Subtitle>? subtitles, DanmakuConfig? danmaku, VideoStatus? status, bool isVip, bool isPaid
 });
 
 
-@override $AuthorCopyWith<$Res>? get author;@override $ContentStatsCopyWith<$Res>? get stats;@override $ContentSourceCopyWith<$Res> get source;@override $DanmakuConfigCopyWith<$Res>? get danmaku;
+@override $ContentSourceCopyWith<$Res> get source;@override $AuthorCopyWith<$Res>? get author;@override $ContentStatsCopyWith<$Res>? get stats;@override $DanmakuConfigCopyWith<$Res>? get danmaku;
 
 }
 /// @nodoc
@@ -1532,11 +1532,12 @@ class __$VideoContentCopyWithImpl<$Res>
 
 /// Create a copy of VideoContent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? source = null,Object? duration = freezed,Object? playUrl = freezed,Object? qualities = freezed,Object? chapters = freezed,Object? previewUrl = freezed,Object? subtitles = freezed,Object? danmaku = freezed,Object? status = freezed,Object? isVip = null,Object? isPaid = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? source = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? duration = freezed,Object? playUrl = freezed,Object? qualities = freezed,Object? chapters = freezed,Object? previewUrl = freezed,Object? subtitles = freezed,Object? danmaku = freezed,Object? status = freezed,Object? isVip = null,Object? isPaid = null,}) {
   return _then(_VideoContent(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as ContentSource,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,author: freezed == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
 as Author?,tags: freezed == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
@@ -1544,8 +1545,7 @@ as List<String>?,category: freezed == category ? _self.category : category // ig
 as String?,stats: freezed == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as ContentStats?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
-as ContentSource,duration: freezed == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
+as DateTime?,duration: freezed == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as int?,playUrl: freezed == playUrl ? _self.playUrl : playUrl // ignore: cast_nullable_to_non_nullable
 as String?,qualities: freezed == qualities ? _self._qualities : qualities // ignore: cast_nullable_to_non_nullable
 as List<VideoQuality>?,chapters: freezed == chapters ? _self._chapters : chapters // ignore: cast_nullable_to_non_nullable
@@ -1560,6 +1560,15 @@ as bool,
 }
 
 /// Create a copy of VideoContent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ContentSourceCopyWith<$Res> get source {
+  
+  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
+    return _then(_self.copyWith(source: value));
+  });
+}/// Create a copy of VideoContent
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -1582,15 +1591,6 @@ $ContentStatsCopyWith<$Res>? get stats {
 
   return $ContentStatsCopyWith<$Res>(_self.stats!, (value) {
     return _then(_self.copyWith(stats: value));
-  });
-}/// Create a copy of VideoContent
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContentSourceCopyWith<$Res> get source {
-  
-  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
-    return _then(_self.copyWith(source: value));
   });
 }/// Create a copy of VideoContent
 /// with the given fields replaced by the non-null parameter values.

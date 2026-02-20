@@ -7,29 +7,29 @@ import 'package:spectra/core/media/models/content_stats.dart';
 part 'video_content.freezed.dart';
 part 'video_content.g.dart';
 
-/// Video quality option.
+/// 视频画质选项。
 @freezed
 sealed class VideoQuality with _$VideoQuality {
   const factory VideoQuality({
-    /// Quality label (e.g., "1080p", "720p", "480p").
+    /// 画质标签（如 "1080p"、"720p"、"480p"）。
     required String label,
 
-    /// Video stream URL.
+    /// 视频流 URL。
     required String url,
 
-    /// Video codec (e.g., "h264", "h265", "vp9").
+    /// 视频编码（如 "h264"、"h265"、"vp9"）。
     String? codec,
 
-    /// Bitrate in kbps.
+    /// 码率（kbps）。
     int? bitrate,
 
-    /// Resolution width.
+    /// 分辨率宽度。
     int? width,
 
-    /// Resolution height.
+    /// 分辨率高度。
     int? height,
 
-    /// File size in bytes.
+    /// 文件大小（字节）。
     int? fileSize,
   }) = _VideoQuality;
 
@@ -37,21 +37,23 @@ sealed class VideoQuality with _$VideoQuality {
       _$VideoQualityFromJson(json);
 }
 
-/// Video chapter/episode.
+/// 视频章节/剧集。
 @freezed
 sealed class VideoChapter with _$VideoChapter {
   const factory VideoChapter({
-    /// Chapter ID.
+    /// 章节 ID。
     required String id,
 
-    /// Chapter title.
+    /// 章节标题。
     required String title,
 
-    /// Chapter index/number.
-    required int index, /// Chapter URL (if separate page).
+    /// 章节索引/编号。
+    required int index,
+
+    /// 章节 URL（如果为单独页面）。
     String? url,
 
-    /// Duration in seconds.
+    /// 时长（秒）。
     int? duration,
   }) = _VideoChapter;
 
@@ -59,18 +61,20 @@ sealed class VideoChapter with _$VideoChapter {
       _$VideoChapterFromJson(json);
 }
 
-/// Subtitle track.
+/// 字幕轨道。
 @freezed
 sealed class Subtitle with _$Subtitle {
   const factory Subtitle({
-    /// Language code (e.g., "en", "zh", "ja").
+    /// 语言代码（如 "en"、"zh"、"ja"）。
     required String language,
 
-    /// Subtitle URL (VTT, SRT, ASS format).
-    required String url, /// Language display name.
+    /// 字幕 URL（VTT、SRT、ASS 格式）。
+    required String url,
+
+    /// 语言显示名称。
     String? label,
 
-    /// Whether this is the default subtitle.
+    /// 是否为默认字幕。
     @Default(false) bool isDefault,
   }) = _Subtitle;
 
@@ -78,17 +82,17 @@ sealed class Subtitle with _$Subtitle {
       _$SubtitleFromJson(json);
 }
 
-/// Danmaku (bullet comment) configuration.
+/// 弹幕配置。
 @freezed
 sealed class DanmakuConfig with _$DanmakuConfig {
   const factory DanmakuConfig({
-    /// Danmaku data URL (XML or JSON format).
+    /// 弹幕数据 URL（XML 或 JSON 格式）。
     String? url,
 
-    /// Raw danmaku data (if embedded).
+    /// 原始弹幕数据（如果嵌入）。
     String? rawData,
 
-    /// Whether danmaku is enabled.
+    /// 是否启用弹幕。
     @Default(true) bool enabled,
   }) = _DanmakuConfig;
 
@@ -96,81 +100,83 @@ sealed class DanmakuConfig with _$DanmakuConfig {
       _$DanmakuConfigFromJson(json);
 }
 
-/// Video content status.
+/// 视频内容状态。
 enum VideoStatus {
-  /// Currently airing/ongoing.
+  /// 正在连载/更新中。
   ongoing,
 
-  /// Completed series.
+  /// 已完结。
   completed,
 
-  /// Not yet released.
+  /// 尚未发布。
   upcoming,
 }
 
-/// Video content model for movies, series, clips, etc.
+/// 电影、剧集、短片等视频内容模型。
 @freezed
 sealed class VideoContent with _$VideoContent {
   const factory VideoContent({
-    /// Unique identifier.
+    /// 唯一标识符。
     required String id,
 
-    /// Video title.
+    /// 视频标题。
     required String title,
 
-    /// Source information.
-    required ContentSource source, /// Cover image URL.
+    /// 来源信息。
+    required ContentSource source,
+
+    /// 封面图片 URL。
     String? cover,
 
-    /// Description/summary.
+    /// 描述/摘要。
     String? description,
 
-    /// Author/uploader information.
+    /// 作者/上传者信息。
     Author? author,
 
-    /// Tags.
+    /// 标签。
     List<String>? tags,
 
-    /// Category.
+    /// 分类。
     String? category,
 
-    /// Statistics.
+    /// 统计信息。
     ContentStats? stats,
 
-    /// Publish date.
+    /// 发布日期。
     DateTime? createdAt,
 
-    /// Update date.
+    /// 更新日期。
     DateTime? updatedAt,
 
-    /// Video duration in seconds.
+    /// 视频时长（秒）。
     int? duration,
 
-    /// Primary playback URL.
+    /// 主要播放 URL。
     String? playUrl,
 
-    /// Available quality options.
+    /// 可用的画质选项。
     List<VideoQuality>? qualities,
 
-    /// Episode/chapter list.
+    /// 剧集/章节列表。
     List<VideoChapter>? chapters,
 
-    /// Preview/GIF URL.
+    /// 预览/GIF URL。
     String? previewUrl,
 
-    /// Subtitle tracks.
+    /// 字幕轨道。
     List<Subtitle>? subtitles,
 
-    /// Danmaku configuration.
+    /// 弹幕配置。
     DanmakuConfig? danmaku,
 
-    /// Video status.
+    /// 视频状态。
     VideoStatus? status,
 
-    /// Whether VIP subscription is required.
+    /// 是否需要 VIP 订阅。
     @Default(false) bool isVip,
 
-    /// Whether payment is required.
+    /// 是否需要付费。
     @Default(false) bool isPaid,
   }) = _VideoContent;
 

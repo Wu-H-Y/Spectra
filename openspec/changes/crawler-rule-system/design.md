@@ -19,6 +19,7 @@ Spectra 是一个跨平台多媒体数据采集应用，支持视频、音乐、
 - **Web 编辑器**: 利用 Web 生态优势实现可视化编辑器
 - **freezed 强制**: 所有数据模型必须使用 freezed 定义不可变类
 - **代码生成**: 使用 build_runner 生成代码
+- **响应式设计**: 使用 sizer 包实现跨设备自适应布局，支持移动端和桌面端
 
 ### 利益相关者
 
@@ -37,6 +38,7 @@ Spectra 是一个跨平台多媒体数据采集应用，支持视频、音乐、
 4. **实现 Web 编辑器** - Vue 3 + TypeScript，可视化规则编辑
 5. **实现 HTTP Server** - Shelf 框架，为编辑器提供 API
 6. **定义标准数据模型** - freezed 模型，覆盖所有媒体类型
+7. **实现响应式 UI** - sizer 包，支持桌面端和移动端自适应布局
 
 ### Non-Goals
 
@@ -316,6 +318,140 @@ class VideoContent with _$VideoContent {
 - 测试选择器匹配结果
 - 截图分享
 
+### Decision 9: 响应式 UI 设计
+
+**选择**: 使用 sizer 包实现响应式布局
+
+```dart
+// Sizer 初始化 (包裹 MaterialApp)
+Sizer(
+  builder: (context, orientation, screenType) {
+    return MaterialApp(
+      home: HomePage(),
+    );
+  },
+);
+
+// 响应式尺寸
+Container(
+  width: 20.w,      // 屏幕宽度的 20%
+  height: 30.5.h,   // 屏幕高度的 30.5%
+  padding: EdgeInsets.all(16.dp),  // 响应式 dp
+)
+
+// 响应式字体
+Text(
+  '标题',
+  style: TextStyle(fontSize: 16.sp),  // 响应式字体大小
+)
+
+// 设备类型判断
+Device.screenType == ScreenType.tablet
+  ? TabletLayout()   // 平板布局
+  : MobileLayout();  // 手机布局
+
+// 屏幕方向判断
+Device.orientation == Orientation.portrait
+  ? PortraitLayout()
+  : LandscapeLayout();
+```
+
+**Sizer 配置**:
+
+```dart
+Sizer(
+  maxMobileWidth: 599,    // 最大手机宽度
+  maxTabletWidth: 1024,   // 最大平板宽度 (超过则为桌面)
+  builder: (context, orientation, screenType) {
+    // ...
+  },
+)
+```
+
+**尺寸单位说明**:
+
+| 单位 | 用途 | 示例 |
+|------|------|------|
+| `.w` | 宽度百分比 | `20.w` = 屏幕宽度的 20% |
+| `.h` | 高度百分比 | `30.5.h` = 屏幕高度的 30.5% |
+| `.sp` | 响应式字体 | `16.sp` = 基于密度的响应式字体 |
+| `.dp` | 响应式 dp | `16.dp` = 基于像素密度的 dp |
+| `.sw` | SafeArea 宽度百分比 | 去除安全区域后的宽度 |
+| `.sh` | SafeArea 高度百分比 | 去除安全区域后的高度 |
+
+**设备类型**:
+
+| ScreenType | 条件 | 布局策略 |
+|------------|------|----------|
+| mobile | width ≤ 599px | 单列布局，底部导航 |
+| tablet | 600px < width ≤ 1024px | 双列布局，侧边导航 |
+| desktop | width > 1024px | 多列布局，宽屏优化 |
+
+**理由**:
+- sizer 是 Flutter 生态中最流行的响应式布局包 (1.8k likes, 178k downloads)
+- 简单直观的 API，学习成本低
+- 支持所有平台 (Android, iOS, Web, Windows, macOS, Linux)
+- 百分比单位天然适应不同屏幕尺寸
+- 设备类型判断方便实现自适应布局
+
+**备选方案**:
+
+- MediaQuery + LayoutBuilder: 需要手动计算，代码繁琐
+- flutter_screenutil: 类似功能，但 sizer 的 API 更简洁
+- 自定义响应式框架: 开发成本高，维护困难
+
+**布局适配策略**:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    移动端 (width ≤ 599px)                   │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │                    AppBar                            │    │
+│  ├─────────────────────────────────────────────────────┤    │
+│  │                                                     │    │
+│  │                 主内容区域                           │    │
+│  │              (单列/全宽卡片)                         │    │
+│  │                                                     │    │
+│  ├─────────────────────────────────────────────────────┤    │
+│  │               底部导航栏                             │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│                  平板/桌面端 (width > 600px)                │
+├─────────────────────────────────────────────────────────────┤
+│  ┌──────────┬────────────────────────────────────────────┐  │
+│  │          │                                            │  │
+│  │  侧边    │              主内容区域                     │  │
+│  │  导航    │           (多列/网格布局)                   │  │
+│  │  栏      │                                            │  │
+│  │          │                                            │  │
+│  │ (20.w)   │                (80.w)                      │  │
+│  └──────────┴────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Web 编辑器响应式策略**:
+
+Web 编辑器使用 Tailwind CSS 的响应式断点，与 Flutter 端保持一致：
+
+```css
+/* Tailwind 配置 */
+screens: {
+  'mobile': '599px',
+  'tablet': '600px',
+  'desktop': '1024px',
+}
+```
+
+```tsx
+// 响应式组件示例
+<div className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-3 gap-4">
+  {items.map(item => <RuleCard key={item.id} item={item} />)}
+</div>
+```
+
 ---
 
 ## Risks / Trade-offs
@@ -378,10 +514,11 @@ class VideoContent with _$VideoContent {
 ### Phase 1: 核心模型 (1-2 周)
 
 1. 添加 freezed 相关依赖
-2. 定义基础媒体数据模型 (BaseContent, Author, ContentStats)
-3. 定义各媒体类型模型 (VideoContent, ComicContent, ...)
-4. 定义规则模型 (CrawlerRule, ExtractConfig, FieldMapping, ...)
-5. 运行 build_runner 生成代码
+2. 添加 sizer 依赖用于响应式布局
+3. 定义基础媒体数据模型 (BaseContent, Author, ContentStats)
+4. 定义各媒体类型模型 (VideoContent, ComicContent, ...)
+5. 定义规则模型 (CrawlerRule, ExtractConfig, FieldMapping, ...)
+6. 运行 build_runner 生成代码
 
 ### Phase 2: HTTP Server (1 周)
 

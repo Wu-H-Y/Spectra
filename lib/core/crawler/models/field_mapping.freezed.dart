@@ -15,11 +15,11 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FieldMapping {
 
-/// Target field name in output.
- String get field;/// Selector for extracting the value.
- Selector get selector;/// Default value if extraction fails.
- String? get defaultValue;/// List of transformations to apply.
- List<Transform>? get transforms;/// Whether this field is required.
+/// 输出中的目标字段名。
+ String get field;/// 用于提取值的选择器。
+ Selector get selector;/// 提取失败时的默认值。
+ String? get defaultValue;/// 要应用的转换列表。
+ List<Transform>? get transforms;/// 此字段是否为必需。
  bool get required;
 /// Create a copy of FieldMapping
 /// with the given fields replaced by the non-null parameter values.
@@ -224,15 +224,15 @@ class _FieldMapping implements FieldMapping {
   const _FieldMapping({required this.field, required this.selector, this.defaultValue, final  List<Transform>? transforms, this.required = false}): _transforms = transforms;
   factory _FieldMapping.fromJson(Map<String, dynamic> json) => _$FieldMappingFromJson(json);
 
-/// Target field name in output.
+/// 输出中的目标字段名。
 @override final  String field;
-/// Selector for extracting the value.
+/// 用于提取值的选择器。
 @override final  Selector selector;
-/// Default value if extraction fails.
+/// 提取失败时的默认值。
 @override final  String? defaultValue;
-/// List of transformations to apply.
+/// 要应用的转换列表。
  final  List<Transform>? _transforms;
-/// List of transformations to apply.
+/// 要应用的转换列表。
 @override List<Transform>? get transforms {
   final value = _transforms;
   if (value == null) return null;
@@ -241,7 +241,7 @@ class _FieldMapping implements FieldMapping {
   return EqualUnmodifiableListView(value);
 }
 
-/// Whether this field is required.
+/// 此字段是否为必需。
 @override@JsonKey() final  bool required;
 
 /// Create a copy of FieldMapping

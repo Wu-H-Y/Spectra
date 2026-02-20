@@ -3,36 +3,36 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'content_stats.freezed.dart';
 part 'content_stats.g.dart';
 
-/// Content statistics and engagement metrics.
+/// 内容统计和互动指标。
 ///
-/// Tracks view counts, likes, ratings, and other engagement data.
+/// 跟踪浏览量、点赞数、评分和其他互动数据。
 @freezed
 sealed class ContentStats with _$ContentStats {
-  /// Creates a [ContentStats] instance.
+  /// 创建 [ContentStats] 实例。
   const factory ContentStats({
-    /// View/play count.
+    /// 浏览/播放次数。
     int? viewCount,
 
-    /// Like/upvote count.
+    /// 点赞/支持数。
     int? likeCount,
 
-    /// Favorite/bookmark count.
+    /// 收藏/书签数。
     int? favoriteCount,
 
-    /// Comment count.
+    /// 评论数。
     int? commentCount,
 
-    /// Share/repost count.
+    /// 分享/转发数。
     int? shareCount,
 
-    /// Rating score (typically 0-10 or 0-5 scale).
+    /// 评分（通常为 0-10 或 0-5 分制）。
     double? rating,
 
-    /// Number of ratings received.
+    /// 收到的评分数。
     int? ratingCount,
   }) = _ContentStats;
 
-  /// Creates [ContentStats] from JSON.
+  /// 从 JSON 创建 [ContentStats]。
   factory ContentStats.fromJson(Map<String, dynamic> json) =>
       _$ContentStatsFromJson(json);
 }

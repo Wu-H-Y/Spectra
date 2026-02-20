@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:spectra/core/theme/theme.dart';
 import 'package:spectra/l10n/generated/l10n.dart';
 
@@ -10,7 +9,7 @@ import 'package:spectra/l10n/generated/l10n.dart';
 /// 应用的主入口页面，展示品牌风格 UI。
 ///
 /// 包含欢迎区域和功能卡片网格，支持深色/浅色主题。
-class HomePage extends ConsumerWidget {
+class HomePage extends HookConsumerWidget {
   /// 创建主页实例
   const HomePage({super.key});
 

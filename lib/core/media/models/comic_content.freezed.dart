@@ -15,12 +15,12 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ComicChapter {
 
-/// Chapter ID.
- String get id;/// Chapter title.
- String get title;/// Chapter URL (if separate page).
- String? get url;/// List of image URLs in reading order.
- List<String> get images;/// Chapter index/number.
- int get index;
+/// 章节 ID。
+ String get id;/// 章节标题。
+ String get title;/// 按阅读顺序排列的图片 URL 列表。
+ List<String> get images;/// 章节索引/编号。
+ int get index;/// 章节 URL（如果为单独页面）。
+ String? get url;
 /// Create a copy of ComicChapter
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -33,16 +33,16 @@ $ComicChapterCopyWith<ComicChapter> get copyWith => _$ComicChapterCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ComicChapter&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.url, url) || other.url == url)&&const DeepCollectionEquality().equals(other.images, images)&&(identical(other.index, index) || other.index == index));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ComicChapter&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.images, images)&&(identical(other.index, index) || other.index == index)&&(identical(other.url, url) || other.url == url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,url,const DeepCollectionEquality().hash(images),index);
+int get hashCode => Object.hash(runtimeType,id,title,const DeepCollectionEquality().hash(images),index,url);
 
 @override
 String toString() {
-  return 'ComicChapter(id: $id, title: $title, url: $url, images: $images, index: $index)';
+  return 'ComicChapter(id: $id, title: $title, images: $images, index: $index, url: $url)';
 }
 
 
@@ -53,7 +53,7 @@ abstract mixin class $ComicChapterCopyWith<$Res>  {
   factory $ComicChapterCopyWith(ComicChapter value, $Res Function(ComicChapter) _then) = _$ComicChapterCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? url, List<String> images, int index
+ String id, String title, List<String> images, int index, String? url
 });
 
 
@@ -70,14 +70,14 @@ class _$ComicChapterCopyWithImpl<$Res>
 
 /// Create a copy of ComicChapter
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? url = freezed,Object? images = null,Object? index = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? images = null,Object? index = null,Object? url = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
-as String?,images: null == images ? _self.images : images // ignore: cast_nullable_to_non_nullable
+as String,images: null == images ? _self.images : images // ignore: cast_nullable_to_non_nullable
 as List<String>,index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
-as int,
+as int,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -159,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? url,  List<String> images,  int index)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  List<String> images,  int index,  String? url)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ComicChapter() when $default != null:
-return $default(_that.id,_that.title,_that.url,_that.images,_that.index);case _:
+return $default(_that.id,_that.title,_that.images,_that.index,_that.url);case _:
   return orElse();
 
 }
@@ -180,10 +180,10 @@ return $default(_that.id,_that.title,_that.url,_that.images,_that.index);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? url,  List<String> images,  int index)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  List<String> images,  int index,  String? url)  $default,) {final _that = this;
 switch (_that) {
 case _ComicChapter():
-return $default(_that.id,_that.title,_that.url,_that.images,_that.index);}
+return $default(_that.id,_that.title,_that.images,_that.index,_that.url);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -197,10 +197,10 @@ return $default(_that.id,_that.title,_that.url,_that.images,_that.index);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? url,  List<String> images,  int index)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  List<String> images,  int index,  String? url)?  $default,) {final _that = this;
 switch (_that) {
 case _ComicChapter() when $default != null:
-return $default(_that.id,_that.title,_that.url,_that.images,_that.index);case _:
+return $default(_that.id,_that.title,_that.images,_that.index,_that.url);case _:
   return null;
 
 }
@@ -212,26 +212,26 @@ return $default(_that.id,_that.title,_that.url,_that.images,_that.index);case _:
 @JsonSerializable()
 
 class _ComicChapter implements ComicChapter {
-  const _ComicChapter({required this.id, required this.title, this.url, required final  List<String> images, required this.index}): _images = images;
+  const _ComicChapter({required this.id, required this.title, required final  List<String> images, required this.index, this.url}): _images = images;
   factory _ComicChapter.fromJson(Map<String, dynamic> json) => _$ComicChapterFromJson(json);
 
-/// Chapter ID.
+/// 章节 ID。
 @override final  String id;
-/// Chapter title.
+/// 章节标题。
 @override final  String title;
-/// Chapter URL (if separate page).
-@override final  String? url;
-/// List of image URLs in reading order.
+/// 按阅读顺序排列的图片 URL 列表。
  final  List<String> _images;
-/// List of image URLs in reading order.
+/// 按阅读顺序排列的图片 URL 列表。
 @override List<String> get images {
   if (_images is EqualUnmodifiableListView) return _images;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_images);
 }
 
-/// Chapter index/number.
+/// 章节索引/编号。
 @override final  int index;
+/// 章节 URL（如果为单独页面）。
+@override final  String? url;
 
 /// Create a copy of ComicChapter
 /// with the given fields replaced by the non-null parameter values.
@@ -246,16 +246,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ComicChapter&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.url, url) || other.url == url)&&const DeepCollectionEquality().equals(other._images, _images)&&(identical(other.index, index) || other.index == index));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ComicChapter&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._images, _images)&&(identical(other.index, index) || other.index == index)&&(identical(other.url, url) || other.url == url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,url,const DeepCollectionEquality().hash(_images),index);
+int get hashCode => Object.hash(runtimeType,id,title,const DeepCollectionEquality().hash(_images),index,url);
 
 @override
 String toString() {
-  return 'ComicChapter(id: $id, title: $title, url: $url, images: $images, index: $index)';
+  return 'ComicChapter(id: $id, title: $title, images: $images, index: $index, url: $url)';
 }
 
 
@@ -266,7 +266,7 @@ abstract mixin class _$ComicChapterCopyWith<$Res> implements $ComicChapterCopyWi
   factory _$ComicChapterCopyWith(_ComicChapter value, $Res Function(_ComicChapter) _then) = __$ComicChapterCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? url, List<String> images, int index
+ String id, String title, List<String> images, int index, String? url
 });
 
 
@@ -283,14 +283,14 @@ class __$ComicChapterCopyWithImpl<$Res>
 
 /// Create a copy of ComicChapter
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? url = freezed,Object? images = null,Object? index = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? images = null,Object? index = null,Object? url = freezed,}) {
   return _then(_ComicChapter(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
-as String?,images: null == images ? _self._images : images // ignore: cast_nullable_to_non_nullable
+as String,images: null == images ? _self._images : images // ignore: cast_nullable_to_non_nullable
 as List<String>,index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
-as int,
+as int,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -301,24 +301,24 @@ as int,
 /// @nodoc
 mixin _$ComicContent {
 
-/// Unique identifier.
- String get id;/// Comic title.
- String get title;/// Cover image URL.
- String? get cover;/// Description/summary.
- String? get description;/// Author/artist information.
- Author? get author;/// Tags.
- List<String>? get tags;/// Category.
- String? get category;/// Statistics.
- ContentStats? get stats;/// Publish date.
- DateTime? get createdAt;/// Update date.
- DateTime? get updatedAt;/// Source information.
- ContentSource get source;/// Chapter list.
- List<ComicChapter> get chapters;/// Comic status.
- ComicStatus? get status;/// Latest chapter info.
- ComicChapter? get lastChapter;/// Reading direction.
- ReadDirection get readDirection;/// Age rating/restriction.
- String? get ageRating;/// Total chapter count.
- int? get chapterCount;/// Total image count across all chapters.
+/// 唯一标识符。
+ String get id;/// 漫画标题。
+ String get title;/// 来源信息。
+ ContentSource get source;/// 章节列表。
+ List<ComicChapter> get chapters;/// 封面图片 URL。
+ String? get cover;/// 描述/摘要。
+ String? get description;/// 作者/画师信息。
+ Author? get author;/// 标签。
+ List<String>? get tags;/// 分类。
+ String? get category;/// 统计信息。
+ ContentStats? get stats;/// 发布日期。
+ DateTime? get createdAt;/// 更新日期。
+ DateTime? get updatedAt;/// 漫画状态。
+ ComicStatus? get status;/// 最新章节信息。
+ ComicChapter? get lastChapter;/// 阅读方向。
+ ReadDirection get readDirection;/// 年龄分级/限制。
+ String? get ageRating;/// 总章节数。
+ int? get chapterCount;/// 所有章节的总图片数。
  int? get totalImages;
 /// Create a copy of ComicContent
 /// with the given fields replaced by the non-null parameter values.
@@ -332,16 +332,16 @@ $ComicContentCopyWith<ComicContent> get copyWith => _$ComicContentCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ComicContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.source, source) || other.source == source)&&const DeepCollectionEquality().equals(other.chapters, chapters)&&(identical(other.status, status) || other.status == status)&&(identical(other.lastChapter, lastChapter) || other.lastChapter == lastChapter)&&(identical(other.readDirection, readDirection) || other.readDirection == readDirection)&&(identical(other.ageRating, ageRating) || other.ageRating == ageRating)&&(identical(other.chapterCount, chapterCount) || other.chapterCount == chapterCount)&&(identical(other.totalImages, totalImages) || other.totalImages == totalImages));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ComicContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.source, source) || other.source == source)&&const DeepCollectionEquality().equals(other.chapters, chapters)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.lastChapter, lastChapter) || other.lastChapter == lastChapter)&&(identical(other.readDirection, readDirection) || other.readDirection == readDirection)&&(identical(other.ageRating, ageRating) || other.ageRating == ageRating)&&(identical(other.chapterCount, chapterCount) || other.chapterCount == chapterCount)&&(identical(other.totalImages, totalImages) || other.totalImages == totalImages));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,cover,description,author,const DeepCollectionEquality().hash(tags),category,stats,createdAt,updatedAt,source,const DeepCollectionEquality().hash(chapters),status,lastChapter,readDirection,ageRating,chapterCount,totalImages);
+int get hashCode => Object.hash(runtimeType,id,title,source,const DeepCollectionEquality().hash(chapters),cover,description,author,const DeepCollectionEquality().hash(tags),category,stats,createdAt,updatedAt,status,lastChapter,readDirection,ageRating,chapterCount,totalImages);
 
 @override
 String toString() {
-  return 'ComicContent(id: $id, title: $title, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, source: $source, chapters: $chapters, status: $status, lastChapter: $lastChapter, readDirection: $readDirection, ageRating: $ageRating, chapterCount: $chapterCount, totalImages: $totalImages)';
+  return 'ComicContent(id: $id, title: $title, source: $source, chapters: $chapters, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, lastChapter: $lastChapter, readDirection: $readDirection, ageRating: $ageRating, chapterCount: $chapterCount, totalImages: $totalImages)';
 }
 
 
@@ -352,11 +352,11 @@ abstract mixin class $ComicContentCopyWith<$Res>  {
   factory $ComicContentCopyWith(ComicContent value, $Res Function(ComicContent) _then) = _$ComicContentCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, ContentSource source, List<ComicChapter> chapters, ComicStatus? status, ComicChapter? lastChapter, ReadDirection readDirection, String? ageRating, int? chapterCount, int? totalImages
+ String id, String title, ContentSource source, List<ComicChapter> chapters, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, ComicStatus? status, ComicChapter? lastChapter, ReadDirection readDirection, String? ageRating, int? chapterCount, int? totalImages
 });
 
 
-$AuthorCopyWith<$Res>? get author;$ContentStatsCopyWith<$Res>? get stats;$ContentSourceCopyWith<$Res> get source;$ComicChapterCopyWith<$Res>? get lastChapter;
+$ContentSourceCopyWith<$Res> get source;$AuthorCopyWith<$Res>? get author;$ContentStatsCopyWith<$Res>? get stats;$ComicChapterCopyWith<$Res>? get lastChapter;
 
 }
 /// @nodoc
@@ -369,11 +369,13 @@ class _$ComicContentCopyWithImpl<$Res>
 
 /// Create a copy of ComicContent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? source = null,Object? chapters = null,Object? status = freezed,Object? lastChapter = freezed,Object? readDirection = null,Object? ageRating = freezed,Object? chapterCount = freezed,Object? totalImages = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? source = null,Object? chapters = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? status = freezed,Object? lastChapter = freezed,Object? readDirection = null,Object? ageRating = freezed,Object? chapterCount = freezed,Object? totalImages = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as ContentSource,chapters: null == chapters ? _self.chapters : chapters // ignore: cast_nullable_to_non_nullable
+as List<ComicChapter>,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,author: freezed == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
 as Author?,tags: freezed == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
@@ -381,9 +383,7 @@ as List<String>?,category: freezed == category ? _self.category : category // ig
 as String?,stats: freezed == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as ContentStats?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
-as ContentSource,chapters: null == chapters ? _self.chapters : chapters // ignore: cast_nullable_to_non_nullable
-as List<ComicChapter>,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as DateTime?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ComicStatus?,lastChapter: freezed == lastChapter ? _self.lastChapter : lastChapter // ignore: cast_nullable_to_non_nullable
 as ComicChapter?,readDirection: null == readDirection ? _self.readDirection : readDirection // ignore: cast_nullable_to_non_nullable
 as ReadDirection,ageRating: freezed == ageRating ? _self.ageRating : ageRating // ignore: cast_nullable_to_non_nullable
@@ -393,6 +393,15 @@ as int?,
   ));
 }
 /// Create a copy of ComicContent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ContentSourceCopyWith<$Res> get source {
+  
+  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
+    return _then(_self.copyWith(source: value));
+  });
+}/// Create a copy of ComicContent
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -415,15 +424,6 @@ $ContentStatsCopyWith<$Res>? get stats {
 
   return $ContentStatsCopyWith<$Res>(_self.stats!, (value) {
     return _then(_self.copyWith(stats: value));
-  });
-}/// Create a copy of ComicContent
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContentSourceCopyWith<$Res> get source {
-  
-  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
-    return _then(_self.copyWith(source: value));
   });
 }/// Create a copy of ComicContent
 /// with the given fields replaced by the non-null parameter values.
@@ -516,10 +516,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source,  List<ComicChapter> chapters,  ComicStatus? status,  ComicChapter? lastChapter,  ReadDirection readDirection,  String? ageRating,  int? chapterCount,  int? totalImages)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  ContentSource source,  List<ComicChapter> chapters,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ComicStatus? status,  ComicChapter? lastChapter,  ReadDirection readDirection,  String? ageRating,  int? chapterCount,  int? totalImages)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ComicContent() when $default != null:
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source,_that.chapters,_that.status,_that.lastChapter,_that.readDirection,_that.ageRating,_that.chapterCount,_that.totalImages);case _:
+return $default(_that.id,_that.title,_that.source,_that.chapters,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.status,_that.lastChapter,_that.readDirection,_that.ageRating,_that.chapterCount,_that.totalImages);case _:
   return orElse();
 
 }
@@ -537,10 +537,10 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source,  List<ComicChapter> chapters,  ComicStatus? status,  ComicChapter? lastChapter,  ReadDirection readDirection,  String? ageRating,  int? chapterCount,  int? totalImages)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  ContentSource source,  List<ComicChapter> chapters,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ComicStatus? status,  ComicChapter? lastChapter,  ReadDirection readDirection,  String? ageRating,  int? chapterCount,  int? totalImages)  $default,) {final _that = this;
 switch (_that) {
 case _ComicContent():
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source,_that.chapters,_that.status,_that.lastChapter,_that.readDirection,_that.ageRating,_that.chapterCount,_that.totalImages);}
+return $default(_that.id,_that.title,_that.source,_that.chapters,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.status,_that.lastChapter,_that.readDirection,_that.ageRating,_that.chapterCount,_that.totalImages);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -554,10 +554,10 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source,  List<ComicChapter> chapters,  ComicStatus? status,  ComicChapter? lastChapter,  ReadDirection readDirection,  String? ageRating,  int? chapterCount,  int? totalImages)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  ContentSource source,  List<ComicChapter> chapters,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ComicStatus? status,  ComicChapter? lastChapter,  ReadDirection readDirection,  String? ageRating,  int? chapterCount,  int? totalImages)?  $default,) {final _that = this;
 switch (_that) {
 case _ComicContent() when $default != null:
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source,_that.chapters,_that.status,_that.lastChapter,_that.readDirection,_that.ageRating,_that.chapterCount,_that.totalImages);case _:
+return $default(_that.id,_that.title,_that.source,_that.chapters,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.status,_that.lastChapter,_that.readDirection,_that.ageRating,_that.chapterCount,_that.totalImages);case _:
   return null;
 
 }
@@ -569,22 +569,33 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,
 @JsonSerializable()
 
 class _ComicContent implements ComicContent {
-  const _ComicContent({required this.id, required this.title, this.cover, this.description, this.author, final  List<String>? tags, this.category, this.stats, this.createdAt, this.updatedAt, required this.source, required final  List<ComicChapter> chapters, this.status, this.lastChapter, this.readDirection = ReadDirection.ltr, this.ageRating, this.chapterCount, this.totalImages}): _tags = tags,_chapters = chapters;
+  const _ComicContent({required this.id, required this.title, required this.source, required final  List<ComicChapter> chapters, this.cover, this.description, this.author, final  List<String>? tags, this.category, this.stats, this.createdAt, this.updatedAt, this.status, this.lastChapter, this.readDirection = ReadDirection.ltr, this.ageRating, this.chapterCount, this.totalImages}): _chapters = chapters,_tags = tags;
   factory _ComicContent.fromJson(Map<String, dynamic> json) => _$ComicContentFromJson(json);
 
-/// Unique identifier.
+/// 唯一标识符。
 @override final  String id;
-/// Comic title.
+/// 漫画标题。
 @override final  String title;
-/// Cover image URL.
+/// 来源信息。
+@override final  ContentSource source;
+/// 章节列表。
+ final  List<ComicChapter> _chapters;
+/// 章节列表。
+@override List<ComicChapter> get chapters {
+  if (_chapters is EqualUnmodifiableListView) return _chapters;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_chapters);
+}
+
+/// 封面图片 URL。
 @override final  String? cover;
-/// Description/summary.
+/// 描述/摘要。
 @override final  String? description;
-/// Author/artist information.
+/// 作者/画师信息。
 @override final  Author? author;
-/// Tags.
+/// 标签。
  final  List<String>? _tags;
-/// Tags.
+/// 标签。
 @override List<String>? get tags {
   final value = _tags;
   if (value == null) return null;
@@ -593,36 +604,25 @@ class _ComicContent implements ComicContent {
   return EqualUnmodifiableListView(value);
 }
 
-/// Category.
+/// 分类。
 @override final  String? category;
-/// Statistics.
+/// 统计信息。
 @override final  ContentStats? stats;
-/// Publish date.
+/// 发布日期。
 @override final  DateTime? createdAt;
-/// Update date.
+/// 更新日期。
 @override final  DateTime? updatedAt;
-/// Source information.
-@override final  ContentSource source;
-/// Chapter list.
- final  List<ComicChapter> _chapters;
-/// Chapter list.
-@override List<ComicChapter> get chapters {
-  if (_chapters is EqualUnmodifiableListView) return _chapters;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_chapters);
-}
-
-/// Comic status.
+/// 漫画状态。
 @override final  ComicStatus? status;
-/// Latest chapter info.
+/// 最新章节信息。
 @override final  ComicChapter? lastChapter;
-/// Reading direction.
+/// 阅读方向。
 @override@JsonKey() final  ReadDirection readDirection;
-/// Age rating/restriction.
+/// 年龄分级/限制。
 @override final  String? ageRating;
-/// Total chapter count.
+/// 总章节数。
 @override final  int? chapterCount;
-/// Total image count across all chapters.
+/// 所有章节的总图片数。
 @override final  int? totalImages;
 
 /// Create a copy of ComicContent
@@ -638,16 +638,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ComicContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.source, source) || other.source == source)&&const DeepCollectionEquality().equals(other._chapters, _chapters)&&(identical(other.status, status) || other.status == status)&&(identical(other.lastChapter, lastChapter) || other.lastChapter == lastChapter)&&(identical(other.readDirection, readDirection) || other.readDirection == readDirection)&&(identical(other.ageRating, ageRating) || other.ageRating == ageRating)&&(identical(other.chapterCount, chapterCount) || other.chapterCount == chapterCount)&&(identical(other.totalImages, totalImages) || other.totalImages == totalImages));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ComicContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.source, source) || other.source == source)&&const DeepCollectionEquality().equals(other._chapters, _chapters)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.lastChapter, lastChapter) || other.lastChapter == lastChapter)&&(identical(other.readDirection, readDirection) || other.readDirection == readDirection)&&(identical(other.ageRating, ageRating) || other.ageRating == ageRating)&&(identical(other.chapterCount, chapterCount) || other.chapterCount == chapterCount)&&(identical(other.totalImages, totalImages) || other.totalImages == totalImages));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,cover,description,author,const DeepCollectionEquality().hash(_tags),category,stats,createdAt,updatedAt,source,const DeepCollectionEquality().hash(_chapters),status,lastChapter,readDirection,ageRating,chapterCount,totalImages);
+int get hashCode => Object.hash(runtimeType,id,title,source,const DeepCollectionEquality().hash(_chapters),cover,description,author,const DeepCollectionEquality().hash(_tags),category,stats,createdAt,updatedAt,status,lastChapter,readDirection,ageRating,chapterCount,totalImages);
 
 @override
 String toString() {
-  return 'ComicContent(id: $id, title: $title, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, source: $source, chapters: $chapters, status: $status, lastChapter: $lastChapter, readDirection: $readDirection, ageRating: $ageRating, chapterCount: $chapterCount, totalImages: $totalImages)';
+  return 'ComicContent(id: $id, title: $title, source: $source, chapters: $chapters, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, status: $status, lastChapter: $lastChapter, readDirection: $readDirection, ageRating: $ageRating, chapterCount: $chapterCount, totalImages: $totalImages)';
 }
 
 
@@ -658,11 +658,11 @@ abstract mixin class _$ComicContentCopyWith<$Res> implements $ComicContentCopyWi
   factory _$ComicContentCopyWith(_ComicContent value, $Res Function(_ComicContent) _then) = __$ComicContentCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, ContentSource source, List<ComicChapter> chapters, ComicStatus? status, ComicChapter? lastChapter, ReadDirection readDirection, String? ageRating, int? chapterCount, int? totalImages
+ String id, String title, ContentSource source, List<ComicChapter> chapters, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, ComicStatus? status, ComicChapter? lastChapter, ReadDirection readDirection, String? ageRating, int? chapterCount, int? totalImages
 });
 
 
-@override $AuthorCopyWith<$Res>? get author;@override $ContentStatsCopyWith<$Res>? get stats;@override $ContentSourceCopyWith<$Res> get source;@override $ComicChapterCopyWith<$Res>? get lastChapter;
+@override $ContentSourceCopyWith<$Res> get source;@override $AuthorCopyWith<$Res>? get author;@override $ContentStatsCopyWith<$Res>? get stats;@override $ComicChapterCopyWith<$Res>? get lastChapter;
 
 }
 /// @nodoc
@@ -675,11 +675,13 @@ class __$ComicContentCopyWithImpl<$Res>
 
 /// Create a copy of ComicContent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? source = null,Object? chapters = null,Object? status = freezed,Object? lastChapter = freezed,Object? readDirection = null,Object? ageRating = freezed,Object? chapterCount = freezed,Object? totalImages = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? source = null,Object? chapters = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? status = freezed,Object? lastChapter = freezed,Object? readDirection = null,Object? ageRating = freezed,Object? chapterCount = freezed,Object? totalImages = freezed,}) {
   return _then(_ComicContent(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as ContentSource,chapters: null == chapters ? _self._chapters : chapters // ignore: cast_nullable_to_non_nullable
+as List<ComicChapter>,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,author: freezed == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
 as Author?,tags: freezed == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
@@ -687,9 +689,7 @@ as List<String>?,category: freezed == category ? _self.category : category // ig
 as String?,stats: freezed == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as ContentStats?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
-as ContentSource,chapters: null == chapters ? _self._chapters : chapters // ignore: cast_nullable_to_non_nullable
-as List<ComicChapter>,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as DateTime?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ComicStatus?,lastChapter: freezed == lastChapter ? _self.lastChapter : lastChapter // ignore: cast_nullable_to_non_nullable
 as ComicChapter?,readDirection: null == readDirection ? _self.readDirection : readDirection // ignore: cast_nullable_to_non_nullable
 as ReadDirection,ageRating: freezed == ageRating ? _self.ageRating : ageRating // ignore: cast_nullable_to_non_nullable
@@ -700,6 +700,15 @@ as int?,
 }
 
 /// Create a copy of ComicContent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ContentSourceCopyWith<$Res> get source {
+  
+  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
+    return _then(_self.copyWith(source: value));
+  });
+}/// Create a copy of ComicContent
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -722,15 +731,6 @@ $ContentStatsCopyWith<$Res>? get stats {
 
   return $ContentStatsCopyWith<$Res>(_self.stats!, (value) {
     return _then(_self.copyWith(stats: value));
-  });
-}/// Create a copy of ComicContent
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContentSourceCopyWith<$Res> get source {
-  
-  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
-    return _then(_self.copyWith(source: value));
   });
 }/// Create a copy of ComicContent
 /// with the given fields replaced by the non-null parameter values.

@@ -15,11 +15,11 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MatchConfig {
 
-/// URL pattern (regex or glob pattern).
- String get pattern;/// Pattern type (regex or glob).
- MatchPatternType get type;/// Whether to match full URL or just path.
- bool get fullUrl;/// List of additional URL patterns to match.
- List<String>? get includePatterns;/// List of URL patterns to exclude.
+/// URL 模式（正则或 glob 模式）。
+ String get pattern;/// 模式类型（正则或 glob）。
+ MatchPatternType get type;/// 是否匹配完整 URL 还是只匹配路径。
+ bool get fullUrl;/// 要匹配的额外 URL 模式列表。
+ List<String>? get includePatterns;/// 要排除的 URL 模式列表。
  List<String>? get excludePatterns;
 /// Create a copy of MatchConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -215,15 +215,15 @@ class _MatchConfig implements MatchConfig {
   const _MatchConfig({required this.pattern, this.type = MatchPatternType.regex, this.fullUrl = true, final  List<String>? includePatterns, final  List<String>? excludePatterns}): _includePatterns = includePatterns,_excludePatterns = excludePatterns;
   factory _MatchConfig.fromJson(Map<String, dynamic> json) => _$MatchConfigFromJson(json);
 
-/// URL pattern (regex or glob pattern).
+/// URL 模式（正则或 glob 模式）。
 @override final  String pattern;
-/// Pattern type (regex or glob).
+/// 模式类型（正则或 glob）。
 @override@JsonKey() final  MatchPatternType type;
-/// Whether to match full URL or just path.
+/// 是否匹配完整 URL 还是只匹配路径。
 @override@JsonKey() final  bool fullUrl;
-/// List of additional URL patterns to match.
+/// 要匹配的额外 URL 模式列表。
  final  List<String>? _includePatterns;
-/// List of additional URL patterns to match.
+/// 要匹配的额外 URL 模式列表。
 @override List<String>? get includePatterns {
   final value = _includePatterns;
   if (value == null) return null;
@@ -232,9 +232,9 @@ class _MatchConfig implements MatchConfig {
   return EqualUnmodifiableListView(value);
 }
 
-/// List of URL patterns to exclude.
+/// 要排除的 URL 模式列表。
  final  List<String>? _excludePatterns;
-/// List of URL patterns to exclude.
+/// 要排除的 URL 模式列表。
 @override List<String>? get excludePatterns {
   final value = _excludePatterns;
   if (value == null) return null;

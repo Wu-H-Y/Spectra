@@ -15,8 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CrawlerAction {
 
-/// Action type.
- ActionType get type;/// Action parameters (varies by type).
+/// 动作类型。
+ ActionType get type;/// 动作参数（根据类型而异）。
 /// - wait: {selector?: string, timeout?: int}
 /// - click: {selector: string}
 /// - scroll: {direction: "up"|"down", distance?: int}
@@ -216,9 +216,9 @@ class _CrawlerAction implements CrawlerAction {
   const _CrawlerAction({required this.type, required final  Map<String, dynamic> params}): _params = params;
   factory _CrawlerAction.fromJson(Map<String, dynamic> json) => _$CrawlerActionFromJson(json);
 
-/// Action type.
+/// 动作类型。
 @override final  ActionType type;
-/// Action parameters (varies by type).
+/// 动作参数（根据类型而异）。
 /// - wait: {selector?: string, timeout?: int}
 /// - click: {selector: string}
 /// - scroll: {direction: "up"|"down", distance?: int}
@@ -227,7 +227,7 @@ class _CrawlerAction implements CrawlerAction {
 /// - condition: {check: string, then: List<Action>, else?: List<Action>}
 /// - loop: {count: int, actions: List<Action>, delay?: int}
  final  Map<String, dynamic> _params;
-/// Action parameters (varies by type).
+/// 动作参数（根据类型而异）。
 /// - wait: {selector?: string, timeout?: int}
 /// - click: {selector: string}
 /// - scroll: {direction: "up"|"down", distance?: int}
@@ -307,8 +307,8 @@ as Map<String, dynamic>,
 /// @nodoc
 mixin _$WaitAction {
 
-/// Selector to wait for (optional - if null, waits for time).
- String? get selector;/// Timeout in milliseconds.
+/// 要等待的选择器（可选 - 如果为 null，则等待时间）。
+ String? get selector;/// 超时时间（毫秒）。
  int get timeout;
 /// Create a copy of WaitAction
 /// with the given fields replaced by the non-null parameter values.
@@ -501,9 +501,9 @@ class _WaitAction implements WaitAction {
   const _WaitAction({this.selector, this.timeout = 5000});
   factory _WaitAction.fromJson(Map<String, dynamic> json) => _$WaitActionFromJson(json);
 
-/// Selector to wait for (optional - if null, waits for time).
+/// 要等待的选择器（可选 - 如果为 null，则等待时间）。
 @override final  String? selector;
-/// Timeout in milliseconds.
+/// 超时时间（毫秒）。
 @override@JsonKey() final  int timeout;
 
 /// Create a copy of WaitAction
@@ -571,8 +571,8 @@ as int,
 /// @nodoc
 mixin _$ClickAction {
 
-/// Selector for element to click.
- String get selector;/// Whether to scroll element into view first.
+/// 要点击的元素选择器。
+ String get selector;/// 是否先将元素滚动到视图中。
  bool get scrollIntoView;
 /// Create a copy of ClickAction
 /// with the given fields replaced by the non-null parameter values.
@@ -765,9 +765,9 @@ class _ClickAction implements ClickAction {
   const _ClickAction({required this.selector, this.scrollIntoView = true});
   factory _ClickAction.fromJson(Map<String, dynamic> json) => _$ClickActionFromJson(json);
 
-/// Selector for element to click.
+/// 要点击的元素选择器。
 @override final  String selector;
-/// Whether to scroll element into view first.
+/// 是否先将元素滚动到视图中。
 @override@JsonKey() final  bool scrollIntoView;
 
 /// Create a copy of ClickAction
@@ -835,9 +835,9 @@ as bool,
 /// @nodoc
 mixin _$ScrollAction {
 
-/// Scroll direction.
- ScrollDirection get direction;/// Scroll distance in pixels (0 = scroll to end).
- int get distance;/// Scroll smoothly.
+/// 滚动方向。
+ ScrollDirection get direction;/// 滚动距离（像素）（0 = 滚动到底部）。
+ int get distance;/// 平滑滚动。
  bool get smooth;
 /// Create a copy of ScrollAction
 /// with the given fields replaced by the non-null parameter values.
@@ -1031,11 +1031,11 @@ class _ScrollAction implements ScrollAction {
   const _ScrollAction({this.direction = ScrollDirection.down, this.distance = 0, this.smooth = true});
   factory _ScrollAction.fromJson(Map<String, dynamic> json) => _$ScrollActionFromJson(json);
 
-/// Scroll direction.
+/// 滚动方向。
 @override@JsonKey() final  ScrollDirection direction;
-/// Scroll distance in pixels (0 = scroll to end).
+/// 滚动距离（像素）（0 = 滚动到底部）。
 @override@JsonKey() final  int distance;
-/// Scroll smoothly.
+/// 平滑滚动。
 @override@JsonKey() final  bool smooth;
 
 /// Create a copy of ScrollAction
@@ -1104,9 +1104,9 @@ as bool,
 /// @nodoc
 mixin _$FillAction {
 
-/// Selector for form field.
- String get selector;/// Value to fill.
- String get value;/// Whether to simulate typing (with delays).
+/// 表单字段的选择器。
+ String get selector;/// 要填充的值。
+ String get value;/// 是否模拟打字（带延迟）。
  bool get simulateTyping;
 /// Create a copy of FillAction
 /// with the given fields replaced by the non-null parameter values.
@@ -1300,11 +1300,11 @@ class _FillAction implements FillAction {
   const _FillAction({required this.selector, required this.value, this.simulateTyping = false});
   factory _FillAction.fromJson(Map<String, dynamic> json) => _$FillActionFromJson(json);
 
-/// Selector for form field.
+/// 表单字段的选择器。
 @override final  String selector;
-/// Value to fill.
+/// 要填充的值。
 @override final  String value;
-/// Whether to simulate typing (with delays).
+/// 是否模拟打字（带延迟）。
 @override@JsonKey() final  bool simulateTyping;
 
 /// Create a copy of FillAction
@@ -1373,8 +1373,8 @@ as bool,
 /// @nodoc
 mixin _$ScriptAction {
 
-/// JavaScript code to execute.
- String get code;/// Whether to wait for script to complete.
+/// 要执行的 JavaScript 代码。
+ String get code;/// 是否等待脚本完成。
  bool get awaitCompletion;
 /// Create a copy of ScriptAction
 /// with the given fields replaced by the non-null parameter values.
@@ -1567,9 +1567,9 @@ class _ScriptAction implements ScriptAction {
   const _ScriptAction({required this.code, this.awaitCompletion = true});
   factory _ScriptAction.fromJson(Map<String, dynamic> json) => _$ScriptActionFromJson(json);
 
-/// JavaScript code to execute.
+/// 要执行的 JavaScript 代码。
 @override final  String code;
-/// Whether to wait for script to complete.
+/// 是否等待脚本完成。
 @override@JsonKey() final  bool awaitCompletion;
 
 /// Create a copy of ScriptAction
@@ -1637,9 +1637,9 @@ as bool,
 /// @nodoc
 mixin _$ConditionAction {
 
-/// Condition to check (JavaScript expression or selector).
- String get check;/// Actions to execute if condition is true.
- List<CrawlerAction> get thenActions;/// Actions to execute if condition is false.
+/// 要检查的条件（JavaScript 表达式或选择器）。
+ String get check;/// 条件为真时执行的动作。
+ List<CrawlerAction> get thenActions;/// 条件为假时执行的动作。
  List<CrawlerAction>? get elseActions;
 /// Create a copy of ConditionAction
 /// with the given fields replaced by the non-null parameter values.
@@ -1833,20 +1833,20 @@ class _ConditionAction implements ConditionAction {
   const _ConditionAction({required this.check, required final  List<CrawlerAction> thenActions, final  List<CrawlerAction>? elseActions}): _thenActions = thenActions,_elseActions = elseActions;
   factory _ConditionAction.fromJson(Map<String, dynamic> json) => _$ConditionActionFromJson(json);
 
-/// Condition to check (JavaScript expression or selector).
+/// 要检查的条件（JavaScript 表达式或选择器）。
 @override final  String check;
-/// Actions to execute if condition is true.
+/// 条件为真时执行的动作。
  final  List<CrawlerAction> _thenActions;
-/// Actions to execute if condition is true.
+/// 条件为真时执行的动作。
 @override List<CrawlerAction> get thenActions {
   if (_thenActions is EqualUnmodifiableListView) return _thenActions;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_thenActions);
 }
 
-/// Actions to execute if condition is false.
+/// 条件为假时执行的动作。
  final  List<CrawlerAction>? _elseActions;
-/// Actions to execute if condition is false.
+/// 条件为假时执行的动作。
 @override List<CrawlerAction>? get elseActions {
   final value = _elseActions;
   if (value == null) return null;
@@ -1922,9 +1922,9 @@ as List<CrawlerAction>?,
 /// @nodoc
 mixin _$LoopAction {
 
-/// Number of iterations.
- int get count;/// Actions to execute in each iteration.
- List<CrawlerAction> get actions;/// Delay between iterations in milliseconds.
+/// 迭代次数。
+ int get count;/// 每次迭代中执行的动作。
+ List<CrawlerAction> get actions;/// 迭代之间的延迟（毫秒）。
  int get delayMs;
 /// Create a copy of LoopAction
 /// with the given fields replaced by the non-null parameter values.
@@ -2118,18 +2118,18 @@ class _LoopAction implements LoopAction {
   const _LoopAction({required this.count, required final  List<CrawlerAction> actions, this.delayMs = 1000}): _actions = actions;
   factory _LoopAction.fromJson(Map<String, dynamic> json) => _$LoopActionFromJson(json);
 
-/// Number of iterations.
+/// 迭代次数。
 @override final  int count;
-/// Actions to execute in each iteration.
+/// 每次迭代中执行的动作。
  final  List<CrawlerAction> _actions;
-/// Actions to execute in each iteration.
+/// 每次迭代中执行的动作。
 @override List<CrawlerAction> get actions {
   if (_actions is EqualUnmodifiableListView) return _actions;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_actions);
 }
 
-/// Delay between iterations in milliseconds.
+/// 迭代之间的延迟（毫秒）。
 @override@JsonKey() final  int delayMs;
 
 /// Create a copy of LoopAction

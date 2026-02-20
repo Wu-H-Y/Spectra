@@ -15,15 +15,15 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PaginationConfig {
 
-/// Pagination type.
- PaginationType get type;/// Selector for next page link (for URL type).
- Selector? get nextSelector;/// URL template with page placeholder (for URL type).
-/// Use {page} as placeholder, e.g., "list?page={page}"
- String? get urlTemplate;/// Selector for "Load more" button (for click type).
- Selector? get clickSelector;/// Scroll container selector (for infiniteScroll type).
- Selector? get scrollContainer;/// Maximum pages to crawl (0 = unlimited).
- int get maxPages;/// Delay between page requests in milliseconds.
- int get delayMs;/// Wait for content to load after pagination.
+/// 分页类型。
+ PaginationType get type;/// 下一页链接的选择器（用于 URL 类型）。
+ Selector? get nextSelector;/// 带页码占位符的 URL 模板（用于 URL 类型）。
+/// 使用 {page} 作为占位符，例如 "list?page={page}"
+ String? get urlTemplate;/// "加载更多"按钮的选择器（用于点击类型）。
+ Selector? get clickSelector;/// 滚动容器选择器（用于无限滚动类型）。
+ Selector? get scrollContainer;/// 最大爬取页数（0 = 无限制）。
+ int get maxPages;/// 页面请求之间的延迟（毫秒）。
+ int get delayMs;/// 分页后等待内容加载的时间。
  int get waitAfterLoadMs;
 /// Create a copy of PaginationConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -258,22 +258,22 @@ class _PaginationConfig implements PaginationConfig {
   const _PaginationConfig({required this.type, this.nextSelector, this.urlTemplate, this.clickSelector, this.scrollContainer, this.maxPages = 0, this.delayMs = 1000, this.waitAfterLoadMs = 2000});
   factory _PaginationConfig.fromJson(Map<String, dynamic> json) => _$PaginationConfigFromJson(json);
 
-/// Pagination type.
+/// 分页类型。
 @override final  PaginationType type;
-/// Selector for next page link (for URL type).
+/// 下一页链接的选择器（用于 URL 类型）。
 @override final  Selector? nextSelector;
-/// URL template with page placeholder (for URL type).
-/// Use {page} as placeholder, e.g., "list?page={page}"
+/// 带页码占位符的 URL 模板（用于 URL 类型）。
+/// 使用 {page} 作为占位符，例如 "list?page={page}"
 @override final  String? urlTemplate;
-/// Selector for "Load more" button (for click type).
+/// "加载更多"按钮的选择器（用于点击类型）。
 @override final  Selector? clickSelector;
-/// Scroll container selector (for infiniteScroll type).
+/// 滚动容器选择器（用于无限滚动类型）。
 @override final  Selector? scrollContainer;
-/// Maximum pages to crawl (0 = unlimited).
+/// 最大爬取页数（0 = 无限制）。
 @override@JsonKey() final  int maxPages;
-/// Delay between page requests in milliseconds.
+/// 页面请求之间的延迟（毫秒）。
 @override@JsonKey() final  int delayMs;
-/// Wait for content to load after pagination.
+/// 分页后等待内容加载的时间。
 @override@JsonKey() final  int waitAfterLoadMs;
 
 /// Create a copy of PaginationConfig

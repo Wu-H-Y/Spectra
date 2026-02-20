@@ -7,29 +7,29 @@ import 'package:spectra/core/media/models/content_stats.dart';
 part 'image_content.freezed.dart';
 part 'image_content.g.dart';
 
-/// Image information.
+/// 图片信息。
 @freezed
 sealed class ImageInfo with _$ImageInfo {
   const factory ImageInfo({
-    /// Image URL.
+    /// 图片 URL。
     required String url,
 
-    /// Thumbnail/preview URL.
+    /// 缩略图/预览 URL。
     String? thumbnail,
 
-    /// Image width in pixels.
+    /// 图片宽度（像素）。
     int? width,
 
-    /// Image height in pixels.
+    /// 图片高度（像素）。
     int? height,
 
-    /// File size in bytes.
+    /// 文件大小（字节）。
     int? fileSize,
 
-    /// Image format (e.g., "jpg", "png", "webp").
+    /// 图片格式（如 "jpg"、"png"、"webp"）。
     String? format,
 
-    /// Alt text/caption.
+    /// 替代文本/说明。
     String? caption,
   }) = _ImageInfo;
 
@@ -37,56 +37,56 @@ sealed class ImageInfo with _$ImageInfo {
       _$ImageInfoFromJson(json);
 }
 
-/// Image/album content model.
+/// 图片/相册内容模型。
 @freezed
 sealed class ImageContent with _$ImageContent {
   const factory ImageContent({
-    /// Unique identifier.
+    /// 唯一标识符。
     required String id,
 
-    /// Title/caption.
+    /// 标题/说明。
     required String title,
 
-    /// Source information.
+    /// 来源信息。
     required ContentSource source,
 
-    /// List of images (single for non-album, multiple for album).
+    /// 图片列表（非相册为单张，相册为多张）。
     required List<ImageInfo> images,
 
-    /// Whether this is an album (multiple images).
+    /// 是否为相册（多图）。
     required bool isAlbum,
 
-    /// Cover/thumbnail URL.
+    /// 封面/缩略图 URL。
     String? cover,
 
-    /// Description.
+    /// 描述。
     String? description,
 
-    /// Author/photographer information.
+    /// 作者/摄影师信息。
     Author? author,
 
-    /// Tags.
+    /// 标签。
     List<String>? tags,
 
-    /// Category.
+    /// 分类。
     String? category,
 
-    /// Statistics.
+    /// 统计信息。
     ContentStats? stats,
 
-    /// Upload date.
+    /// 上传日期。
     DateTime? createdAt,
 
-    /// Update date.
+    /// 更新日期。
     DateTime? updatedAt,
 
-    /// Image resolution string (e.g., "1920x1080").
+    /// 图片分辨率字符串（如 "1920x1080"）。
     String? resolution,
 
-    /// Whether this is AI-generated content.
+    /// 是否为 AI 生成内容。
     bool? isAIGenerated,
 
-    /// AI model name if AI-generated (e.g., "Stable Diffusion", "Midjourney").
+    /// AI 模型名称（如 "Stable Diffusion"、"Midjourney"）。
     String? aiModel,
   }) = _ImageContent;
 

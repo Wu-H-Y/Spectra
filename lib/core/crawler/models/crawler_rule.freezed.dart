@@ -15,24 +15,24 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CrawlerRule {
 
-/// Rule unique identifier.
- String get id;/// Rule name.
- String get name;/// Rule description.
- String? get description;/// Media type this rule extracts.
- MediaType get mediaType;/// Rule version (semantic versioning).
- String get version;/// URL matching configuration.
- MatchConfig get match;/// HTTP request configuration.
- RequestConfig get request;/// Extraction configuration.
- ExtractConfig get extract;/// Actions to execute before extraction.
- List<CrawlerAction>? get beforeActions;/// Actions to execute after extraction.
- List<CrawlerAction>? get afterActions;/// Anti-crawl detection configuration.
- DetectionConfig? get detection;/// Rule author.
- String? get author;/// Rule source (official, third_party, user).
- String get source;/// Rule icon URL.
- String? get iconUrl;/// Rule tags.
- List<String>? get tags;/// Whether rule is enabled.
- bool get enabled;/// Creation timestamp.
- DateTime? get createdAt;/// Last update timestamp.
+/// 规则唯一标识符。
+ String get id;/// 规则名称。
+ String get name;/// 此规则提取的媒体类型。
+ MediaType get mediaType;/// URL 匹配配置。
+ MatchConfig get match;/// 提取配置。
+ ExtractConfig get extract;/// 规则描述。
+ String? get description;/// 规则版本（语义化版本）。
+ String get version;/// HTTP 请求配置。
+ RequestConfig get request;/// 提取前要执行的动作。
+ List<CrawlerAction>? get beforeActions;/// 提取后要执行的动作。
+ List<CrawlerAction>? get afterActions;/// 反爬虫检测配置。
+ DetectionConfig? get detection;/// 规则作者。
+ String? get author;/// 规则来源（official、third_party、user）。
+ String get source;/// 规则图标 URL。
+ String? get iconUrl;/// 规则标签。
+ List<String>? get tags;/// 规则是否启用。
+ bool get enabled;/// 创建时间戳。
+ DateTime? get createdAt;/// 最后更新时间戳。
  DateTime? get updatedAt;
 /// Create a copy of CrawlerRule
 /// with the given fields replaced by the non-null parameter values.
@@ -46,16 +46,16 @@ $CrawlerRuleCopyWith<CrawlerRule> get copyWith => _$CrawlerRuleCopyWithImpl<Craw
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CrawlerRule&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.version, version) || other.version == version)&&(identical(other.match, match) || other.match == match)&&(identical(other.request, request) || other.request == request)&&(identical(other.extract, extract) || other.extract == extract)&&const DeepCollectionEquality().equals(other.beforeActions, beforeActions)&&const DeepCollectionEquality().equals(other.afterActions, afterActions)&&(identical(other.detection, detection) || other.detection == detection)&&(identical(other.author, author) || other.author == author)&&(identical(other.source, source) || other.source == source)&&(identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CrawlerRule&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.match, match) || other.match == match)&&(identical(other.extract, extract) || other.extract == extract)&&(identical(other.description, description) || other.description == description)&&(identical(other.version, version) || other.version == version)&&(identical(other.request, request) || other.request == request)&&const DeepCollectionEquality().equals(other.beforeActions, beforeActions)&&const DeepCollectionEquality().equals(other.afterActions, afterActions)&&(identical(other.detection, detection) || other.detection == detection)&&(identical(other.author, author) || other.author == author)&&(identical(other.source, source) || other.source == source)&&(identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,mediaType,version,match,request,extract,const DeepCollectionEquality().hash(beforeActions),const DeepCollectionEquality().hash(afterActions),detection,author,source,iconUrl,const DeepCollectionEquality().hash(tags),enabled,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,name,mediaType,match,extract,description,version,request,const DeepCollectionEquality().hash(beforeActions),const DeepCollectionEquality().hash(afterActions),detection,author,source,iconUrl,const DeepCollectionEquality().hash(tags),enabled,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'CrawlerRule(id: $id, name: $name, description: $description, mediaType: $mediaType, version: $version, match: $match, request: $request, extract: $extract, beforeActions: $beforeActions, afterActions: $afterActions, detection: $detection, author: $author, source: $source, iconUrl: $iconUrl, tags: $tags, enabled: $enabled, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'CrawlerRule(id: $id, name: $name, mediaType: $mediaType, match: $match, extract: $extract, description: $description, version: $version, request: $request, beforeActions: $beforeActions, afterActions: $afterActions, detection: $detection, author: $author, source: $source, iconUrl: $iconUrl, tags: $tags, enabled: $enabled, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -66,11 +66,11 @@ abstract mixin class $CrawlerRuleCopyWith<$Res>  {
   factory $CrawlerRuleCopyWith(CrawlerRule value, $Res Function(CrawlerRule) _then) = _$CrawlerRuleCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String? description, MediaType mediaType, String version, MatchConfig match, RequestConfig request, ExtractConfig extract, List<CrawlerAction>? beforeActions, List<CrawlerAction>? afterActions, DetectionConfig? detection, String? author, String source, String? iconUrl, List<String>? tags, bool enabled, DateTime? createdAt, DateTime? updatedAt
+ String id, String name, MediaType mediaType, MatchConfig match, ExtractConfig extract, String? description, String version, RequestConfig request, List<CrawlerAction>? beforeActions, List<CrawlerAction>? afterActions, DetectionConfig? detection, String? author, String source, String? iconUrl, List<String>? tags, bool enabled, DateTime? createdAt, DateTime? updatedAt
 });
 
 
-$MatchConfigCopyWith<$Res> get match;$RequestConfigCopyWith<$Res> get request;$ExtractConfigCopyWith<$Res> get extract;$DetectionConfigCopyWith<$Res>? get detection;
+$MatchConfigCopyWith<$Res> get match;$ExtractConfigCopyWith<$Res> get extract;$RequestConfigCopyWith<$Res> get request;$DetectionConfigCopyWith<$Res>? get detection;
 
 }
 /// @nodoc
@@ -83,17 +83,17 @@ class _$CrawlerRuleCopyWithImpl<$Res>
 
 /// Create a copy of CrawlerRule
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? mediaType = null,Object? version = null,Object? match = null,Object? request = null,Object? extract = null,Object? beforeActions = freezed,Object? afterActions = freezed,Object? detection = freezed,Object? author = freezed,Object? source = null,Object? iconUrl = freezed,Object? tags = freezed,Object? enabled = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? mediaType = null,Object? match = null,Object? extract = null,Object? description = freezed,Object? version = null,Object? request = null,Object? beforeActions = freezed,Object? afterActions = freezed,Object? detection = freezed,Object? author = freezed,Object? source = null,Object? iconUrl = freezed,Object? tags = freezed,Object? enabled = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
-as MediaType,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
-as String,match: null == match ? _self.match : match // ignore: cast_nullable_to_non_nullable
-as MatchConfig,request: null == request ? _self.request : request // ignore: cast_nullable_to_non_nullable
-as RequestConfig,extract: null == extract ? _self.extract : extract // ignore: cast_nullable_to_non_nullable
-as ExtractConfig,beforeActions: freezed == beforeActions ? _self.beforeActions : beforeActions // ignore: cast_nullable_to_non_nullable
+as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
+as MediaType,match: null == match ? _self.match : match // ignore: cast_nullable_to_non_nullable
+as MatchConfig,extract: null == extract ? _self.extract : extract // ignore: cast_nullable_to_non_nullable
+as ExtractConfig,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String,request: null == request ? _self.request : request // ignore: cast_nullable_to_non_nullable
+as RequestConfig,beforeActions: freezed == beforeActions ? _self.beforeActions : beforeActions // ignore: cast_nullable_to_non_nullable
 as List<CrawlerAction>?,afterActions: freezed == afterActions ? _self.afterActions : afterActions // ignore: cast_nullable_to_non_nullable
 as List<CrawlerAction>?,detection: freezed == detection ? _self.detection : detection // ignore: cast_nullable_to_non_nullable
 as DetectionConfig?,author: freezed == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
@@ -119,19 +119,19 @@ $MatchConfigCopyWith<$Res> get match {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$RequestConfigCopyWith<$Res> get request {
+$ExtractConfigCopyWith<$Res> get extract {
   
-  return $RequestConfigCopyWith<$Res>(_self.request, (value) {
-    return _then(_self.copyWith(request: value));
+  return $ExtractConfigCopyWith<$Res>(_self.extract, (value) {
+    return _then(_self.copyWith(extract: value));
   });
 }/// Create a copy of CrawlerRule
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ExtractConfigCopyWith<$Res> get extract {
+$RequestConfigCopyWith<$Res> get request {
   
-  return $ExtractConfigCopyWith<$Res>(_self.extract, (value) {
-    return _then(_self.copyWith(extract: value));
+  return $RequestConfigCopyWith<$Res>(_self.request, (value) {
+    return _then(_self.copyWith(request: value));
   });
 }/// Create a copy of CrawlerRule
 /// with the given fields replaced by the non-null parameter values.
@@ -224,10 +224,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? description,  MediaType mediaType,  String version,  MatchConfig match,  RequestConfig request,  ExtractConfig extract,  List<CrawlerAction>? beforeActions,  List<CrawlerAction>? afterActions,  DetectionConfig? detection,  String? author,  String source,  String? iconUrl,  List<String>? tags,  bool enabled,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  MediaType mediaType,  MatchConfig match,  ExtractConfig extract,  String? description,  String version,  RequestConfig request,  List<CrawlerAction>? beforeActions,  List<CrawlerAction>? afterActions,  DetectionConfig? detection,  String? author,  String source,  String? iconUrl,  List<String>? tags,  bool enabled,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CrawlerRule() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.mediaType,_that.version,_that.match,_that.request,_that.extract,_that.beforeActions,_that.afterActions,_that.detection,_that.author,_that.source,_that.iconUrl,_that.tags,_that.enabled,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.mediaType,_that.match,_that.extract,_that.description,_that.version,_that.request,_that.beforeActions,_that.afterActions,_that.detection,_that.author,_that.source,_that.iconUrl,_that.tags,_that.enabled,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -245,10 +245,10 @@ return $default(_that.id,_that.name,_that.description,_that.mediaType,_that.vers
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? description,  MediaType mediaType,  String version,  MatchConfig match,  RequestConfig request,  ExtractConfig extract,  List<CrawlerAction>? beforeActions,  List<CrawlerAction>? afterActions,  DetectionConfig? detection,  String? author,  String source,  String? iconUrl,  List<String>? tags,  bool enabled,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  MediaType mediaType,  MatchConfig match,  ExtractConfig extract,  String? description,  String version,  RequestConfig request,  List<CrawlerAction>? beforeActions,  List<CrawlerAction>? afterActions,  DetectionConfig? detection,  String? author,  String source,  String? iconUrl,  List<String>? tags,  bool enabled,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _CrawlerRule():
-return $default(_that.id,_that.name,_that.description,_that.mediaType,_that.version,_that.match,_that.request,_that.extract,_that.beforeActions,_that.afterActions,_that.detection,_that.author,_that.source,_that.iconUrl,_that.tags,_that.enabled,_that.createdAt,_that.updatedAt);}
+return $default(_that.id,_that.name,_that.mediaType,_that.match,_that.extract,_that.description,_that.version,_that.request,_that.beforeActions,_that.afterActions,_that.detection,_that.author,_that.source,_that.iconUrl,_that.tags,_that.enabled,_that.createdAt,_that.updatedAt);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -262,10 +262,10 @@ return $default(_that.id,_that.name,_that.description,_that.mediaType,_that.vers
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? description,  MediaType mediaType,  String version,  MatchConfig match,  RequestConfig request,  ExtractConfig extract,  List<CrawlerAction>? beforeActions,  List<CrawlerAction>? afterActions,  DetectionConfig? detection,  String? author,  String source,  String? iconUrl,  List<String>? tags,  bool enabled,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  MediaType mediaType,  MatchConfig match,  ExtractConfig extract,  String? description,  String version,  RequestConfig request,  List<CrawlerAction>? beforeActions,  List<CrawlerAction>? afterActions,  DetectionConfig? detection,  String? author,  String source,  String? iconUrl,  List<String>? tags,  bool enabled,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _CrawlerRule() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.mediaType,_that.version,_that.match,_that.request,_that.extract,_that.beforeActions,_that.afterActions,_that.detection,_that.author,_that.source,_that.iconUrl,_that.tags,_that.enabled,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.mediaType,_that.match,_that.extract,_that.description,_that.version,_that.request,_that.beforeActions,_that.afterActions,_that.detection,_that.author,_that.source,_that.iconUrl,_that.tags,_that.enabled,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -277,28 +277,28 @@ return $default(_that.id,_that.name,_that.description,_that.mediaType,_that.vers
 @JsonSerializable()
 
 class _CrawlerRule implements CrawlerRule {
-  const _CrawlerRule({required this.id, required this.name, this.description, required this.mediaType, this.version = '1.0.0', required this.match, this.request = const RequestConfig(), required this.extract, final  List<CrawlerAction>? beforeActions, final  List<CrawlerAction>? afterActions, this.detection, this.author, this.source = 'user', this.iconUrl, final  List<String>? tags, this.enabled = true, this.createdAt, this.updatedAt}): _beforeActions = beforeActions,_afterActions = afterActions,_tags = tags;
+  const _CrawlerRule({required this.id, required this.name, required this.mediaType, required this.match, required this.extract, this.description, this.version = '1.0.0', this.request = const RequestConfig(), final  List<CrawlerAction>? beforeActions, final  List<CrawlerAction>? afterActions, this.detection, this.author, this.source = 'user', this.iconUrl, final  List<String>? tags, this.enabled = true, this.createdAt, this.updatedAt}): _beforeActions = beforeActions,_afterActions = afterActions,_tags = tags;
   factory _CrawlerRule.fromJson(Map<String, dynamic> json) => _$CrawlerRuleFromJson(json);
 
-/// Rule unique identifier.
+/// 规则唯一标识符。
 @override final  String id;
-/// Rule name.
+/// 规则名称。
 @override final  String name;
-/// Rule description.
-@override final  String? description;
-/// Media type this rule extracts.
+/// 此规则提取的媒体类型。
 @override final  MediaType mediaType;
-/// Rule version (semantic versioning).
-@override@JsonKey() final  String version;
-/// URL matching configuration.
+/// URL 匹配配置。
 @override final  MatchConfig match;
-/// HTTP request configuration.
-@override@JsonKey() final  RequestConfig request;
-/// Extraction configuration.
+/// 提取配置。
 @override final  ExtractConfig extract;
-/// Actions to execute before extraction.
+/// 规则描述。
+@override final  String? description;
+/// 规则版本（语义化版本）。
+@override@JsonKey() final  String version;
+/// HTTP 请求配置。
+@override@JsonKey() final  RequestConfig request;
+/// 提取前要执行的动作。
  final  List<CrawlerAction>? _beforeActions;
-/// Actions to execute before extraction.
+/// 提取前要执行的动作。
 @override List<CrawlerAction>? get beforeActions {
   final value = _beforeActions;
   if (value == null) return null;
@@ -307,9 +307,9 @@ class _CrawlerRule implements CrawlerRule {
   return EqualUnmodifiableListView(value);
 }
 
-/// Actions to execute after extraction.
+/// 提取后要执行的动作。
  final  List<CrawlerAction>? _afterActions;
-/// Actions to execute after extraction.
+/// 提取后要执行的动作。
 @override List<CrawlerAction>? get afterActions {
   final value = _afterActions;
   if (value == null) return null;
@@ -318,17 +318,17 @@ class _CrawlerRule implements CrawlerRule {
   return EqualUnmodifiableListView(value);
 }
 
-/// Anti-crawl detection configuration.
+/// 反爬虫检测配置。
 @override final  DetectionConfig? detection;
-/// Rule author.
+/// 规则作者。
 @override final  String? author;
-/// Rule source (official, third_party, user).
+/// 规则来源（official、third_party、user）。
 @override@JsonKey() final  String source;
-/// Rule icon URL.
+/// 规则图标 URL。
 @override final  String? iconUrl;
-/// Rule tags.
+/// 规则标签。
  final  List<String>? _tags;
-/// Rule tags.
+/// 规则标签。
 @override List<String>? get tags {
   final value = _tags;
   if (value == null) return null;
@@ -337,11 +337,11 @@ class _CrawlerRule implements CrawlerRule {
   return EqualUnmodifiableListView(value);
 }
 
-/// Whether rule is enabled.
+/// 规则是否启用。
 @override@JsonKey() final  bool enabled;
-/// Creation timestamp.
+/// 创建时间戳。
 @override final  DateTime? createdAt;
-/// Last update timestamp.
+/// 最后更新时间戳。
 @override final  DateTime? updatedAt;
 
 /// Create a copy of CrawlerRule
@@ -357,16 +357,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CrawlerRule&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.version, version) || other.version == version)&&(identical(other.match, match) || other.match == match)&&(identical(other.request, request) || other.request == request)&&(identical(other.extract, extract) || other.extract == extract)&&const DeepCollectionEquality().equals(other._beforeActions, _beforeActions)&&const DeepCollectionEquality().equals(other._afterActions, _afterActions)&&(identical(other.detection, detection) || other.detection == detection)&&(identical(other.author, author) || other.author == author)&&(identical(other.source, source) || other.source == source)&&(identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CrawlerRule&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.match, match) || other.match == match)&&(identical(other.extract, extract) || other.extract == extract)&&(identical(other.description, description) || other.description == description)&&(identical(other.version, version) || other.version == version)&&(identical(other.request, request) || other.request == request)&&const DeepCollectionEquality().equals(other._beforeActions, _beforeActions)&&const DeepCollectionEquality().equals(other._afterActions, _afterActions)&&(identical(other.detection, detection) || other.detection == detection)&&(identical(other.author, author) || other.author == author)&&(identical(other.source, source) || other.source == source)&&(identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.enabled, enabled) || other.enabled == enabled)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,mediaType,version,match,request,extract,const DeepCollectionEquality().hash(_beforeActions),const DeepCollectionEquality().hash(_afterActions),detection,author,source,iconUrl,const DeepCollectionEquality().hash(_tags),enabled,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,name,mediaType,match,extract,description,version,request,const DeepCollectionEquality().hash(_beforeActions),const DeepCollectionEquality().hash(_afterActions),detection,author,source,iconUrl,const DeepCollectionEquality().hash(_tags),enabled,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'CrawlerRule(id: $id, name: $name, description: $description, mediaType: $mediaType, version: $version, match: $match, request: $request, extract: $extract, beforeActions: $beforeActions, afterActions: $afterActions, detection: $detection, author: $author, source: $source, iconUrl: $iconUrl, tags: $tags, enabled: $enabled, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'CrawlerRule(id: $id, name: $name, mediaType: $mediaType, match: $match, extract: $extract, description: $description, version: $version, request: $request, beforeActions: $beforeActions, afterActions: $afterActions, detection: $detection, author: $author, source: $source, iconUrl: $iconUrl, tags: $tags, enabled: $enabled, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -377,11 +377,11 @@ abstract mixin class _$CrawlerRuleCopyWith<$Res> implements $CrawlerRuleCopyWith
   factory _$CrawlerRuleCopyWith(_CrawlerRule value, $Res Function(_CrawlerRule) _then) = __$CrawlerRuleCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String? description, MediaType mediaType, String version, MatchConfig match, RequestConfig request, ExtractConfig extract, List<CrawlerAction>? beforeActions, List<CrawlerAction>? afterActions, DetectionConfig? detection, String? author, String source, String? iconUrl, List<String>? tags, bool enabled, DateTime? createdAt, DateTime? updatedAt
+ String id, String name, MediaType mediaType, MatchConfig match, ExtractConfig extract, String? description, String version, RequestConfig request, List<CrawlerAction>? beforeActions, List<CrawlerAction>? afterActions, DetectionConfig? detection, String? author, String source, String? iconUrl, List<String>? tags, bool enabled, DateTime? createdAt, DateTime? updatedAt
 });
 
 
-@override $MatchConfigCopyWith<$Res> get match;@override $RequestConfigCopyWith<$Res> get request;@override $ExtractConfigCopyWith<$Res> get extract;@override $DetectionConfigCopyWith<$Res>? get detection;
+@override $MatchConfigCopyWith<$Res> get match;@override $ExtractConfigCopyWith<$Res> get extract;@override $RequestConfigCopyWith<$Res> get request;@override $DetectionConfigCopyWith<$Res>? get detection;
 
 }
 /// @nodoc
@@ -394,17 +394,17 @@ class __$CrawlerRuleCopyWithImpl<$Res>
 
 /// Create a copy of CrawlerRule
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? mediaType = null,Object? version = null,Object? match = null,Object? request = null,Object? extract = null,Object? beforeActions = freezed,Object? afterActions = freezed,Object? detection = freezed,Object? author = freezed,Object? source = null,Object? iconUrl = freezed,Object? tags = freezed,Object? enabled = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? mediaType = null,Object? match = null,Object? extract = null,Object? description = freezed,Object? version = null,Object? request = null,Object? beforeActions = freezed,Object? afterActions = freezed,Object? detection = freezed,Object? author = freezed,Object? source = null,Object? iconUrl = freezed,Object? tags = freezed,Object? enabled = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_CrawlerRule(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
-as MediaType,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
-as String,match: null == match ? _self.match : match // ignore: cast_nullable_to_non_nullable
-as MatchConfig,request: null == request ? _self.request : request // ignore: cast_nullable_to_non_nullable
-as RequestConfig,extract: null == extract ? _self.extract : extract // ignore: cast_nullable_to_non_nullable
-as ExtractConfig,beforeActions: freezed == beforeActions ? _self._beforeActions : beforeActions // ignore: cast_nullable_to_non_nullable
+as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
+as MediaType,match: null == match ? _self.match : match // ignore: cast_nullable_to_non_nullable
+as MatchConfig,extract: null == extract ? _self.extract : extract // ignore: cast_nullable_to_non_nullable
+as ExtractConfig,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as String,request: null == request ? _self.request : request // ignore: cast_nullable_to_non_nullable
+as RequestConfig,beforeActions: freezed == beforeActions ? _self._beforeActions : beforeActions // ignore: cast_nullable_to_non_nullable
 as List<CrawlerAction>?,afterActions: freezed == afterActions ? _self._afterActions : afterActions // ignore: cast_nullable_to_non_nullable
 as List<CrawlerAction>?,detection: freezed == detection ? _self.detection : detection // ignore: cast_nullable_to_non_nullable
 as DetectionConfig?,author: freezed == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
@@ -431,19 +431,19 @@ $MatchConfigCopyWith<$Res> get match {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$RequestConfigCopyWith<$Res> get request {
+$ExtractConfigCopyWith<$Res> get extract {
   
-  return $RequestConfigCopyWith<$Res>(_self.request, (value) {
-    return _then(_self.copyWith(request: value));
+  return $ExtractConfigCopyWith<$Res>(_self.extract, (value) {
+    return _then(_self.copyWith(extract: value));
   });
 }/// Create a copy of CrawlerRule
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ExtractConfigCopyWith<$Res> get extract {
+$RequestConfigCopyWith<$Res> get request {
   
-  return $ExtractConfigCopyWith<$Res>(_self.extract, (value) {
-    return _then(_self.copyWith(extract: value));
+  return $RequestConfigCopyWith<$Res>(_self.request, (value) {
+    return _then(_self.copyWith(request: value));
   });
 }/// Create a copy of CrawlerRule
 /// with the given fields replaced by the non-null parameter values.

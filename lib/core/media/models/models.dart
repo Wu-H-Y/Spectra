@@ -1,11 +1,11 @@
-/// Media data models using freezed for immutability.
+/// 使用 freezed 实现不可变性的媒体数据模型。
 ///
-/// This library provides models for different media types:
-/// - VideoContent: Video media (movies, series, clips)
-/// - ComicContent: Comic/manga media
-/// - NovelContent: Novel/fiction text content
-/// - MusicContent: Music/audio tracks
-/// - ImageContent: Images and albums
+/// 此库提供不同媒体类型的模型：
+/// - VideoContent: 视频媒体（电影、剧集、短片）
+/// - ComicContent: 漫画/日漫媒体
+/// - NovelContent: 小说/虚构文本内容
+/// - MusicContent: 音乐/音轨
+/// - ImageContent: 图片和相册
 library;
 
 export 'author.dart';

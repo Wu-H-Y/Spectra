@@ -3,41 +3,41 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'request_config.freezed.dart';
 part 'request_config.g.dart';
 
-/// HTTP request configuration.
+/// HTTP 请求配置。
 @freezed
 sealed class RequestConfig with _$RequestConfig {
   const factory RequestConfig({
-    /// HTTP method (GET, POST, etc.).
+    /// HTTP 方法（GET、POST 等）。
     @Default('GET') String method,
 
-    /// Request headers.
+    /// 请求头。
     Map<String, String>? headers,
 
-    /// Request body (for POST requests).
+    /// 请求体（用于 POST 请求）。
     String? body,
 
-    /// Query parameters.
+    /// 查询参数。
     Map<String, String>? query,
 
-    /// Cookies to send.
+    /// 要发送的 Cookies。
     Map<String, String>? cookies,
 
-    /// Request timeout in milliseconds.
+    /// 请求超时时间（毫秒）。
     @Default(30000) int timeoutMs,
 
-    /// Whether to follow redirects.
+    /// 是否跟随重定向。
     @Default(true) bool followRedirects,
 
-    /// Maximum redirects to follow.
+    /// 最大重定向次数。
     @Default(5) int maxRedirects,
 
-    /// User agent string.
+    /// 用户代理字符串。
     String? userAgent,
 
-    /// Whether to use mobile user agent.
+    /// 是否使用移动端用户代理。
     @Default(false) bool mobileUserAgent,
 
-    /// Referer header value.
+    /// Referer 头值。
     String? referer,
   }) = _RequestConfig;
 

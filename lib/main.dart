@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:spectra/core/database/drift/app_database.dart';
 import 'package:spectra/core/database/hive/hive_service.dart';
 import 'package:spectra/core/router/app_router.dart';
@@ -76,7 +76,7 @@ Future<void> _initializeHeavyTasks() async {
 /// - 路由
 /// - 本地化
 /// - 主题
-class SpectraApp extends ConsumerWidget {
+class SpectraApp extends HookConsumerWidget {
   /// 创建 Spectra 应用实例
   const SpectraApp({super.key});
 

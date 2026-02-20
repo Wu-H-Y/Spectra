@@ -15,11 +15,11 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Author {
 
-/// Author unique identifier (optional, platform-specific).
- String? get id;/// Author display name (required).
- String get name;/// Author avatar URL.
- String? get avatar;/// Author description/bio.
- String? get description;/// Number of followers.
+/// 作者显示名称（必需）。
+ String get name;/// 作者唯一标识符（可选，平台特定）。
+ String? get id;/// 作者头像 URL。
+ String? get avatar;/// 作者描述/简介。
+ String? get description;/// 粉丝数量。
  int? get followerCount;
 /// Create a copy of Author
 /// with the given fields replaced by the non-null parameter values.
@@ -33,16 +33,16 @@ $AuthorCopyWith<Author> get copyWith => _$AuthorCopyWithImpl<Author>(this as Aut
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Author&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.description, description) || other.description == description)&&(identical(other.followerCount, followerCount) || other.followerCount == followerCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Author&&(identical(other.name, name) || other.name == name)&&(identical(other.id, id) || other.id == id)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.description, description) || other.description == description)&&(identical(other.followerCount, followerCount) || other.followerCount == followerCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,avatar,description,followerCount);
+int get hashCode => Object.hash(runtimeType,name,id,avatar,description,followerCount);
 
 @override
 String toString() {
-  return 'Author(id: $id, name: $name, avatar: $avatar, description: $description, followerCount: $followerCount)';
+  return 'Author(name: $name, id: $id, avatar: $avatar, description: $description, followerCount: $followerCount)';
 }
 
 
@@ -53,7 +53,7 @@ abstract mixin class $AuthorCopyWith<$Res>  {
   factory $AuthorCopyWith(Author value, $Res Function(Author) _then) = _$AuthorCopyWithImpl;
 @useResult
 $Res call({
- String? id, String name, String? avatar, String? description, int? followerCount
+ String name, String? id, String? avatar, String? description, int? followerCount
 });
 
 
@@ -70,11 +70,11 @@ class _$AuthorCopyWithImpl<$Res>
 
 /// Create a copy of Author
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = null,Object? avatar = freezed,Object? description = freezed,Object? followerCount = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? id = freezed,Object? avatar = freezed,Object? description = freezed,Object? followerCount = freezed,}) {
   return _then(_self.copyWith(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,followerCount: freezed == followerCount ? _self.followerCount : followerCount // ignore: cast_nullable_to_non_nullable
 as int?,
@@ -159,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String name,  String? avatar,  String? description,  int? followerCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String? id,  String? avatar,  String? description,  int? followerCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Author() when $default != null:
-return $default(_that.id,_that.name,_that.avatar,_that.description,_that.followerCount);case _:
+return $default(_that.name,_that.id,_that.avatar,_that.description,_that.followerCount);case _:
   return orElse();
 
 }
@@ -180,10 +180,10 @@ return $default(_that.id,_that.name,_that.avatar,_that.description,_that.followe
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String name,  String? avatar,  String? description,  int? followerCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String? id,  String? avatar,  String? description,  int? followerCount)  $default,) {final _that = this;
 switch (_that) {
 case _Author():
-return $default(_that.id,_that.name,_that.avatar,_that.description,_that.followerCount);}
+return $default(_that.name,_that.id,_that.avatar,_that.description,_that.followerCount);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -197,10 +197,10 @@ return $default(_that.id,_that.name,_that.avatar,_that.description,_that.followe
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String name,  String? avatar,  String? description,  int? followerCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String? id,  String? avatar,  String? description,  int? followerCount)?  $default,) {final _that = this;
 switch (_that) {
 case _Author() when $default != null:
-return $default(_that.id,_that.name,_that.avatar,_that.description,_that.followerCount);case _:
+return $default(_that.name,_that.id,_that.avatar,_that.description,_that.followerCount);case _:
   return null;
 
 }
@@ -212,18 +212,18 @@ return $default(_that.id,_that.name,_that.avatar,_that.description,_that.followe
 @JsonSerializable()
 
 class _Author implements Author {
-  const _Author({this.id, required this.name, this.avatar, this.description, this.followerCount});
+  const _Author({required this.name, this.id, this.avatar, this.description, this.followerCount});
   factory _Author.fromJson(Map<String, dynamic> json) => _$AuthorFromJson(json);
 
-/// Author unique identifier (optional, platform-specific).
-@override final  String? id;
-/// Author display name (required).
+/// 作者显示名称（必需）。
 @override final  String name;
-/// Author avatar URL.
+/// 作者唯一标识符（可选，平台特定）。
+@override final  String? id;
+/// 作者头像 URL。
 @override final  String? avatar;
-/// Author description/bio.
+/// 作者描述/简介。
 @override final  String? description;
-/// Number of followers.
+/// 粉丝数量。
 @override final  int? followerCount;
 
 /// Create a copy of Author
@@ -239,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Author&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.description, description) || other.description == description)&&(identical(other.followerCount, followerCount) || other.followerCount == followerCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Author&&(identical(other.name, name) || other.name == name)&&(identical(other.id, id) || other.id == id)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.description, description) || other.description == description)&&(identical(other.followerCount, followerCount) || other.followerCount == followerCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,avatar,description,followerCount);
+int get hashCode => Object.hash(runtimeType,name,id,avatar,description,followerCount);
 
 @override
 String toString() {
-  return 'Author(id: $id, name: $name, avatar: $avatar, description: $description, followerCount: $followerCount)';
+  return 'Author(name: $name, id: $id, avatar: $avatar, description: $description, followerCount: $followerCount)';
 }
 
 
@@ -259,7 +259,7 @@ abstract mixin class _$AuthorCopyWith<$Res> implements $AuthorCopyWith<$Res> {
   factory _$AuthorCopyWith(_Author value, $Res Function(_Author) _then) = __$AuthorCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, String name, String? avatar, String? description, int? followerCount
+ String name, String? id, String? avatar, String? description, int? followerCount
 });
 
 
@@ -276,11 +276,11 @@ class __$AuthorCopyWithImpl<$Res>
 
 /// Create a copy of Author
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = null,Object? avatar = freezed,Object? description = freezed,Object? followerCount = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? id = freezed,Object? avatar = freezed,Object? description = freezed,Object? followerCount = freezed,}) {
   return _then(_Author(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,followerCount: freezed == followerCount ? _self.followerCount : followerCount // ignore: cast_nullable_to_non_nullable
 as int?,

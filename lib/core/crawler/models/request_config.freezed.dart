@@ -15,17 +15,17 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RequestConfig {
 
-/// HTTP method (GET, POST, etc.).
- String get method;/// Request headers.
- Map<String, String>? get headers;/// Request body (for POST requests).
- String? get body;/// Query parameters.
- Map<String, String>? get query;/// Cookies to send.
- Map<String, String>? get cookies;/// Request timeout in milliseconds.
- int get timeoutMs;/// Whether to follow redirects.
- bool get followRedirects;/// Maximum redirects to follow.
- int get maxRedirects;/// User agent string.
- String? get userAgent;/// Whether to use mobile user agent.
- bool get mobileUserAgent;/// Referer header value.
+/// HTTP 方法（GET、POST 等）。
+ String get method;/// 请求头。
+ Map<String, String>? get headers;/// 请求体（用于 POST 请求）。
+ String? get body;/// 查询参数。
+ Map<String, String>? get query;/// 要发送的 Cookies。
+ Map<String, String>? get cookies;/// 请求超时时间（毫秒）。
+ int get timeoutMs;/// 是否跟随重定向。
+ bool get followRedirects;/// 最大重定向次数。
+ int get maxRedirects;/// 用户代理字符串。
+ String? get userAgent;/// 是否使用移动端用户代理。
+ bool get mobileUserAgent;/// Referer 头值。
  String? get referer;
 /// Create a copy of RequestConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -227,11 +227,11 @@ class _RequestConfig implements RequestConfig {
   const _RequestConfig({this.method = 'GET', final  Map<String, String>? headers, this.body, final  Map<String, String>? query, final  Map<String, String>? cookies, this.timeoutMs = 30000, this.followRedirects = true, this.maxRedirects = 5, this.userAgent, this.mobileUserAgent = false, this.referer}): _headers = headers,_query = query,_cookies = cookies;
   factory _RequestConfig.fromJson(Map<String, dynamic> json) => _$RequestConfigFromJson(json);
 
-/// HTTP method (GET, POST, etc.).
+/// HTTP 方法（GET、POST 等）。
 @override@JsonKey() final  String method;
-/// Request headers.
+/// 请求头。
  final  Map<String, String>? _headers;
-/// Request headers.
+/// 请求头。
 @override Map<String, String>? get headers {
   final value = _headers;
   if (value == null) return null;
@@ -240,11 +240,11 @@ class _RequestConfig implements RequestConfig {
   return EqualUnmodifiableMapView(value);
 }
 
-/// Request body (for POST requests).
+/// 请求体（用于 POST 请求）。
 @override final  String? body;
-/// Query parameters.
+/// 查询参数。
  final  Map<String, String>? _query;
-/// Query parameters.
+/// 查询参数。
 @override Map<String, String>? get query {
   final value = _query;
   if (value == null) return null;
@@ -253,9 +253,9 @@ class _RequestConfig implements RequestConfig {
   return EqualUnmodifiableMapView(value);
 }
 
-/// Cookies to send.
+/// 要发送的 Cookies。
  final  Map<String, String>? _cookies;
-/// Cookies to send.
+/// 要发送的 Cookies。
 @override Map<String, String>? get cookies {
   final value = _cookies;
   if (value == null) return null;
@@ -264,17 +264,17 @@ class _RequestConfig implements RequestConfig {
   return EqualUnmodifiableMapView(value);
 }
 
-/// Request timeout in milliseconds.
+/// 请求超时时间（毫秒）。
 @override@JsonKey() final  int timeoutMs;
-/// Whether to follow redirects.
+/// 是否跟随重定向。
 @override@JsonKey() final  bool followRedirects;
-/// Maximum redirects to follow.
+/// 最大重定向次数。
 @override@JsonKey() final  int maxRedirects;
-/// User agent string.
+/// 用户代理字符串。
 @override final  String? userAgent;
-/// Whether to use mobile user agent.
+/// 是否使用移动端用户代理。
 @override@JsonKey() final  bool mobileUserAgent;
-/// Referer header value.
+/// Referer 头值。
 @override final  String? referer;
 
 /// Create a copy of RequestConfig

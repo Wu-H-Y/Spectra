@@ -5,46 +5,46 @@ import 'package:spectra/core/crawler/models/selector.dart';
 part 'pagination_config.freezed.dart';
 part 'pagination_config.g.dart';
 
-/// Pagination type.
+/// 分页类型。
 @JsonEnum()
 enum PaginationType {
-  /// URL-based pagination (page=1, page=2, etc.).
+  /// 基于 URL 的分页（page=1, page=2 等）。
   url,
 
-  /// Click-based pagination ("Load more" button).
+  /// 基于点击的分页（"加载更多"按钮）。
   click,
 
-  /// Infinite scroll pagination.
+  /// 无限滚动分页。
   infiniteScroll,
 }
 
-/// Pagination configuration.
+/// 分页配置。
 @freezed
 sealed class PaginationConfig with _$PaginationConfig {
   const factory PaginationConfig({
-    /// Pagination type.
+    /// 分页类型。
     required PaginationType type,
 
-    /// Selector for next page link (for URL type).
+    /// 下一页链接的选择器（用于 URL 类型）。
     Selector? nextSelector,
 
-    /// URL template with page placeholder (for URL type).
-    /// Use {page} as placeholder, e.g., "list?page={page}"
+    /// 带页码占位符的 URL 模板（用于 URL 类型）。
+    /// 使用 {page} 作为占位符，例如 "list?page={page}"
     String? urlTemplate,
 
-    /// Selector for "Load more" button (for click type).
+    /// "加载更多"按钮的选择器（用于点击类型）。
     Selector? clickSelector,
 
-    /// Scroll container selector (for infiniteScroll type).
+    /// 滚动容器选择器（用于无限滚动类型）。
     Selector? scrollContainer,
 
-    /// Maximum pages to crawl (0 = unlimited).
+    /// 最大爬取页数（0 = 无限制）。
     @Default(0) int maxPages,
 
-    /// Delay between page requests in milliseconds.
+    /// 页面请求之间的延迟（毫秒）。
     @Default(1000) int delayMs,
 
-    /// Wait for content to load after pagination.
+    /// 分页后等待内容加载的时间。
     @Default(2000) int waitAfterLoadMs,
   }) = _PaginationConfig;
 

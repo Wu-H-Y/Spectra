@@ -253,6 +253,201 @@ class S {
       args: [],
     );
   }
+
+  /// `提示`
+  String get errorTitleDefault {
+    return Intl.message('提示', name: 'errorTitleDefault', desc: '', args: []);
+  }
+
+  /// `网络错误`
+  String get errorTitleNetwork {
+    return Intl.message('网络错误', name: 'errorTitleNetwork', desc: '', args: []);
+  }
+
+  /// `身份验证失败`
+  String get errorTitleAuth {
+    return Intl.message('身份验证失败', name: 'errorTitleAuth', desc: '', args: []);
+  }
+
+  /// `权限不足`
+  String get errorTitlePermission {
+    return Intl.message(
+      '权限不足',
+      name: 'errorTitlePermission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `规则错误`
+  String get errorTitleRule {
+    return Intl.message('规则错误', name: 'errorTitleRule', desc: '', args: []);
+  }
+
+  /// `未知错误`
+  String get errorTitleUnknown {
+    return Intl.message('未知错误', name: 'errorTitleUnknown', desc: '', args: []);
+  }
+
+  /// `网络不可达，请检查您的网络连接`
+  String get errorNetworkUnreachable {
+    return Intl.message(
+      '网络不可达，请检查您的网络连接',
+      name: 'errorNetworkUnreachable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `连接超时，请稍后重试`
+  String get errorConnectionTimeout {
+    return Intl.message(
+      '连接超时，请稍后重试',
+      name: 'errorConnectionTimeout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `服务器内部错误 ({code})`
+  String errorServerError(Object code) {
+    return Intl.message(
+      '服务器内部错误 ($code)',
+      name: 'errorServerError',
+      desc: '',
+      args: [code],
+    );
+  }
+
+  /// `登录已过期，请重新登录`
+  String get errorUnauthorized {
+    return Intl.message(
+      '登录已过期，请重新登录',
+      name: 'errorUnauthorized',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `您没有权限执行此操作`
+  String get errorForbidden {
+    return Intl.message(
+      '您没有权限执行此操作',
+      name: 'errorForbidden',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `请求的资源不存在`
+  String get errorNotFound {
+    return Intl.message('请求的资源不存在', name: 'errorNotFound', desc: '', args: []);
+  }
+
+  /// `请求参数有误，请检查后重试`
+  String get errorBadRequest {
+    return Intl.message(
+      '请求参数有误，请检查后重试',
+      name: 'errorBadRequest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `数据解析失败，请稍后重试`
+  String get errorParseError {
+    return Intl.message(
+      '数据解析失败，请稍后重试',
+      name: 'errorParseError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `规则解析失败：{message}`
+  String errorRuleParseError(Object message) {
+    return Intl.message(
+      '规则解析失败：$message',
+      name: 'errorRuleParseError',
+      desc: '',
+      args: [message],
+    );
+  }
+
+  /// `规则执行失败：{message}`
+  String errorRuleExecutionError(Object message) {
+    return Intl.message(
+      '规则执行失败：$message',
+      name: 'errorRuleExecutionError',
+      desc: '',
+      args: [message],
+    );
+  }
+
+  /// `选择器匹配失败：{selector}`
+  String errorSelectorError(Object selector) {
+    return Intl.message(
+      '选择器匹配失败：$selector',
+      name: 'errorSelectorError',
+      desc: '',
+      args: [selector],
+    );
+  }
+
+  /// `密码长度不能少于 {count} 位`
+  String errorWeakPassword(Object count) {
+    return Intl.message(
+      '密码长度不能少于 $count 位',
+      name: 'errorWeakPassword',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `用户名 "{username}" 已存在`
+  String errorUsernameExists(Object username) {
+    return Intl.message(
+      '用户名 "$username" 已存在',
+      name: 'errorUsernameExists',
+      desc: '',
+      args: [username],
+    );
+  }
+
+  /// `数据库操作失败，请稍后重试`
+  String get errorDatabaseError {
+    return Intl.message(
+      '数据库操作失败，请稍后重试',
+      name: 'errorDatabaseError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `缓存操作失败，请稍后重试`
+  String get errorCacheError {
+    return Intl.message(
+      '缓存操作失败，请稍后重试',
+      name: 'errorCacheError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `发生未知错误，请稍后重试`
+  String get errorUnknown {
+    return Intl.message(
+      '发生未知错误，请稍后重试',
+      name: 'errorUnknown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `重试`
+  String get retry {
+    return Intl.message('重试', name: 'retry', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

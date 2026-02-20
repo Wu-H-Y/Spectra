@@ -15,15 +15,15 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Transform {
 
-/// Transform type.
- TransformType get type;/// Parameter for the transform (varies by type).
-/// - regex: pattern (with optional replacement)
+/// 转换类型。
+ TransformType get type;/// 转换参数（根据类型而异）。
+/// - regex: 模式（带可选替换）
 /// - replace: {find: string, replace: string}
-/// - date: format string (e.g., "yyyy-MM-dd")
-/// - url: base URL for resolving relative URLs
+/// - date: 格式字符串（例如 "yyyy-MM-dd"）
+/// - url: 用于解析相对 URL 的基础 URL
 /// - substring: {start: int, end: int?}
-/// - split: delimiter
-/// - join: delimiter
+/// - split: 分隔符
+/// - join: 分隔符
 /// - map: {key1: value1, key2: value2}
  dynamic get params;
 /// Create a copy of Transform
@@ -217,16 +217,16 @@ class _Transform implements Transform {
   const _Transform({required this.type, this.params});
   factory _Transform.fromJson(Map<String, dynamic> json) => _$TransformFromJson(json);
 
-/// Transform type.
+/// 转换类型。
 @override final  TransformType type;
-/// Parameter for the transform (varies by type).
-/// - regex: pattern (with optional replacement)
+/// 转换参数（根据类型而异）。
+/// - regex: 模式（带可选替换）
 /// - replace: {find: string, replace: string}
-/// - date: format string (e.g., "yyyy-MM-dd")
-/// - url: base URL for resolving relative URLs
+/// - date: 格式字符串（例如 "yyyy-MM-dd"）
+/// - url: 用于解析相对 URL 的基础 URL
 /// - substring: {start: int, end: int?}
-/// - split: delimiter
-/// - join: delimiter
+/// - split: 分隔符
+/// - join: 分隔符
 /// - map: {key1: value1, key2: value2}
 @override final  dynamic params;
 

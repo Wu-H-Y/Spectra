@@ -7,20 +7,20 @@ import 'package:spectra/core/crawler/models/selector.dart';
 part 'extract_config.freezed.dart';
 part 'extract_config.g.dart';
 
-/// List page extraction configuration.
+/// 列表页提取配置。
 @freezed
 sealed class ListExtract with _$ListExtract {
   const factory ListExtract({
-    /// Selector for list item containers.
+    /// 列表项容器的选择器。
     required Selector container,
 
-    /// Field mappings for each list item.
+    /// 每个列表项的字段映射。
     required List<FieldMapping> items,
 
-    /// Pagination configuration.
+    /// 分页配置。
     PaginationConfig? pagination,
 
-    /// URL for list page (optional, uses rule pattern if not specified).
+    /// 列表页 URL（可选，如果未指定则使用规则模式）。
     String? url,
   }) = _ListExtract;
 
@@ -28,17 +28,17 @@ sealed class ListExtract with _$ListExtract {
       _$ListExtractFromJson(json);
 }
 
-/// Detail page extraction configuration.
+/// 详情页提取配置。
 @freezed
 sealed class DetailExtract with _$DetailExtract {
   const factory DetailExtract({
-    /// Field mappings for detail page.
+    /// 详情页的字段映射。
     required List<FieldMapping> items,
 
-    /// Selector to get detail URL from list item.
+    /// 从列表项获取详情 URL 的选择器。
     Selector? urlFromList,
 
-    /// Chapter/episode extraction (for comics, novels, videos).
+    /// 章节/剧集提取（用于漫画、小说、视频）。
     ChapterExtract? chapters,
   }) = _DetailExtract;
 
@@ -46,17 +46,17 @@ sealed class DetailExtract with _$DetailExtract {
       _$DetailExtractFromJson(json);
 }
 
-/// Chapter extraction configuration.
+/// 章节提取配置。
 @freezed
 sealed class ChapterExtract with _$ChapterExtract {
   const factory ChapterExtract({
-    /// Selector for chapter list container.
+    /// 章节列表容器的选择器。
     required Selector container,
 
-    /// Field mappings for each chapter.
+    /// 每个章节的字段映射。
     required List<FieldMapping> items,
 
-    /// Whether chapters are in reverse order (newest first).
+    /// 章节是否为逆序（最新在前）。
     @Default(false) bool reverseOrder,
   }) = _ChapterExtract;
 
@@ -64,20 +64,20 @@ sealed class ChapterExtract with _$ChapterExtract {
       _$ChapterExtractFromJson(json);
 }
 
-/// Content extraction configuration (video, comic, novel content).
+/// 内容提取配置（视频、漫画、小说内容）。
 @freezed
 sealed class ContentExtract with _$ContentExtract {
   const factory ContentExtract({
-    /// Video extraction config.
+    /// 视频提取配置。
     VideoExtract? video,
 
-    /// Comic extraction config.
+    /// 漫画提取配置。
     ComicExtract? comic,
 
-    /// Novel extraction config.
+    /// 小说提取配置。
     NovelExtract? novel,
 
-    /// Music extraction config.
+    /// 音乐提取配置。
     MusicExtract? music,
   }) = _ContentExtract;
 
@@ -85,17 +85,17 @@ sealed class ContentExtract with _$ContentExtract {
       _$ContentExtractFromJson(json);
 }
 
-/// Video content extraction.
+/// 视频内容提取。
 @freezed
 sealed class VideoExtract with _$VideoExtract {
   const factory VideoExtract({
-    /// Selector for video URL.
+    /// 视频 URL 的选择器。
     Selector? playUrl,
 
-    /// Selector for quality options.
+    /// 质量选项的选择器。
     Selector? qualities,
 
-    /// JavaScript to extract video info.
+    /// 提取视频信息的 JavaScript。
     String? jsExtract,
   }) = _VideoExtract;
 
@@ -103,14 +103,14 @@ sealed class VideoExtract with _$VideoExtract {
       _$VideoExtractFromJson(json);
 }
 
-/// Comic content extraction.
+/// 漫画内容提取。
 @freezed
 sealed class ComicExtract with _$ComicExtract {
   const factory ComicExtract({
-    /// Selector for image URLs.
+    /// 图片 URL 的选择器。
     required Selector images,
 
-    /// JavaScript to extract images.
+    /// 提取图片的 JavaScript。
     String? jsExtract,
   }) = _ComicExtract;
 
@@ -118,14 +118,14 @@ sealed class ComicExtract with _$ComicExtract {
       _$ComicExtractFromJson(json);
 }
 
-/// Novel content extraction.
+/// 小说内容提取。
 @freezed
 sealed class NovelExtract with _$NovelExtract {
   const factory NovelExtract({
-    /// Selector for chapter content.
+    /// 章节内容的选择器。
     required Selector content,
 
-    /// JavaScript to extract content.
+    /// 提取内容的 JavaScript。
     String? jsExtract,
   }) = _NovelExtract;
 
@@ -133,17 +133,17 @@ sealed class NovelExtract with _$NovelExtract {
       _$NovelExtractFromJson(json);
 }
 
-/// Music content extraction.
+/// 音乐内容提取。
 @freezed
 sealed class MusicExtract with _$MusicExtract {
   const factory MusicExtract({
-    /// Selector for audio URL.
+    /// 音频 URL 的选择器。
     Selector? audioUrl,
 
-    /// Selector for lyrics.
+    /// 歌词的选择器。
     Selector? lyrics,
 
-    /// JavaScript to extract audio info.
+    /// 提取音频信息的 JavaScript。
     String? jsExtract,
   }) = _MusicExtract;
 
@@ -151,17 +151,17 @@ sealed class MusicExtract with _$MusicExtract {
       _$MusicExtractFromJson(json);
 }
 
-/// Complete extraction configuration.
+/// 完整的提取配置。
 @freezed
 sealed class ExtractConfig with _$ExtractConfig {
   const factory ExtractConfig({
-    /// List page extraction.
+    /// 列表页提取。
     ListExtract? list,
 
-    /// Detail page extraction.
+    /// 详情页提取。
     DetailExtract? detail,
 
-    /// Content extraction.
+    /// 内容提取。
     ContentExtract? content,
   }) = _ExtractConfig;
 

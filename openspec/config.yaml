@@ -1,15 +1,53 @@
 schema: spec-driven
 
-# Project context
+# Project context (injected into all artifact instructions)
 context: |
   Tech stack: Flutter, Dart
   Code Quality: Strict static analysis enforced.
   Workflow: Run analysis after completing all sub-tasks of a main task.
+  
+  ## Project Specification Constraints (IMPORTANT)
+  
+  The project has defined stable capability specifications (main specs) in `openspec/specs/`.
+  These specs represent the "spec truth" of the project - all implementations must comply.
+  
+  **Implementation Requirements**:
+  - Load and reference relevant main specs during implementation
+  - Do not violate interfaces and behaviors defined in main specs
+  - To modify existing specs, must explicitly declare through delta specs
 
-# Per-artifact rules
+# Per-artifact rules (only injected into matching artifacts)
 rules:
+  proposal:
+    # Check existing capabilities when creating proposal
+    - Check `openspec/specs/` directory to identify related existing capabilities
+    - If modifying existing functionality, must explicitly list in "Modified Capabilities"
+    - If new functionality depends on existing capabilities, document in proposal
+  
+  specs:
+    # Must reference main specs when creating delta specs
+    - For MODIFIED Requirements: must first read `openspec/specs/<capability>/spec.md`
+    - Copy complete requirement block (from `### Requirement:` through all scenarios) before modifying
+    - Ensure modifications do not accidentally lose details from existing specs
+    - Use ADDED instead of MODIFIED if only adding new behavior without changing existing behavior
+  
+  design:
+    # Must consider existing spec constraints during design
+    - Check `openspec/specs/` for any constraints related to the design
+    - Technology choices should not violate architecture decisions in main specs
+    - If violation is necessary, must explicitly modify in delta specs
+  
   tasks:
+    # Task execution rules
     - Run `flutter analyze` ONLY after ALL sub-tasks of a main task are completed (e.g., finish 1.1, 1.2, 1.3 -> then analyze).
     - Fix ALL reported issues, including `info` level hints, before marking the main task as complete.
     - Do not proceed to the next main task until `flutter analyze` passes cleanly with zero issues.
     - Ensure no `info`, `warning`, or `error` level issues remain in the codebase related to the implemented tasks.
+  
+  apply:
+    # Must comply with main specs during implementation (CORE RULES)
+    - MUST load relevant main specs: Before implementation, load all related main specs from `openspec/specs/`
+    - MUST comply with interfaces: Implementation must conform to interfaces, protocols, and behaviors defined in main specs
+    - Conflict handling: If implementation conflicts with main specs, first try modifying implementation to comply, then try updating delta specs, finally pause and ask user
+    - Incremental validation: After completing each major task, verify compliance with loaded main specs
+    - Documentation consistency: Code comments and docs should use terminology consistent with main specs

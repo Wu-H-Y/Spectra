@@ -15,13 +15,13 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ImageInfo {
 
-/// Image URL.
- String get url;/// Thumbnail/preview URL.
- String? get thumbnail;/// Image width in pixels.
- int? get width;/// Image height in pixels.
- int? get height;/// File size in bytes.
- int? get fileSize;/// Image format (e.g., "jpg", "png", "webp").
- String? get format;/// Alt text/caption.
+/// 图片 URL。
+ String get url;/// 缩略图/预览 URL。
+ String? get thumbnail;/// 图片宽度（像素）。
+ int? get width;/// 图片高度（像素）。
+ int? get height;/// 文件大小（字节）。
+ int? get fileSize;/// 图片格式（如 "jpg"、"png"、"webp"）。
+ String? get format;/// 替代文本/说明。
  String? get caption;
 /// Create a copy of ImageInfo
 /// with the given fields replaced by the non-null parameter values.
@@ -219,19 +219,19 @@ class _ImageInfo implements ImageInfo {
   const _ImageInfo({required this.url, this.thumbnail, this.width, this.height, this.fileSize, this.format, this.caption});
   factory _ImageInfo.fromJson(Map<String, dynamic> json) => _$ImageInfoFromJson(json);
 
-/// Image URL.
+/// 图片 URL。
 @override final  String url;
-/// Thumbnail/preview URL.
+/// 缩略图/预览 URL。
 @override final  String? thumbnail;
-/// Image width in pixels.
+/// 图片宽度（像素）。
 @override final  int? width;
-/// Image height in pixels.
+/// 图片高度（像素）。
 @override final  int? height;
-/// File size in bytes.
+/// 文件大小（字节）。
 @override final  int? fileSize;
-/// Image format (e.g., "jpg", "png", "webp").
+/// 图片格式（如 "jpg"、"png"、"webp"）。
 @override final  String? format;
-/// Alt text/caption.
+/// 替代文本/说明。
 @override final  String? caption;
 
 /// Create a copy of ImageInfo
@@ -304,22 +304,22 @@ as String?,
 /// @nodoc
 mixin _$ImageContent {
 
-/// Unique identifier.
- String get id;/// Title/caption.
- String get title;/// Cover/thumbnail URL.
- String? get cover;/// Description.
- String? get description;/// Author/photographer information.
- Author? get author;/// Tags.
- List<String>? get tags;/// Category.
- String? get category;/// Statistics.
- ContentStats? get stats;/// Upload date.
- DateTime? get createdAt;/// Update date.
- DateTime? get updatedAt;/// Source information.
- ContentSource get source;/// List of images (single for non-album, multiple for album).
- List<ImageInfo> get images;/// Whether this is an album (multiple images).
- bool get isAlbum;/// Image resolution string (e.g., "1920x1080").
- String? get resolution;/// Whether this is AI-generated content.
- bool? get isAIGenerated;/// AI model name if AI-generated (e.g., "Stable Diffusion", "Midjourney").
+/// 唯一标识符。
+ String get id;/// 标题/说明。
+ String get title;/// 来源信息。
+ ContentSource get source;/// 图片列表（非相册为单张，相册为多张）。
+ List<ImageInfo> get images;/// 是否为相册（多图）。
+ bool get isAlbum;/// 封面/缩略图 URL。
+ String? get cover;/// 描述。
+ String? get description;/// 作者/摄影师信息。
+ Author? get author;/// 标签。
+ List<String>? get tags;/// 分类。
+ String? get category;/// 统计信息。
+ ContentStats? get stats;/// 上传日期。
+ DateTime? get createdAt;/// 更新日期。
+ DateTime? get updatedAt;/// 图片分辨率字符串（如 "1920x1080"）。
+ String? get resolution;/// 是否为 AI 生成内容。
+ bool? get isAIGenerated;/// AI 模型名称（如 "Stable Diffusion"、"Midjourney"）。
  String? get aiModel;
 /// Create a copy of ImageContent
 /// with the given fields replaced by the non-null parameter values.
@@ -333,16 +333,16 @@ $ImageContentCopyWith<ImageContent> get copyWith => _$ImageContentCopyWithImpl<I
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ImageContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.source, source) || other.source == source)&&const DeepCollectionEquality().equals(other.images, images)&&(identical(other.isAlbum, isAlbum) || other.isAlbum == isAlbum)&&(identical(other.resolution, resolution) || other.resolution == resolution)&&(identical(other.isAIGenerated, isAIGenerated) || other.isAIGenerated == isAIGenerated)&&(identical(other.aiModel, aiModel) || other.aiModel == aiModel));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ImageContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.source, source) || other.source == source)&&const DeepCollectionEquality().equals(other.images, images)&&(identical(other.isAlbum, isAlbum) || other.isAlbum == isAlbum)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.resolution, resolution) || other.resolution == resolution)&&(identical(other.isAIGenerated, isAIGenerated) || other.isAIGenerated == isAIGenerated)&&(identical(other.aiModel, aiModel) || other.aiModel == aiModel));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,cover,description,author,const DeepCollectionEquality().hash(tags),category,stats,createdAt,updatedAt,source,const DeepCollectionEquality().hash(images),isAlbum,resolution,isAIGenerated,aiModel);
+int get hashCode => Object.hash(runtimeType,id,title,source,const DeepCollectionEquality().hash(images),isAlbum,cover,description,author,const DeepCollectionEquality().hash(tags),category,stats,createdAt,updatedAt,resolution,isAIGenerated,aiModel);
 
 @override
 String toString() {
-  return 'ImageContent(id: $id, title: $title, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, source: $source, images: $images, isAlbum: $isAlbum, resolution: $resolution, isAIGenerated: $isAIGenerated, aiModel: $aiModel)';
+  return 'ImageContent(id: $id, title: $title, source: $source, images: $images, isAlbum: $isAlbum, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, resolution: $resolution, isAIGenerated: $isAIGenerated, aiModel: $aiModel)';
 }
 
 
@@ -353,11 +353,11 @@ abstract mixin class $ImageContentCopyWith<$Res>  {
   factory $ImageContentCopyWith(ImageContent value, $Res Function(ImageContent) _then) = _$ImageContentCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, ContentSource source, List<ImageInfo> images, bool isAlbum, String? resolution, bool? isAIGenerated, String? aiModel
+ String id, String title, ContentSource source, List<ImageInfo> images, bool isAlbum, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, String? resolution, bool? isAIGenerated, String? aiModel
 });
 
 
-$AuthorCopyWith<$Res>? get author;$ContentStatsCopyWith<$Res>? get stats;$ContentSourceCopyWith<$Res> get source;
+$ContentSourceCopyWith<$Res> get source;$AuthorCopyWith<$Res>? get author;$ContentStatsCopyWith<$Res>? get stats;
 
 }
 /// @nodoc
@@ -370,11 +370,14 @@ class _$ImageContentCopyWithImpl<$Res>
 
 /// Create a copy of ImageContent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? source = null,Object? images = null,Object? isAlbum = null,Object? resolution = freezed,Object? isAIGenerated = freezed,Object? aiModel = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? source = null,Object? images = null,Object? isAlbum = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? resolution = freezed,Object? isAIGenerated = freezed,Object? aiModel = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as ContentSource,images: null == images ? _self.images : images // ignore: cast_nullable_to_non_nullable
+as List<ImageInfo>,isAlbum: null == isAlbum ? _self.isAlbum : isAlbum // ignore: cast_nullable_to_non_nullable
+as bool,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,author: freezed == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
 as Author?,tags: freezed == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
@@ -382,16 +385,22 @@ as List<String>?,category: freezed == category ? _self.category : category // ig
 as String?,stats: freezed == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as ContentStats?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
-as ContentSource,images: null == images ? _self.images : images // ignore: cast_nullable_to_non_nullable
-as List<ImageInfo>,isAlbum: null == isAlbum ? _self.isAlbum : isAlbum // ignore: cast_nullable_to_non_nullable
-as bool,resolution: freezed == resolution ? _self.resolution : resolution // ignore: cast_nullable_to_non_nullable
+as DateTime?,resolution: freezed == resolution ? _self.resolution : resolution // ignore: cast_nullable_to_non_nullable
 as String?,isAIGenerated: freezed == isAIGenerated ? _self.isAIGenerated : isAIGenerated // ignore: cast_nullable_to_non_nullable
 as bool?,aiModel: freezed == aiModel ? _self.aiModel : aiModel // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
 /// Create a copy of ImageContent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ContentSourceCopyWith<$Res> get source {
+  
+  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
+    return _then(_self.copyWith(source: value));
+  });
+}/// Create a copy of ImageContent
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -414,15 +423,6 @@ $ContentStatsCopyWith<$Res>? get stats {
 
   return $ContentStatsCopyWith<$Res>(_self.stats!, (value) {
     return _then(_self.copyWith(stats: value));
-  });
-}/// Create a copy of ImageContent
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContentSourceCopyWith<$Res> get source {
-  
-  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
-    return _then(_self.copyWith(source: value));
   });
 }
 }
@@ -503,10 +503,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source,  List<ImageInfo> images,  bool isAlbum,  String? resolution,  bool? isAIGenerated,  String? aiModel)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  ContentSource source,  List<ImageInfo> images,  bool isAlbum,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  String? resolution,  bool? isAIGenerated,  String? aiModel)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ImageContent() when $default != null:
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source,_that.images,_that.isAlbum,_that.resolution,_that.isAIGenerated,_that.aiModel);case _:
+return $default(_that.id,_that.title,_that.source,_that.images,_that.isAlbum,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.resolution,_that.isAIGenerated,_that.aiModel);case _:
   return orElse();
 
 }
@@ -524,10 +524,10 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source,  List<ImageInfo> images,  bool isAlbum,  String? resolution,  bool? isAIGenerated,  String? aiModel)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  ContentSource source,  List<ImageInfo> images,  bool isAlbum,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  String? resolution,  bool? isAIGenerated,  String? aiModel)  $default,) {final _that = this;
 switch (_that) {
 case _ImageContent():
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source,_that.images,_that.isAlbum,_that.resolution,_that.isAIGenerated,_that.aiModel);}
+return $default(_that.id,_that.title,_that.source,_that.images,_that.isAlbum,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.resolution,_that.isAIGenerated,_that.aiModel);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -541,10 +541,10 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source,  List<ImageInfo> images,  bool isAlbum,  String? resolution,  bool? isAIGenerated,  String? aiModel)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  ContentSource source,  List<ImageInfo> images,  bool isAlbum,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  String? resolution,  bool? isAIGenerated,  String? aiModel)?  $default,) {final _that = this;
 switch (_that) {
 case _ImageContent() when $default != null:
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source,_that.images,_that.isAlbum,_that.resolution,_that.isAIGenerated,_that.aiModel);case _:
+return $default(_that.id,_that.title,_that.source,_that.images,_that.isAlbum,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.resolution,_that.isAIGenerated,_that.aiModel);case _:
   return null;
 
 }
@@ -556,22 +556,35 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,
 @JsonSerializable()
 
 class _ImageContent implements ImageContent {
-  const _ImageContent({required this.id, required this.title, this.cover, this.description, this.author, final  List<String>? tags, this.category, this.stats, this.createdAt, this.updatedAt, required this.source, required final  List<ImageInfo> images, required this.isAlbum, this.resolution, this.isAIGenerated, this.aiModel}): _tags = tags,_images = images;
+  const _ImageContent({required this.id, required this.title, required this.source, required final  List<ImageInfo> images, required this.isAlbum, this.cover, this.description, this.author, final  List<String>? tags, this.category, this.stats, this.createdAt, this.updatedAt, this.resolution, this.isAIGenerated, this.aiModel}): _images = images,_tags = tags;
   factory _ImageContent.fromJson(Map<String, dynamic> json) => _$ImageContentFromJson(json);
 
-/// Unique identifier.
+/// 唯一标识符。
 @override final  String id;
-/// Title/caption.
+/// 标题/说明。
 @override final  String title;
-/// Cover/thumbnail URL.
+/// 来源信息。
+@override final  ContentSource source;
+/// 图片列表（非相册为单张，相册为多张）。
+ final  List<ImageInfo> _images;
+/// 图片列表（非相册为单张，相册为多张）。
+@override List<ImageInfo> get images {
+  if (_images is EqualUnmodifiableListView) return _images;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_images);
+}
+
+/// 是否为相册（多图）。
+@override final  bool isAlbum;
+/// 封面/缩略图 URL。
 @override final  String? cover;
-/// Description.
+/// 描述。
 @override final  String? description;
-/// Author/photographer information.
+/// 作者/摄影师信息。
 @override final  Author? author;
-/// Tags.
+/// 标签。
  final  List<String>? _tags;
-/// Tags.
+/// 标签。
 @override List<String>? get tags {
   final value = _tags;
   if (value == null) return null;
@@ -580,32 +593,19 @@ class _ImageContent implements ImageContent {
   return EqualUnmodifiableListView(value);
 }
 
-/// Category.
+/// 分类。
 @override final  String? category;
-/// Statistics.
+/// 统计信息。
 @override final  ContentStats? stats;
-/// Upload date.
+/// 上传日期。
 @override final  DateTime? createdAt;
-/// Update date.
+/// 更新日期。
 @override final  DateTime? updatedAt;
-/// Source information.
-@override final  ContentSource source;
-/// List of images (single for non-album, multiple for album).
- final  List<ImageInfo> _images;
-/// List of images (single for non-album, multiple for album).
-@override List<ImageInfo> get images {
-  if (_images is EqualUnmodifiableListView) return _images;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_images);
-}
-
-/// Whether this is an album (multiple images).
-@override final  bool isAlbum;
-/// Image resolution string (e.g., "1920x1080").
+/// 图片分辨率字符串（如 "1920x1080"）。
 @override final  String? resolution;
-/// Whether this is AI-generated content.
+/// 是否为 AI 生成内容。
 @override final  bool? isAIGenerated;
-/// AI model name if AI-generated (e.g., "Stable Diffusion", "Midjourney").
+/// AI 模型名称（如 "Stable Diffusion"、"Midjourney"）。
 @override final  String? aiModel;
 
 /// Create a copy of ImageContent
@@ -621,16 +621,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ImageContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.source, source) || other.source == source)&&const DeepCollectionEquality().equals(other._images, _images)&&(identical(other.isAlbum, isAlbum) || other.isAlbum == isAlbum)&&(identical(other.resolution, resolution) || other.resolution == resolution)&&(identical(other.isAIGenerated, isAIGenerated) || other.isAIGenerated == isAIGenerated)&&(identical(other.aiModel, aiModel) || other.aiModel == aiModel));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ImageContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.source, source) || other.source == source)&&const DeepCollectionEquality().equals(other._images, _images)&&(identical(other.isAlbum, isAlbum) || other.isAlbum == isAlbum)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.resolution, resolution) || other.resolution == resolution)&&(identical(other.isAIGenerated, isAIGenerated) || other.isAIGenerated == isAIGenerated)&&(identical(other.aiModel, aiModel) || other.aiModel == aiModel));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,cover,description,author,const DeepCollectionEquality().hash(_tags),category,stats,createdAt,updatedAt,source,const DeepCollectionEquality().hash(_images),isAlbum,resolution,isAIGenerated,aiModel);
+int get hashCode => Object.hash(runtimeType,id,title,source,const DeepCollectionEquality().hash(_images),isAlbum,cover,description,author,const DeepCollectionEquality().hash(_tags),category,stats,createdAt,updatedAt,resolution,isAIGenerated,aiModel);
 
 @override
 String toString() {
-  return 'ImageContent(id: $id, title: $title, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, source: $source, images: $images, isAlbum: $isAlbum, resolution: $resolution, isAIGenerated: $isAIGenerated, aiModel: $aiModel)';
+  return 'ImageContent(id: $id, title: $title, source: $source, images: $images, isAlbum: $isAlbum, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, resolution: $resolution, isAIGenerated: $isAIGenerated, aiModel: $aiModel)';
 }
 
 
@@ -641,11 +641,11 @@ abstract mixin class _$ImageContentCopyWith<$Res> implements $ImageContentCopyWi
   factory _$ImageContentCopyWith(_ImageContent value, $Res Function(_ImageContent) _then) = __$ImageContentCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, ContentSource source, List<ImageInfo> images, bool isAlbum, String? resolution, bool? isAIGenerated, String? aiModel
+ String id, String title, ContentSource source, List<ImageInfo> images, bool isAlbum, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, String? resolution, bool? isAIGenerated, String? aiModel
 });
 
 
-@override $AuthorCopyWith<$Res>? get author;@override $ContentStatsCopyWith<$Res>? get stats;@override $ContentSourceCopyWith<$Res> get source;
+@override $ContentSourceCopyWith<$Res> get source;@override $AuthorCopyWith<$Res>? get author;@override $ContentStatsCopyWith<$Res>? get stats;
 
 }
 /// @nodoc
@@ -658,11 +658,14 @@ class __$ImageContentCopyWithImpl<$Res>
 
 /// Create a copy of ImageContent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? source = null,Object? images = null,Object? isAlbum = null,Object? resolution = freezed,Object? isAIGenerated = freezed,Object? aiModel = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? source = null,Object? images = null,Object? isAlbum = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? resolution = freezed,Object? isAIGenerated = freezed,Object? aiModel = freezed,}) {
   return _then(_ImageContent(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as ContentSource,images: null == images ? _self._images : images // ignore: cast_nullable_to_non_nullable
+as List<ImageInfo>,isAlbum: null == isAlbum ? _self.isAlbum : isAlbum // ignore: cast_nullable_to_non_nullable
+as bool,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,author: freezed == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
 as Author?,tags: freezed == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
@@ -670,10 +673,7 @@ as List<String>?,category: freezed == category ? _self.category : category // ig
 as String?,stats: freezed == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as ContentStats?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
-as ContentSource,images: null == images ? _self._images : images // ignore: cast_nullable_to_non_nullable
-as List<ImageInfo>,isAlbum: null == isAlbum ? _self.isAlbum : isAlbum // ignore: cast_nullable_to_non_nullable
-as bool,resolution: freezed == resolution ? _self.resolution : resolution // ignore: cast_nullable_to_non_nullable
+as DateTime?,resolution: freezed == resolution ? _self.resolution : resolution // ignore: cast_nullable_to_non_nullable
 as String?,isAIGenerated: freezed == isAIGenerated ? _self.isAIGenerated : isAIGenerated // ignore: cast_nullable_to_non_nullable
 as bool?,aiModel: freezed == aiModel ? _self.aiModel : aiModel // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -681,6 +681,15 @@ as String?,
 }
 
 /// Create a copy of ImageContent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ContentSourceCopyWith<$Res> get source {
+  
+  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
+    return _then(_self.copyWith(source: value));
+  });
+}/// Create a copy of ImageContent
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -703,15 +712,6 @@ $ContentStatsCopyWith<$Res>? get stats {
 
   return $ContentStatsCopyWith<$Res>(_self.stats!, (value) {
     return _then(_self.copyWith(stats: value));
-  });
-}/// Create a copy of ImageContent
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContentSourceCopyWith<$Res> get source {
-  
-  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
-    return _then(_self.copyWith(source: value));
   });
 }
 }

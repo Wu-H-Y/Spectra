@@ -1,40 +1,38 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:relic/relic.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shelf/shelf.dart';
-import 'package:shelf/shelf_io.dart' as shelf_io;
-import 'package:shelf_web_socket/shelf_web_socket.dart' show webSocketHandler;
 import 'package:spectra/core/server/handlers/static_handler.dart';
-import 'package:spectra/core/server/handlers/websocket_handler.dart';
 import 'package:spectra/core/server/middleware/cors_middleware.dart';
 import 'package:spectra/core/server/routes/rules_routes.dart';
 import 'package:spectra/core/server/routes/server_routes.dart';
 import 'package:spectra/shared/providers/talker_provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket/web_socket.dart';
 
 part 'server_provider.g.dart';
 
-/// Server status information.
+/// 服务器状态信息。
 class ServerStatus {
-  /// Creates server status.
+  /// 创建服务器状态。
   const ServerStatus({
     required this.isRunning,
     required this.port,
     this.url,
   });
 
-  /// Whether the server is currently running.
+  /// 服务器当前是否正在运行。
   final bool isRunning;
 
-  /// The port the server is running on.
+  /// 服务器运行的端口。
   final int port;
 
-  /// The URL to access the server.
+  /// 访问服务器的 URL。
   final String? url;
 
-  /// Copy with new values.
+  /// 复制并更新值。
   ServerStatus copyWith({
     bool? isRunning,
     int? port,
@@ -48,11 +46,11 @@ class ServerStatus {
   }
 }
 
-/// Provider for the HTTP server.
+/// HTTP 服务器 Provider。
 @riverpod
 class Server extends _$Server {
-  HttpServer? _server;
-  WebSocketHandler? _webSocketHandler;
+  RelicServer? _server;
+  final Set<RelicWebSocket> _webSocketConnections = {};
   int _port = 8080;
   Talker? _talker;
 
@@ -65,22 +63,19 @@ class Server extends _$Server {
     );
   }
 
-  /// Start the HTTP server.
+  /// 启动 HTTP 服务器。
   Future<void> start({int? port}) async {
     if (_server != null) {
-      return; // Already running
+      return; // 已在运行
     }
 
     _port = port ?? await _findAvailablePort();
-    _webSocketHandler = WebSocketHandler(talker: _talker);
-
-    final app = await _createApp();
 
     try {
-      _server = await shelf_io.serve(
-        app,
-        InternetAddress.anyIPv4,
-        _port,
+      final app = _createApp();
+      _server = await app.serve(
+        address: InternetAddress.anyIPv4,
+        port: _port,
       );
 
       state = ServerStatus(
@@ -96,16 +91,20 @@ class Server extends _$Server {
     }
   }
 
-  /// Stop the HTTP server.
+  /// 停止 HTTP 服务器。
   Future<void> stop() async {
     if (_server == null) {
-      return; // Not running
+      return; // 未在运行
     }
 
-    await _webSocketHandler?.closeAll();
-    await _server?.close(force: true);
+    // 关闭所有 WebSocket 连接
+    for (final ws in _webSocketConnections) {
+      await ws.close();
+    }
+    _webSocketConnections.clear();
+
+    await _server?.close();
     _server = null;
-    _webSocketHandler = null;
 
     state = ServerStatus(
       isRunning: false,
@@ -115,13 +114,13 @@ class Server extends _$Server {
     _talker?.info('Server stopped');
   }
 
-  /// Check if server is running.
+  /// 检查服务器是否正在运行。
   bool get isRunning => _server != null;
 
-  /// Get current port.
+  /// 获取当前端口。
   int get currentPort => _port;
 
-  /// Find an available port.
+  /// 查找可用端口。
   Future<int> _findAvailablePort() async {
     final socket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
     final port = socket.port;
@@ -129,9 +128,9 @@ class Server extends _$Server {
     return port;
   }
 
-  /// Create the Shelf application.
-  Future<Handler> _createApp() async {
-    const rulesRoutes = RulesRoutes();
+  /// 创建 Relic 应用。
+  RelicApp _createApp() {
+    final rulesRoutes = RulesRoutes();
     final serverRoutes = ServerRoutes(
       isRunning: () => isRunning,
       port: () => currentPort,
@@ -139,68 +138,142 @@ class Server extends _$Server {
       onStop: stop,
     );
 
-    // Create WebSocket handler
-    final wsHandler = webSocketHandler(
-      (WebSocketChannel webSocket, String? _) {
-        // Fire and forget: WebSocket handling is async by design.
-        // ignore: discarded_futures
-        _webSocketHandler?.handle(webSocket);
-      },
-    );
-
-    // Create static file handler for editor
+    // 为编辑器创建静态文件处理器
     final projectPath = Directory.current.path;
     final editorPath = '$projectPath/assets/editor';
     final staticHandler = editorAssetsExist(projectPath)
         ? createEditorStaticHandler(editorPath)
-        : (request) => Response.notFound('Editor not built');
+        : (request) => Response.notFound(
+            body: Body.fromString('Editor not built'),
+          );
 
-    // Combine all routes
-    final apiRouter = Cascade()
-        .add(serverRoutes.router.call)
-        .add(rulesRoutes.router.call)
-        .add(wsHandler)
-        .handler;
+    final app = RelicApp()
+      // 添加中间件
+      ..use('/', _logMiddleware)
+      ..use('/', _errorMiddleware)
+      ..use('/', corsMiddleware())
+      // WebSocket 路由
+      ..get('/ws', _handleWebSocket)
+      // API 路由
+      ..attach('/api/server', serverRoutes.router)
+      ..attach('/api', rulesRoutes.router)
+      // 静态文件（编辑器）
+      ..fallback = staticHandler;
 
-    // Main handler with middleware
-    final handler = const Pipeline()
-        .addMiddleware(_logMiddleware)
-        .addMiddleware(_errorMiddleware)
-        .addMiddleware(corsMiddleware())
-        .addHandler((request) async {
-          final path = request.requestedUri.path;
-
-          // API routes
-          if (path.startsWith('/api') || path == '/ws') {
-            return apiRouter(request);
-          }
-
-          // Static files (editor)
-          return staticHandler(request);
-        });
-
-    return handler;
+    return app;
   }
 
-  /// Log middleware - logs all requests.
+  /// WebSocket 处理器。
+  Result _handleWebSocket(Request request) {
+    return WebSocketUpgrade((webSocket) async {
+      _webSocketConnections.add(webSocket);
+      _talker?.debug(
+        'WebSocket connected, total: ${_webSocketConnections.length}',
+      );
+
+      try {
+        webSocket.sendText(jsonEncode({'type': 'connected'}));
+
+        await for (final event in webSocket.events) {
+          if (event is TextDataReceived) {
+            _handleWebSocketMessage(webSocket, event.text);
+          }
+        }
+      } on Exception catch (e, st) {
+        _talker?.error('WebSocket error', e, st);
+      } finally {
+        _webSocketConnections.remove(webSocket);
+        _talker?.debug(
+          'WebSocket disconnected, total: ${_webSocketConnections.length}',
+        );
+      }
+    });
+  }
+
+  /// 处理 WebSocket 消息。
+  void _handleWebSocketMessage(RelicWebSocket sender, String message) {
+    try {
+      final data = jsonDecode(message) as Map<String, dynamic>;
+      final type = data['type'] as String?;
+      final payload = data['data'];
+
+      switch (type) {
+        case 'element_selected':
+          // 向所有客户端广播元素选择
+          _broadcast(
+            jsonEncode({
+              'type': 'element_selected',
+              'data': payload,
+            }),
+          );
+
+        case 'preview_request':
+          // 处理预览请求
+          _handlePreviewRequest(sender, payload as Map<String, dynamic>?);
+
+        case 'ping':
+          sender.sendText(jsonEncode({'type': 'pong'}));
+
+        default:
+          _talker?.warning('Unknown WebSocket message type: $type');
+      }
+    } on Exception catch (e, st) {
+      _talker?.error('Error handling WebSocket message', e, st);
+    }
+  }
+
+  /// 处理预览请求。
+  void _handlePreviewRequest(
+    RelicWebSocket sender,
+    Map<String, dynamic>? payload,
+  ) {
+    if (payload == null) return;
+
+    final url = payload['url'] as String?;
+    if (url == null) return;
+
+    sender.sendText(
+      jsonEncode({
+        'type': 'preview_response',
+        'data': {
+          'status': 'accepted',
+          'url': url,
+        },
+      }),
+    );
+  }
+
+  /// 向所有客户端广播消息。
+  void _broadcast(String message) {
+    for (final ws in _webSocketConnections) {
+      ws.sendText(message);
+    }
+  }
+
+  /// 日志中间件 - 记录所有请求。
   Middleware get _logMiddleware {
     return (Handler innerHandler) {
       return (Request request) async {
         final stopwatch = Stopwatch()..start();
-        final response = await innerHandler(request);
+        final result = await innerHandler(request);
         stopwatch.stop();
 
+        final statusCode = switch (result) {
+          final Response r => r.statusCode,
+          _ => 0,
+        };
+
         _talker?.debug(
-          '${request.method} ${request.requestedUri.path} '
-          '${response.statusCode} ${stopwatch.elapsedMilliseconds}ms',
+          '${request.method.name} ${request.url.path} '
+          '$statusCode ${stopwatch.elapsedMilliseconds}ms',
         );
 
-        return response;
+        return result;
       };
     };
   }
 
-  /// Error handling middleware.
+  /// 错误处理中间件。
   Middleware get _errorMiddleware {
     return (Handler innerHandler) {
       return (Request request) async {
@@ -209,7 +282,13 @@ class Server extends _$Server {
         } on Exception catch (e, st) {
           _talker?.error('Error handling request', e, st);
           return Response.internalServerError(
-            body: 'Internal server error: $e',
+            body: Body.fromString(
+              jsonEncode({
+                'error': 'Internal server error',
+                'message': e.toString(),
+              }),
+              mimeType: MimeType.json,
+            ),
           );
         }
       };

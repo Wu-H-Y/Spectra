@@ -15,13 +15,13 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ContentStats {
 
-/// View/play count.
- int? get viewCount;/// Like/upvote count.
- int? get likeCount;/// Favorite/bookmark count.
- int? get favoriteCount;/// Comment count.
- int? get commentCount;/// Share/repost count.
- int? get shareCount;/// Rating score (typically 0-10 or 0-5 scale).
- double? get rating;/// Number of ratings received.
+/// 浏览/播放次数。
+ int? get viewCount;/// 点赞/支持数。
+ int? get likeCount;/// 收藏/书签数。
+ int? get favoriteCount;/// 评论数。
+ int? get commentCount;/// 分享/转发数。
+ int? get shareCount;/// 评分（通常为 0-10 或 0-5 分制）。
+ double? get rating;/// 收到的评分数。
  int? get ratingCount;
 /// Create a copy of ContentStats
 /// with the given fields replaced by the non-null parameter values.
@@ -219,19 +219,19 @@ class _ContentStats implements ContentStats {
   const _ContentStats({this.viewCount, this.likeCount, this.favoriteCount, this.commentCount, this.shareCount, this.rating, this.ratingCount});
   factory _ContentStats.fromJson(Map<String, dynamic> json) => _$ContentStatsFromJson(json);
 
-/// View/play count.
+/// 浏览/播放次数。
 @override final  int? viewCount;
-/// Like/upvote count.
+/// 点赞/支持数。
 @override final  int? likeCount;
-/// Favorite/bookmark count.
+/// 收藏/书签数。
 @override final  int? favoriteCount;
-/// Comment count.
+/// 评论数。
 @override final  int? commentCount;
-/// Share/repost count.
+/// 分享/转发数。
 @override final  int? shareCount;
-/// Rating score (typically 0-10 or 0-5 scale).
+/// 评分（通常为 0-10 或 0-5 分制）。
 @override final  double? rating;
-/// Number of ratings received.
+/// 收到的评分数。
 @override final  int? ratingCount;
 
 /// Create a copy of ContentStats

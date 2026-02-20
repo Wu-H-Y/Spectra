@@ -16,39 +16,39 @@ dependencies:
   flex_color_scheme: ^8.4.0 # Material 3 主题系统
   flutter:
     sdk: flutter
-  flutter_js: ^0.8.7 # JavaScript 脚本执行引擎
+  flutter_hooks: ^0.21.2 # React 风格 hooks 支持
+  flutter_js: ^0.8.7 # js 运行时
   flutter_localizations:
-    sdk: flutter # Flutter 官方本地化
-  flutter_native_splash: ^2.4.7 # 原生启动屏
-  flutter_riverpod: ^3.2.1 # Riverpod 状态管理
+    sdk: flutter
+  flutter_native_splash: ^2.4.6 # 原生启动屏
+  fpdart: ^1.2.0 # 函数式编程核心库
   freezed_annotation: ^3.1.0 # Freezed 注解
   go_router: ^17.1.0 # 声明式路由
   google_fonts: ^8.0.2 # Google 字体
-  hive_ce: ^2.15.0 # Hive CE 键值存储
-  hive_ce_flutter: ^2.3.3 # Hive CE Flutter 支持
+  hive_ce: ^2.19.3 # Hive CE 键值存储
+  hive_ce_flutter: ^2.3.4 # Hive CE Flutter 支持
+  hooks_riverpod: ^3.2.1 # Riverpod 状态管理 (带 hooks 支持)
   html: ^0.15.6 # HTML 解析和 CSS 选择器
   intl: ^0.20.2 # 国际化
   json_annotation: ^4.10.0 # JSON 序列化注解
+  json_path: ^0.9.0 # JSONPath 查询语言
   meta: 1.17.0 # Dart 元数据注解
+  mime: any # MIME 类型检测
   package_info_plus: ^9.0.0 # 应用信息
   pub_semver: ^2.1.5 # 语义化版本
   qs_dart: ^1.7.0 # URL 参数编解码
+  relic: ^1.0.0 # 现代 HTTP 服务器框架
   riverpod_annotation: ^4.0.2 # Riverpod 注解
-  shelf: ^1.4.0 # HTTP 服务器框架
-  shelf_router: ^1.1.4 # Shelf 路由
-  shelf_static: ^1.1.3 # Shelf 静态文件服务
-  shelf_web_socket: ^2.0.0 # Shelf WebSocket 支持
   talker: ^5.1.13 # 日志和错误处理
   talker_dio_logger: ^5.1.13 # Talker Dio 日志拦截器
   talker_flutter: ^5.1.13 # Talker Flutter 支持
   talker_riverpod_logger: ^5.1.13 # Talker Riverpod 日志观察者
   url_launcher: ^6.3.1 # URL 启动器
   uuid: ^4.5.1 # UUID 生成
-  web_socket_channel: ^3.0.1 # WebSocket 通道
+  web_socket: any # WebSocket 客户端
+  web_socket_channel: any # WebSocket 通道
   window_manager: ^0.5.1 # 桌面窗口管理
-  xpath_selector: ^3.0.1 # XPath 解析器
-  xpath_selector_html_parser: ^3.0.1 # XPath HTML 解析器
-
+  xml: ^6.6.1 # XML/HTML 解析和 XPath 选择器
 dev_dependencies:
   build_runner: ^2.11.1 # 代码生成
   drift_dev: ^2.31.0 # Drift 数据库生成器

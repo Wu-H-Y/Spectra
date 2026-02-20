@@ -20,6 +20,18 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh';
 
+  static String m0(message) => "规则执行失败：${message}";
+
+  static String m1(message) => "规则解析失败：${message}";
+
+  static String m2(selector) => "选择器匹配失败：${selector}";
+
+  static String m3(code) => "服务器内部错误 (${code})";
+
+  static String m4(username) => "用户名 \"${username}\" 已存在";
+
+  static String m5(count) => "密码长度不能少于 ${count} 位";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("关于"),
@@ -29,6 +41,32 @@ class MessageLookup extends MessageLookupByLibrary {
     "currentLanguage": MessageLookupByLibrary.simpleMessage("当前语言"),
     "currentTheme": MessageLookupByLibrary.simpleMessage("当前主题"),
     "developerTools": MessageLookupByLibrary.simpleMessage("开发者工具"),
+    "errorBadRequest": MessageLookupByLibrary.simpleMessage("请求参数有误，请检查后重试"),
+    "errorCacheError": MessageLookupByLibrary.simpleMessage("缓存操作失败，请稍后重试"),
+    "errorConnectionTimeout": MessageLookupByLibrary.simpleMessage(
+      "连接超时，请稍后重试",
+    ),
+    "errorDatabaseError": MessageLookupByLibrary.simpleMessage("数据库操作失败，请稍后重试"),
+    "errorForbidden": MessageLookupByLibrary.simpleMessage("您没有权限执行此操作"),
+    "errorNetworkUnreachable": MessageLookupByLibrary.simpleMessage(
+      "网络不可达，请检查您的网络连接",
+    ),
+    "errorNotFound": MessageLookupByLibrary.simpleMessage("请求的资源不存在"),
+    "errorParseError": MessageLookupByLibrary.simpleMessage("数据解析失败，请稍后重试"),
+    "errorRuleExecutionError": m0,
+    "errorRuleParseError": m1,
+    "errorSelectorError": m2,
+    "errorServerError": m3,
+    "errorTitleAuth": MessageLookupByLibrary.simpleMessage("身份验证失败"),
+    "errorTitleDefault": MessageLookupByLibrary.simpleMessage("提示"),
+    "errorTitleNetwork": MessageLookupByLibrary.simpleMessage("网络错误"),
+    "errorTitlePermission": MessageLookupByLibrary.simpleMessage("权限不足"),
+    "errorTitleRule": MessageLookupByLibrary.simpleMessage("规则错误"),
+    "errorTitleUnknown": MessageLookupByLibrary.simpleMessage("未知错误"),
+    "errorUnauthorized": MessageLookupByLibrary.simpleMessage("登录已过期，请重新登录"),
+    "errorUnknown": MessageLookupByLibrary.simpleMessage("发生未知错误，请稍后重试"),
+    "errorUsernameExists": m4,
+    "errorWeakPassword": m5,
     "featureComic": MessageLookupByLibrary.simpleMessage("漫画采集"),
     "featureImage": MessageLookupByLibrary.simpleMessage("图片采集"),
     "featureMusic": MessageLookupByLibrary.simpleMessage("音乐采集"),
@@ -43,6 +81,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "languageEnglish": MessageLookupByLibrary.simpleMessage("英文"),
     "openInBrowser": MessageLookupByLibrary.simpleMessage("在浏览器中打开"),
     "pageNotFound": MessageLookupByLibrary.simpleMessage("404 - 页面未找到"),
+    "retry": MessageLookupByLibrary.simpleMessage("重试"),
     "ruleEditor": MessageLookupByLibrary.simpleMessage("规则编辑器"),
     "ruleEditorDescription": MessageLookupByLibrary.simpleMessage(
       "打开网页端爬虫规则编辑器",

@@ -42,6 +42,7 @@ _MusicContent _$MusicContentFromJson(Map<String, dynamic> json) =>
     _MusicContent(
       id: json['id'] as String,
       title: json['title'] as String,
+      source: ContentSource.fromJson(json['source'] as Map<String, dynamic>),
       cover: json['cover'] as String?,
       description: json['description'] as String?,
       artistInfo: json['artistInfo'] == null
@@ -58,7 +59,6 @@ _MusicContent _$MusicContentFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
-      source: ContentSource.fromJson(json['source'] as Map<String, dynamic>),
       audioUrl: json['audioUrl'] as String?,
       duration: (json['duration'] as num?)?.toInt(),
       artist: json['artist'] as String?,
@@ -78,6 +78,7 @@ Map<String, dynamic> _$MusicContentToJson(_MusicContent instance) =>
     <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
+      'source': instance.source,
       'cover': instance.cover,
       'description': instance.description,
       'artistInfo': instance.artistInfo,
@@ -86,7 +87,6 @@ Map<String, dynamic> _$MusicContentToJson(_MusicContent instance) =>
       'stats': instance.stats,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
-      'source': instance.source,
       'audioUrl': instance.audioUrl,
       'duration': instance.duration,
       'artist': instance.artist,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:spectra/core/constants/locale_constants.dart';
 import 'package:spectra/core/server/server_provider.dart';
@@ -15,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 /// - 主题模式切换（深色/浅色/跟随系统）
 /// - 语言切换（中文/英文）
 /// - 关于信息
-class SettingsPage extends ConsumerWidget {
+class SettingsPage extends HookConsumerWidget {
   /// 创建设置页面实例
   const SettingsPage({super.key});
 
@@ -173,13 +173,12 @@ class SettingsPage extends ConsumerWidget {
                         const SizedBox(height: 4),
                         Text(
                           l10n.ruleEditorDescription,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
+                          style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(
-                            color: colorScheme.onSurface
-                                .withValues(alpha: 0.6),
-                          ),
+                                color: colorScheme.onSurface.withValues(
+                                  alpha: 0.6,
+                                ),
+                              ),
                         ),
                       ],
                     ),
@@ -189,7 +188,7 @@ class SettingsPage extends ConsumerWidget {
               const SizedBox(height: AppSpacing.md),
               Row(
                 children: [
-                  // Server status indicator
+                  // 服务器状态指示器
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.sm,
@@ -218,21 +217,20 @@ class SettingsPage extends ConsumerWidget {
                           serverStatus.isRunning
                               ? l10n.serverRunning
                               : l10n.serverStopped,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall
+                          style: Theme.of(context).textTheme.labelSmall
                               ?.copyWith(
-                            color: serverStatus.isRunning
-                                ? Colors.green
-                                : colorScheme.onSurface
-                                    .withValues(alpha: 0.6),
-                          ),
+                                color: serverStatus.isRunning
+                                    ? Colors.green
+                                    : colorScheme.onSurface.withValues(
+                                        alpha: 0.6,
+                                      ),
+                              ),
                         ),
                       ],
                     ),
                   ),
                   const Spacer(),
-                  // Start/Stop button
+                  // 启动/停止按钮
                   FilledButton.tonal(
                     onPressed: () async {
                       final notifier = ref.read(serverProvider.notifier);

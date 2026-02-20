@@ -32,31 +32,31 @@ _VideoChapter _$VideoChapterFromJson(Map<String, dynamic> json) =>
     _VideoChapter(
       id: json['id'] as String,
       title: json['title'] as String,
+      index: (json['index'] as num).toInt(),
       url: json['url'] as String?,
       duration: (json['duration'] as num?)?.toInt(),
-      index: (json['index'] as num).toInt(),
     );
 
 Map<String, dynamic> _$VideoChapterToJson(_VideoChapter instance) =>
     <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
+      'index': instance.index,
       'url': instance.url,
       'duration': instance.duration,
-      'index': instance.index,
     };
 
 _Subtitle _$SubtitleFromJson(Map<String, dynamic> json) => _Subtitle(
   language: json['language'] as String,
-  label: json['label'] as String?,
   url: json['url'] as String,
+  label: json['label'] as String?,
   isDefault: json['isDefault'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$SubtitleToJson(_Subtitle instance) => <String, dynamic>{
   'language': instance.language,
-  'label': instance.label,
   'url': instance.url,
+  'label': instance.label,
   'isDefault': instance.isDefault,
 };
 
@@ -78,6 +78,7 @@ _VideoContent _$VideoContentFromJson(Map<String, dynamic> json) =>
     _VideoContent(
       id: json['id'] as String,
       title: json['title'] as String,
+      source: ContentSource.fromJson(json['source'] as Map<String, dynamic>),
       cover: json['cover'] as String?,
       description: json['description'] as String?,
       author: json['author'] == null
@@ -94,7 +95,6 @@ _VideoContent _$VideoContentFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
-      source: ContentSource.fromJson(json['source'] as Map<String, dynamic>),
       duration: (json['duration'] as num?)?.toInt(),
       playUrl: json['playUrl'] as String?,
       qualities: (json['qualities'] as List<dynamic>?)
@@ -119,6 +119,7 @@ Map<String, dynamic> _$VideoContentToJson(_VideoContent instance) =>
     <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
+      'source': instance.source,
       'cover': instance.cover,
       'description': instance.description,
       'author': instance.author,
@@ -127,7 +128,6 @@ Map<String, dynamic> _$VideoContentToJson(_VideoContent instance) =>
       'stats': instance.stats,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
-      'source': instance.source,
       'duration': instance.duration,
       'playUrl': instance.playUrl,
       'qualities': instance.qualities,

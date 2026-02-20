@@ -35,5 +35,31 @@
     "serverStop": "Stop Server",
     "serverUrl": "Server URL",
     "openInBrowser": "Open in Browser",
-    "serverStartError": "Failed to start server"
+    "serverStartError": "Failed to start server",
+
+    "errorTitleDefault": "Notice",
+    "errorTitleNetwork": "Network Error",
+    "errorTitleAuth": "Authentication Failed",
+    "errorTitlePermission": "Permission Denied",
+    "errorTitleRule": "Rule Error",
+    "errorTitleUnknown": "Unknown Error",
+
+    "errorNetworkUnreachable": "Network unreachable. Please check your connection.",
+    "errorConnectionTimeout": "Connection timed out. Please try again later.",
+    "errorServerError": "Server error ({code})",
+    "errorUnauthorized": "Session expired. Please log in again.",
+    "errorForbidden": "You don't have permission to perform this action.",
+    "errorNotFound": "The requested resource was not found.",
+    "errorBadRequest": "Invalid request parameters. Please check and try again.",
+    "errorParseError": "Failed to parse data. Please try again later.",
+    "errorRuleParseError": "Rule parse error: {message}",
+    "errorRuleExecutionError": "Rule execution error: {message}",
+    "errorSelectorError": "Selector matching failed: {selector}",
+    "errorWeakPassword": "Password must be at least {count} characters long.",
+    "errorUsernameExists": "Username \"{username}\" already exists.",
+    "errorDatabaseError": "Database operation failed. Please try again later.",
+    "errorCacheError": "Cache operation failed. Please try again later.",
+    "errorUnknown": "An unknown error occurred. Please try again later.",
+
+    "retry": "Retry"
 }

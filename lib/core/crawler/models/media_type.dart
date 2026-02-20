@@ -1,29 +1,29 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-/// Media content type for crawler rules.
+/// 爬虫规则的媒体内容类型。
 @JsonEnum()
 enum MediaType {
-  /// Video content (movies, series, clips).
+  /// 视频内容（电影、剧集、短片）。
   video,
 
-  /// Music/audio tracks.
+  /// 音乐/音轨。
   music,
 
-  /// Novel/fiction text content.
+  /// 小说/虚构文本内容。
   novel,
 
-  /// Comic/manga content.
+  /// 漫画/日漫内容。
   comic,
 
-  /// Images and albums.
+  /// 图片和相册。
   image,
 
-  /// Audio content (podcasts, audiobooks).
+  /// 音频内容（播客、有声书）。
   audio,
 
-  /// RSS/Atom feeds.
+  /// RSS/Atom 订阅源。
   rss,
 
-  /// Generic content (any type).
+  /// 通用内容（任何类型）。
   generic,
 }

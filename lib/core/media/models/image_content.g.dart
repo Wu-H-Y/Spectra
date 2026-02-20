@@ -31,6 +31,11 @@ _ImageContent _$ImageContentFromJson(Map<String, dynamic> json) =>
     _ImageContent(
       id: json['id'] as String,
       title: json['title'] as String,
+      source: ContentSource.fromJson(json['source'] as Map<String, dynamic>),
+      images: (json['images'] as List<dynamic>)
+          .map((e) => ImageInfo.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      isAlbum: json['isAlbum'] as bool,
       cover: json['cover'] as String?,
       description: json['description'] as String?,
       author: json['author'] == null
@@ -47,11 +52,6 @@ _ImageContent _$ImageContentFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
-      source: ContentSource.fromJson(json['source'] as Map<String, dynamic>),
-      images: (json['images'] as List<dynamic>)
-          .map((e) => ImageInfo.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      isAlbum: json['isAlbum'] as bool,
       resolution: json['resolution'] as String?,
       isAIGenerated: json['isAIGenerated'] as bool?,
       aiModel: json['aiModel'] as String?,
@@ -61,6 +61,9 @@ Map<String, dynamic> _$ImageContentToJson(_ImageContent instance) =>
     <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
+      'source': instance.source,
+      'images': instance.images,
+      'isAlbum': instance.isAlbum,
       'cover': instance.cover,
       'description': instance.description,
       'author': instance.author,
@@ -69,9 +72,6 @@ Map<String, dynamic> _$ImageContentToJson(_ImageContent instance) =>
       'stats': instance.stats,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
-      'source': instance.source,
-      'images': instance.images,
-      'isAlbum': instance.isAlbum,
       'resolution': instance.resolution,
       'isAIGenerated': instance.isAIGenerated,
       'aiModel': instance.aiModel,

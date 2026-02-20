@@ -15,13 +15,13 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Selector {
 
-/// Selector type (css, xpath, regex, jsonpath, js).
- SelectorType get type;/// Selector expression.
- String get expression;/// Attribute to extract (e.g., "href", "src", "text").
-/// Use "text" or leave empty for text content.
-/// Use "html" for inner HTML.
- String? get attribute;/// Fallback selectors if primary fails.
- List<Selector>? get fallbacks;/// Whether to return first match only.
+/// 选择器类型（css、xpath、regex、jsonpath、js）。
+ SelectorType get type;/// 选择器表达式。
+ String get expression;/// 要提取的属性（例如 "href"、"src"、"text"）。
+/// 使用 "text" 或留空表示文本内容。
+/// 使用 "html" 表示内部 HTML。
+ String? get attribute;/// 主选择器失败时的回退选择器。
+ List<Selector>? get fallbacks;/// 是否只返回第一个匹配。
  bool get firstOnly;
 /// Create a copy of Selector
 /// with the given fields replaced by the non-null parameter values.
@@ -217,17 +217,17 @@ class _Selector implements Selector {
   const _Selector({required this.type, required this.expression, this.attribute, final  List<Selector>? fallbacks, this.firstOnly = false}): _fallbacks = fallbacks;
   factory _Selector.fromJson(Map<String, dynamic> json) => _$SelectorFromJson(json);
 
-/// Selector type (css, xpath, regex, jsonpath, js).
+/// 选择器类型（css、xpath、regex、jsonpath、js）。
 @override final  SelectorType type;
-/// Selector expression.
+/// 选择器表达式。
 @override final  String expression;
-/// Attribute to extract (e.g., "href", "src", "text").
-/// Use "text" or leave empty for text content.
-/// Use "html" for inner HTML.
+/// 要提取的属性（例如 "href"、"src"、"text"）。
+/// 使用 "text" 或留空表示文本内容。
+/// 使用 "html" 表示内部 HTML。
 @override final  String? attribute;
-/// Fallback selectors if primary fails.
+/// 主选择器失败时的回退选择器。
  final  List<Selector>? _fallbacks;
-/// Fallback selectors if primary fails.
+/// 主选择器失败时的回退选择器。
 @override List<Selector>? get fallbacks {
   final value = _fallbacks;
   if (value == null) return null;
@@ -236,7 +236,7 @@ class _Selector implements Selector {
   return EqualUnmodifiableListView(value);
 }
 
-/// Whether to return first match only.
+/// 是否只返回第一个匹配。
 @override@JsonKey() final  bool firstOnly;
 
 /// Create a copy of Selector

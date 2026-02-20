@@ -9,14 +9,14 @@ part of 'crawler_rule.dart';
 _CrawlerRule _$CrawlerRuleFromJson(Map<String, dynamic> json) => _CrawlerRule(
   id: json['id'] as String,
   name: json['name'] as String,
-  description: json['description'] as String?,
   mediaType: $enumDecode(_$MediaTypeEnumMap, json['mediaType']),
-  version: json['version'] as String? ?? '1.0.0',
   match: MatchConfig.fromJson(json['match'] as Map<String, dynamic>),
+  extract: ExtractConfig.fromJson(json['extract'] as Map<String, dynamic>),
+  description: json['description'] as String?,
+  version: json['version'] as String? ?? '1.0.0',
   request: json['request'] == null
       ? const RequestConfig()
       : RequestConfig.fromJson(json['request'] as Map<String, dynamic>),
-  extract: ExtractConfig.fromJson(json['extract'] as Map<String, dynamic>),
   beforeActions: (json['beforeActions'] as List<dynamic>?)
       ?.map((e) => CrawlerAction.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -43,12 +43,12 @@ Map<String, dynamic> _$CrawlerRuleToJson(_CrawlerRule instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'description': instance.description,
       'mediaType': _$MediaTypeEnumMap[instance.mediaType]!,
-      'version': instance.version,
       'match': instance.match,
-      'request': instance.request,
       'extract': instance.extract,
+      'description': instance.description,
+      'version': instance.version,
+      'request': instance.request,
       'beforeActions': instance.beforeActions,
       'afterActions': instance.afterActions,
       'detection': instance.detection,

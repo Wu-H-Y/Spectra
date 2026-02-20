@@ -8,14 +8,14 @@ part of 'server_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Provider for the HTTP server.
+/// HTTP 服务器 Provider。
 
 @ProviderFor(Server)
 final serverProvider = ServerProvider._();
 
-/// Provider for the HTTP server.
+/// HTTP 服务器 Provider。
 final class ServerProvider extends $NotifierProvider<Server, ServerStatus> {
-  /// Provider for the HTTP server.
+  /// HTTP 服务器 Provider。
   ServerProvider._()
     : super(
         from: null,
@@ -43,9 +43,9 @@ final class ServerProvider extends $NotifierProvider<Server, ServerStatus> {
   }
 }
 
-String _$serverHash() => r'6881011fc30ae1723aec36f27a6fed0cb1706c14';
+String _$serverHash() => r'd40bc04563c017dab34e9e1544b20344823b6477';
 
-/// Provider for the HTTP server.
+/// HTTP 服务器 Provider。
 
 abstract class _$Server extends $Notifier<ServerStatus> {
   ServerStatus build();

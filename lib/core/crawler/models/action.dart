@@ -3,39 +3,39 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'action.freezed.dart';
 part 'action.g.dart';
 
-/// Action type for page interactions.
+/// 页面交互的动作类型。
 @JsonEnum()
 enum ActionType {
-  /// Wait for element or time.
+  /// 等待元素或时间。
   wait,
 
-  /// Click on element.
+  /// 点击元素。
   click,
 
-  /// Scroll page.
+  /// 滚动页面。
   scroll,
 
-  /// Fill form field.
+  /// 填充表单字段。
   fill,
 
-  /// Execute JavaScript.
+  /// 执行 JavaScript。
   script,
 
-  /// Conditional action.
+  /// 条件动作。
   condition,
 
-  /// Loop action.
+  /// 循环动作。
   loop,
 }
 
-/// Action for page interactions (anti-crawl handling).
+/// 页面交互动作（反爬虫处理）。
 @freezed
 sealed class CrawlerAction with _$CrawlerAction {
   const factory CrawlerAction({
-    /// Action type.
+    /// 动作类型。
     required ActionType type,
 
-    /// Action parameters (varies by type).
+    /// 动作参数（根据类型而异）。
     /// - wait: {selector?: string, timeout?: int}
     /// - click: {selector: string}
     /// - scroll: {direction: "up"|"down", distance?: int}
@@ -50,14 +50,14 @@ sealed class CrawlerAction with _$CrawlerAction {
       _$CrawlerActionFromJson(json);
 }
 
-/// Wait action configuration.
+/// 等待动作配置。
 @freezed
 sealed class WaitAction with _$WaitAction {
   const factory WaitAction({
-    /// Selector to wait for (optional - if null, waits for time).
+    /// 要等待的选择器（可选 - 如果为 null，则等待时间）。
     String? selector,
 
-    /// Timeout in milliseconds.
+    /// 超时时间（毫秒）。
     @Default(5000) int timeout,
   }) = _WaitAction;
 
@@ -65,14 +65,14 @@ sealed class WaitAction with _$WaitAction {
       _$WaitActionFromJson(json);
 }
 
-/// Click action configuration.
+/// 点击动作配置。
 @freezed
 sealed class ClickAction with _$ClickAction {
   const factory ClickAction({
-    /// Selector for element to click.
+    /// 要点击的元素选择器。
     required String selector,
 
-    /// Whether to scroll element into view first.
+    /// 是否先将元素滚动到视图中。
     @Default(true) bool scrollIntoView,
   }) = _ClickAction;
 
@@ -80,17 +80,17 @@ sealed class ClickAction with _$ClickAction {
       _$ClickActionFromJson(json);
 }
 
-/// Scroll action configuration.
+/// 滚动动作配置。
 @freezed
 sealed class ScrollAction with _$ScrollAction {
   const factory ScrollAction({
-    /// Scroll direction.
+    /// 滚动方向。
     @Default(ScrollDirection.down) ScrollDirection direction,
 
-    /// Scroll distance in pixels (0 = scroll to end).
+    /// 滚动距离（像素）（0 = 滚动到底部）。
     @Default(0) int distance,
 
-    /// Scroll smoothly.
+    /// 平滑滚动。
     @Default(true) bool smooth,
   }) = _ScrollAction;
 
@@ -98,33 +98,33 @@ sealed class ScrollAction with _$ScrollAction {
       _$ScrollActionFromJson(json);
 }
 
-/// Scroll direction.
+/// 滚动方向。
 @JsonEnum()
 enum ScrollDirection {
-  /// Scroll up.
+  /// 向上滚动。
   up,
 
-  /// Scroll down.
+  /// 向下滚动。
   down,
 
-  /// Scroll left.
+  /// 向左滚动。
   left,
 
-  /// Scroll right.
+  /// 向右滚动。
   right,
 }
 
-/// Fill action configuration.
+/// 填充动作配置。
 @freezed
 sealed class FillAction with _$FillAction {
   const factory FillAction({
-    /// Selector for form field.
+    /// 表单字段的选择器。
     required String selector,
 
-    /// Value to fill.
+    /// 要填充的值。
     required String value,
 
-    /// Whether to simulate typing (with delays).
+    /// 是否模拟打字（带延迟）。
     @Default(false) bool simulateTyping,
   }) = _FillAction;
 
@@ -132,14 +132,14 @@ sealed class FillAction with _$FillAction {
       _$FillActionFromJson(json);
 }
 
-/// Script action configuration.
+/// 脚本动作配置。
 @freezed
 sealed class ScriptAction with _$ScriptAction {
   const factory ScriptAction({
-    /// JavaScript code to execute.
+    /// 要执行的 JavaScript 代码。
     required String code,
 
-    /// Whether to wait for script to complete.
+    /// 是否等待脚本完成。
     @Default(true) bool awaitCompletion,
   }) = _ScriptAction;
 
@@ -147,17 +147,17 @@ sealed class ScriptAction with _$ScriptAction {
       _$ScriptActionFromJson(json);
 }
 
-/// Condition action configuration.
+/// 条件动作配置。
 @freezed
 sealed class ConditionAction with _$ConditionAction {
   const factory ConditionAction({
-    /// Condition to check (JavaScript expression or selector).
+    /// 要检查的条件（JavaScript 表达式或选择器）。
     required String check,
 
-    /// Actions to execute if condition is true.
+    /// 条件为真时执行的动作。
     required List<CrawlerAction> thenActions,
 
-    /// Actions to execute if condition is false.
+    /// 条件为假时执行的动作。
     List<CrawlerAction>? elseActions,
   }) = _ConditionAction;
 
@@ -165,17 +165,17 @@ sealed class ConditionAction with _$ConditionAction {
       _$ConditionActionFromJson(json);
 }
 
-/// Loop action configuration.
+/// 循环动作配置。
 @freezed
 sealed class LoopAction with _$LoopAction {
   const factory LoopAction({
-    /// Number of iterations.
+    /// 迭代次数。
     required int count,
 
-    /// Actions to execute in each iteration.
+    /// 每次迭代中执行的动作。
     required List<CrawlerAction> actions,
 
-    /// Delay between iterations in milliseconds.
+    /// 迭代之间的延迟（毫秒）。
     @Default(1000) int delayMs,
   }) = _LoopAction;
 

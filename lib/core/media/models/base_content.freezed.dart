@@ -15,18 +15,18 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BaseContent {
 
-/// Unique identifier for this content.
- String get id;/// Content title.
- String get title;/// Cover/thumbnail image URL.
- String? get cover;/// Description/summary.
- String? get description;/// Author information.
- Author? get author;/// List of tags/categories.
- List<String>? get tags;/// Primary category name.
- String? get category;/// Content statistics.
- ContentStats? get stats;/// Original publish date.
- DateTime? get createdAt;/// Last update date.
- DateTime? get updatedAt;/// Source information (where content was crawled from).
- ContentSource get source;
+/// 此内容的唯一标识符。
+ String get id;/// 内容标题。
+ String get title;/// 来源信息（内容爬取的来源）。
+ ContentSource get source;/// 封面/缩略图 URL。
+ String? get cover;/// 描述/摘要。
+ String? get description;/// 作者信息。
+ Author? get author;/// 标签/分类列表。
+ List<String>? get tags;/// 主要分类名称。
+ String? get category;/// 内容统计。
+ ContentStats? get stats;/// 原始发布日期。
+ DateTime? get createdAt;/// 最后更新日期。
+ DateTime? get updatedAt;
 /// Create a copy of BaseContent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -39,16 +39,16 @@ $BaseContentCopyWith<BaseContent> get copyWith => _$BaseContentCopyWithImpl<Base
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BaseContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.source, source) || other.source == source));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BaseContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.source, source) || other.source == source)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,cover,description,author,const DeepCollectionEquality().hash(tags),category,stats,createdAt,updatedAt,source);
+int get hashCode => Object.hash(runtimeType,id,title,source,cover,description,author,const DeepCollectionEquality().hash(tags),category,stats,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'BaseContent(id: $id, title: $title, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, source: $source)';
+  return 'BaseContent(id: $id, title: $title, source: $source, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -59,11 +59,11 @@ abstract mixin class $BaseContentCopyWith<$Res>  {
   factory $BaseContentCopyWith(BaseContent value, $Res Function(BaseContent) _then) = _$BaseContentCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, ContentSource source
+ String id, String title, ContentSource source, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt
 });
 
 
-$AuthorCopyWith<$Res>? get author;$ContentStatsCopyWith<$Res>? get stats;$ContentSourceCopyWith<$Res> get source;
+$ContentSourceCopyWith<$Res> get source;$AuthorCopyWith<$Res>? get author;$ContentStatsCopyWith<$Res>? get stats;
 
 }
 /// @nodoc
@@ -76,11 +76,12 @@ class _$BaseContentCopyWithImpl<$Res>
 
 /// Create a copy of BaseContent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? source = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? source = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as ContentSource,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,author: freezed == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
 as Author?,tags: freezed == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
@@ -88,11 +89,19 @@ as List<String>?,category: freezed == category ? _self.category : category // ig
 as String?,stats: freezed == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as ContentStats?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
-as ContentSource,
+as DateTime?,
   ));
 }
 /// Create a copy of BaseContent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ContentSourceCopyWith<$Res> get source {
+  
+  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
+    return _then(_self.copyWith(source: value));
+  });
+}/// Create a copy of BaseContent
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -115,15 +124,6 @@ $ContentStatsCopyWith<$Res>? get stats {
 
   return $ContentStatsCopyWith<$Res>(_self.stats!, (value) {
     return _then(_self.copyWith(stats: value));
-  });
-}/// Create a copy of BaseContent
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContentSourceCopyWith<$Res> get source {
-  
-  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
-    return _then(_self.copyWith(source: value));
   });
 }
 }
@@ -204,10 +204,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  ContentSource source,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BaseContent() when $default != null:
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source);case _:
+return $default(_that.id,_that.title,_that.source,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -225,10 +225,10 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  ContentSource source,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _BaseContent():
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source);}
+return $default(_that.id,_that.title,_that.source,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -242,10 +242,10 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  ContentSource source,  String? cover,  String? description,  Author? author,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _BaseContent() when $default != null:
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source);case _:
+return $default(_that.id,_that.title,_that.source,_that.cover,_that.description,_that.author,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -257,22 +257,24 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.author,
 @JsonSerializable()
 
 class _BaseContent implements BaseContent {
-  const _BaseContent({required this.id, required this.title, this.cover, this.description, this.author, final  List<String>? tags, this.category, this.stats, this.createdAt, this.updatedAt, required this.source}): _tags = tags;
+  const _BaseContent({required this.id, required this.title, required this.source, this.cover, this.description, this.author, final  List<String>? tags, this.category, this.stats, this.createdAt, this.updatedAt}): _tags = tags;
   factory _BaseContent.fromJson(Map<String, dynamic> json) => _$BaseContentFromJson(json);
 
-/// Unique identifier for this content.
+/// 此内容的唯一标识符。
 @override final  String id;
-/// Content title.
+/// 内容标题。
 @override final  String title;
-/// Cover/thumbnail image URL.
+/// 来源信息（内容爬取的来源）。
+@override final  ContentSource source;
+/// 封面/缩略图 URL。
 @override final  String? cover;
-/// Description/summary.
+/// 描述/摘要。
 @override final  String? description;
-/// Author information.
+/// 作者信息。
 @override final  Author? author;
-/// List of tags/categories.
+/// 标签/分类列表。
  final  List<String>? _tags;
-/// List of tags/categories.
+/// 标签/分类列表。
 @override List<String>? get tags {
   final value = _tags;
   if (value == null) return null;
@@ -281,16 +283,14 @@ class _BaseContent implements BaseContent {
   return EqualUnmodifiableListView(value);
 }
 
-/// Primary category name.
+/// 主要分类名称。
 @override final  String? category;
-/// Content statistics.
+/// 内容统计。
 @override final  ContentStats? stats;
-/// Original publish date.
+/// 原始发布日期。
 @override final  DateTime? createdAt;
-/// Last update date.
+/// 最后更新日期。
 @override final  DateTime? updatedAt;
-/// Source information (where content was crawled from).
-@override final  ContentSource source;
 
 /// Create a copy of BaseContent
 /// with the given fields replaced by the non-null parameter values.
@@ -305,16 +305,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BaseContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.source, source) || other.source == source));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BaseContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.source, source) || other.source == source)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.author, author) || other.author == author)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,cover,description,author,const DeepCollectionEquality().hash(_tags),category,stats,createdAt,updatedAt,source);
+int get hashCode => Object.hash(runtimeType,id,title,source,cover,description,author,const DeepCollectionEquality().hash(_tags),category,stats,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'BaseContent(id: $id, title: $title, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, source: $source)';
+  return 'BaseContent(id: $id, title: $title, source: $source, cover: $cover, description: $description, author: $author, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -325,11 +325,11 @@ abstract mixin class _$BaseContentCopyWith<$Res> implements $BaseContentCopyWith
   factory _$BaseContentCopyWith(_BaseContent value, $Res Function(_BaseContent) _then) = __$BaseContentCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, ContentSource source
+ String id, String title, ContentSource source, String? cover, String? description, Author? author, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt
 });
 
 
-@override $AuthorCopyWith<$Res>? get author;@override $ContentStatsCopyWith<$Res>? get stats;@override $ContentSourceCopyWith<$Res> get source;
+@override $ContentSourceCopyWith<$Res> get source;@override $AuthorCopyWith<$Res>? get author;@override $ContentStatsCopyWith<$Res>? get stats;
 
 }
 /// @nodoc
@@ -342,11 +342,12 @@ class __$BaseContentCopyWithImpl<$Res>
 
 /// Create a copy of BaseContent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? source = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? source = null,Object? cover = freezed,Object? description = freezed,Object? author = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_BaseContent(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as ContentSource,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,author: freezed == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
 as Author?,tags: freezed == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
@@ -354,12 +355,20 @@ as List<String>?,category: freezed == category ? _self.category : category // ig
 as String?,stats: freezed == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as ContentStats?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
-as ContentSource,
+as DateTime?,
   ));
 }
 
 /// Create a copy of BaseContent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ContentSourceCopyWith<$Res> get source {
+  
+  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
+    return _then(_self.copyWith(source: value));
+  });
+}/// Create a copy of BaseContent
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -382,15 +391,6 @@ $ContentStatsCopyWith<$Res>? get stats {
 
   return $ContentStatsCopyWith<$Res>(_self.stats!, (value) {
     return _then(_self.copyWith(stats: value));
-  });
-}/// Create a copy of BaseContent
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContentSourceCopyWith<$Res> get source {
-  
-  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
-    return _then(_self.copyWith(source: value));
   });
 }
 }

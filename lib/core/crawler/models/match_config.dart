@@ -3,23 +3,23 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'match_config.freezed.dart';
 part 'match_config.g.dart';
 
-/// URL matching configuration.
+/// URL 匹配配置。
 @freezed
 sealed class MatchConfig with _$MatchConfig {
   const factory MatchConfig({
-    /// URL pattern (regex or glob pattern).
+    /// URL 模式（正则或 glob 模式）。
     required String pattern,
 
-    /// Pattern type (regex or glob).
+    /// 模式类型（正则或 glob）。
     @Default(MatchPatternType.regex) MatchPatternType type,
 
-    /// Whether to match full URL or just path.
+    /// 是否匹配完整 URL 还是只匹配路径。
     @Default(true) bool fullUrl,
 
-    /// List of additional URL patterns to match.
+    /// 要匹配的额外 URL 模式列表。
     List<String>? includePatterns,
 
-    /// List of URL patterns to exclude.
+    /// 要排除的 URL 模式列表。
     List<String>? excludePatterns,
   }) = _MatchConfig;
 
@@ -27,12 +27,12 @@ sealed class MatchConfig with _$MatchConfig {
       _$MatchConfigFromJson(json);
 }
 
-/// Pattern type for URL matching.
+/// URL 匹配的模式类型。
 @JsonEnum()
 enum MatchPatternType {
-  /// Regular expression pattern.
+  /// 正则表达式模式。
   regex,
 
-  /// Glob pattern (e.g., "*.example.com/*").
+  /// Glob 模式（例如 "*.example.com/*"）。
   glob,
 }

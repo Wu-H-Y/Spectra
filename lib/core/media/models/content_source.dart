@@ -3,27 +3,31 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'content_source.freezed.dart';
 part 'content_source.g.dart';
 
-/// Source information for crawled content.
+/// 爬取内容的来源信息。
 ///
-/// Tracks where content was extracted from for attribution
-/// and future updates.
+/// 跟踪内容提取自何处，用于归属
+/// 和未来更新。
 @freezed
 sealed class ContentSource with _$ContentSource {
-  /// Creates a [ContentSource] instance.
+  /// 创建 [ContentSource] 实例。
   const factory ContentSource({
-    /// Crawler rule ID that extracted this content.
+    /// 提取此内容的爬虫规则 ID。
     required String ruleId,
 
-    /// Source site display name.
+    /// 来源站点显示名称。
     required String siteName,
 
-    /// Original URL on the source site.
-    required String originalUrl, /// Timestamp when content was crawled.
-    required DateTime crawledAt, /// Source site icon/favicon URL.
+    /// 来源站点上的原始 URL。
+    required String originalUrl,
+
+    /// 内容被爬取的时间戳。
+    required DateTime crawledAt,
+
+    /// 来源站点图标/favicon URL。
     String? siteIcon,
   }) = _ContentSource;
 
-  /// Creates [ContentSource] from JSON.
+  /// 从 JSON 创建 [ContentSource]。
   factory ContentSource.fromJson(Map<String, dynamic> json) =>
       _$ContentSourceFromJson(json);
 }

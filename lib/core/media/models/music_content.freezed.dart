@@ -15,12 +15,12 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AudioQuality {
 
-/// Quality label (e.g., "320kbps", "128kbps", "FLAC").
- String get label;/// Audio stream URL.
- String get url;/// Audio codec (e.g., "mp3", "aac", "flac").
- String? get codec;/// Bitrate in kbps.
- int? get bitrate;/// Sample rate in Hz.
- int? get sampleRate;/// File size in bytes.
+/// 质量标签（如 "320kbps"、"128kbps"、"FLAC"）。
+ String get label;/// 音频流 URL。
+ String get url;/// 音频编码（如 "mp3"、"aac"、"flac"）。
+ String? get codec;/// 码率（kbps）。
+ int? get bitrate;/// 采样率（Hz）。
+ int? get sampleRate;/// 文件大小（字节）。
  int? get fileSize;
 /// Create a copy of AudioQuality
 /// with the given fields replaced by the non-null parameter values.
@@ -217,17 +217,17 @@ class _AudioQuality implements AudioQuality {
   const _AudioQuality({required this.label, required this.url, this.codec, this.bitrate, this.sampleRate, this.fileSize});
   factory _AudioQuality.fromJson(Map<String, dynamic> json) => _$AudioQualityFromJson(json);
 
-/// Quality label (e.g., "320kbps", "128kbps", "FLAC").
+/// 质量标签（如 "320kbps"、"128kbps"、"FLAC"）。
 @override final  String label;
-/// Audio stream URL.
+/// 音频流 URL。
 @override final  String url;
-/// Audio codec (e.g., "mp3", "aac", "flac").
+/// 音频编码（如 "mp3"、"aac"、"flac"）。
 @override final  String? codec;
-/// Bitrate in kbps.
+/// 码率（kbps）。
 @override final  int? bitrate;
-/// Sample rate in Hz.
+/// 采样率（Hz）。
 @override final  int? sampleRate;
-/// File size in bytes.
+/// 文件大小（字节）。
 @override final  int? fileSize;
 
 /// Create a copy of AudioQuality
@@ -299,9 +299,9 @@ as int?,
 /// @nodoc
 mixin _$Lyrics {
 
-/// Plain text lyrics.
- String? get text;/// LRC format lyrics with timestamps.
- String? get lrc;/// Language code.
+/// 纯文本歌词。
+ String? get text;/// 带时间戳的 LRC 格式歌词。
+ String? get lrc;/// 语言代码。
  String? get language;
 /// Create a copy of Lyrics
 /// with the given fields replaced by the non-null parameter values.
@@ -495,11 +495,11 @@ class _Lyrics implements Lyrics {
   const _Lyrics({this.text, this.lrc, this.language});
   factory _Lyrics.fromJson(Map<String, dynamic> json) => _$LyricsFromJson(json);
 
-/// Plain text lyrics.
+/// 纯文本歌词。
 @override final  String? text;
-/// LRC format lyrics with timestamps.
+/// 带时间戳的 LRC 格式歌词。
 @override final  String? lrc;
-/// Language code.
+/// 语言代码。
 @override final  String? language;
 
 /// Create a copy of Lyrics
@@ -568,26 +568,26 @@ as String?,
 /// @nodoc
 mixin _$MusicContent {
 
-/// Unique identifier.
- String get id;/// Track title.
- String get title;/// Cover/album art URL.
- String? get cover;/// Description.
- String? get description;/// Artist information.
- Author? get artistInfo;/// Tags.
- List<String>? get tags;/// Genre/category.
- String? get category;/// Statistics.
- ContentStats? get stats;/// Release date.
- DateTime? get createdAt;/// Update date.
- DateTime? get updatedAt;/// Source information.
- ContentSource get source;/// Primary audio playback URL.
- String? get audioUrl;/// Duration in seconds.
- int? get duration;/// Artist name(s) - can be comma-separated or array.
- String? get artist;/// Album name.
- String? get album;/// Album cover URL (if different from cover).
- String? get albumCover;/// Available quality options.
- List<AudioQuality>? get qualities;/// Lyrics.
- Lyrics? get lyrics;/// Music video URL.
- String? get mvUrl;/// Copyright information.
+/// 唯一标识符。
+ String get id;/// 曲目标题。
+ String get title;/// 来源信息。
+ ContentSource get source;/// 封面/专辑封面 URL。
+ String? get cover;/// 描述。
+ String? get description;/// 艺术家信息。
+ Author? get artistInfo;/// 标签。
+ List<String>? get tags;/// 流派/分类。
+ String? get category;/// 统计信息。
+ ContentStats? get stats;/// 发布日期。
+ DateTime? get createdAt;/// 更新日期。
+ DateTime? get updatedAt;/// 主要音频播放 URL。
+ String? get audioUrl;/// 时长（秒）。
+ int? get duration;/// 艺术家名称（可能是逗号分隔或数组）。
+ String? get artist;/// 专辑名称。
+ String? get album;/// 专辑封面 URL（如果与 cover 不同）。
+ String? get albumCover;/// 可用的质量选项。
+ List<AudioQuality>? get qualities;/// 歌词。
+ Lyrics? get lyrics;/// 音乐视频 URL。
+ String? get mvUrl;/// 版权信息。
  String? get copyright;
 /// Create a copy of MusicContent
 /// with the given fields replaced by the non-null parameter values.
@@ -601,16 +601,16 @@ $MusicContentCopyWith<MusicContent> get copyWith => _$MusicContentCopyWithImpl<M
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MusicContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.artistInfo, artistInfo) || other.artistInfo == artistInfo)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.source, source) || other.source == source)&&(identical(other.audioUrl, audioUrl) || other.audioUrl == audioUrl)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.album, album) || other.album == album)&&(identical(other.albumCover, albumCover) || other.albumCover == albumCover)&&const DeepCollectionEquality().equals(other.qualities, qualities)&&(identical(other.lyrics, lyrics) || other.lyrics == lyrics)&&(identical(other.mvUrl, mvUrl) || other.mvUrl == mvUrl)&&(identical(other.copyright, copyright) || other.copyright == copyright));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MusicContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.source, source) || other.source == source)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.artistInfo, artistInfo) || other.artistInfo == artistInfo)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.audioUrl, audioUrl) || other.audioUrl == audioUrl)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.album, album) || other.album == album)&&(identical(other.albumCover, albumCover) || other.albumCover == albumCover)&&const DeepCollectionEquality().equals(other.qualities, qualities)&&(identical(other.lyrics, lyrics) || other.lyrics == lyrics)&&(identical(other.mvUrl, mvUrl) || other.mvUrl == mvUrl)&&(identical(other.copyright, copyright) || other.copyright == copyright));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,cover,description,artistInfo,const DeepCollectionEquality().hash(tags),category,stats,createdAt,updatedAt,source,audioUrl,duration,artist,album,albumCover,const DeepCollectionEquality().hash(qualities),lyrics,mvUrl,copyright]);
+int get hashCode => Object.hashAll([runtimeType,id,title,source,cover,description,artistInfo,const DeepCollectionEquality().hash(tags),category,stats,createdAt,updatedAt,audioUrl,duration,artist,album,albumCover,const DeepCollectionEquality().hash(qualities),lyrics,mvUrl,copyright]);
 
 @override
 String toString() {
-  return 'MusicContent(id: $id, title: $title, cover: $cover, description: $description, artistInfo: $artistInfo, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, source: $source, audioUrl: $audioUrl, duration: $duration, artist: $artist, album: $album, albumCover: $albumCover, qualities: $qualities, lyrics: $lyrics, mvUrl: $mvUrl, copyright: $copyright)';
+  return 'MusicContent(id: $id, title: $title, source: $source, cover: $cover, description: $description, artistInfo: $artistInfo, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, audioUrl: $audioUrl, duration: $duration, artist: $artist, album: $album, albumCover: $albumCover, qualities: $qualities, lyrics: $lyrics, mvUrl: $mvUrl, copyright: $copyright)';
 }
 
 
@@ -621,11 +621,11 @@ abstract mixin class $MusicContentCopyWith<$Res>  {
   factory $MusicContentCopyWith(MusicContent value, $Res Function(MusicContent) _then) = _$MusicContentCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? cover, String? description, Author? artistInfo, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, ContentSource source, String? audioUrl, int? duration, String? artist, String? album, String? albumCover, List<AudioQuality>? qualities, Lyrics? lyrics, String? mvUrl, String? copyright
+ String id, String title, ContentSource source, String? cover, String? description, Author? artistInfo, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, String? audioUrl, int? duration, String? artist, String? album, String? albumCover, List<AudioQuality>? qualities, Lyrics? lyrics, String? mvUrl, String? copyright
 });
 
 
-$AuthorCopyWith<$Res>? get artistInfo;$ContentStatsCopyWith<$Res>? get stats;$ContentSourceCopyWith<$Res> get source;$LyricsCopyWith<$Res>? get lyrics;
+$ContentSourceCopyWith<$Res> get source;$AuthorCopyWith<$Res>? get artistInfo;$ContentStatsCopyWith<$Res>? get stats;$LyricsCopyWith<$Res>? get lyrics;
 
 }
 /// @nodoc
@@ -638,11 +638,12 @@ class _$MusicContentCopyWithImpl<$Res>
 
 /// Create a copy of MusicContent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? cover = freezed,Object? description = freezed,Object? artistInfo = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? source = null,Object? audioUrl = freezed,Object? duration = freezed,Object? artist = freezed,Object? album = freezed,Object? albumCover = freezed,Object? qualities = freezed,Object? lyrics = freezed,Object? mvUrl = freezed,Object? copyright = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? source = null,Object? cover = freezed,Object? description = freezed,Object? artistInfo = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? audioUrl = freezed,Object? duration = freezed,Object? artist = freezed,Object? album = freezed,Object? albumCover = freezed,Object? qualities = freezed,Object? lyrics = freezed,Object? mvUrl = freezed,Object? copyright = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as ContentSource,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,artistInfo: freezed == artistInfo ? _self.artistInfo : artistInfo // ignore: cast_nullable_to_non_nullable
 as Author?,tags: freezed == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
@@ -650,8 +651,7 @@ as List<String>?,category: freezed == category ? _self.category : category // ig
 as String?,stats: freezed == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as ContentStats?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
-as ContentSource,audioUrl: freezed == audioUrl ? _self.audioUrl : audioUrl // ignore: cast_nullable_to_non_nullable
+as DateTime?,audioUrl: freezed == audioUrl ? _self.audioUrl : audioUrl // ignore: cast_nullable_to_non_nullable
 as String?,duration: freezed == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as int?,artist: freezed == artist ? _self.artist : artist // ignore: cast_nullable_to_non_nullable
 as String?,album: freezed == album ? _self.album : album // ignore: cast_nullable_to_non_nullable
@@ -664,6 +664,15 @@ as String?,
   ));
 }
 /// Create a copy of MusicContent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ContentSourceCopyWith<$Res> get source {
+  
+  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
+    return _then(_self.copyWith(source: value));
+  });
+}/// Create a copy of MusicContent
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -686,15 +695,6 @@ $ContentStatsCopyWith<$Res>? get stats {
 
   return $ContentStatsCopyWith<$Res>(_self.stats!, (value) {
     return _then(_self.copyWith(stats: value));
-  });
-}/// Create a copy of MusicContent
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContentSourceCopyWith<$Res> get source {
-  
-  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
-    return _then(_self.copyWith(source: value));
   });
 }/// Create a copy of MusicContent
 /// with the given fields replaced by the non-null parameter values.
@@ -787,10 +787,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? cover,  String? description,  Author? artistInfo,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source,  String? audioUrl,  int? duration,  String? artist,  String? album,  String? albumCover,  List<AudioQuality>? qualities,  Lyrics? lyrics,  String? mvUrl,  String? copyright)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  ContentSource source,  String? cover,  String? description,  Author? artistInfo,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  String? audioUrl,  int? duration,  String? artist,  String? album,  String? albumCover,  List<AudioQuality>? qualities,  Lyrics? lyrics,  String? mvUrl,  String? copyright)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MusicContent() when $default != null:
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.artistInfo,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source,_that.audioUrl,_that.duration,_that.artist,_that.album,_that.albumCover,_that.qualities,_that.lyrics,_that.mvUrl,_that.copyright);case _:
+return $default(_that.id,_that.title,_that.source,_that.cover,_that.description,_that.artistInfo,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.audioUrl,_that.duration,_that.artist,_that.album,_that.albumCover,_that.qualities,_that.lyrics,_that.mvUrl,_that.copyright);case _:
   return orElse();
 
 }
@@ -808,10 +808,10 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.artistI
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? cover,  String? description,  Author? artistInfo,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source,  String? audioUrl,  int? duration,  String? artist,  String? album,  String? albumCover,  List<AudioQuality>? qualities,  Lyrics? lyrics,  String? mvUrl,  String? copyright)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  ContentSource source,  String? cover,  String? description,  Author? artistInfo,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  String? audioUrl,  int? duration,  String? artist,  String? album,  String? albumCover,  List<AudioQuality>? qualities,  Lyrics? lyrics,  String? mvUrl,  String? copyright)  $default,) {final _that = this;
 switch (_that) {
 case _MusicContent():
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.artistInfo,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source,_that.audioUrl,_that.duration,_that.artist,_that.album,_that.albumCover,_that.qualities,_that.lyrics,_that.mvUrl,_that.copyright);}
+return $default(_that.id,_that.title,_that.source,_that.cover,_that.description,_that.artistInfo,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.audioUrl,_that.duration,_that.artist,_that.album,_that.albumCover,_that.qualities,_that.lyrics,_that.mvUrl,_that.copyright);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -825,10 +825,10 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.artistI
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? cover,  String? description,  Author? artistInfo,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  ContentSource source,  String? audioUrl,  int? duration,  String? artist,  String? album,  String? albumCover,  List<AudioQuality>? qualities,  Lyrics? lyrics,  String? mvUrl,  String? copyright)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  ContentSource source,  String? cover,  String? description,  Author? artistInfo,  List<String>? tags,  String? category,  ContentStats? stats,  DateTime? createdAt,  DateTime? updatedAt,  String? audioUrl,  int? duration,  String? artist,  String? album,  String? albumCover,  List<AudioQuality>? qualities,  Lyrics? lyrics,  String? mvUrl,  String? copyright)?  $default,) {final _that = this;
 switch (_that) {
 case _MusicContent() when $default != null:
-return $default(_that.id,_that.title,_that.cover,_that.description,_that.artistInfo,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.source,_that.audioUrl,_that.duration,_that.artist,_that.album,_that.albumCover,_that.qualities,_that.lyrics,_that.mvUrl,_that.copyright);case _:
+return $default(_that.id,_that.title,_that.source,_that.cover,_that.description,_that.artistInfo,_that.tags,_that.category,_that.stats,_that.createdAt,_that.updatedAt,_that.audioUrl,_that.duration,_that.artist,_that.album,_that.albumCover,_that.qualities,_that.lyrics,_that.mvUrl,_that.copyright);case _:
   return null;
 
 }
@@ -840,22 +840,24 @@ return $default(_that.id,_that.title,_that.cover,_that.description,_that.artistI
 @JsonSerializable()
 
 class _MusicContent implements MusicContent {
-  const _MusicContent({required this.id, required this.title, this.cover, this.description, this.artistInfo, final  List<String>? tags, this.category, this.stats, this.createdAt, this.updatedAt, required this.source, this.audioUrl, this.duration, this.artist, this.album, this.albumCover, final  List<AudioQuality>? qualities, this.lyrics, this.mvUrl, this.copyright}): _tags = tags,_qualities = qualities;
+  const _MusicContent({required this.id, required this.title, required this.source, this.cover, this.description, this.artistInfo, final  List<String>? tags, this.category, this.stats, this.createdAt, this.updatedAt, this.audioUrl, this.duration, this.artist, this.album, this.albumCover, final  List<AudioQuality>? qualities, this.lyrics, this.mvUrl, this.copyright}): _tags = tags,_qualities = qualities;
   factory _MusicContent.fromJson(Map<String, dynamic> json) => _$MusicContentFromJson(json);
 
-/// Unique identifier.
+/// 唯一标识符。
 @override final  String id;
-/// Track title.
+/// 曲目标题。
 @override final  String title;
-/// Cover/album art URL.
+/// 来源信息。
+@override final  ContentSource source;
+/// 封面/专辑封面 URL。
 @override final  String? cover;
-/// Description.
+/// 描述。
 @override final  String? description;
-/// Artist information.
+/// 艺术家信息。
 @override final  Author? artistInfo;
-/// Tags.
+/// 标签。
  final  List<String>? _tags;
-/// Tags.
+/// 标签。
 @override List<String>? get tags {
   final value = _tags;
   if (value == null) return null;
@@ -864,29 +866,27 @@ class _MusicContent implements MusicContent {
   return EqualUnmodifiableListView(value);
 }
 
-/// Genre/category.
+/// 流派/分类。
 @override final  String? category;
-/// Statistics.
+/// 统计信息。
 @override final  ContentStats? stats;
-/// Release date.
+/// 发布日期。
 @override final  DateTime? createdAt;
-/// Update date.
+/// 更新日期。
 @override final  DateTime? updatedAt;
-/// Source information.
-@override final  ContentSource source;
-/// Primary audio playback URL.
+/// 主要音频播放 URL。
 @override final  String? audioUrl;
-/// Duration in seconds.
+/// 时长（秒）。
 @override final  int? duration;
-/// Artist name(s) - can be comma-separated or array.
+/// 艺术家名称（可能是逗号分隔或数组）。
 @override final  String? artist;
-/// Album name.
+/// 专辑名称。
 @override final  String? album;
-/// Album cover URL (if different from cover).
+/// 专辑封面 URL（如果与 cover 不同）。
 @override final  String? albumCover;
-/// Available quality options.
+/// 可用的质量选项。
  final  List<AudioQuality>? _qualities;
-/// Available quality options.
+/// 可用的质量选项。
 @override List<AudioQuality>? get qualities {
   final value = _qualities;
   if (value == null) return null;
@@ -895,11 +895,11 @@ class _MusicContent implements MusicContent {
   return EqualUnmodifiableListView(value);
 }
 
-/// Lyrics.
+/// 歌词。
 @override final  Lyrics? lyrics;
-/// Music video URL.
+/// 音乐视频 URL。
 @override final  String? mvUrl;
-/// Copyright information.
+/// 版权信息。
 @override final  String? copyright;
 
 /// Create a copy of MusicContent
@@ -915,16 +915,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MusicContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.artistInfo, artistInfo) || other.artistInfo == artistInfo)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.source, source) || other.source == source)&&(identical(other.audioUrl, audioUrl) || other.audioUrl == audioUrl)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.album, album) || other.album == album)&&(identical(other.albumCover, albumCover) || other.albumCover == albumCover)&&const DeepCollectionEquality().equals(other._qualities, _qualities)&&(identical(other.lyrics, lyrics) || other.lyrics == lyrics)&&(identical(other.mvUrl, mvUrl) || other.mvUrl == mvUrl)&&(identical(other.copyright, copyright) || other.copyright == copyright));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MusicContent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.source, source) || other.source == source)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.description, description) || other.description == description)&&(identical(other.artistInfo, artistInfo) || other.artistInfo == artistInfo)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.category, category) || other.category == category)&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.audioUrl, audioUrl) || other.audioUrl == audioUrl)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.artist, artist) || other.artist == artist)&&(identical(other.album, album) || other.album == album)&&(identical(other.albumCover, albumCover) || other.albumCover == albumCover)&&const DeepCollectionEquality().equals(other._qualities, _qualities)&&(identical(other.lyrics, lyrics) || other.lyrics == lyrics)&&(identical(other.mvUrl, mvUrl) || other.mvUrl == mvUrl)&&(identical(other.copyright, copyright) || other.copyright == copyright));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,cover,description,artistInfo,const DeepCollectionEquality().hash(_tags),category,stats,createdAt,updatedAt,source,audioUrl,duration,artist,album,albumCover,const DeepCollectionEquality().hash(_qualities),lyrics,mvUrl,copyright]);
+int get hashCode => Object.hashAll([runtimeType,id,title,source,cover,description,artistInfo,const DeepCollectionEquality().hash(_tags),category,stats,createdAt,updatedAt,audioUrl,duration,artist,album,albumCover,const DeepCollectionEquality().hash(_qualities),lyrics,mvUrl,copyright]);
 
 @override
 String toString() {
-  return 'MusicContent(id: $id, title: $title, cover: $cover, description: $description, artistInfo: $artistInfo, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, source: $source, audioUrl: $audioUrl, duration: $duration, artist: $artist, album: $album, albumCover: $albumCover, qualities: $qualities, lyrics: $lyrics, mvUrl: $mvUrl, copyright: $copyright)';
+  return 'MusicContent(id: $id, title: $title, source: $source, cover: $cover, description: $description, artistInfo: $artistInfo, tags: $tags, category: $category, stats: $stats, createdAt: $createdAt, updatedAt: $updatedAt, audioUrl: $audioUrl, duration: $duration, artist: $artist, album: $album, albumCover: $albumCover, qualities: $qualities, lyrics: $lyrics, mvUrl: $mvUrl, copyright: $copyright)';
 }
 
 
@@ -935,11 +935,11 @@ abstract mixin class _$MusicContentCopyWith<$Res> implements $MusicContentCopyWi
   factory _$MusicContentCopyWith(_MusicContent value, $Res Function(_MusicContent) _then) = __$MusicContentCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? cover, String? description, Author? artistInfo, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, ContentSource source, String? audioUrl, int? duration, String? artist, String? album, String? albumCover, List<AudioQuality>? qualities, Lyrics? lyrics, String? mvUrl, String? copyright
+ String id, String title, ContentSource source, String? cover, String? description, Author? artistInfo, List<String>? tags, String? category, ContentStats? stats, DateTime? createdAt, DateTime? updatedAt, String? audioUrl, int? duration, String? artist, String? album, String? albumCover, List<AudioQuality>? qualities, Lyrics? lyrics, String? mvUrl, String? copyright
 });
 
 
-@override $AuthorCopyWith<$Res>? get artistInfo;@override $ContentStatsCopyWith<$Res>? get stats;@override $ContentSourceCopyWith<$Res> get source;@override $LyricsCopyWith<$Res>? get lyrics;
+@override $ContentSourceCopyWith<$Res> get source;@override $AuthorCopyWith<$Res>? get artistInfo;@override $ContentStatsCopyWith<$Res>? get stats;@override $LyricsCopyWith<$Res>? get lyrics;
 
 }
 /// @nodoc
@@ -952,11 +952,12 @@ class __$MusicContentCopyWithImpl<$Res>
 
 /// Create a copy of MusicContent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? cover = freezed,Object? description = freezed,Object? artistInfo = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? source = null,Object? audioUrl = freezed,Object? duration = freezed,Object? artist = freezed,Object? album = freezed,Object? albumCover = freezed,Object? qualities = freezed,Object? lyrics = freezed,Object? mvUrl = freezed,Object? copyright = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? source = null,Object? cover = freezed,Object? description = freezed,Object? artistInfo = freezed,Object? tags = freezed,Object? category = freezed,Object? stats = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? audioUrl = freezed,Object? duration = freezed,Object? artist = freezed,Object? album = freezed,Object? albumCover = freezed,Object? qualities = freezed,Object? lyrics = freezed,Object? mvUrl = freezed,Object? copyright = freezed,}) {
   return _then(_MusicContent(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as ContentSource,cover: freezed == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,artistInfo: freezed == artistInfo ? _self.artistInfo : artistInfo // ignore: cast_nullable_to_non_nullable
 as Author?,tags: freezed == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
@@ -964,8 +965,7 @@ as List<String>?,category: freezed == category ? _self.category : category // ig
 as String?,stats: freezed == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as ContentStats?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
-as ContentSource,audioUrl: freezed == audioUrl ? _self.audioUrl : audioUrl // ignore: cast_nullable_to_non_nullable
+as DateTime?,audioUrl: freezed == audioUrl ? _self.audioUrl : audioUrl // ignore: cast_nullable_to_non_nullable
 as String?,duration: freezed == duration ? _self.duration : duration // ignore: cast_nullable_to_non_nullable
 as int?,artist: freezed == artist ? _self.artist : artist // ignore: cast_nullable_to_non_nullable
 as String?,album: freezed == album ? _self.album : album // ignore: cast_nullable_to_non_nullable
@@ -979,6 +979,15 @@ as String?,
 }
 
 /// Create a copy of MusicContent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ContentSourceCopyWith<$Res> get source {
+  
+  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
+    return _then(_self.copyWith(source: value));
+  });
+}/// Create a copy of MusicContent
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -1001,15 +1010,6 @@ $ContentStatsCopyWith<$Res>? get stats {
 
   return $ContentStatsCopyWith<$Res>(_self.stats!, (value) {
     return _then(_self.copyWith(stats: value));
-  });
-}/// Create a copy of MusicContent
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContentSourceCopyWith<$Res> get source {
-  
-  return $ContentSourceCopyWith<$Res>(_self.source, (value) {
-    return _then(_self.copyWith(source: value));
   });
 }/// Create a copy of MusicContent
 /// with the given fields replaced by the non-null parameter values.

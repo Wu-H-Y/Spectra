@@ -1,11 +1,10 @@
 import 'dart:convert';
 
-import 'package:shelf/shelf.dart';
-import 'package:shelf_router/shelf_router.dart';
+import 'package:relic/relic.dart';
 
-/// Server control routes.
+/// 服务器控制路由。
 class ServerRoutes {
-  /// Creates server routes.
+  /// 创建服务器路由。
   ServerRoutes({
     required this.isRunning,
     required this.port,
@@ -13,81 +12,91 @@ class ServerRoutes {
     required this.onStop,
   });
 
-  /// Whether the server is currently running.
+  /// 服务器当前是否正在运行。
   final bool Function() isRunning;
 
-  /// The port the server is running on.
+  /// 服务器运行的端口。
   final int Function() port;
 
-  /// Callback when server should start.
+  /// 服务器启动时的回调。
   final Future<void> Function() onStart;
 
-  /// Callback when server should stop.
+  /// 服务器停止时的回调。
   final Future<void> Function() onStop;
 
-  /// Create router with all routes.
-  Router get router => Router()
-    // GET /api/server/status - Get server status
+  /// 创建包含所有路由的路由器。
+  Router<Handler> get router => Router<Handler>()
+    // GET /api/server/status - 获取服务器状态
     ..get('/api/server/status', _getStatus)
-    // POST /api/server/start - Start the server
+    // POST /api/server/start - 启动服务器
     ..post('/api/server/start', _startServer)
-    // POST /api/server/stop - Stop the server
+    // POST /api/server/stop - 停止服务器
     ..post('/api/server/stop', _stopServer);
 
-  /// Get server status.
+  /// 获取服务器状态。
   Future<Response> _getStatus(Request request) async {
     final currentPort = port();
     return Response.ok(
-      jsonEncode({
-        'isRunning': isRunning(),
-        'port': currentPort,
-        'url': 'http://localhost:$currentPort',
-      }),
-      headers: {'content-type': 'application/json'},
+      body: Body.fromString(
+        jsonEncode({
+          'isRunning': isRunning(),
+          'port': currentPort,
+          'url': 'http://localhost:$currentPort',
+        }),
+        mimeType: MimeType.json,
+      ),
     );
   }
 
-  /// Start the server.
+  /// 启动服务器。
   Future<Response> _startServer(Request request) async {
     try {
       await onStart();
       return Response.ok(
-        jsonEncode({
-          'isRunning': isRunning(),
-          'port': port(),
-          'message': 'Server started',
-        }),
-        headers: {'content-type': 'application/json'},
+        body: Body.fromString(
+          jsonEncode({
+            'isRunning': isRunning(),
+            'port': port(),
+            'message': 'Server started',
+          }),
+          mimeType: MimeType.json,
+        ),
       );
     } on Exception catch (e) {
       return Response.internalServerError(
-        body: jsonEncode({
-          'isRunning': false,
-          'error': e.toString(),
-        }),
-        headers: {'content-type': 'application/json'},
+        body: Body.fromString(
+          jsonEncode({
+            'isRunning': false,
+            'error': e.toString(),
+          }),
+          mimeType: MimeType.json,
+        ),
       );
     }
   }
 
-  /// Stop the server.
+  /// 停止服务器。
   Future<Response> _stopServer(Request request) async {
     try {
       await onStop();
       return Response.ok(
-        jsonEncode({
-          'isRunning': false,
-          'message': 'Server stopped',
-        }),
-        headers: {'content-type': 'application/json'},
+        body: Body.fromString(
+          jsonEncode({
+            'isRunning': false,
+            'message': 'Server stopped',
+          }),
+          mimeType: MimeType.json,
+        ),
       );
     } on Exception catch (e) {
       return Response.internalServerError(
-        body: jsonEncode({
-          'isRunning': isRunning(),
-          'error': e.toString(),
-        }),
-        headers: {'content-type': 'application/json'},
+        body: Body.fromString(
+          jsonEncode({
+            'isRunning': isRunning(),
+            'error': e.toString(),
+          }),
+          mimeType: MimeType.json,
+        ),
       );
     }
   }

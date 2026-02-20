@@ -15,10 +15,10 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ListExtract {
 
-/// Selector for list item containers.
- Selector get container;/// Field mappings for each list item.
- List<FieldMapping> get items;/// Pagination configuration.
- PaginationConfig? get pagination;/// URL for list page (optional, uses rule pattern if not specified).
+/// 列表项容器的选择器。
+ Selector get container;/// 每个列表项的字段映射。
+ List<FieldMapping> get items;/// 分页配置。
+ PaginationConfig? get pagination;/// 列表页 URL（可选，如果未指定则使用规则模式）。
  String? get url;
 /// Create a copy of ListExtract
 /// with the given fields replaced by the non-null parameter values.
@@ -234,20 +234,20 @@ class _ListExtract implements ListExtract {
   const _ListExtract({required this.container, required final  List<FieldMapping> items, this.pagination, this.url}): _items = items;
   factory _ListExtract.fromJson(Map<String, dynamic> json) => _$ListExtractFromJson(json);
 
-/// Selector for list item containers.
+/// 列表项容器的选择器。
 @override final  Selector container;
-/// Field mappings for each list item.
+/// 每个列表项的字段映射。
  final  List<FieldMapping> _items;
-/// Field mappings for each list item.
+/// 每个列表项的字段映射。
 @override List<FieldMapping> get items {
   if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_items);
 }
 
-/// Pagination configuration.
+/// 分页配置。
 @override final  PaginationConfig? pagination;
-/// URL for list page (optional, uses rule pattern if not specified).
+/// 列表页 URL（可选，如果未指定则使用规则模式）。
 @override final  String? url;
 
 /// Create a copy of ListExtract
@@ -338,9 +338,9 @@ $PaginationConfigCopyWith<$Res>? get pagination {
 /// @nodoc
 mixin _$DetailExtract {
 
-/// Selector to get detail URL from list item.
- Selector? get urlFromList;/// Field mappings for detail page.
- List<FieldMapping> get items;/// Chapter/episode extraction (for comics, novels, videos).
+/// 详情页的字段映射。
+ List<FieldMapping> get items;/// 从列表项获取详情 URL 的选择器。
+ Selector? get urlFromList;/// 章节/剧集提取（用于漫画、小说、视频）。
  ChapterExtract? get chapters;
 /// Create a copy of DetailExtract
 /// with the given fields replaced by the non-null parameter values.
@@ -354,16 +354,16 @@ $DetailExtractCopyWith<DetailExtract> get copyWith => _$DetailExtractCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DetailExtract&&(identical(other.urlFromList, urlFromList) || other.urlFromList == urlFromList)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.chapters, chapters) || other.chapters == chapters));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DetailExtract&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.urlFromList, urlFromList) || other.urlFromList == urlFromList)&&(identical(other.chapters, chapters) || other.chapters == chapters));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,urlFromList,const DeepCollectionEquality().hash(items),chapters);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),urlFromList,chapters);
 
 @override
 String toString() {
-  return 'DetailExtract(urlFromList: $urlFromList, items: $items, chapters: $chapters)';
+  return 'DetailExtract(items: $items, urlFromList: $urlFromList, chapters: $chapters)';
 }
 
 
@@ -374,7 +374,7 @@ abstract mixin class $DetailExtractCopyWith<$Res>  {
   factory $DetailExtractCopyWith(DetailExtract value, $Res Function(DetailExtract) _then) = _$DetailExtractCopyWithImpl;
 @useResult
 $Res call({
- Selector? urlFromList, List<FieldMapping> items, ChapterExtract? chapters
+ List<FieldMapping> items, Selector? urlFromList, ChapterExtract? chapters
 });
 
 
@@ -391,11 +391,11 @@ class _$DetailExtractCopyWithImpl<$Res>
 
 /// Create a copy of DetailExtract
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? urlFromList = freezed,Object? items = null,Object? chapters = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? urlFromList = freezed,Object? chapters = freezed,}) {
   return _then(_self.copyWith(
-urlFromList: freezed == urlFromList ? _self.urlFromList : urlFromList // ignore: cast_nullable_to_non_nullable
-as Selector?,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
-as List<FieldMapping>,chapters: freezed == chapters ? _self.chapters : chapters // ignore: cast_nullable_to_non_nullable
+items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
+as List<FieldMapping>,urlFromList: freezed == urlFromList ? _self.urlFromList : urlFromList // ignore: cast_nullable_to_non_nullable
+as Selector?,chapters: freezed == chapters ? _self.chapters : chapters // ignore: cast_nullable_to_non_nullable
 as ChapterExtract?,
   ));
 }
@@ -502,10 +502,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Selector? urlFromList,  List<FieldMapping> items,  ChapterExtract? chapters)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<FieldMapping> items,  Selector? urlFromList,  ChapterExtract? chapters)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DetailExtract() when $default != null:
-return $default(_that.urlFromList,_that.items,_that.chapters);case _:
+return $default(_that.items,_that.urlFromList,_that.chapters);case _:
   return orElse();
 
 }
@@ -523,10 +523,10 @@ return $default(_that.urlFromList,_that.items,_that.chapters);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Selector? urlFromList,  List<FieldMapping> items,  ChapterExtract? chapters)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<FieldMapping> items,  Selector? urlFromList,  ChapterExtract? chapters)  $default,) {final _that = this;
 switch (_that) {
 case _DetailExtract():
-return $default(_that.urlFromList,_that.items,_that.chapters);}
+return $default(_that.items,_that.urlFromList,_that.chapters);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -540,10 +540,10 @@ return $default(_that.urlFromList,_that.items,_that.chapters);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Selector? urlFromList,  List<FieldMapping> items,  ChapterExtract? chapters)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<FieldMapping> items,  Selector? urlFromList,  ChapterExtract? chapters)?  $default,) {final _that = this;
 switch (_that) {
 case _DetailExtract() when $default != null:
-return $default(_that.urlFromList,_that.items,_that.chapters);case _:
+return $default(_that.items,_that.urlFromList,_that.chapters);case _:
   return null;
 
 }
@@ -555,21 +555,21 @@ return $default(_that.urlFromList,_that.items,_that.chapters);case _:
 @JsonSerializable()
 
 class _DetailExtract implements DetailExtract {
-  const _DetailExtract({this.urlFromList, required final  List<FieldMapping> items, this.chapters}): _items = items;
+  const _DetailExtract({required final  List<FieldMapping> items, this.urlFromList, this.chapters}): _items = items;
   factory _DetailExtract.fromJson(Map<String, dynamic> json) => _$DetailExtractFromJson(json);
 
-/// Selector to get detail URL from list item.
-@override final  Selector? urlFromList;
-/// Field mappings for detail page.
+/// 详情页的字段映射。
  final  List<FieldMapping> _items;
-/// Field mappings for detail page.
+/// 详情页的字段映射。
 @override List<FieldMapping> get items {
   if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_items);
 }
 
-/// Chapter/episode extraction (for comics, novels, videos).
+/// 从列表项获取详情 URL 的选择器。
+@override final  Selector? urlFromList;
+/// 章节/剧集提取（用于漫画、小说、视频）。
 @override final  ChapterExtract? chapters;
 
 /// Create a copy of DetailExtract
@@ -585,16 +585,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DetailExtract&&(identical(other.urlFromList, urlFromList) || other.urlFromList == urlFromList)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.chapters, chapters) || other.chapters == chapters));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DetailExtract&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.urlFromList, urlFromList) || other.urlFromList == urlFromList)&&(identical(other.chapters, chapters) || other.chapters == chapters));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,urlFromList,const DeepCollectionEquality().hash(_items),chapters);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),urlFromList,chapters);
 
 @override
 String toString() {
-  return 'DetailExtract(urlFromList: $urlFromList, items: $items, chapters: $chapters)';
+  return 'DetailExtract(items: $items, urlFromList: $urlFromList, chapters: $chapters)';
 }
 
 
@@ -605,7 +605,7 @@ abstract mixin class _$DetailExtractCopyWith<$Res> implements $DetailExtractCopy
   factory _$DetailExtractCopyWith(_DetailExtract value, $Res Function(_DetailExtract) _then) = __$DetailExtractCopyWithImpl;
 @override @useResult
 $Res call({
- Selector? urlFromList, List<FieldMapping> items, ChapterExtract? chapters
+ List<FieldMapping> items, Selector? urlFromList, ChapterExtract? chapters
 });
 
 
@@ -622,11 +622,11 @@ class __$DetailExtractCopyWithImpl<$Res>
 
 /// Create a copy of DetailExtract
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? urlFromList = freezed,Object? items = null,Object? chapters = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? items = null,Object? urlFromList = freezed,Object? chapters = freezed,}) {
   return _then(_DetailExtract(
-urlFromList: freezed == urlFromList ? _self.urlFromList : urlFromList // ignore: cast_nullable_to_non_nullable
-as Selector?,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
-as List<FieldMapping>,chapters: freezed == chapters ? _self.chapters : chapters // ignore: cast_nullable_to_non_nullable
+items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
+as List<FieldMapping>,urlFromList: freezed == urlFromList ? _self.urlFromList : urlFromList // ignore: cast_nullable_to_non_nullable
+as Selector?,chapters: freezed == chapters ? _self.chapters : chapters // ignore: cast_nullable_to_non_nullable
 as ChapterExtract?,
   ));
 }
@@ -662,9 +662,9 @@ $ChapterExtractCopyWith<$Res>? get chapters {
 /// @nodoc
 mixin _$ChapterExtract {
 
-/// Selector for chapter list container.
- Selector get container;/// Field mappings for each chapter.
- List<FieldMapping> get items;/// Whether chapters are in reverse order (newest first).
+/// 章节列表容器的选择器。
+ Selector get container;/// 每个章节的字段映射。
+ List<FieldMapping> get items;/// 章节是否为逆序（最新在前）。
  bool get reverseOrder;
 /// Create a copy of ChapterExtract
 /// with the given fields replaced by the non-null parameter values.
@@ -867,18 +867,18 @@ class _ChapterExtract implements ChapterExtract {
   const _ChapterExtract({required this.container, required final  List<FieldMapping> items, this.reverseOrder = false}): _items = items;
   factory _ChapterExtract.fromJson(Map<String, dynamic> json) => _$ChapterExtractFromJson(json);
 
-/// Selector for chapter list container.
+/// 章节列表容器的选择器。
 @override final  Selector container;
-/// Field mappings for each chapter.
+/// 每个章节的字段映射。
  final  List<FieldMapping> _items;
-/// Field mappings for each chapter.
+/// 每个章节的字段映射。
 @override List<FieldMapping> get items {
   if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_items);
 }
 
-/// Whether chapters are in reverse order (newest first).
+/// 章节是否为逆序（最新在前）。
 @override@JsonKey() final  bool reverseOrder;
 
 /// Create a copy of ChapterExtract
@@ -956,10 +956,10 @@ $SelectorCopyWith<$Res> get container {
 /// @nodoc
 mixin _$ContentExtract {
 
-/// Video extraction config.
- VideoExtract? get video;/// Comic extraction config.
- ComicExtract? get comic;/// Novel extraction config.
- NovelExtract? get novel;/// Music extraction config.
+/// 视频提取配置。
+ VideoExtract? get video;/// 漫画提取配置。
+ ComicExtract? get comic;/// 小说提取配置。
+ NovelExtract? get novel;/// 音乐提取配置。
  MusicExtract? get music;
 /// Create a copy of ContentExtract
 /// with the given fields replaced by the non-null parameter values.
@@ -1202,13 +1202,13 @@ class _ContentExtract implements ContentExtract {
   const _ContentExtract({this.video, this.comic, this.novel, this.music});
   factory _ContentExtract.fromJson(Map<String, dynamic> json) => _$ContentExtractFromJson(json);
 
-/// Video extraction config.
+/// 视频提取配置。
 @override final  VideoExtract? video;
-/// Comic extraction config.
+/// 漫画提取配置。
 @override final  ComicExtract? comic;
-/// Novel extraction config.
+/// 小说提取配置。
 @override final  NovelExtract? novel;
-/// Music extraction config.
+/// 音乐提取配置。
 @override final  MusicExtract? music;
 
 /// Create a copy of ContentExtract
@@ -1326,9 +1326,9 @@ $MusicExtractCopyWith<$Res>? get music {
 /// @nodoc
 mixin _$VideoExtract {
 
-/// Selector for video URL.
- Selector? get playUrl;/// Selector for quality options.
- Selector? get qualities;/// JavaScript to extract video info.
+/// 视频 URL 的选择器。
+ Selector? get playUrl;/// 质量选项的选择器。
+ Selector? get qualities;/// 提取视频信息的 JavaScript。
  String? get jsExtract;
 /// Create a copy of VideoExtract
 /// with the given fields replaced by the non-null parameter values.
@@ -1546,11 +1546,11 @@ class _VideoExtract implements VideoExtract {
   const _VideoExtract({this.playUrl, this.qualities, this.jsExtract});
   factory _VideoExtract.fromJson(Map<String, dynamic> json) => _$VideoExtractFromJson(json);
 
-/// Selector for video URL.
+/// 视频 URL 的选择器。
 @override final  Selector? playUrl;
-/// Selector for quality options.
+/// 质量选项的选择器。
 @override final  Selector? qualities;
-/// JavaScript to extract video info.
+/// 提取视频信息的 JavaScript。
 @override final  String? jsExtract;
 
 /// Create a copy of VideoExtract
@@ -1643,8 +1643,8 @@ $SelectorCopyWith<$Res>? get qualities {
 /// @nodoc
 mixin _$ComicExtract {
 
-/// Selector for image URLs.
- Selector get images;/// JavaScript to extract images.
+/// 图片 URL 的选择器。
+ Selector get images;/// 提取图片的 JavaScript。
  String? get jsExtract;
 /// Create a copy of ComicExtract
 /// with the given fields replaced by the non-null parameter values.
@@ -1846,9 +1846,9 @@ class _ComicExtract implements ComicExtract {
   const _ComicExtract({required this.images, this.jsExtract});
   factory _ComicExtract.fromJson(Map<String, dynamic> json) => _$ComicExtractFromJson(json);
 
-/// Selector for image URLs.
+/// 图片 URL 的选择器。
 @override final  Selector images;
-/// JavaScript to extract images.
+/// 提取图片的 JavaScript。
 @override final  String? jsExtract;
 
 /// Create a copy of ComicExtract
@@ -1925,8 +1925,8 @@ $SelectorCopyWith<$Res> get images {
 /// @nodoc
 mixin _$NovelExtract {
 
-/// Selector for chapter content.
- Selector get content;/// JavaScript to extract content.
+/// 章节内容的选择器。
+ Selector get content;/// 提取内容的 JavaScript。
  String? get jsExtract;
 /// Create a copy of NovelExtract
 /// with the given fields replaced by the non-null parameter values.
@@ -2128,9 +2128,9 @@ class _NovelExtract implements NovelExtract {
   const _NovelExtract({required this.content, this.jsExtract});
   factory _NovelExtract.fromJson(Map<String, dynamic> json) => _$NovelExtractFromJson(json);
 
-/// Selector for chapter content.
+/// 章节内容的选择器。
 @override final  Selector content;
-/// JavaScript to extract content.
+/// 提取内容的 JavaScript。
 @override final  String? jsExtract;
 
 /// Create a copy of NovelExtract
@@ -2207,9 +2207,9 @@ $SelectorCopyWith<$Res> get content {
 /// @nodoc
 mixin _$MusicExtract {
 
-/// Selector for audio URL.
- Selector? get audioUrl;/// Selector for lyrics.
- Selector? get lyrics;/// JavaScript to extract audio info.
+/// 音频 URL 的选择器。
+ Selector? get audioUrl;/// 歌词的选择器。
+ Selector? get lyrics;/// 提取音频信息的 JavaScript。
  String? get jsExtract;
 /// Create a copy of MusicExtract
 /// with the given fields replaced by the non-null parameter values.
@@ -2427,11 +2427,11 @@ class _MusicExtract implements MusicExtract {
   const _MusicExtract({this.audioUrl, this.lyrics, this.jsExtract});
   factory _MusicExtract.fromJson(Map<String, dynamic> json) => _$MusicExtractFromJson(json);
 
-/// Selector for audio URL.
+/// 音频 URL 的选择器。
 @override final  Selector? audioUrl;
-/// Selector for lyrics.
+/// 歌词的选择器。
 @override final  Selector? lyrics;
-/// JavaScript to extract audio info.
+/// 提取音频信息的 JavaScript。
 @override final  String? jsExtract;
 
 /// Create a copy of MusicExtract
@@ -2524,9 +2524,9 @@ $SelectorCopyWith<$Res>? get lyrics {
 /// @nodoc
 mixin _$ExtractConfig {
 
-/// List page extraction.
- ListExtract? get list;/// Detail page extraction.
- DetailExtract? get detail;/// Content extraction.
+/// 列表页提取。
+ ListExtract? get list;/// 详情页提取。
+ DetailExtract? get detail;/// 内容提取。
  ContentExtract? get content;
 /// Create a copy of ExtractConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -2756,11 +2756,11 @@ class _ExtractConfig implements ExtractConfig {
   const _ExtractConfig({this.list, this.detail, this.content});
   factory _ExtractConfig.fromJson(Map<String, dynamic> json) => _$ExtractConfigFromJson(json);
 
-/// List page extraction.
+/// 列表页提取。
 @override final  ListExtract? list;
-/// Detail page extraction.
+/// 详情页提取。
 @override final  DetailExtract? detail;
-/// Content extraction.
+/// 内容提取。
 @override final  ContentExtract? content;
 
 /// Create a copy of ExtractConfig

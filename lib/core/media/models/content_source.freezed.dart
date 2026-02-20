@@ -15,12 +15,12 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ContentSource {
 
-/// Crawler rule ID that extracted this content.
- String get ruleId;/// Source site display name.
- String get siteName;/// Source site icon/favicon URL.
- String? get siteIcon;/// Original URL on the source site.
- String get originalUrl;/// Timestamp when content was crawled.
- DateTime get crawledAt;
+/// 提取此内容的爬虫规则 ID。
+ String get ruleId;/// 来源站点显示名称。
+ String get siteName;/// 来源站点上的原始 URL。
+ String get originalUrl;/// 内容被爬取的时间戳。
+ DateTime get crawledAt;/// 来源站点图标/favicon URL。
+ String? get siteIcon;
 /// Create a copy of ContentSource
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -33,16 +33,16 @@ $ContentSourceCopyWith<ContentSource> get copyWith => _$ContentSourceCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ContentSource&&(identical(other.ruleId, ruleId) || other.ruleId == ruleId)&&(identical(other.siteName, siteName) || other.siteName == siteName)&&(identical(other.siteIcon, siteIcon) || other.siteIcon == siteIcon)&&(identical(other.originalUrl, originalUrl) || other.originalUrl == originalUrl)&&(identical(other.crawledAt, crawledAt) || other.crawledAt == crawledAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ContentSource&&(identical(other.ruleId, ruleId) || other.ruleId == ruleId)&&(identical(other.siteName, siteName) || other.siteName == siteName)&&(identical(other.originalUrl, originalUrl) || other.originalUrl == originalUrl)&&(identical(other.crawledAt, crawledAt) || other.crawledAt == crawledAt)&&(identical(other.siteIcon, siteIcon) || other.siteIcon == siteIcon));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,ruleId,siteName,siteIcon,originalUrl,crawledAt);
+int get hashCode => Object.hash(runtimeType,ruleId,siteName,originalUrl,crawledAt,siteIcon);
 
 @override
 String toString() {
-  return 'ContentSource(ruleId: $ruleId, siteName: $siteName, siteIcon: $siteIcon, originalUrl: $originalUrl, crawledAt: $crawledAt)';
+  return 'ContentSource(ruleId: $ruleId, siteName: $siteName, originalUrl: $originalUrl, crawledAt: $crawledAt, siteIcon: $siteIcon)';
 }
 
 
@@ -53,7 +53,7 @@ abstract mixin class $ContentSourceCopyWith<$Res>  {
   factory $ContentSourceCopyWith(ContentSource value, $Res Function(ContentSource) _then) = _$ContentSourceCopyWithImpl;
 @useResult
 $Res call({
- String ruleId, String siteName, String? siteIcon, String originalUrl, DateTime crawledAt
+ String ruleId, String siteName, String originalUrl, DateTime crawledAt, String? siteIcon
 });
 
 
@@ -70,14 +70,14 @@ class _$ContentSourceCopyWithImpl<$Res>
 
 /// Create a copy of ContentSource
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? ruleId = null,Object? siteName = null,Object? siteIcon = freezed,Object? originalUrl = null,Object? crawledAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? ruleId = null,Object? siteName = null,Object? originalUrl = null,Object? crawledAt = null,Object? siteIcon = freezed,}) {
   return _then(_self.copyWith(
 ruleId: null == ruleId ? _self.ruleId : ruleId // ignore: cast_nullable_to_non_nullable
 as String,siteName: null == siteName ? _self.siteName : siteName // ignore: cast_nullable_to_non_nullable
-as String,siteIcon: freezed == siteIcon ? _self.siteIcon : siteIcon // ignore: cast_nullable_to_non_nullable
-as String?,originalUrl: null == originalUrl ? _self.originalUrl : originalUrl // ignore: cast_nullable_to_non_nullable
+as String,originalUrl: null == originalUrl ? _self.originalUrl : originalUrl // ignore: cast_nullable_to_non_nullable
 as String,crawledAt: null == crawledAt ? _self.crawledAt : crawledAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,siteIcon: freezed == siteIcon ? _self.siteIcon : siteIcon // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -159,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String ruleId,  String siteName,  String? siteIcon,  String originalUrl,  DateTime crawledAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String ruleId,  String siteName,  String originalUrl,  DateTime crawledAt,  String? siteIcon)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ContentSource() when $default != null:
-return $default(_that.ruleId,_that.siteName,_that.siteIcon,_that.originalUrl,_that.crawledAt);case _:
+return $default(_that.ruleId,_that.siteName,_that.originalUrl,_that.crawledAt,_that.siteIcon);case _:
   return orElse();
 
 }
@@ -180,10 +180,10 @@ return $default(_that.ruleId,_that.siteName,_that.siteIcon,_that.originalUrl,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String ruleId,  String siteName,  String? siteIcon,  String originalUrl,  DateTime crawledAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String ruleId,  String siteName,  String originalUrl,  DateTime crawledAt,  String? siteIcon)  $default,) {final _that = this;
 switch (_that) {
 case _ContentSource():
-return $default(_that.ruleId,_that.siteName,_that.siteIcon,_that.originalUrl,_that.crawledAt);}
+return $default(_that.ruleId,_that.siteName,_that.originalUrl,_that.crawledAt,_that.siteIcon);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -197,10 +197,10 @@ return $default(_that.ruleId,_that.siteName,_that.siteIcon,_that.originalUrl,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String ruleId,  String siteName,  String? siteIcon,  String originalUrl,  DateTime crawledAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String ruleId,  String siteName,  String originalUrl,  DateTime crawledAt,  String? siteIcon)?  $default,) {final _that = this;
 switch (_that) {
 case _ContentSource() when $default != null:
-return $default(_that.ruleId,_that.siteName,_that.siteIcon,_that.originalUrl,_that.crawledAt);case _:
+return $default(_that.ruleId,_that.siteName,_that.originalUrl,_that.crawledAt,_that.siteIcon);case _:
   return null;
 
 }
@@ -212,19 +212,19 @@ return $default(_that.ruleId,_that.siteName,_that.siteIcon,_that.originalUrl,_th
 @JsonSerializable()
 
 class _ContentSource implements ContentSource {
-  const _ContentSource({required this.ruleId, required this.siteName, this.siteIcon, required this.originalUrl, required this.crawledAt});
+  const _ContentSource({required this.ruleId, required this.siteName, required this.originalUrl, required this.crawledAt, this.siteIcon});
   factory _ContentSource.fromJson(Map<String, dynamic> json) => _$ContentSourceFromJson(json);
 
-/// Crawler rule ID that extracted this content.
+/// 提取此内容的爬虫规则 ID。
 @override final  String ruleId;
-/// Source site display name.
+/// 来源站点显示名称。
 @override final  String siteName;
-/// Source site icon/favicon URL.
-@override final  String? siteIcon;
-/// Original URL on the source site.
+/// 来源站点上的原始 URL。
 @override final  String originalUrl;
-/// Timestamp when content was crawled.
+/// 内容被爬取的时间戳。
 @override final  DateTime crawledAt;
+/// 来源站点图标/favicon URL。
+@override final  String? siteIcon;
 
 /// Create a copy of ContentSource
 /// with the given fields replaced by the non-null parameter values.
@@ -239,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ContentSource&&(identical(other.ruleId, ruleId) || other.ruleId == ruleId)&&(identical(other.siteName, siteName) || other.siteName == siteName)&&(identical(other.siteIcon, siteIcon) || other.siteIcon == siteIcon)&&(identical(other.originalUrl, originalUrl) || other.originalUrl == originalUrl)&&(identical(other.crawledAt, crawledAt) || other.crawledAt == crawledAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ContentSource&&(identical(other.ruleId, ruleId) || other.ruleId == ruleId)&&(identical(other.siteName, siteName) || other.siteName == siteName)&&(identical(other.originalUrl, originalUrl) || other.originalUrl == originalUrl)&&(identical(other.crawledAt, crawledAt) || other.crawledAt == crawledAt)&&(identical(other.siteIcon, siteIcon) || other.siteIcon == siteIcon));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,ruleId,siteName,siteIcon,originalUrl,crawledAt);
+int get hashCode => Object.hash(runtimeType,ruleId,siteName,originalUrl,crawledAt,siteIcon);
 
 @override
 String toString() {
-  return 'ContentSource(ruleId: $ruleId, siteName: $siteName, siteIcon: $siteIcon, originalUrl: $originalUrl, crawledAt: $crawledAt)';
+  return 'ContentSource(ruleId: $ruleId, siteName: $siteName, originalUrl: $originalUrl, crawledAt: $crawledAt, siteIcon: $siteIcon)';
 }
 
 
@@ -259,7 +259,7 @@ abstract mixin class _$ContentSourceCopyWith<$Res> implements $ContentSourceCopy
   factory _$ContentSourceCopyWith(_ContentSource value, $Res Function(_ContentSource) _then) = __$ContentSourceCopyWithImpl;
 @override @useResult
 $Res call({
- String ruleId, String siteName, String? siteIcon, String originalUrl, DateTime crawledAt
+ String ruleId, String siteName, String originalUrl, DateTime crawledAt, String? siteIcon
 });
 
 
@@ -276,14 +276,14 @@ class __$ContentSourceCopyWithImpl<$Res>
 
 /// Create a copy of ContentSource
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? ruleId = null,Object? siteName = null,Object? siteIcon = freezed,Object? originalUrl = null,Object? crawledAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? ruleId = null,Object? siteName = null,Object? originalUrl = null,Object? crawledAt = null,Object? siteIcon = freezed,}) {
   return _then(_ContentSource(
 ruleId: null == ruleId ? _self.ruleId : ruleId // ignore: cast_nullable_to_non_nullable
 as String,siteName: null == siteName ? _self.siteName : siteName // ignore: cast_nullable_to_non_nullable
-as String,siteIcon: freezed == siteIcon ? _self.siteIcon : siteIcon // ignore: cast_nullable_to_non_nullable
-as String?,originalUrl: null == originalUrl ? _self.originalUrl : originalUrl // ignore: cast_nullable_to_non_nullable
+as String,originalUrl: null == originalUrl ? _self.originalUrl : originalUrl // ignore: cast_nullable_to_non_nullable
 as String,crawledAt: null == crawledAt ? _self.crawledAt : crawledAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,siteIcon: freezed == siteIcon ? _self.siteIcon : siteIcon // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

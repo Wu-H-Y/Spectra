@@ -1,7 +1,6 @@
-/// Crawler module for rule-based content extraction.
+/// 基于规则的内容提取爬虫模块。
 library;
 
+export 'executor/executor.dart';
 export 'models/models.dart';
-// TODO(developer): Export these when implemented
-// export 'executor/executor.dart';
-// export 'selector/selector.dart';
+export 'selector/selector.dart';

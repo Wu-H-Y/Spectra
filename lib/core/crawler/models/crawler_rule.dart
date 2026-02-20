@@ -10,56 +10,62 @@ import 'package:spectra/core/crawler/models/request_config.dart';
 part 'crawler_rule.freezed.dart';
 part 'crawler_rule.g.dart';
 
-/// Complete crawler rule definition.
+/// 完整的爬虫规则定义。
 @freezed
 sealed class CrawlerRule with _$CrawlerRule {
   const factory CrawlerRule({
-    /// Rule unique identifier.
+    /// 规则唯一标识符。
     required String id,
 
-    /// Rule name.
+    /// 规则名称。
     required String name,
 
-    /// Media type this rule extracts.
-    required MediaType mediaType, /// URL matching configuration.
-    required MatchConfig match, /// Extraction configuration.
-    required ExtractConfig extract, /// Rule description.
+    /// 此规则提取的媒体类型。
+    required MediaType mediaType,
+
+    /// URL 匹配配置。
+    required MatchConfig match,
+
+    /// 提取配置。
+    required ExtractConfig extract,
+
+    /// 规则描述。
     String? description,
 
-    /// Rule version (semantic versioning).
+    /// 规则版本（语义化版本）。
     @Default('1.0.0') String version,
 
-    /// HTTP request configuration.
+    /// HTTP 请求配置。
     @Default(RequestConfig()) RequestConfig request,
 
-    /// Actions to execute before extraction.
+    /// 提取前要执行的动作。
     List<CrawlerAction>? beforeActions,
 
-    /// Actions to execute after extraction.
+    /// 提取后要执行的动作。
     List<CrawlerAction>? afterActions,
 
-    /// Anti-crawl detection configuration.
+    /// 反爬虫检测配置。
     DetectionConfig? detection,
 
-    /// Rule author.
+    /// 规则作者。
     String? author,
 
-    /// Rule source (official, third_party, user).
+    /// 规则来源（official、third_party、user）。
     @Default('user') String source,
 
-    /// Rule icon URL.
+    /// 规则图标 URL。
     String? iconUrl,
 
-    /// Rule tags.
+    /// 规则标签。
     List<String>? tags,
 
-    /// Whether rule is enabled.
+    /// 规则是否启用。
     @Default(true) bool enabled,
 
-    /// Creation timestamp.
+    /// 创建时间戳。
     DateTime? createdAt,
 
-    /// Last update timestamp.
+    /// 最后更新时间戳。
     DateTime? updatedAt,
   }) = _CrawlerRule;
 

@@ -35,5 +35,31 @@
     "serverStop": "停止服务器",
     "serverUrl": "服务器地址",
     "openInBrowser": "在浏览器中打开",
-    "serverStartError": "服务器启动失败"
+    "serverStartError": "服务器启动失败",
+
+    "errorTitleDefault": "提示",
+    "errorTitleNetwork": "网络错误",
+    "errorTitleAuth": "身份验证失败",
+    "errorTitlePermission": "权限不足",
+    "errorTitleRule": "规则错误",
+    "errorTitleUnknown": "未知错误",
+
+    "errorNetworkUnreachable": "网络不可达，请检查您的网络连接",
+    "errorConnectionTimeout": "连接超时，请稍后重试",
+    "errorServerError": "服务器内部错误 ({code})",
+    "errorUnauthorized": "登录已过期，请重新登录",
+    "errorForbidden": "您没有权限执行此操作",
+    "errorNotFound": "请求的资源不存在",
+    "errorBadRequest": "请求参数有误，请检查后重试",
+    "errorParseError": "数据解析失败，请稍后重试",
+    "errorRuleParseError": "规则解析失败：{message}",
+    "errorRuleExecutionError": "规则执行失败：{message}",
+    "errorSelectorError": "选择器匹配失败：{selector}",
+    "errorWeakPassword": "密码长度不能少于 {count} 位",
+    "errorUsernameExists": "用户名 \"{username}\" 已存在",
+    "errorDatabaseError": "数据库操作失败，请稍后重试",
+    "errorCacheError": "缓存操作失败，请稍后重试",
+    "errorUnknown": "发生未知错误，请稍后重试",
+
+    "retry": "重试"
 }

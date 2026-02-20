@@ -5,27 +5,27 @@ import 'package:spectra/core/crawler/models/selector_type.dart';
 part 'selector.freezed.dart';
 part 'selector.g.dart';
 
-/// Selector for extracting content from HTML/JSON.
+/// 从 HTML/JSON 提取内容的选择器。
 ///
-/// Supports multiple selector types with fallback options.
+/// 支持多种选择器类型，并提供回退选项。
 @freezed
 sealed class Selector with _$Selector {
   const factory Selector({
-    /// Selector type (css, xpath, regex, jsonpath, js).
+    /// 选择器类型（css、xpath、regex、jsonpath、js）。
     required SelectorType type,
 
-    /// Selector expression.
+    /// 选择器表达式。
     required String expression,
 
-    /// Attribute to extract (e.g., "href", "src", "text").
-    /// Use "text" or leave empty for text content.
-    /// Use "html" for inner HTML.
+    /// 要提取的属性（例如 "href"、"src"、"text"）。
+    /// 使用 "text" 或留空表示文本内容。
+    /// 使用 "html" 表示内部 HTML。
     String? attribute,
 
-    /// Fallback selectors if primary fails.
+    /// 主选择器失败时的回退选择器。
     List<Selector>? fallbacks,
 
-    /// Whether to return first match only.
+    /// 是否只返回第一个匹配。
     @Default(false) bool firstOnly,
   }) = _Selector;
 
@@ -33,17 +33,17 @@ sealed class Selector with _$Selector {
       _$SelectorFromJson(json);
 }
 
-/// CSS selector shorthand.
+/// CSS 选择器简写。
 const SelectorType css = SelectorType.css;
 
-/// XPath selector shorthand.
+/// XPath 选择器简写。
 const SelectorType xpath = SelectorType.xpath;
 
-/// Regex selector shorthand.
+/// 正则选择器简写。
 const SelectorType regex = SelectorType.regex;
 
-/// JSONPath selector shorthand.
+/// JSONPath 选择器简写。
 const SelectorType jsonpath = SelectorType.jsonpath;
 
-/// JavaScript selector shorthand.
+/// JavaScript 选择器简写。
 const SelectorType js = SelectorType.js;

@@ -1,71 +1,110 @@
-# Routing Specification
+# 路由规范
 
-## ADDED Requirements
+## 技术栈
 
-### Requirement: Declarative route configuration
-The system SHALL use go_router with type-safe routes defined using `@TypedGoRoute` annotations.
-
-#### Scenario: Route definition
-- **WHEN** a developer defines a route
-- **THEN** the route SHALL use `@TypedGoRoute<RouteClass>` annotation with path parameter
-
-#### Scenario: Generated route code
-- **WHEN** build_runner completes successfully
-- **THEN** `$appRoutes` SHALL be generated and available for GoRouter configuration
+- **go_router**: 声明式路由
+- **go_router_builder**: 类型安全路由生成
 
 ---
 
-### Requirement: Router provider integration
-The system SHALL expose GoRouter through a Riverpod provider for global access.
+## 路由定义
 
-#### Scenario: Router provider access
-- **WHEN** any widget needs to navigate
-- **THEN** the widget SHALL access router via `ref.watch(routerProvider)`
+### Requirement: 声明式类型安全路由
 
-#### Scenario: Router in MaterialApp
-- **WHEN** MaterialApp.router is built
-- **THEN** it SHALL use `routerConfig: ref.watch(routerProvider)`
+使用 `@TypedGoRoute` 注解定义路由。
 
----
+```dart
+@TypedGoRoute<HomeRoute>(path: '/')
+class HomeRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const HomePage();
+  }
+}
+```
 
-### Requirement: Core route structure
-The system SHALL define the following base routes at minimum:
+### Requirement: Router Provider 集成
 
-| Route | Path | Description |
-|-------|------|-------------|
-| HomeRoute | `/` | Application home page |
-| SettingsRoute | `/settings` | Application settings |
-
-#### Scenario: Home route navigation
-- **WHEN** user navigates to `/`
-- **THEN** HomeRoute SHALL display the HomePage widget
-
-#### Scenario: Settings route navigation
-- **WHEN** user navigates to `/settings`
-- **THEN** SettingsRoute SHALL display the SettingsPage widget
-
----
-
-### Requirement: Type-safe navigation
-The system SHALL use generated route classes for navigation instead of string-based paths.
-
-#### Scenario: Navigate to route
-- **WHEN** navigating to a page programmatically
-- **THEN** the code SHALL use `context.push(const HomeRoute())` syntax
-
-#### Scenario: Route parameters
-- **WHEN** a route requires parameters
-- **THEN** parameters SHALL be passed through the route class constructor
+```dart
+@riverpod
+GoRouter router(Ref ref) {
+  return GoRouter(
+    routes: $appRoutes,
+    errorBuilder: (context, state) => const ErrorPage(),
+  );
+}
+```
 
 ---
 
-### Requirement: Error handling
-The system SHALL display a custom error page when navigation fails.
+## 导航规范
 
-#### Scenario: Unknown route
-- **WHEN** user navigates to an undefined route
-- **THEN** a 404 error page SHALL be displayed
+### Requirement: 类型安全导航
 
-#### Scenario: Route error recovery
-- **WHEN** navigation error occurs
-- **THEN** user SHALL be able to return to home page
+```dart
+// ✅ 正确
+context.push(const HomeRoute());
+context.push(VideoRoute(id: '123'));
+
+// ❌ 错误
+context.push('/');
+context.push('/video/123');
+```
+
+### Requirement: 基础路由
+
+| 路由类 | 路径 | 页面 |
+|--------|------|------|
+| HomeRoute | `/` | HomePage |
+| SettingsRoute | `/settings` | SettingsPage |
+
+---
+
+## 错误处理
+
+### Requirement: 自定义错误页面
+
+```dart
+@TypedGoRoute<ErrorRoute>(path: '/error')
+class ErrorRoute extends GoRouteData {
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const ErrorPage();
+  }
+}
+```
+
+#### Scenario: 未知路由
+- **WHEN** 导航到未定义路由
+- **THEN** 显示 404 错误页面
+
+#### Scenario: 错误恢复
+- **WHEN** 导航错误
+- **THEN** 用户可返回首页
+
+---
+
+## 首页规范
+
+### Requirement: 首页结构
+
+- **AppBar**: 显示 Spectra 品牌，使用 Orbitron 字体
+- **欢迎区**: 品牌风格内容，支持国际化
+- **功能导航**: 卡片式导航到各功能模块
+
+### Requirement: 主题应用
+
+- **背景色**: Deep Void (`#0B0E14`)
+- **主色**: Cyber Cyan (`#00F2FF`)
+- **次色**: Electric Violet (`#7000FF`)
+
+### Requirement: 文件位置
+
+```
+lib/features/home/
+├── presentation/
+│   ├── pages/
+│   │   └── home_page.dart
+│   └── widgets/
+│       └── feature_card.dart
+```

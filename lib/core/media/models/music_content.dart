@@ -7,26 +7,26 @@ import 'package:spectra/core/media/models/content_stats.dart';
 part 'music_content.freezed.dart';
 part 'music_content.g.dart';
 
-/// Audio quality option.
+/// 音频质量选项。
 @freezed
 sealed class AudioQuality with _$AudioQuality {
   const factory AudioQuality({
-    /// Quality label (e.g., "320kbps", "128kbps", "FLAC").
+    /// 质量标签（如 "320kbps"、"128kbps"、"FLAC"）。
     required String label,
 
-    /// Audio stream URL.
+    /// 音频流 URL。
     required String url,
 
-    /// Audio codec (e.g., "mp3", "aac", "flac").
+    /// 音频编码（如 "mp3"、"aac"、"flac"）。
     String? codec,
 
-    /// Bitrate in kbps.
+    /// 码率（kbps）。
     int? bitrate,
 
-    /// Sample rate in Hz.
+    /// 采样率（Hz）。
     int? sampleRate,
 
-    /// File size in bytes.
+    /// 文件大小（字节）。
     int? fileSize,
   }) = _AudioQuality;
 
@@ -34,83 +34,85 @@ sealed class AudioQuality with _$AudioQuality {
       _$AudioQualityFromJson(json);
 }
 
-/// Lyrics with optional LRC format support.
+/// 歌词，支持可选 LRC 格式。
 @freezed
 sealed class Lyrics with _$Lyrics {
   const factory Lyrics({
-    /// Plain text lyrics.
+    /// 纯文本歌词。
     String? text,
 
-    /// LRC format lyrics with timestamps.
+    /// 带时间戳的 LRC 格式歌词。
     String? lrc,
 
-    /// Language code.
+    /// 语言代码。
     String? language,
   }) = _Lyrics;
 
   factory Lyrics.fromJson(Map<String, dynamic> json) => _$LyricsFromJson(json);
 }
 
-/// Music/audio track content model.
+/// 音乐/音轨内容模型。
 @freezed
 sealed class MusicContent with _$MusicContent {
   const factory MusicContent({
-    /// Unique identifier.
+    /// 唯一标识符。
     required String id,
 
-    /// Track title.
+    /// 曲目标题。
     required String title,
 
-    /// Source information.
-    required ContentSource source, /// Cover/album art URL.
+    /// 来源信息。
+    required ContentSource source,
+
+    /// 封面/专辑封面 URL。
     String? cover,
 
-    /// Description.
+    /// 描述。
     String? description,
 
-    /// Artist information.
+    /// 艺术家信息。
     Author? artistInfo,
 
-    /// Tags.
+    /// 标签。
     List<String>? tags,
 
-    /// Genre/category.
+    /// 流派/分类。
     String? category,
 
-    /// Statistics.
+    /// 统计信息。
     ContentStats? stats,
 
-    /// Release date.
+    /// 发布日期。
     DateTime? createdAt,
 
-    /// Update date.
+    /// 更新日期。
     DateTime? updatedAt,
 
-    /// Primary audio playback URL.
+    /// 主要音频播放 URL。
     String? audioUrl,
 
-    /// Duration in seconds.
+    /// 时长（秒）。
     int? duration,
 
-    /// Artist name(s) - can be comma-separated or array.
+    /// 艺术家名称（可能是逗号分隔或数组）。
     String? artist,
 
-    /// Album name.
+    /// 专辑名称。
     String? album,
 
-    /// Album cover URL (if different from cover).
+    /// 专辑封面 URL（如果与 cover 不同）。
     String? albumCover,
 
-    /// Available quality options.
+    /// 可用的质量选项。
     List<AudioQuality>? qualities,
 
-    /// Lyrics.
+    /// 歌词。
     Lyrics? lyrics,
 
-    /// Music video URL.
+    /// 音乐视频 URL。
     String? mvUrl,
 
-    /// Copyright information.
+    /// 版权信息。
     String? copyright,
   }) = _MusicContent;
 

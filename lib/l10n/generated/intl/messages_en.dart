@@ -20,6 +20,19 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(message) => "Rule execution error: ${message}";
+
+  static String m1(message) => "Rule parse error: ${message}";
+
+  static String m2(selector) => "Selector matching failed: ${selector}";
+
+  static String m3(code) => "Server error (${code})";
+
+  static String m4(username) => "Username \"${username}\" already exists.";
+
+  static String m5(count) =>
+      "Password must be at least ${count} characters long.";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("About"),
@@ -29,6 +42,52 @@ class MessageLookup extends MessageLookupByLibrary {
     "currentLanguage": MessageLookupByLibrary.simpleMessage("Current language"),
     "currentTheme": MessageLookupByLibrary.simpleMessage("Current theme"),
     "developerTools": MessageLookupByLibrary.simpleMessage("Developer Tools"),
+    "errorBadRequest": MessageLookupByLibrary.simpleMessage(
+      "Invalid request parameters. Please check and try again.",
+    ),
+    "errorCacheError": MessageLookupByLibrary.simpleMessage(
+      "Cache operation failed. Please try again later.",
+    ),
+    "errorConnectionTimeout": MessageLookupByLibrary.simpleMessage(
+      "Connection timed out. Please try again later.",
+    ),
+    "errorDatabaseError": MessageLookupByLibrary.simpleMessage(
+      "Database operation failed. Please try again later.",
+    ),
+    "errorForbidden": MessageLookupByLibrary.simpleMessage(
+      "You don\'t have permission to perform this action.",
+    ),
+    "errorNetworkUnreachable": MessageLookupByLibrary.simpleMessage(
+      "Network unreachable. Please check your connection.",
+    ),
+    "errorNotFound": MessageLookupByLibrary.simpleMessage(
+      "The requested resource was not found.",
+    ),
+    "errorParseError": MessageLookupByLibrary.simpleMessage(
+      "Failed to parse data. Please try again later.",
+    ),
+    "errorRuleExecutionError": m0,
+    "errorRuleParseError": m1,
+    "errorSelectorError": m2,
+    "errorServerError": m3,
+    "errorTitleAuth": MessageLookupByLibrary.simpleMessage(
+      "Authentication Failed",
+    ),
+    "errorTitleDefault": MessageLookupByLibrary.simpleMessage("Notice"),
+    "errorTitleNetwork": MessageLookupByLibrary.simpleMessage("Network Error"),
+    "errorTitlePermission": MessageLookupByLibrary.simpleMessage(
+      "Permission Denied",
+    ),
+    "errorTitleRule": MessageLookupByLibrary.simpleMessage("Rule Error"),
+    "errorTitleUnknown": MessageLookupByLibrary.simpleMessage("Unknown Error"),
+    "errorUnauthorized": MessageLookupByLibrary.simpleMessage(
+      "Session expired. Please log in again.",
+    ),
+    "errorUnknown": MessageLookupByLibrary.simpleMessage(
+      "An unknown error occurred. Please try again later.",
+    ),
+    "errorUsernameExists": m4,
+    "errorWeakPassword": m5,
     "featureComic": MessageLookupByLibrary.simpleMessage("Comic Collection"),
     "featureImage": MessageLookupByLibrary.simpleMessage("Image Collection"),
     "featureMusic": MessageLookupByLibrary.simpleMessage("Music Collection"),
@@ -47,6 +106,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageNotFound": MessageLookupByLibrary.simpleMessage(
       "404 - Page Not Found",
     ),
+    "retry": MessageLookupByLibrary.simpleMessage("Retry"),
     "ruleEditor": MessageLookupByLibrary.simpleMessage("Rule Editor"),
     "ruleEditorDescription": MessageLookupByLibrary.simpleMessage(
       "Open web-based rule editor for crawler rules",

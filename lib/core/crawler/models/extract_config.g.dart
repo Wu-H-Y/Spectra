@@ -27,12 +27,12 @@ Map<String, dynamic> _$ListExtractToJson(_ListExtract instance) =>
 
 _DetailExtract _$DetailExtractFromJson(Map<String, dynamic> json) =>
     _DetailExtract(
-      urlFromList: json['urlFromList'] == null
-          ? null
-          : Selector.fromJson(json['urlFromList'] as Map<String, dynamic>),
       items: (json['items'] as List<dynamic>)
           .map((e) => FieldMapping.fromJson(e as Map<String, dynamic>))
           .toList(),
+      urlFromList: json['urlFromList'] == null
+          ? null
+          : Selector.fromJson(json['urlFromList'] as Map<String, dynamic>),
       chapters: json['chapters'] == null
           ? null
           : ChapterExtract.fromJson(json['chapters'] as Map<String, dynamic>),
@@ -40,8 +40,8 @@ _DetailExtract _$DetailExtractFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$DetailExtractToJson(_DetailExtract instance) =>
     <String, dynamic>{
-      'urlFromList': instance.urlFromList,
       'items': instance.items,
+      'urlFromList': instance.urlFromList,
       'chapters': instance.chapters,
     };
 

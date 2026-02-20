@@ -7,6 +7,7 @@
 - [x] 1.3 Create directory structure for core/crawler/, core/server/, core/media/
 - [x] 1.4 Initialize web-editor project with Vite + React + TypeScript
 - [x] 1.5 Configure web-editor with Tailwind CSS and shadcn/ui
+- [ ] 1.6 Add sizer dependency for responsive UI layout
 
 ## 2. Media Data Models (freezed)
 
@@ -53,24 +54,24 @@
 
 ## 5. Selector Engine
 
-- [ ] 5.1 Implement CSS selector evaluator
-- [ ] 5.2 Implement XPath evaluator
-- [ ] 5.3 Implement Regex extractor
-- [ ] 5.4 Implement JSONPath evaluator
-- [ ] 5.5 Implement JavaScript expression evaluator
-- [ ] 5.6 Create SelectorEngine with fallback support
+- [x] 5.1 Implement CSS selector evaluator
+- [x] 5.2 Implement XPath evaluator
+- [x] 5.3 Implement Regex extractor
+- [x] 5.4 Implement JSONPath evaluator
+- [x] 5.5 Implement JavaScript expression evaluator
+- [x] 5.6 Create SelectorEngine with fallback support
 
 ## 6. Rule Execution Engine
 
-- [ ] 6.1 Create RuleParser for JSON to model conversion
-- [ ] 6.2 Implement rule validation with error reporting
-- [ ] 6.3 Create ListExtractor for list page extraction
-- [ ] 6.4 Create DetailExtractor for detail page extraction
-- [ ] 6.5 Create ContentExtractor for media content extraction
-- [ ] 6.6 Implement pagination handler (URL, click, infinite scroll)
-- [ ] 6.7 Create TransformPipeline for data transformation
-- [ ] 6.8 Create ExecutionState tracker
-- [ ] 6.9 Integrate with HTTP API (/api/execute, /api/validate)
+- [x] 6.1 Create RuleParser for JSON to model conversion
+- [x] 6.2 Implement rule validation with error reporting
+- [x] 6.3 Create ListExtractor for list page extraction
+- [x] 6.4 Create DetailExtractor for detail page extraction
+- [x] 6.5 Create ContentExtractor for media content extraction
+- [x] 6.6 Implement pagination handler (URL, click, infinite scroll)
+- [x] 6.7 Create TransformPipeline for data transformation
+- [x] 6.8 Create ExecutionState tracker
+- [x] 6.9 Integrate with HTTP API (/api/execute, /api/validate)
 
 ## 7. Anti-Crawl Handling
 
@@ -137,3 +138,17 @@
 - [ ] 13.2 Create rule examples for each media type
 - [ ] 13.3 Document API endpoints
 - [ ] 13.4 Write user guide for web editor
+
+## 14. Responsive UI Implementation
+
+- [ ] 14.1 Wrap MaterialApp with Sizer widget and configure breakpoints
+- [ ] 14.2 Create ResponsiveLayout widget for device-type-based layout switching
+- [ ] 14.3 Implement mobile layout with bottom navigation and single-column content
+- [ ] 14.4 Implement tablet/desktop layout with side navigation and grid content
+- [ ] 14.5 Convert fixed pixel values to sizer responsive units (.w, .h, .sp)
+- [ ] 14.6 Create responsive spacing constants using sizer units
+- [ ] 14.7 Implement responsive icon and button sizing
+- [ ] 14.8 Add screen orientation handling for layout changes
+- [ ] 14.9 Update page preview UI for responsive mobile/desktop display
+- [ ] 14.10 Configure Tailwind CSS responsive breakpoints to match sizer
+- [ ] 14.11 Test responsive layouts on different device sizes and orientations

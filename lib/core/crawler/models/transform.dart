@@ -3,67 +3,67 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'transform.freezed.dart';
 part 'transform.g.dart';
 
-/// Transform type for data transformation.
+/// 数据转换的转换类型。
 @JsonEnum()
 enum TransformType {
-  /// Remove leading/trailing whitespace.
+  /// 移除首尾空白。
   trim,
 
-  /// Parse as number.
+  /// 解析为数字。
   number,
 
-  /// Parse as date/datetime.
+  /// 解析为日期/时间。
   date,
 
-  /// Normalize URL (resolve relative URLs).
+  /// 规范化 URL（解析相对 URL）。
   url,
 
-  /// Regex replacement.
+  /// 正则替换。
   regex,
 
-  /// String replacement.
+  /// 字符串替换。
   replace,
 
-  /// Convert to lowercase.
+  /// 转换为小写。
   lowercase,
 
-  /// Convert to uppercase.
+  /// 转换为大写。
   uppercase,
 
-  /// Extract substring (start, end indices).
+  /// 提取子字符串（起始、结束索引）。
   substring,
 
-  /// Split string by delimiter.
+  /// 按分隔符分割字符串。
   split,
 
-  /// Join array with delimiter.
+  /// 用分隔符连接数组。
   join,
 
-  /// Map values (find/replace dictionary).
+  /// 映射值（查找/替换字典）。
   map,
 
-  /// Parse JSON string.
+  /// 解析 JSON 字符串。
   parseJson,
 
-  /// Format number with suffix (1K, 1M, etc.).
+  /// 带后缀格式化数字（1K、1M 等）。
   formatNumber,
 }
 
-/// Data transformation configuration.
+/// 数据转换配置。
 @freezed
 sealed class Transform with _$Transform {
   const factory Transform({
-    /// Transform type.
+    /// 转换类型。
     required TransformType type,
 
-    /// Parameter for the transform (varies by type).
-    /// - regex: pattern (with optional replacement)
+    /// 转换参数（根据类型而异）。
+    /// - regex: 模式（带可选替换）
     /// - replace: {find: string, replace: string}
-    /// - date: format string (e.g., "yyyy-MM-dd")
-    /// - url: base URL for resolving relative URLs
+    /// - date: 格式字符串（例如 "yyyy-MM-dd"）
+    /// - url: 用于解析相对 URL 的基础 URL
     /// - substring: {start: int, end: int?}
-    /// - split: delimiter
-    /// - join: delimiter
+    /// - split: 分隔符
+    /// - join: 分隔符
     /// - map: {key1: value1, key2: value2}
     dynamic params,
   }) = _Transform;

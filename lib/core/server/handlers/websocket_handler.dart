@@ -4,32 +4,32 @@ import 'dart:convert';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-/// WebSocket handler for real-time communication with the web editor.
+/// 用于与 Web 编辑器实时通信的 WebSocket 处理器。
 class WebSocketHandler {
-  /// Creates a WebSocket handler.
+  /// 创建 WebSocket 处理器。
   WebSocketHandler({Talker? talker}) : _talker = talker;
 
-  /// Talker instance for logging.
+  /// Talker 实例用于日志记录。
   final Talker? _talker;
 
-  /// Active WebSocket connections.
+  /// 活跃的 WebSocket 连接。
   final Set<WebSocketChannel> _connections = {};
 
-  /// Stream controller for broadcasting messages.
+  /// 用于广播消息的流控制器。
   final StreamController<String> _broadcastController =
       StreamController<String>.broadcast();
 
-  /// Handle a WebSocket connection.
+  /// 处理 WebSocket 连接。
   Future<void> handle(WebSocketChannel webSocket) async {
     _connections.add(webSocket);
 
-    // Subscribe to broadcast messages
+    // 订阅广播消息
     final subscription = _broadcastController.stream.listen((message) {
       webSocket.sink.add(message);
     });
 
     try {
-      // Listen for incoming messages
+      // 监听传入消息
       await for (final message in webSocket.stream) {
         _handleMessage(webSocket, message);
       }
@@ -42,7 +42,7 @@ class WebSocketHandler {
     }
   }
 
-  /// Handle an incoming WebSocket message.
+  /// 处理传入的 WebSocket 消息。
   void _handleMessage(WebSocketChannel sender, dynamic message) {
     try {
       final data = jsonDecode(message as String) as Map<String, dynamic>;
@@ -51,14 +51,16 @@ class WebSocketHandler {
 
       switch (type) {
         case 'element_selected':
-          // Broadcast element selection to all clients
-          broadcast(jsonEncode({
-            'type': 'element_selected',
-            'data': payload,
-          }));
+          // 向所有客户端广播元素选择
+          broadcast(
+            jsonEncode({
+              'type': 'element_selected',
+              'data': payload,
+            }),
+          );
 
         case 'preview_request':
-          // Handle preview request from web editor
+          // 处理来自 Web 编辑器的预览请求
           _handlePreviewRequest(sender, payload as Map<String, dynamic>?);
 
         case 'ping':
@@ -72,7 +74,7 @@ class WebSocketHandler {
     }
   }
 
-  /// Handle a preview request.
+  /// 处理预览请求。
   void _handlePreviewRequest(
     WebSocketChannel sender,
     Map<String, dynamic>? payload,
@@ -82,32 +84,34 @@ class WebSocketHandler {
     final url = payload['url'] as String?;
     if (url == null) return;
 
-    // TODO(developer): Implement preview request handling
-    // This would trigger the Flutter app to open a preview page
+    // TODO(developer): 实现预览请求处理
+    // 这将触发 Flutter 应用打开预览页面
 
-    sender.sink.add(jsonEncode({
-      'type': 'preview_response',
-      'data': {
-        'status': 'accepted',
-        'url': url,
-      },
-    }));
+    sender.sink.add(
+      jsonEncode({
+        'type': 'preview_response',
+        'data': {
+          'status': 'accepted',
+          'url': url,
+        },
+      }),
+    );
   }
 
-  /// Broadcast a message to all connected clients.
+  /// 向所有连接的客户端广播消息。
   void broadcast(String message) {
     _broadcastController.add(message);
   }
 
-  /// Send a message to a specific client.
+  /// 向特定客户端发送消息。
   void send(WebSocketChannel client, String message) {
     client.sink.add(message);
   }
 
-  /// Get the number of active connections.
+  /// 获取活跃连接数。
   int get connectionCount => _connections.length;
 
-  /// Close all connections.
+  /// 关闭所有连接。
   Future<void> closeAll() async {
     for (final connection in _connections) {
       await connection.sink.close();

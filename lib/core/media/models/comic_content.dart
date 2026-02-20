@@ -7,19 +7,23 @@ import 'package:spectra/core/media/models/content_stats.dart';
 part 'comic_content.freezed.dart';
 part 'comic_content.g.dart';
 
-/// Comic chapter/episode.
+/// 漫画章节/话。
 @freezed
 sealed class ComicChapter with _$ComicChapter {
   const factory ComicChapter({
-    /// Chapter ID.
+    /// 章节 ID。
     required String id,
 
-    /// Chapter title.
+    /// 章节标题。
     required String title,
 
-    /// List of image URLs in reading order.
-    required List<String> images, /// Chapter index/number.
-    required int index, /// Chapter URL (if separate page).
+    /// 按阅读顺序排列的图片 URL 列表。
+    required List<String> images,
+
+    /// 章节索引/编号。
+    required int index,
+
+    /// 章节 URL（如果为单独页面）。
     String? url,
   }) = _ComicChapter;
 
@@ -27,85 +31,89 @@ sealed class ComicChapter with _$ComicChapter {
       _$ComicChapterFromJson(json);
 }
 
-/// Comic content status.
+/// 漫画内容状态。
 enum ComicStatus {
-  /// Currently updating.
+  /// 正在更新。
   ongoing,
 
-  /// Completed series.
+  /// 已完结。
   completed,
 
-  /// On hiatus/break.
+  /// 暂停/休载。
   hiatus,
 
-  /// Cancelled/discontinued.
+  /// 取消/停更。
   cancelled,
 }
 
-/// Reading direction for comics.
+/// 漫画阅读方向。
 enum ReadDirection {
-  /// Left to right (Western style).
+  /// 从左到右（西式风格）。
   ltr,
 
-  /// Right to left (Japanese manga style).
+  /// 从右到左（日式漫画风格）。
   rtl,
 
-  /// Top to bottom (Webtoon style).
+  /// 从上到下（条漫风格）。
   vertical,
 }
 
-/// Comic/manga content model.
+/// 漫画/日漫内容模型。
 @freezed
 sealed class ComicContent with _$ComicContent {
   const factory ComicContent({
-    /// Unique identifier.
+    /// 唯一标识符。
     required String id,
 
-    /// Comic title.
+    /// 漫画标题。
     required String title,
 
-    /// Source information.
-    required ContentSource source, /// Chapter list.
-    required List<ComicChapter> chapters, /// Cover image URL.
+    /// 来源信息。
+    required ContentSource source,
+
+    /// 章节列表。
+    required List<ComicChapter> chapters,
+
+    /// 封面图片 URL。
     String? cover,
 
-    /// Description/summary.
+    /// 描述/摘要。
     String? description,
 
-    /// Author/artist information.
+    /// 作者/画师信息。
     Author? author,
 
-    /// Tags.
+    /// 标签。
     List<String>? tags,
 
-    /// Category.
+    /// 分类。
     String? category,
 
-    /// Statistics.
+    /// 统计信息。
     ContentStats? stats,
 
-    /// Publish date.
+    /// 发布日期。
     DateTime? createdAt,
 
-    /// Update date.
+    /// 更新日期。
     DateTime? updatedAt,
 
-    /// Comic status.
+    /// 漫画状态。
     ComicStatus? status,
 
-    /// Latest chapter info.
+    /// 最新章节信息。
     ComicChapter? lastChapter,
 
-    /// Reading direction.
+    /// 阅读方向。
     @Default(ReadDirection.ltr) ReadDirection readDirection,
 
-    /// Age rating/restriction.
+    /// 年龄分级/限制。
     String? ageRating,
 
-    /// Total chapter count.
+    /// 总章节数。
     int? chapterCount,
 
-    /// Total image count across all chapters.
+    /// 所有章节的总图片数。
     int? totalImages,
   }) = _ComicContent;
 
