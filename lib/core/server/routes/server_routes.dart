@@ -25,13 +25,16 @@ class ServerRoutes {
   final Future<void> Function() onStop;
 
   /// 创建包含所有路由的路由器。
+  ///
+  /// 注意：此路由器会被挂载到 /api/server 路径下，
+  /// 所以内部路由不需要 /api/server 前缀。
   Router<Handler> get router => Router<Handler>()
-    // GET /api/server/status - 获取服务器状态
-    ..get('/api/server/status', _getStatus)
-    // POST /api/server/start - 启动服务器
-    ..post('/api/server/start', _startServer)
-    // POST /api/server/stop - 停止服务器
-    ..post('/api/server/stop', _stopServer);
+    // GET /status - 获取服务器状态
+    ..get('/status', _getStatus)
+    // POST /start - 启动服务器
+    ..post('/start', _startServer)
+    // POST /stop - 停止服务器
+    ..post('/stop', _stopServer);
 
   /// 获取服务器状态。
   Future<Response> _getStatus(Request request) async {

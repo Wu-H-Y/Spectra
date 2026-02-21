@@ -29,28 +29,22 @@ export function UrlMatchingForm({ match, onChange }: UrlMatchingFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('urlMatching')}</CardTitle>
-        <CardDescription>
-          {t('urlMatchingDescription', {
-            defaultValue: 'Configure which URLs this rule should match',
-          })}
-        </CardDescription>
+        <CardTitle>{t('rules.urlMatching')}</CardTitle>
+        <CardDescription>{t('rules.urlMatchingDescription')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="pattern">{t('urlPattern')} *</Label>
+          <Label htmlFor="pattern">{t('rules.urlPattern')} *</Label>
           <Input
             id="pattern"
             value={match.pattern}
             onChange={(e) => onChange({ ...match, pattern: e.target.value })}
-            placeholder={t('urlPatternPlaceholder', {
-              defaultValue: 'e.g., https://example.com/videos/*',
-            })}
+            placeholder={t('rules.urlPatternPlaceholder')}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="patternType">{t('patternType')} *</Label>
+          <Label htmlFor="patternType">{t('rules.patternType')} *</Label>
           <Select
             value={match.type || 'regex'}
             onValueChange={(value: 'regex' | 'glob') =>
@@ -75,19 +69,13 @@ export function UrlMatchingForm({ match, onChange }: UrlMatchingFormProps) {
             onChange={(e) => onChange({ ...match, fullUrl: e.target.checked })}
             className="h-4 w-4"
           />
-          <Label htmlFor="fullUrl">
-            {t('matchFullUrl', {
-              defaultValue: 'Match against full URL (including query params)',
-            })}
-          </Label>
+          <Label htmlFor="fullUrl">{t('rules.matchFullUrl')}</Label>
         </div>
 
         <div className="space-y-2">
-          <Label>
-            {t('includePatterns', { defaultValue: 'Include Patterns' })}
-          </Label>
+          <Label>{t('rules.includePatterns')}</Label>
           <textarea
-            className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             value={match.includePatterns?.join('\n') || ''}
             onChange={(e) =>
               onChange({
@@ -95,18 +83,14 @@ export function UrlMatchingForm({ match, onChange }: UrlMatchingFormProps) {
                 includePatterns: e.target.value.split('\n').filter(Boolean),
               })
             }
-            placeholder={t('includePatternsPlaceholder', {
-              defaultValue: 'Additional patterns to include (one per line)',
-            })}
+            placeholder={t('rules.includePatternsPlaceholder')}
           />
         </div>
 
         <div className="space-y-2">
-          <Label>
-            {t('excludePatterns', { defaultValue: 'Exclude Patterns' })}
-          </Label>
+          <Label>{t('rules.excludePatterns')}</Label>
           <textarea
-            className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             value={match.excludePatterns?.join('\n') || ''}
             onChange={(e) =>
               onChange({
@@ -114,9 +98,7 @@ export function UrlMatchingForm({ match, onChange }: UrlMatchingFormProps) {
                 excludePatterns: e.target.value.split('\n').filter(Boolean),
               })
             }
-            placeholder={t('excludePatternsPlaceholder', {
-              defaultValue: 'Patterns to exclude (one per line)',
-            })}
+            placeholder={t('rules.excludePatternsPlaceholder')}
           />
         </div>
       </CardContent>

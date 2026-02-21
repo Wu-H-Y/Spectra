@@ -114,21 +114,13 @@ export function FieldMappingEditor({
       {/* 列表页字段配置 */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            {t('listFields', { defaultValue: 'List Page Fields' })}
-          </CardTitle>
-          <CardDescription>
-            {t('listFieldsDescription', {
-              defaultValue: 'Configure field mappings for list page extraction',
-            })}
-          </CardDescription>
+          <CardTitle>{t('rules.listFields')}</CardTitle>
+          <CardDescription>{t('rules.listFieldsDescription')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* 容器选择器 */}
           <div className="space-y-2">
-            <Label>
-              {t('containerSelector', { defaultValue: 'Container Selector' })}
-            </Label>
+            <Label>{t('rules.containerSelector')}</Label>
             <div className="grid grid-cols-[120px_1fr] gap-2">
               <Select
                 value={extract?.list?.container?.type || 'css'}
@@ -173,9 +165,7 @@ export function FieldMappingEditor({
                     },
                   })
                 }
-                placeholder={t('containerSelectorPlaceholder', {
-                  defaultValue: 'e.g., .video-item',
-                })}
+                placeholder={t('rules.containerSelectorPlaceholder')}
               />
             </div>
           </div>
@@ -194,7 +184,7 @@ export function FieldMappingEditor({
 
           <Button variant="outline" size="sm" onClick={() => addField('list')}>
             <Plus className="h-4 w-4 mr-2" />
-            {t('addListField', { defaultValue: 'Add List Field' })}
+            {t('rules.addListField')}
           </Button>
         </CardContent>
       </Card>
@@ -202,22 +192,15 @@ export function FieldMappingEditor({
       {/* 详情页字段配置 */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            {t('detailFields', { defaultValue: 'Detail Page Fields' })}
-          </CardTitle>
+          <CardTitle>{t('rules.detailFields')}</CardTitle>
           <CardDescription>
-            {t('detailFieldsDescription', {
-              defaultValue:
-                'Configure field mappings for detail page extraction',
-            })}
+            {t('rules.detailFieldsDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* URL 选择器 */}
           <div className="space-y-2">
-            <Label>
-              {t('detailUrlSelector', { defaultValue: 'Detail URL Selector' })}
-            </Label>
+            <Label>{t('rules.detailUrlSelector')}</Label>
             <div className="grid grid-cols-[120px_1fr] gap-2">
               <Select
                 value={extract?.detail?.urlFromList?.type || 'css'}
@@ -263,9 +246,7 @@ export function FieldMappingEditor({
                     },
                   })
                 }
-                placeholder={t('detailUrlSelectorPlaceholder', {
-                  defaultValue: 'e.g., a.title@href',
-                })}
+                placeholder={t('rules.detailUrlSelectorPlaceholder')}
               />
             </div>
           </div>
@@ -288,7 +269,7 @@ export function FieldMappingEditor({
             onClick={() => addField('detail')}
           >
             <Plus className="h-4 w-4 mr-2" />
-            {t('addDetailField', { defaultValue: 'Add Detail Field' })}
+            {t('rules.addDetailField')}
           </Button>
         </CardContent>
       </Card>
@@ -316,27 +297,19 @@ function FieldItem({ field, onChange, onRemove }: FieldItemProps) {
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 grid grid-cols-[1fr_1fr] gap-3">
           <div className="space-y-1">
-            <Label className="text-xs">
-              {t('fieldName', { defaultValue: 'Field Name' })}
-            </Label>
+            <Label className="text-xs">{t('rules.fieldName')}</Label>
             <Input
               value={field.field}
               onChange={(e) => onChange({ field: e.target.value })}
-              placeholder={t('fieldNamePlaceholder', {
-                defaultValue: 'e.g., title',
-              })}
+              placeholder={t('rules.fieldNamePlaceholder')}
             />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs">
-              {t('defaultValue', { defaultValue: 'Default Value' })}
-            </Label>
+            <Label className="text-xs">{t('rules.fieldDefaultValue')}</Label>
             <Input
               value={field.defaultValue || ''}
               onChange={(e) => onChange({ defaultValue: e.target.value })}
-              placeholder={t('defaultValuePlaceholder', {
-                defaultValue: 'Optional',
-              })}
+              placeholder={t('rules.fieldDefaultValuePlaceholder')}
             />
           </div>
         </div>
@@ -347,9 +320,7 @@ function FieldItem({ field, onChange, onRemove }: FieldItemProps) {
 
       <div className="grid grid-cols-[120px_1fr_150px] gap-2">
         <div className="space-y-1">
-          <Label className="text-xs">
-            {t('selectorType', { defaultValue: 'Type' })}
-          </Label>
+          <Label className="text-xs">{t('rules.fieldType')}</Label>
           <Select
             value={field.selector.type}
             onValueChange={(value: SelectorType) =>
@@ -369,29 +340,21 @@ function FieldItem({ field, onChange, onRemove }: FieldItemProps) {
           </Select>
         </div>
         <div className="space-y-1">
-          <Label className="text-xs">
-            {t('expression', { defaultValue: 'Expression' })}
-          </Label>
+          <Label className="text-xs">{t('rules.expression')}</Label>
           <Input
             value={field.selector.expression}
             onChange={(e) => updateSelector({ expression: e.target.value })}
-            placeholder={t('expressionPlaceholder', {
-              defaultValue: 'e.g., .title',
-            })}
+            placeholder={t('rules.expressionPlaceholder')}
           />
         </div>
         <div className="space-y-1">
-          <Label className="text-xs">
-            {t('attribute', { defaultValue: 'Attribute' })}
-          </Label>
+          <Label className="text-xs">{t('rules.attribute')}</Label>
           <Input
             value={field.selector.attribute || ''}
             onChange={(e) =>
               updateSelector({ attribute: e.target.value || undefined })
             }
-            placeholder={t('attributePlaceholder', {
-              defaultValue: 'e.g., href',
-            })}
+            placeholder={t('rules.attributePlaceholder')}
           />
         </div>
       </div>
@@ -406,7 +369,7 @@ function FieldItem({ field, onChange, onRemove }: FieldItemProps) {
             className="h-4 w-4"
           />
           <Label htmlFor={`required-${field.field}`} className="text-xs">
-            {t('required', { defaultValue: 'Required' })}
+            {t('rules.required')}
           </Label>
         </div>
         <div className="flex items-center space-x-2">
@@ -418,7 +381,7 @@ function FieldItem({ field, onChange, onRemove }: FieldItemProps) {
             className="h-4 w-4"
           />
           <Label htmlFor={`firstOnly-${field.field}`} className="text-xs">
-            {t('firstOnly', { defaultValue: 'First Only' })}
+            {t('rules.firstOnly')}
           </Label>
         </div>
       </div>

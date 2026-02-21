@@ -6,9 +6,9 @@
 
 | 技术 | 用途 |
 |------|------|
-| React 18 + TypeScript | UI框架 |
+| React 19 + TypeScript | UI框架 |
 | Vite | 构建工具 |
-| Tailwind CSS | 样式 |
+| Tailwind CSS v4 | 样式 |
 | shadcn/ui | 组件库 |
 | Monaco Editor | 代码编辑 |
 | Zustand | 状态管理 |
@@ -17,6 +17,80 @@
 #### Scenario: 构建输出
 - **WHEN** 执行构建
 - **THEN** 产物输出到 `assets/editor/`
+
+#### Scenario: React 19 特性
+- **WHEN** 使用 React 19
+- **THEN** 可使用 useOptimistic、use 等 Hook
+
+---
+
+## 组件架构
+
+### Requirement: 组件规范
+
+所有 UI 组件必须遵循 shadcn/ui 最佳实践：
+
+- 使用 `forwardRef` 支持引用传递
+- 支持 `className` 透传
+- 使用 `cva` (class-variance-authority) 实现变体系统
+- 设置 `displayName` 便于调试
+- 导出 `VariantProps` 类型
+
+#### Scenario: 组件引用传递
+- **WHEN** 使用 `ref` prop
+- **THEN** 引用正确传递到底层 DOM 元素
+
+#### Scenario: 组件样式扩展
+- **WHEN** 传入 `className` prop
+- **THEN** 样式与默认样式合并，不覆盖
+
+---
+
+## 性能优化
+
+### Requirement: 渲染性能
+
+应用 Vercel React 最佳实践：
+
+- 路由级代码分割（React.lazy + Suspense）
+- Vite manualChunks 分离第三方库
+- 使用 `React.memo` 优化高频渲染组件
+- 使用 `useMemo` / `useCallback` 避免不必要重渲染
+- TanStack Query 配置合理的 `staleTime`
+
+#### Scenario: 路由懒加载
+- **WHEN** 访问路由
+- **THEN** 仅加载当前路由所需的代码块
+
+#### Scenario: Chunk 分离
+- **WHEN** 执行构建
+- **THEN** 产物按 vendor 分离：
+  - vendor-react: React 核心
+  - vendor-ui: Radix UI + Lucide
+  - vendor-data: TanStack Query + Zustand
+  - vendor-editor: Monaco Editor
+
+---
+
+## 国际化
+
+### Requirement: i18n 架构
+
+使用 react-i18next 配置：
+
+- 嵌套键结构 (`common.save`, `rules.ruleName`)
+- TypeScript 类型安全（CustomTypeOptions）
+- 单文件 locale (`zh.json`, `en.json`)
+- 禁止 `defaultValue` 参数
+- 禁止 `ns` 参数（使用嵌套键替代）
+
+#### Scenario: 类型安全翻译
+- **WHEN** 调用 `t()` 函数
+- **THEN** 键名有 TypeScript 自动补全和类型检查
+
+#### Scenario: 语言切换
+- **WHEN** 用户切换语言
+- **THEN** 所有UI文本更新
 
 ---
 
@@ -115,15 +189,3 @@
 | preview_select_mode | → Flutter | 进入选择模式 |
 | preview_highlight | → Flutter | 高亮元素 |
 | element_selected | ← Flutter | 元素选择结果 |
-
----
-
-## 国际化
-
-### Requirement: 多语言支持
-
-支持语言：中文 (zh-CN)、英文 (en-US)
-
-#### Scenario: 语言切换
-- **WHEN** 用户切换语言
-- **THEN** 所有UI文本更新

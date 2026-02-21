@@ -231,11 +231,6 @@ class ResponsiveBuilder extends StatelessWidget {
   });
 
   /// 构建函数
-  /// [context] 构建上下文
-  /// [deviceType] 当前设备类型
-  /// [orientation] 屏幕方向
-  /// [screenWidth] 屏幕宽度
-  /// [screenHeight] 屏幕高度
   final Widget Function(
     BuildContext context,
     DeviceType deviceType,

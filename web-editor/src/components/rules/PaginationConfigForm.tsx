@@ -81,21 +81,15 @@ export function PaginationConfigForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          {t('paginationConfig', { defaultValue: 'Pagination Configuration' })}
-        </CardTitle>
+        <CardTitle>{t('rules.paginationConfig')}</CardTitle>
         <CardDescription>
-          {t('paginationConfigDescription', {
-            defaultValue: 'Configure how to navigate through multiple pages',
-          })}
+          {t('rules.paginationConfigDescription')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* 分页类型 */}
         <div className="space-y-2">
-          <Label>
-            {t('paginationType', { defaultValue: 'Pagination Type' })}
-          </Label>
+          <Label>{t('rules.paginationType')}</Label>
           <Select
             value={pagination?.type || 'url'}
             onValueChange={(value: 'url' | 'click' | 'infiniteScroll') =>
@@ -106,16 +100,12 @@ export function PaginationConfigForm({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="url">
-                {t('paginationUrl', { defaultValue: 'URL Pattern' })}
-              </SelectItem>
+              <SelectItem value="url">{t('rules.paginationUrl')}</SelectItem>
               <SelectItem value="click">
-                {t('paginationClick', { defaultValue: 'Click Next' })}
+                {t('rules.paginationClick')}
               </SelectItem>
               <SelectItem value="infiniteScroll">
-                {t('paginationInfiniteScroll', {
-                  defaultValue: 'Infinite Scroll',
-                })}
+                {t('rules.paginationInfiniteScroll')}
               </SelectItem>
             </SelectContent>
           </Select>
@@ -125,31 +115,21 @@ export function PaginationConfigForm({
         {pagination?.type === 'url' && (
           <>
             <div className="space-y-2">
-              <Label>
-                {t('urlTemplate', { defaultValue: 'URL Template' })}
-              </Label>
+              <Label>{t('rules.urlTemplate')}</Label>
               <Input
                 value={pagination.urlTemplate || ''}
                 onChange={(e) =>
                   updatePagination({ urlTemplate: e.target.value })
                 }
-                placeholder={t('urlTemplatePlaceholder', {
-                  defaultValue: 'e.g., https://example.com/page/{page}',
-                })}
+                placeholder={t('rules.urlTemplatePlaceholder')}
               />
               <p className="text-xs text-muted-foreground">
-                {t('urlTemplateHint', {
-                  defaultValue: 'Use {page} as placeholder for page number',
-                })}
+                {t('rules.urlTemplateHint')}
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label>
-                {t('nextPageSelector', {
-                  defaultValue: 'Next Page Selector (Optional)',
-                })}
-              </Label>
+              <Label>{t('rules.nextPageSelector')}</Label>
               <div className="grid grid-cols-[120px_1fr] gap-2">
                 <Select
                   value={pagination.nextSelector?.type || 'css'}
@@ -173,9 +153,7 @@ export function PaginationConfigForm({
                   onChange={(e) =>
                     updateNextSelector({ expression: e.target.value })
                   }
-                  placeholder={t('nextPageSelectorPlaceholder', {
-                    defaultValue: 'e.g., a.next@href',
-                  })}
+                  placeholder={t('rules.nextPageSelectorPlaceholder')}
                 />
               </div>
             </div>
@@ -185,9 +163,7 @@ export function PaginationConfigForm({
         {/* 点击分页配置 */}
         {pagination?.type === 'click' && (
           <div className="space-y-2">
-            <Label>
-              {t('clickSelector', { defaultValue: 'Click Selector' })}
-            </Label>
+            <Label>{t('rules.clickSelector')}</Label>
             <div className="grid grid-cols-[120px_1fr] gap-2">
               <Select
                 value={pagination.clickSelector?.type || 'css'}
@@ -211,9 +187,7 @@ export function PaginationConfigForm({
                 onChange={(e) =>
                   updateClickSelector({ expression: e.target.value })
                 }
-                placeholder={t('clickSelectorPlaceholder', {
-                  defaultValue: 'e.g., button.load-more',
-                })}
+                placeholder={t('rules.clickSelectorPlaceholder')}
               />
             </div>
           </div>
@@ -222,11 +196,7 @@ export function PaginationConfigForm({
         {/* 无限滚动配置 */}
         {pagination?.type === 'infiniteScroll' && (
           <div className="space-y-2">
-            <Label>
-              {t('scrollContainer', {
-                defaultValue: 'Scroll Container (Optional)',
-              })}
-            </Label>
+            <Label>{t('rules.scrollContainer')}</Label>
             <div className="grid grid-cols-[120px_1fr] gap-2">
               <Select
                 value={pagination.scrollContainer?.type || 'css'}
@@ -250,9 +220,7 @@ export function PaginationConfigForm({
                 onChange={(e) =>
                   updateScrollContainer({ expression: e.target.value })
                 }
-                placeholder={t('scrollContainerPlaceholder', {
-                  defaultValue: 'e.g., .scroll-container',
-                })}
+                placeholder={t('rules.scrollContainerPlaceholder')}
               />
             </div>
           </div>
@@ -261,7 +229,7 @@ export function PaginationConfigForm({
         {/* 通用配置 */}
         <div className="grid grid-cols-3 gap-4">
           <div className="space-y-2">
-            <Label>{t('maxPages', { defaultValue: 'Max Pages' })}</Label>
+            <Label>{t('rules.maxPages')}</Label>
             <Input
               type="number"
               min={1}
@@ -273,14 +241,12 @@ export function PaginationConfigForm({
                     : undefined,
                 })
               }
-              placeholder={t('maxPagesPlaceholder', {
-                defaultValue: 'Unlimited',
-              })}
+              placeholder={t('rules.maxPagesPlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label>{t('delayMs', { defaultValue: 'Delay (ms)' })}</Label>
+            <Label>{t('rules.delayMs')}</Label>
             <Input
               type="number"
               min={0}
@@ -292,14 +258,12 @@ export function PaginationConfigForm({
                     : undefined,
                 })
               }
-              placeholder={t('delayMsPlaceholder', { defaultValue: '1000' })}
+              placeholder={t('rules.delayMsPlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label>
-              {t('waitAfterLoadMs', { defaultValue: 'Wait After Load (ms)' })}
-            </Label>
+            <Label>{t('rules.waitAfterLoadMs')}</Label>
             <Input
               type="number"
               min={0}
@@ -311,9 +275,7 @@ export function PaginationConfigForm({
                     : undefined,
                 })
               }
-              placeholder={t('waitAfterLoadMsPlaceholder', {
-                defaultValue: '500',
-              })}
+              placeholder={t('rules.waitAfterLoadMsPlaceholder')}
             />
           </div>
         </div>

@@ -23,74 +23,83 @@ interface RuleMetadataFormProps {
   onChange: (updates: Partial<CrawlerRule>) => void;
 }
 
-const mediaTypes: { value: MediaType; label: string }[] = [
-  { value: 'video', label: 'Video' },
-  { value: 'music', label: 'Music' },
-  { value: 'novel', label: 'Novel' },
-  { value: 'comic', label: 'Comic' },
-  { value: 'image', label: 'Image' },
-  { value: 'audio', label: 'Audio' },
-  { value: 'rss', label: 'RSS' },
-  { value: 'generic', label: 'Generic' },
+const mediaTypes: { value: MediaType }[] = [
+  { value: 'video' },
+  { value: 'music' },
+  { value: 'novel' },
+  { value: 'comic' },
+  { value: 'image' },
+  { value: 'audio' },
+  { value: 'rss' },
+  { value: 'generic' },
 ];
 
+// 媒体类型翻译键映射
+const mediaTypeKeys: Record<
+  MediaType,
+  | 'rules.mediaTypeVideo'
+  | 'rules.mediaTypeMusic'
+  | 'rules.mediaTypeNovel'
+  | 'rules.mediaTypeComic'
+  | 'rules.mediaTypeImage'
+  | 'rules.mediaTypeAudio'
+  | 'rules.mediaTypeRss'
+  | 'rules.mediaTypeGeneric'
+> = {
+  video: 'rules.mediaTypeVideo',
+  music: 'rules.mediaTypeMusic',
+  novel: 'rules.mediaTypeNovel',
+  comic: 'rules.mediaTypeComic',
+  image: 'rules.mediaTypeImage',
+  audio: 'rules.mediaTypeAudio',
+  rss: 'rules.mediaTypeRss',
+  generic: 'rules.mediaTypeGeneric',
+};
+
 export function RuleMetadataForm({ rule, onChange }: RuleMetadataFormProps) {
+  // 加载 common 和 rules namespace
   const { t } = useTranslation();
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          {t('ruleMetadata', { defaultValue: 'Rule Metadata' })}
-        </CardTitle>
-        <CardDescription>
-          {t('ruleMetadataDescription', {
-            defaultValue: 'Basic information about the rule',
-          })}
-        </CardDescription>
+        <CardTitle>{t('rules.ruleMetadata')}</CardTitle>
+        <CardDescription>{t('rules.ruleMetadataDescription')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="name">{t('ruleName')} *</Label>
+          <Label htmlFor="name">{t('rules.ruleName')} *</Label>
           <Input
             id="name"
             value={rule.name || ''}
             onChange={(e) => onChange({ name: e.target.value })}
-            placeholder={t('ruleNamePlaceholder', {
-              defaultValue: 'Enter rule name',
-            })}
+            placeholder={t('rules.ruleNamePlaceholder')}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="description">{t('ruleDescription')}</Label>
+          <Label htmlFor="description">{t('rules.ruleDescription')}</Label>
           <Input
             id="description"
             value={rule.description || ''}
             onChange={(e) => onChange({ description: e.target.value })}
-            placeholder={t('ruleDescriptionPlaceholder', {
-              defaultValue: 'Enter rule description',
-            })}
+            placeholder={t('rules.ruleDescriptionPlaceholder')}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="mediaType">{t('mediaType')} *</Label>
+          <Label htmlFor="mediaType">{t('rules.mediaType')} *</Label>
           <Select
             value={rule.mediaType || 'generic'}
             onValueChange={(value: MediaType) => onChange({ mediaType: value })}
           >
             <SelectTrigger>
-              <SelectValue
-                placeholder={t('selectMediaType', {
-                  defaultValue: 'Select media type',
-                })}
-              />
+              <SelectValue placeholder={t('rules.selectMediaType')} />
             </SelectTrigger>
             <SelectContent>
               {mediaTypes.map((type) => (
                 <SelectItem key={type.value} value={type.value}>
-                  {t(`mediaType.${type.value}`, { defaultValue: type.label })}
+                  {t(mediaTypeKeys[type.value])}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -98,21 +107,17 @@ export function RuleMetadataForm({ rule, onChange }: RuleMetadataFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="author">
-            {t('author', { defaultValue: 'Author' })}
-          </Label>
+          <Label htmlFor="author">{t('common.author')}</Label>
           <Input
             id="author"
             value={rule.author || ''}
             onChange={(e) => onChange({ author: e.target.value })}
-            placeholder={t('authorPlaceholder', {
-              defaultValue: 'Enter author name',
-            })}
+            placeholder={t('rules.authorPlaceholder')}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="tags">{t('tags', { defaultValue: 'Tags' })}</Label>
+          <Label htmlFor="tags">{t('rules.tags')}</Label>
           <Input
             id="tags"
             value={rule.tags?.join(', ') || ''}
@@ -124,9 +129,7 @@ export function RuleMetadataForm({ rule, onChange }: RuleMetadataFormProps) {
                   .filter(Boolean),
               })
             }
-            placeholder={t('tagsPlaceholder', {
-              defaultValue: 'Enter tags separated by commas',
-            })}
+            placeholder={t('rules.tagsPlaceholder')}
           />
         </div>
 
@@ -138,9 +141,7 @@ export function RuleMetadataForm({ rule, onChange }: RuleMetadataFormProps) {
             onChange={(e) => onChange({ enabled: e.target.checked })}
             className="h-4 w-4"
           />
-          <Label htmlFor="enabled">
-            {t('enabled', { defaultValue: 'Enabled' })}
-          </Label>
+          <Label htmlFor="enabled">{t('rules.enabled')}</Label>
         </div>
       </CardContent>
     </Card>

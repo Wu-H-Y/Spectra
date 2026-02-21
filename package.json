@@ -6,10 +6,11 @@
   "description": "Spectra 多媒体数据采集应用 - Git hooks 和代码质量工具",
   "scripts": {
     "prepare": "husky",
-    "lint:dart": "flutter analyze",
+    "build:web": "cd web-editor && bun run build",
+    "lint:dart": "dart analyze",
     "lint:web": "cd web-editor && bun run lint",
     "lint": "bun run lint:dart && bun run lint:web",
-    "format:dart": "dart format --fix .",
+    "format:dart": "dart format .",
     "format:web": "cd web-editor && bun run fmt",
     "format": "bun run format:dart && bun run format:web"
   },

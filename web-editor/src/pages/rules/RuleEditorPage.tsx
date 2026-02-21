@@ -154,20 +154,16 @@ export function RuleEditorPage() {
     if (applyCallback) {
       applyCallback(newSelector);
       setApplyCallback(null); // 清除回调
-      toast.success(t('selectorApplied', { defaultValue: 'Selector applied' }));
+      toast.success(t('preview.selectorApplied'));
     } else {
       // 没有活动的字段，显示选择器供用户复制
-      toast.success(
-        t('selectorCopied', {
-          defaultValue: `Selector: ${selector}`,
-        }),
-      );
+      toast.success(t('preview.selectorCopied'));
     }
   };
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-100">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     );
@@ -179,29 +175,21 @@ export function RuleEditorPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">
-            {isNew
-              ? t('newRule')
-              : t('editRule', { defaultValue: 'Edit Rule' })}
+            {isNew ? t('common.newRule') : t('rules.editRule')}
           </h2>
           <p className="text-muted-foreground">
-            {isNew
-              ? t('createNewRule', {
-                  defaultValue: 'Create a new crawler rule',
-                })
-              : t('editRuleDescription', {
-                  defaultValue: 'Modify the crawler rule',
-                })}
+            {isNew ? t('rules.createNewRule') : t('rules.editRuleDescription')}
           </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => navigate('/rules')}>
-            {t('cancel')}
+            {t('common.cancel')}
           </Button>
           <Button variant="outline" onClick={handleValidate}>
-            {t('validate', { defaultValue: 'Validate' })}
+            {t('rules.validate')}
           </Button>
           <Button onClick={handleSave} disabled={saveMutation.isPending}>
-            {t('save')}
+            {t('common.save')}
           </Button>
         </div>
       </div>
@@ -213,7 +201,7 @@ export function RuleEditorPage() {
           size="sm"
           onClick={() => toggleJsonMode()}
         >
-          {t('formMode', { defaultValue: 'Form' })}
+          {t('rules.formMode')}
         </Button>
         <Button
           variant={isJsonMode ? 'default' : 'outline'}
@@ -230,9 +218,7 @@ export function RuleEditorPage() {
           <CardHeader>
             <CardTitle>JSON Editor</CardTitle>
             <CardDescription>
-              {t('jsonEditorDescription', {
-                defaultValue: 'Edit the rule in JSON format',
-              })}
+              {t('rules.jsonEditorDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -254,24 +240,16 @@ export function RuleEditorPage() {
       ) : (
         <Tabs defaultValue="metadata" className="space-y-4">
           <TabsList className="grid w-full grid-cols-8">
-            <TabsTrigger value="metadata">
-              {t('metadata', { defaultValue: 'Metadata' })}
-            </TabsTrigger>
-            <TabsTrigger value="url">{t('urlMatching')}</TabsTrigger>
-            <TabsTrigger value="request">
-              {t('request', { defaultValue: 'Request' })}
-            </TabsTrigger>
-            <TabsTrigger value="fields">
-              {t('fields', { defaultValue: 'Fields' })}
-            </TabsTrigger>
+            <TabsTrigger value="metadata">{t('rules.metadata')}</TabsTrigger>
+            <TabsTrigger value="url">{t('rules.urlMatching')}</TabsTrigger>
+            <TabsTrigger value="request">{t('rules.request')}</TabsTrigger>
+            <TabsTrigger value="fields">{t('rules.fields')}</TabsTrigger>
             <TabsTrigger value="pagination">
-              {t('pagination', { defaultValue: 'Pagination' })}
+              {t('rules.pagination')}
             </TabsTrigger>
-            <TabsTrigger value="actions">{t('actions')}</TabsTrigger>
-            <TabsTrigger value="detection">
-              {t('detection', { defaultValue: 'Detection' })}
-            </TabsTrigger>
-            <TabsTrigger value="preview">{t('preview')}</TabsTrigger>
+            <TabsTrigger value="actions">{t('rules.actions')}</TabsTrigger>
+            <TabsTrigger value="detection">{t('rules.detection')}</TabsTrigger>
+            <TabsTrigger value="preview">{t('preview.preview')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="metadata">
@@ -340,15 +318,9 @@ export function RuleEditorPage() {
           <TabsContent value="detection">
             <Card>
               <CardHeader>
-                <CardTitle>
-                  {t('detectionConfig', {
-                    defaultValue: 'Detection Configuration',
-                  })}
-                </CardTitle>
+                <CardTitle>{t('rules.detectionConfig')}</CardTitle>
                 <CardDescription>
-                  {t('detectionConfigDescription', {
-                    defaultValue: 'Configure anti-crawl detection',
-                  })}
+                  {t('rules.detectionConfigDescription')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -368,9 +340,7 @@ export function RuleEditorPage() {
                     className="h-4 w-4"
                   />
                   <Label htmlFor="detectCloudflare">
-                    {t('detectCloudflare', {
-                      defaultValue: 'Detect Cloudflare',
-                    })}
+                    {t('rules.detectCloudflare')}
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -388,9 +358,7 @@ export function RuleEditorPage() {
                     }
                     className="h-4 w-4"
                   />
-                  <Label htmlFor="autoRetry">
-                    {t('autoRetry', { defaultValue: 'Auto Retry' })}
-                  </Label>
+                  <Label htmlFor="autoRetry">{t('rules.autoRetry')}</Label>
                 </div>
               </CardContent>
             </Card>
@@ -421,8 +389,8 @@ export function RuleEditorPage() {
           <CardHeader>
             <CardTitle>
               {validateMutation.data.valid
-                ? t('validationPassed', { defaultValue: 'Validation Passed' })
-                : t('validationFailed', { defaultValue: 'Validation Failed' })}
+                ? t('rules.validationPassed')
+                : t('rules.validationFailed')}
             </CardTitle>
           </CardHeader>
           {validateMutation.data.errors.length > 0 && (

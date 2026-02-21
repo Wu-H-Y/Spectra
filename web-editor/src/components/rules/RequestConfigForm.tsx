@@ -39,19 +39,15 @@ export function RequestConfigForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          {t('requestConfiguration', { defaultValue: 'Request Configuration' })}
-        </CardTitle>
+        <CardTitle>{t('rules.requestConfiguration')}</CardTitle>
         <CardDescription>
-          {t('requestConfigurationDescription', {
-            defaultValue: 'Configure how requests are made',
-          })}
+          {t('rules.requestConfigurationDescription')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label>{t('method', { defaultValue: 'HTTP Method' })}</Label>
+            <Label>{t('rules.method')}</Label>
             <Select
               value={request.method || 'GET'}
               onValueChange={(value) => updateField('method', value)}
@@ -69,7 +65,7 @@ export function RequestConfigForm({
           </div>
 
           <div className="space-y-2">
-            <Label>{t('timeout', { defaultValue: 'Timeout (ms)' })}</Label>
+            <Label>{t('rules.timeout')}</Label>
             <Input
               type="number"
               value={request.timeoutMs || 30000}
@@ -81,13 +77,11 @@ export function RequestConfigForm({
         </div>
 
         <div className="space-y-2">
-          <Label>{t('userAgent', { defaultValue: 'User Agent' })}</Label>
+          <Label>{t('rules.userAgent')}</Label>
           <Input
             value={request.userAgent || ''}
             onChange={(e) => updateField('userAgent', e.target.value)}
-            placeholder={t('userAgentPlaceholder', {
-              defaultValue: 'Custom user agent string',
-            })}
+            placeholder={t('rules.userAgentPlaceholder')}
           />
         </div>
 
@@ -99,26 +93,22 @@ export function RequestConfigForm({
             onChange={(e) => updateField('mobileUserAgent', e.target.checked)}
             className="h-4 w-4"
           />
-          <Label htmlFor="mobileUserAgent">
-            {t('mobileUserAgent', { defaultValue: 'Use mobile user agent' })}
-          </Label>
+          <Label htmlFor="mobileUserAgent">{t('rules.mobileUserAgent')}</Label>
         </div>
 
         <div className="space-y-2">
-          <Label>{t('referer', { defaultValue: 'Referer' })}</Label>
+          <Label>{t('rules.referer')}</Label>
           <Input
             value={request.referer || ''}
             onChange={(e) => updateField('referer', e.target.value)}
-            placeholder={t('refererPlaceholder', {
-              defaultValue: 'Referer URL',
-            })}
+            placeholder={t('rules.refererPlaceholder')}
           />
         </div>
 
         <div className="space-y-2">
-          <Label>{t('headers', { defaultValue: 'Custom Headers' })}</Label>
+          <Label>{t('rules.headers')}</Label>
           <textarea
-            className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="flex min-h-25 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             value={JSON.stringify(request.headers || {}, null, 2)}
             onChange={(e) => {
               try {
@@ -132,9 +122,9 @@ export function RequestConfigForm({
         </div>
 
         <div className="space-y-2">
-          <Label>{t('cookies', { defaultValue: 'Cookies' })}</Label>
+          <Label>{t('rules.cookies')}</Label>
           <textarea
-            className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="flex min-h-25 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             value={JSON.stringify(request.cookies || {}, null, 2)}
             onChange={(e) => {
               try {
@@ -157,14 +147,12 @@ export function RequestConfigForm({
               className="h-4 w-4"
             />
             <Label htmlFor="followRedirects">
-              {t('followRedirects', { defaultValue: 'Follow redirects' })}
+              {t('rules.followRedirects')}
             </Label>
           </div>
 
           <div className="space-y-2">
-            <Label>
-              {t('maxRedirects', { defaultValue: 'Max Redirects' })}
-            </Label>
+            <Label>{t('rules.maxRedirects')}</Label>
             <Input
               type="number"
               value={request.maxRedirects || 5}

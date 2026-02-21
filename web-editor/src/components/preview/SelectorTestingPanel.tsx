@@ -55,23 +55,17 @@ export function SelectorTestingPanel({
 
   const handleTest = async () => {
     if (!expression.trim()) {
-      toast.warning(
-        t('enterSelector', { defaultValue: 'Please enter a selector' }),
-      );
+      toast.warning(t('preview.enterSelector'));
       return;
     }
 
     if (!serverUrl) {
-      toast.error(
-        t('serverNotRunning', { defaultValue: 'Server is not running' }),
-      );
+      toast.error(t('preview.serverNotRunning'));
       return;
     }
 
     if (!previewUrl.trim()) {
-      toast.warning(
-        t('openPreviewFirst', { defaultValue: 'Please open a preview first' }),
-      );
+      toast.warning(t('preview.openPreviewFirst'));
       return;
     }
 
@@ -99,19 +93,12 @@ export function SelectorTestingPanel({
       setResult(data);
 
       if (data.success && data.count > 0) {
-        toast.success(
-          t('foundElements', {
-            defaultValue: `Found ${data.count} elements`,
-            count: data.count,
-          }),
-        );
+        toast.success(t('preview.foundElements', { count: data.count }));
       } else if (data.success && data.count === 0) {
-        toast.warning(
-          t('noElementsFound', { defaultValue: 'No elements found' }),
-        );
+        toast.warning(t('preview.noElementsFound'));
       }
     } catch {
-      toast.error(t('testError', { defaultValue: 'Failed to test selector' }));
+      toast.error(t('preview.testError'));
       setResult({
         success: false,
         count: 0,
@@ -128,18 +115,16 @@ export function SelectorTestingPanel({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Play className="h-5 w-5" />
-          {t('selectorTesting', { defaultValue: 'Selector Testing' })}
+          {t('preview.selectorTesting')}
         </CardTitle>
         <CardDescription>
-          {t('selectorTestingDescription', {
-            defaultValue: 'Test selectors on the preview page',
-          })}
+          {t('preview.selectorTestingDescription')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Selector Input */}
         <div className="space-y-2">
-          <Label>{t('selector', { defaultValue: 'Selector' })}</Label>
+          <Label>{t('preview.selector')}</Label>
           <div className="flex gap-2">
             <Select
               value={selectorType}
@@ -195,19 +180,16 @@ export function SelectorTestingPanel({
                     className="bg-green-100 text-green-800"
                   >
                     <Check className="h-3 w-3 mr-1" />
-                    {t('success', { defaultValue: 'Success' })}
+                    {t('preview.success')}
                   </Badge>
                   <span className="text-sm text-muted-foreground">
-                    {t('elementsFound', {
-                      defaultValue: '{{count}} elements found',
-                      count: result.count,
-                    })}
+                    {t('preview.elementsFound', { count: result.count })}
                   </span>
                 </>
               ) : (
                 <Badge variant="outline" className="bg-red-100 text-red-800">
                   <X className="h-3 w-3 mr-1" />
-                  {t('failed', { defaultValue: 'Failed' })}
+                  {t('preview.failed')}
                 </Badge>
               )}
             </div>
@@ -221,7 +203,7 @@ export function SelectorTestingPanel({
                 {result.elements.slice(0, 10).map((el, index) => (
                   <div key={index} className="p-2 bg-muted rounded text-sm">
                     <div className="font-medium mb-1">
-                      {t('element', { defaultValue: 'Element' })} #{index + 1}
+                      {t('preview.element')} #{index + 1}
                     </div>
                     {el.text && (
                       <p className="text-muted-foreground line-clamp-2 mb-1">
@@ -236,8 +218,7 @@ export function SelectorTestingPanel({
                 ))}
                 {result.elements.length > 10 && (
                   <p className="text-xs text-muted-foreground text-center">
-                    {t('andMore', {
-                      defaultValue: 'And {{count}} more...',
+                    {t('preview.andMore', {
                       count: result.elements.length - 10,
                     })}
                   </p>

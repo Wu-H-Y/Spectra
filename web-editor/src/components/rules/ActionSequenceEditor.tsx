@@ -123,21 +123,15 @@ export function ActionSequenceEditor({
       {/* 提取前动作 */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            {t('beforeActions', { defaultValue: 'Before Actions' })}
-          </CardTitle>
+          <CardTitle>{t('rules.beforeActions')}</CardTitle>
           <CardDescription>
-            {t('beforeActionsDescription', {
-              defaultValue: 'Actions to execute before extraction',
-            })}
+            {t('rules.beforeActionsDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {beforeActions.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              {t('noBeforeActions', {
-                defaultValue: 'No before actions configured',
-              })}
+              {t('rules.noBeforeActions')}
             </p>
           ) : (
             <div className="space-y-3">
@@ -161,7 +155,7 @@ export function ActionSequenceEditor({
             onClick={() => addAction('before')}
           >
             <Plus className="h-4 w-4 mr-2" />
-            {t('addBeforeAction', { defaultValue: 'Add Before Action' })}
+            {t('rules.addBeforeAction')}
           </Button>
         </CardContent>
       </Card>
@@ -169,21 +163,15 @@ export function ActionSequenceEditor({
       {/* 提取后动作 */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            {t('afterActions', { defaultValue: 'After Actions' })}
-          </CardTitle>
+          <CardTitle>{t('rules.afterActions')}</CardTitle>
           <CardDescription>
-            {t('afterActionsDescription', {
-              defaultValue: 'Actions to execute after extraction',
-            })}
+            {t('rules.afterActionsDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {afterActions.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              {t('noAfterActions', {
-                defaultValue: 'No after actions configured',
-              })}
+              {t('rules.noAfterActions')}
             </p>
           ) : (
             <div className="space-y-3">
@@ -207,7 +195,7 @@ export function ActionSequenceEditor({
             onClick={() => addAction('after')}
           >
             <Plus className="h-4 w-4 mr-2" />
-            {t('addAfterAction', { defaultValue: 'Add After Action' })}
+            {t('rules.addAfterAction')}
           </Button>
         </CardContent>
       </Card>
@@ -245,9 +233,7 @@ function ActionItem({
       case 'wait':
         return (
           <div className="space-y-2">
-            <Label className="text-xs">
-              {t('durationMs', { defaultValue: 'Duration (ms)' })}
-            </Label>
+            <Label className="text-xs">{t('rules.durationMs')}</Label>
             <Input
               type="number"
               min={0}
@@ -258,9 +244,7 @@ function ActionItem({
                   e.target.value ? parseInt(e.target.value, 10) : 0,
                 )
               }
-              placeholder={t('durationPlaceholder', {
-                defaultValue: 'e.g., 1000',
-              })}
+              placeholder={t('rules.durationPlaceholder')}
             />
           </div>
         );
@@ -268,15 +252,11 @@ function ActionItem({
       case 'click':
         return (
           <div className="space-y-2">
-            <Label className="text-xs">
-              {t('selector', { defaultValue: 'Selector' })}
-            </Label>
+            <Label className="text-xs">{t('rules.selector')}</Label>
             <Input
               value={(action.params.selector as string) || ''}
               onChange={(e) => updateParams('selector', e.target.value)}
-              placeholder={t('clickSelectorPlaceholder', {
-                defaultValue: 'e.g., button.submit',
-              })}
+              placeholder={t('rules.clickSelectorPlaceholder')}
             />
           </div>
         );
@@ -285,9 +265,7 @@ function ActionItem({
         return (
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label className="text-xs">
-                {t('scrollTo', { defaultValue: 'Scroll To' })}
-              </Label>
+              <Label className="text-xs">{t('rules.scrollTo')}</Label>
               <Select
                 value={(action.params.scrollTo as string) || 'bottom'}
                 onValueChange={(value) => updateParams('scrollTo', value)}
@@ -296,29 +274,23 @@ function ActionItem({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="top">
-                    {t('scrollTop', { defaultValue: 'Top' })}
-                  </SelectItem>
+                  <SelectItem value="top">{t('rules.scrollTop')}</SelectItem>
                   <SelectItem value="bottom">
-                    {t('scrollBottom', { defaultValue: 'Bottom' })}
+                    {t('rules.scrollBottom')}
                   </SelectItem>
                   <SelectItem value="element">
-                    {t('scrollElement', { defaultValue: 'Element' })}
+                    {t('rules.scrollElement')}
                   </SelectItem>
                 </SelectContent>
               </Select>
             </div>
             {action.params.scrollTo === 'element' && (
               <div className="space-y-2">
-                <Label className="text-xs">
-                  {t('scrollSelector', { defaultValue: 'Selector' })}
-                </Label>
+                <Label className="text-xs">{t('rules.scrollSelector')}</Label>
                 <Input
                   value={(action.params.selector as string) || ''}
                   onChange={(e) => updateParams('selector', e.target.value)}
-                  placeholder={t('scrollSelectorPlaceholder', {
-                    defaultValue: 'e.g., .target',
-                  })}
+                  placeholder={t('rules.scrollSelectorPlaceholder')}
                 />
               </div>
             )}
@@ -329,27 +301,19 @@ function ActionItem({
         return (
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label className="text-xs">
-                {t('fillSelector', { defaultValue: 'Selector' })}
-              </Label>
+              <Label className="text-xs">{t('rules.fillSelector')}</Label>
               <Input
                 value={(action.params.selector as string) || ''}
                 onChange={(e) => updateParams('selector', e.target.value)}
-                placeholder={t('fillSelectorPlaceholder', {
-                  defaultValue: 'e.g., input[name="q"]',
-                })}
+                placeholder={t('rules.fillSelectorPlaceholder')}
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs">
-                {t('fillValue', { defaultValue: 'Value' })}
-              </Label>
+              <Label className="text-xs">{t('rules.fillValue')}</Label>
               <Input
                 value={(action.params.value as string) || ''}
                 onChange={(e) => updateParams('value', e.target.value)}
-                placeholder={t('fillValuePlaceholder', {
-                  defaultValue: 'Text to fill',
-                })}
+                placeholder={t('rules.fillValuePlaceholder')}
               />
             </div>
           </div>
@@ -358,17 +322,12 @@ function ActionItem({
       case 'script':
         return (
           <div className="space-y-2">
-            <Label className="text-xs">
-              {t('scriptCode', { defaultValue: 'JavaScript Code' })}
-            </Label>
+            <Label className="text-xs">{t('rules.scriptCode')}</Label>
             <textarea
-              className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-mono ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="flex min-h-25 w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-mono ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               value={(action.params.code as string) || ''}
               onChange={(e) => updateParams('code', e.target.value)}
-              placeholder={t('scriptCodePlaceholder', {
-                defaultValue:
-                  'e.g., document.querySelector(".content").innerText',
-              })}
+              placeholder={t('rules.scriptCodePlaceholder')}
             />
           </div>
         );
@@ -376,15 +335,11 @@ function ActionItem({
       case 'condition':
         return (
           <div className="space-y-2">
-            <Label className="text-xs">
-              {t('conditionExpression', { defaultValue: 'Condition' })}
-            </Label>
+            <Label className="text-xs">{t('rules.conditionExpression')}</Label>
             <Input
               value={(action.params.condition as string) || ''}
               onChange={(e) => updateParams('condition', e.target.value)}
-              placeholder={t('conditionPlaceholder', {
-                defaultValue: 'e.g., document.querySelector(".error") === null',
-              })}
+              placeholder={t('rules.conditionPlaceholder')}
             />
           </div>
         );
@@ -393,9 +348,7 @@ function ActionItem({
         return (
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label className="text-xs">
-                {t('loopCount', { defaultValue: 'Count' })}
-              </Label>
+              <Label className="text-xs">{t('rules.loopCount')}</Label>
               <Input
                 type="number"
                 min={1}
@@ -406,15 +359,11 @@ function ActionItem({
                     e.target.value ? parseInt(e.target.value, 10) : 1,
                   )
                 }
-                placeholder={t('loopCountPlaceholder', {
-                  defaultValue: 'Number of iterations',
-                })}
+                placeholder={t('rules.loopCountPlaceholder')}
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs">
-                {t('loopDelay', { defaultValue: 'Delay (ms)' })}
-              </Label>
+              <Label className="text-xs">{t('rules.loopDelay')}</Label>
               <Input
                 type="number"
                 min={0}
@@ -425,9 +374,7 @@ function ActionItem({
                     e.target.value ? parseInt(e.target.value, 10) : 0,
                   )
                 }
-                placeholder={t('loopDelayPlaceholder', {
-                  defaultValue: 'Delay between iterations',
-                })}
+                placeholder={t('rules.loopDelayPlaceholder')}
               />
             </div>
           </div>
@@ -449,7 +396,7 @@ function ActionItem({
               onChange({ type: value, params: {} })
             }
           >
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-35">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

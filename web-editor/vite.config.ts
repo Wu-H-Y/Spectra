@@ -12,6 +12,20 @@ export default defineConfig({
   build: {
     outDir: '../assets/editor',
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // React 核心
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          // UI 组件库
+          'vendor-ui': ['radix-ui', 'lucide-react'],
+          // 数据获取和状态管理
+          'vendor-data': ['@tanstack/react-query', 'zustand'],
+          // 编辑器
+          'vendor-editor': ['@monaco-editor/react'],
+        },
+      },
+    },
   },
 
   // Development server proxy to Flutter backend

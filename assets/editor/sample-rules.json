@@ -1,0 +1,474 @@
+{
+  "version": "1.0",
+  "exportedAt": "2025-01-01T00:00:00.000Z",
+  "rules": [
+    {
+      "id": "sample-video-bilibili",
+      "name": "B站视频规则示例",
+      "description": "Bilibili视频采集示例规则，用于演示视频类网站的规则配置",
+      "mediaType": "video",
+      "version": "1.0",
+      "author": "Spectra",
+      "tags": ["视频", "B站", "示例"],
+      "enabled": true,
+      "match": {
+        "pattern": "bilibili.com/video/",
+        "type": "regex",
+        "fullUrl": true
+      },
+      "request": {
+        "method": "GET",
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          "Referer": "https://www.bilibili.com"
+        },
+        "timeoutMs": 30000,
+        "followRedirects": true
+      },
+      "extract": {
+        "detail": {
+          "items": [
+            {
+              "field": "title",
+              "selector": {
+                "type": "css",
+                "expression": "h1.video-title"
+              },
+              "required": true
+            },
+            {
+              "field": "cover",
+              "selector": {
+                "type": "css",
+                "expression": "meta[property='og:image']",
+                "attribute": "content"
+              }
+            },
+            {
+              "field": "description",
+              "selector": {
+                "type": "css",
+                "expression": "div.desc-info-text"
+              }
+            },
+            {
+              "field": "author",
+              "selector": {
+                "type": "css",
+                "expression": "a.username"
+              }
+            },
+            {
+              "field": "playCount",
+              "selector": {
+                "type": "css",
+                "expression": "span.view-text"
+              },
+              "transforms": [
+                {
+                  "type": "parseNumber"
+                }
+              ]
+            },
+            {
+              "field": "duration",
+              "selector": {
+                "type": "css",
+                "expression": "span.duration"
+              }
+            }
+          ]
+        },
+        "content": {
+          "video": {
+            "jsExtract": "window.__playinfo__"
+          }
+        }
+      },
+      "detection": {
+        "detectCloudflare": true,
+        "autoRetry": true,
+        "maxRetries": 3
+      }
+    },
+    {
+      "id": "sample-novel-qidian",
+      "name": "起点小说规则示例",
+      "description": "起点中文网小说采集示例规则，用于演示小说类网站的规则配置",
+      "mediaType": "novel",
+      "version": "1.0",
+      "author": "Spectra",
+      "tags": ["小说", "起点", "示例"],
+      "enabled": true,
+      "match": {
+        "pattern": "qidian.com/.*book/.*",
+        "type": "regex",
+        "fullUrl": true
+      },
+      "request": {
+        "method": "GET",
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        },
+        "timeoutMs": 30000
+      },
+      "extract": {
+        "detail": {
+          "items": [
+            {
+              "field": "title",
+              "selector": {
+                "type": "css",
+                "expression": "h1.book-name"
+              },
+              "required": true
+            },
+            {
+              "field": "cover",
+              "selector": {
+                "type": "css",
+                "expression": "div.book-img img",
+                "attribute": "src"
+              }
+            },
+            {
+              "field": "author",
+              "selector": {
+                "type": "css",
+                "expression": "a.writer"
+              }
+            },
+            {
+              "field": "description",
+              "selector": {
+                "type": "css",
+                "expression": "div.book-intro p"
+              }
+            },
+            {
+              "field": "category",
+              "selector": {
+                "type": "css",
+                "expression": "a.tag"
+              }
+            },
+            {
+              "field": "wordCount",
+              "selector": {
+                "type": "css",
+                "expression": "em.count"
+              },
+              "transforms": [
+                {
+                  "type": "parseNumber"
+                }
+              ]
+            }
+          ],
+          "chapters": {
+            "container": {
+              "type": "css",
+              "expression": "div.volume-wrap"
+            },
+            "items": [
+              {
+                "field": "title",
+                "selector": {
+                  "type": "css",
+                  "expression": "a.chapter-item"
+                }
+              },
+              {
+                "field": "url",
+                "selector": {
+                  "type": "css",
+                  "expression": "a.chapter-item",
+                  "attribute": "href"
+                }
+              }
+            ]
+          }
+        },
+        "content": {
+          "novel": {
+            "content": {
+              "type": "css",
+              "expression": "div.read-content"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "sample-comic-manhua",
+      "name": "漫画网站规则示例",
+      "description": "通用漫画网站采集示例规则，用于演示漫画类网站的规则配置",
+      "mediaType": "comic",
+      "version": "1.0",
+      "author": "Spectra",
+      "tags": ["漫画", "示例"],
+      "enabled": true,
+      "match": {
+        "pattern": "*/manhua/*",
+        "type": "glob",
+        "fullUrl": true
+      },
+      "request": {
+        "method": "GET",
+        "timeoutMs": 30000
+      },
+      "extract": {
+        "list": {
+          "container": {
+            "type": "css",
+            "expression": "div.comic-list"
+          },
+          "items": [
+            {
+              "field": "title",
+              "selector": {
+                "type": "css",
+                "expression": "a.title"
+              },
+              "required": true
+            },
+            {
+              "field": "cover",
+              "selector": {
+                "type": "css",
+                "expression": "img.cover",
+                "attribute": "src"
+              }
+            },
+            {
+              "field": "url",
+              "selector": {
+                "type": "css",
+                "expression": "a.title",
+                "attribute": "href"
+              }
+            }
+          ],
+          "pagination": {
+            "type": "url",
+            "urlTemplate": "/manhua/page/{page}",
+            "maxPages": 10
+          }
+        },
+        "detail": {
+          "items": [
+            {
+              "field": "title",
+              "selector": {
+                "type": "css",
+                "expression": "h1.comic-title"
+              }
+            },
+            {
+              "field": "author",
+              "selector": {
+                "type": "css",
+                "expression": "span.author"
+              }
+            },
+            {
+              "field": "status",
+              "selector": {
+                "type": "css",
+                "expression": "span.status"
+              }
+            }
+          ],
+          "chapters": {
+            "container": {
+              "type": "css",
+              "expression": "div.chapter-list"
+            },
+            "items": [
+              {
+                "field": "title",
+                "selector": {
+                  "type": "css",
+                  "expression": "a"
+                }
+              },
+              {
+                "field": "url",
+                "selector": {
+                  "type": "css",
+                  "expression": "a",
+                  "attribute": "href"
+                }
+              }
+            ]
+          }
+        },
+        "content": {
+          "comic": {
+            "images": {
+              "type": "css",
+              "expression": "div.comic-content img",
+              "attribute": "src"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "sample-music-generic",
+      "name": "音乐网站规则示例",
+      "description": "通用音乐网站采集示例规则，用于演示音乐类网站的规则配置",
+      "mediaType": "music",
+      "version": "1.0",
+      "author": "Spectra",
+      "tags": ["音乐", "示例"],
+      "enabled": true,
+      "match": {
+        "pattern": "*/music/*",
+        "type": "glob",
+        "fullUrl": true
+      },
+      "request": {
+        "method": "GET",
+        "timeoutMs": 30000
+      },
+      "extract": {
+        "list": {
+          "container": {
+            "type": "css",
+            "expression": "div.song-list"
+          },
+          "items": [
+            {
+              "field": "title",
+              "selector": {
+                "type": "css",
+                "expression": "span.song-title"
+              },
+              "required": true
+            },
+            {
+              "field": "artist",
+              "selector": {
+                "type": "css",
+                "expression": "span.artist-name"
+              }
+            },
+            {
+              "field": "album",
+              "selector": {
+                "type": "css",
+                "expression": "span.album-name"
+              }
+            },
+            {
+              "field": "duration",
+              "selector": {
+                "type": "css",
+                "expression": "span.duration"
+              }
+            }
+          ]
+        },
+        "content": {
+          "music": {
+            "audioUrl": {
+              "type": "jsonpath",
+              "expression": "$.data.url"
+            },
+            "lyrics": {
+              "type": "css",
+              "expression": "div.lyrics-content"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "sample-image-gallery",
+      "name": "图库网站规则示例",
+      "description": "通用图库网站采集示例规则，用于演示图片类网站的规则配置",
+      "mediaType": "image",
+      "version": "1.0",
+      "author": "Spectra",
+      "tags": ["图片", "图库", "示例"],
+      "enabled": true,
+      "match": {
+        "pattern": "*/gallery/*",
+        "type": "glob",
+        "fullUrl": true
+      },
+      "request": {
+        "method": "GET",
+        "timeoutMs": 30000
+      },
+      "extract": {
+        "list": {
+          "container": {
+            "type": "css",
+            "expression": "div.gallery-grid"
+          },
+          "items": [
+            {
+              "field": "title",
+              "selector": {
+                "type": "css",
+                "expression": "a.gallery-item"
+              }
+            },
+            {
+              "field": "thumbnail",
+              "selector": {
+                "type": "css",
+                "expression": "img.thumbnail",
+                "attribute": "src"
+              }
+            },
+            {
+              "field": "url",
+              "selector": {
+                "type": "css",
+                "expression": "a.gallery-item",
+                "attribute": "href"
+              }
+            }
+          ],
+          "pagination": {
+            "type": "infiniteScroll",
+            "scrollContainer": {
+              "type": "css",
+              "expression": "div.gallery-container"
+            },
+            "maxPages": 5,
+            "waitAfterLoadMs": 2000
+          }
+        },
+        "detail": {
+          "items": [
+            {
+              "field": "title",
+              "selector": {
+                "type": "css",
+                "expression": "h1.gallery-title"
+              }
+            },
+            {
+              "field": "description",
+              "selector": {
+                "type": "css",
+                "expression": "div.gallery-description"
+              }
+            },
+            {
+              "field": "tags",
+              "selector": {
+                "type": "css",
+                "expression": "a.tag"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

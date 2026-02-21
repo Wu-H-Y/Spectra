@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:spectra/core/crawler/models/models.dart';
 import 'package:spectra/core/crawler/executor/transform_pipeline.dart';
+import 'package:spectra/core/crawler/models/models.dart';
 
 void main() {
   group('CrawlerRule', () {
@@ -45,7 +45,7 @@ void main() {
           pattern: '*/video/*',
           type: MatchPatternType.glob,
         ),
-        extract: const ExtractConfig(),
+        extract: ExtractConfig(),
       );
 
       expect(rule.match.type, MatchPatternType.glob);
@@ -78,8 +78,8 @@ void main() {
         type: SelectorType.css,
         expression: '.title',
         fallbacks: [
-          const Selector(type: SelectorType.css, expression: 'h1'),
-          const Selector(type: SelectorType.xpath, expression: '//h1'),
+          Selector(type: SelectorType.css, expression: 'h1'),
+          Selector(type: SelectorType.xpath, expression: '//h1'),
         ],
       );
 
@@ -91,12 +91,12 @@ void main() {
     test('should create field mapping with transforms', () {
       const mapping = FieldMapping(
         field: 'viewCount',
-        selector: const Selector(
+        selector: Selector(
           type: SelectorType.css,
           expression: '.views',
         ),
         transforms: [
-          const Transform(type: TransformType.number),
+          Transform(type: TransformType.number),
         ],
       );
 
@@ -120,7 +120,7 @@ void main() {
     test('should create click pagination', () {
       const pagination = PaginationConfig(
         type: PaginationType.click,
-        clickSelector: const Selector(
+        clickSelector: Selector(
           type: SelectorType.css,
           expression: '.next-page',
         ),
@@ -133,7 +133,7 @@ void main() {
     test('should create infinite scroll pagination', () {
       const pagination = PaginationConfig(
         type: PaginationType.infiniteScroll,
-        scrollContainer: const Selector(
+        scrollContainer: Selector(
           type: SelectorType.css,
           expression: '.content',
         ),
@@ -220,9 +220,7 @@ void main() {
   group('DetectionConfig', () {
     test('should create captcha detection config', () {
       const config = DetectionConfig(
-        captcha: CaptchaDetection(
-          detectHcaptcha: true,
-        ),
+        captcha: CaptchaDetection(),
       );
 
       expect(config.captcha?.detectRecaptcha, isTrue);

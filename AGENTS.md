@@ -1,125 +1,51 @@
-# CLAUDE.md
+# SPECTRA 项目知识库
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+**Generated:** 2026-02-21
+**Commit:** 8d1f27c
+**Branch:** feature/architecture
 
-## Project Overview
+## OVERVIEW
 
-Spectra 是一款跨平台多媒体数据采集应用，支持视频、音乐、小说、漫画、图片的采集，通过自定义爬虫规则系统实现灵活的数据提取。
+跨平台多媒体数据采集应用，通过自定义爬虫规则系统实现视频/音乐/小说/漫画/图片的采集。
 
-**技术栈**: Flutter 3.x / Dart 3.x / Material 3 / Riverpod 3.x / fpdart 1.x
+**Stack**: Flutter 3.x / Dart 3.x / Material 3 / Riverpod 3.x / fpdart 1.x / relic 1.x
 
-**状态管理**: hooks_riverpod + flutter_hooks
+## WHERE TO LOOK
 
-**函数式编程**: fpdart (Either, TaskEither, Option)
+| Task | Location | Notes |
+|------|----------|-------|
+| 添加新功能 | `lib/features/<feature>/` | Clean Architecture: data/domain/presentation |
+| 修改路由 | `lib/core/router/app_router.dart` | 使用 `@TypedGoRoute` 注解 |
+| 全局状态 | `lib/shared/providers/` | Riverpod providers |
+| 爬虫规则 | `lib/core/crawler/` | 详见 `lib/core/crawler/AGENTS.md` |
+| 主题定制 | `lib/core/theme/tokens/` | 设计令牌架构 |
+| 数据库 | `lib/core/database/` | Drift (SQLite) + Hive CE |
+| HTTP 服务 | `lib/core/server/` | relic 服务器 |
+| 国际化 | `lib/l10n/intl_*.arb` | 主语言: zh |
+| 错误处理 | `lib/core/errors/`, `lib/core/functional/` | sealed class + fpdart |
+| Web 编辑器 | `web-editor/` | React + TypeScript + Vite |
 
-**HTTP 服务器**: relic 1.x
-
-**平台**: Android, iOS, Windows, macOS, Linux
-
-## Development Commands
+## COMMANDS
 
 ```bash
-# 安装依赖
-flutter pub get
-
-# 运行应用 (使用 MCP dart 工具优先)
-flutter run
+# 开发
+flutter pub get                    # 安装依赖
+flutter run                        # 运行应用
+bun install                        # 初始化 Git Hooks
 
 # 代码生成 (修改注解类后必须运行)
 dart run build_runner build --delete-conflicting-outputs
 
-# 静态分析
-flutter analyze
+# 质量检查
+flutter analyze --fatal-infos      # 静态分析 (CI 使用 --fatal-infos)
+dart format .                      # 格式化
+flutter test                       # 测试
 
-# 格式化代码
-dart format .
-
-# 运行测试
-flutter test
-
-# 运行单个测试文件
-flutter test test/path/to/test.dart
-
-# 构建发布版本
-flutter build <platform> --release  # platform: apk, ios, windows, macos, linux
+# 构建
+flutter build <platform> --release # platform: apk, ios, windows, macos, linux
 ```
 
-## Architecture: Feature-First Clean Architecture
-
-项目采用 Feature-First Clean Architecture 架构，按功能模块组织代码。
-
-```
-lib/
-├── core/                    # 共享基础设施
-│   ├── constants/          # 常量定义
-│   ├── database/           # 数据库 (Drift + Hive)
-│   │   ├── drift/          # 关系型数据 (SQLite)
-│   │   └── hive/           # 键值存储
-│   ├── router/             # 路由配置 (go_router)
-│   ├── theme/              # 主题系统 (设计令牌架构)
-│   ├── crawler/            # 爬虫规则引擎
-│   └── utils/              # 工具类
-├── features/               # 功能模块
-│   └── <feature>/
-│       ├── data/           # 数据层: datasources, models, repositories
-│       ├── domain/         # 领域层: entities, repositories (接口), usecases
-│       └── presentation/   # 表示层: providers, pages, widgets
-├── shared/                 # 跨功能共享组件
-│   ├── providers/          # 全局 Providers
-│   └── widgets/            # 通用 Widgets
-└── l10n/                   # 国际化 (ARB 格式)
-    ├── app_en.arb          # 英文翻译
-    ├── app_zh.arb          # 中文翻译
-    └── generated/          # 生成的本地化类
-```
-
-## Key Technologies & Patterns
-
-### State Management: Riverpod
-
-- 使用 `flutter_riverpod` + `riverpod_generator` 进行代码生成
-- Provider 定义使用 `@riverpod` 注解，继承 `_$ClassName`
-- 全局 Providers 放在 `lib/shared/providers/`
-- 功能特定 Providers 放在 `lib/features/<feature>/presentation/providers/`
-
-```dart
-@riverpod
-class Example extends _$Example {
-  @override
-  String build() => 'initial';
-}
-```
-
-### Routing: go_router
-
-- 使用 `@TypedGoRoute` 注解定义类型安全路由
-- 路由通过 Riverpod Provider 暴露: `ref.watch(routerProvider)`
-- 导航使用: `context.push(const HomeRoute())`
-
-### Database: Dual Strategy
-
-- **Drift** (SQLite): 关系型数据，用于爬虫规则、内容、任务等
-- **Hive CE**: 键值存储，用于用户设置、缓存、凭证等
-- 两者都使用 `build_runner` 生成代码
-
-### Localization: gen_l10n
-
-- ARB 文件位于 `lib/l10n/app_<locale>.arb`
-- 使用 `AppLocalizations.of(context)!.stringKey` 访问翻译
-- 支持中文和英文
-
-### Code Generation
-
-项目广泛使用代码生成:
-
-- `riverpod_generator`: Provider 生成
-- `go_router_builder`: 路由生成
-- `drift_dev`: 数据库代码生成
-- `hive_ce_generator`: Hive 适配器生成
-- `freezed`: 不可变数据类
-- `json_serializable`: JSON 序列化
-
-**修改任何带注解的文件后，必须运行 build_runner。**
+**重要**: Git Hooks 必须 全部通过，禁止使用 `--no-verify` 跳过。
 
 ## Coding Standards
 
@@ -138,77 +64,46 @@ class Example extends _$Example {
 - 使用 `flutter_lints` + `very_good_analysis`
 - 生成的代码 (`*.g.dart`, `*.freezed.dart`) 已排除分析
 
-### Documentation Language Standards
+## ANTI-PATTERNS (禁止模式)
+
+| 禁止 | 替代方案 | 原因 |
+|------|---------|------|
+| `print()` / `debugPrint()` / `log()` | `talker.debug()` / `talker.info()` | 统一日志系统 |
+| `Text('登录')` | `Text(S.current.loginButton)` | UI 文本必须国际化 |
+| 在 `if`/`for`/嵌套函数中调用 Hooks | 顶层无条件调用 | Hooks 规则 |
+| `e.toString()` 展示给用户 | `failure.localizedMessage(context)` | 错误国际化 |
+| 直接使用 `String` 类型错误 | `sealed class AppFailure` | 类型安全错误处理 |
+
+## UNIQUE STYLES (项目特有)
+
+### 函数式错误处理
+
+使用 fpdart 的 `Either<Failure, T>` 替代异常：
+
+```dart
+// 业务逻辑返回 Either
+Future<Either<Failure, User>> getUser(String id);
+
+// UI 层使用 EitherBuilder
+EitherBuilder<User>(
+  either: userEither,
+  data: (user) => UserCard(user: user),
+  error: (failure) => FailureWidget(failure: failure),
+)
+```
+
+### 双数据库策略
+
+- **Drift (SQLite)**: 关系型数据 — 爬虫规则、内容、任务
+- **Hive CE**: 键值存储 — 用户设置、缓存、凭证
+
+### Documentation Language
 
 项目采用统一的中文文档和注释规范：
 
-#### 代码注释
-
-所有 Dart 源代码中的注释**必须使用中文**：
-
-```dart
-/// 用户服务
-/// 
-/// 提供用户相关的业务逻辑处理。
-class UserService {
-  /// 当前登录用户
-  User? currentUser;
-  
-  /// 获取用户信息
-  /// 
-  /// [userId] 用户唯一标识
-  /// 返回用户信息，如果用户不存在则返回 null
-  Future<User?> getUser(String userId) async {
-    // 实现逻辑...
-  }
-}
-```
-
-#### 日志输出
-
-所有日志输出**必须使用中文**：
-
-```dart
-// 正确 ✓
-talker.info('用户登录成功: ${user.name}');
-talker.error('网络请求失败: $e');
-
-// 错误 ✗
-talker.info('User logged in: ${user.name}');
-```
-
-#### UI 文本国际化
-
-UI 上显示的文本**必须通过国际化系统访问**，禁止硬编码：
-
-```dart
-// 正确 ✓
-Text(S.current.loginButton)
-Text(AppLocalizations.of(context)!.welcomeMessage)
-
-// 错误 ✗
-Text('登录')
-Text('Login')
-```
-
-新增 UI 文本时必须同时更新：
-- `lib/l10n/app_zh.arb` - 中文翻译
-- `lib/l10n/app_en.arb` - 英文翻译
-
-#### OpenSpec 文档
-
-所有 OpenSpec 变更文档**必须使用中文**：
-- `proposal.md`
-- `design.md`
-- `specs/**/*.md`
-- `tasks.md`
-
-#### 例外情况
-
-以下情况不强制使用中文：
-- 第三方库或生成代码中的注释
-- 测试代码中的断言消息
-- 技术术语（如 API、HTTP、JSON）
+- 代码注释/日志输出**必须使用中文**
+- UI 文本**必须通过国际化系统访问** (`S.current.xxx`)
+- 例外：第三方库注释、测试断言、技术术语
 
 ## Commit Convention
 
@@ -251,23 +146,7 @@ Text('Login')
 
 1. **context7 MCP**: 使用 `resolve-library-id` 和 `query-docs` 查询库文档
 2. **pub.dev**: 使用 `pub_dev_search` 搜索包信息
-3. **网页爬取**: 使用 `web_reader` 或 `fetch` MCP 工具获取:
-   - GitHub README.md
-   - 官方文档网站
-   - API 参考文档
-4. **Dart doc**: 查看本地或在线 API 文档
+3. **网页爬取**: 使用 `fetch` MCP 工具获取官方文档
+4. **shadcn-ui**: 优先使用mcp工具和[llms.txt](https://ui.shadcn.com/llms.txt)获取相关文档
 
 **不要猜测 API 用法，先查文档再实现。**
-
-## Feature Development Workflow
-
-1. 在 `lib/features/<feature>/` 下创建模块结构
-2. 定义领域层: entities 和 repository 接口
-3. 实现数据层: models 和 repository 实现
-4. 创建 Providers: 使用 `@riverpod` 注解
-5. 构建 UI: pages 和 widgets
-6. 添加路由: 使用 `@TypedGoRoute`
-7. 添加国际化: 更新 ARB 文件
-8. 运行代码生成: `dart run build_runner build`
-9. 运行分析: `flutter analyze`
-10. 提交代码: 遵循 Conventional Commits

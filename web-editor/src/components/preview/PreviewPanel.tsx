@@ -63,16 +63,12 @@ export function PreviewPanel({
 
   const handleStartPreview = async () => {
     if (!previewUrl.trim()) {
-      toast.warning(
-        t('enterPreviewUrl', { defaultValue: 'Please enter a URL to preview' }),
-      );
+      toast.warning(t('preview.enterPreviewUrl'));
       return;
     }
 
     if (!serverUrl) {
-      toast.error(
-        t('serverNotRunning', { defaultValue: 'Server is not running' }),
-      );
+      toast.error(t('preview.serverNotRunning'));
       return;
     }
 
@@ -88,13 +84,9 @@ export function PreviewPanel({
         throw new Error('Failed to open preview');
       }
 
-      toast.success(
-        t('previewOpened', { defaultValue: 'Preview opened in app' }),
-      );
+      toast.success(t('preview.previewOpened'));
     } catch {
-      toast.error(
-        t('previewError', { defaultValue: 'Failed to open preview' }),
-      );
+      toast.error(t('preview.previewError'));
     } finally {
       setIsLoading(false);
     }
@@ -104,7 +96,7 @@ export function PreviewPanel({
     if (selectedElement) {
       onApplySelector(selectedElement.selector, selectedElement.selectorType);
       onClearSelection();
-      toast.success(t('selectorApplied', { defaultValue: 'Selector applied' }));
+      toast.success(t('preview.selectorApplied'));
     }
   };
 
@@ -114,18 +106,12 @@ export function PreviewPanel({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Eye className="h-5 w-5" />
-            {t('preview')}
+            {t('preview.preview')}
           </CardTitle>
-          <CardDescription>
-            {t('previewNotConnected', {
-              defaultValue: 'Connect to server to enable preview',
-            })}
-          </CardDescription>
+          <CardDescription>{t('preview.previewNotConnected')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Badge variant="secondary">
-            {t('disconnected', { defaultValue: 'Disconnected' })}
-          </Badge>
+          <Badge variant="secondary">{t('preview.disconnected')}</Badge>
         </CardContent>
       </Card>
     );
@@ -136,20 +122,14 @@ export function PreviewPanel({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Eye className="h-5 w-5" />
-          {t('preview')}
+          {t('preview.preview')}
         </CardTitle>
-        <CardDescription>
-          {t('previewDescription', {
-            defaultValue: 'Open a page in the app to select elements',
-          })}
-        </CardDescription>
+        <CardDescription>{t('preview.previewDescription')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* URL Input */}
         <div className="space-y-2">
-          <Label htmlFor="preview-url">
-            {t('previewUrl', { defaultValue: 'Preview URL' })}
-          </Label>
+          <Label htmlFor="preview-url">{t('preview.previewUrl')}</Label>
           <div className="flex gap-2">
             <Input
               id="preview-url"
@@ -174,9 +154,7 @@ export function PreviewPanel({
 
         {/* Element Selection */}
         <div className="space-y-2">
-          <Label>
-            {t('elementSelection', { defaultValue: 'Element Selection' })}
-          </Label>
+          <Label>{t('preview.elementSelection')}</Label>
           <div className="flex gap-2">
             {isSelecting ? (
               <>
@@ -187,7 +165,7 @@ export function PreviewPanel({
                   className="flex-1"
                 >
                   <X className="h-4 w-4 mr-1" />
-                  {t('cancelSelection', { defaultValue: 'Cancel' })}
+                  {t('preview.cancelSelection')}
                 </Button>
               </>
             ) : (
@@ -199,15 +177,13 @@ export function PreviewPanel({
                 disabled={!previewUrl.trim()}
               >
                 <Crosshair className="h-4 w-4 mr-1" />
-                {t('selectElement', { defaultValue: 'Select Element' })}
+                {t('preview.selectElement')}
               </Button>
             )}
           </div>
           {isSelecting && (
             <p className="text-xs text-muted-foreground">
-              {t('selectingHint', {
-                defaultValue: 'Click on an element in the app to select it',
-              })}
+              {t('preview.selectingHint')}
             </p>
           )}
         </div>
@@ -217,7 +193,7 @@ export function PreviewPanel({
           <div className="space-y-2 p-3 bg-muted rounded-lg">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">
-                {t('selectedElement', { defaultValue: 'Selected Element' })}
+                {t('preview.selectedElement')}
               </span>
               <Button variant="ghost" size="sm" onClick={onClearSelection}>
                 <X className="h-3 w-3" />
@@ -240,7 +216,7 @@ export function PreviewPanel({
             </div>
             <Button size="sm" onClick={handleApplySelector} className="w-full">
               <Check className="h-4 w-4 mr-1" />
-              {t('applySelector', { defaultValue: 'Apply Selector' })}
+              {t('preview.applySelector')}
             </Button>
           </div>
         )}
@@ -249,18 +225,14 @@ export function PreviewPanel({
         {screenshot && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>
-                {t('pageScreenshot', { defaultValue: 'Page Screenshot' })}
-              </Label>
+              <Label>{t('preview.pageScreenshot')}</Label>
               <div className="flex gap-1">
                 {onRequestScreenshot && (
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={onRequestScreenshot}
-                    title={t('refreshScreenshot', {
-                      defaultValue: 'Refresh screenshot',
-                    })}
+                    title={t('preview.refreshScreenshot')}
                   >
                     <RefreshCw className="h-4 w-4" />
                   </Button>
@@ -269,7 +241,7 @@ export function PreviewPanel({
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowFullScreenshot(!showFullScreenshot)}
-                  title={t('toggleSize', { defaultValue: 'Toggle size' })}
+                  title={t('preview.toggleSize')}
                 >
                   <ZoomIn className="h-4 w-4" />
                 </Button>
@@ -282,7 +254,7 @@ export function PreviewPanel({
             >
               <img
                 src={`data:image/png;base64,${screenshot}`}
-                alt={t('pageScreenshot', { defaultValue: 'Page Screenshot' })}
+                alt={t('preview.pageScreenshot')}
                 className="w-full h-auto"
               />
             </div>

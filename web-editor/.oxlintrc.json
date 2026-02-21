@@ -5,9 +5,12 @@
     "suspicious": "warn"
   },
   "plugins": ["typescript", "react", "oxc"],
+  "jsPlugins": ["./scripts/oxlint-plugin-i18n.js"],
   "rules": {
     "no-console": "off",
-    "react-in-jsx-scope": "off"
+    "react-in-jsx-scope": "off",
+    "i18n/no-default-value": "error",
+    "i18n/no-namespace-option": "error"
   },
   "env": {
     "browser": true,

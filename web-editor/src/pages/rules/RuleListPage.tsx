@@ -47,6 +47,28 @@ const mediaTypeColors: Record<string, string> = {
   generic: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
 };
 
+// 媒体类型翻译键映射
+const mediaTypeKeys: Record<
+  string,
+  | 'rules.mediaTypeVideo'
+  | 'rules.mediaTypeMusic'
+  | 'rules.mediaTypeNovel'
+  | 'rules.mediaTypeComic'
+  | 'rules.mediaTypeImage'
+  | 'rules.mediaTypeAudio'
+  | 'rules.mediaTypeRss'
+  | 'rules.mediaTypeGeneric'
+> = {
+  video: 'rules.mediaTypeVideo',
+  music: 'rules.mediaTypeMusic',
+  novel: 'rules.mediaTypeNovel',
+  comic: 'rules.mediaTypeComic',
+  image: 'rules.mediaTypeImage',
+  audio: 'rules.mediaTypeAudio',
+  rss: 'rules.mediaTypeRss',
+  generic: 'rules.mediaTypeGeneric',
+};
+
 /**
  * 规则列表页面。
  */
@@ -65,6 +87,7 @@ export function RuleListPage() {
   } = useQuery({
     queryKey: ['rules'],
     queryFn: rulesApi.list,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   // Delete mutation
@@ -73,10 +96,10 @@ export function RuleListPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['rules'] });
       setDeleteRuleId(null);
-      toast.success(t('deleted'));
+      toast.success(t('errors.deleted'));
     },
     onError: () => {
-      toast.error(t('deleteError', { defaultValue: 'Failed to delete rule' }));
+      toast.error(t('errors.deleteError'));
     },
   });
 
@@ -125,19 +148,15 @@ export function RuleListPage() {
       a.download = `${rule.name}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      toast.success(
-        t('exportSuccess', { defaultValue: 'Rule exported successfully' }),
-      );
+      toast.success(t('errors.exportSuccess'));
     } catch {
-      toast.error(t('exportError', { defaultValue: 'Failed to export rule' }));
+      toast.error(t('errors.exportError'));
     }
   };
 
   const handleExportAllRules = async () => {
     if (!rules || rules.length === 0) {
-      toast.warning(
-        t('noRulesToExport', { defaultValue: 'No rules to export' }),
-      );
+      toast.warning(t('errors.noRulesToExport'));
       return;
     }
     try {
@@ -155,14 +174,9 @@ export function RuleListPage() {
       a.download = `crawler-rules-${new Date().toISOString().split('T')[0]}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      toast.success(
-        t('exportAllSuccess', {
-          defaultValue: `Exported ${rules.length} rules successfully`,
-          count: rules.length,
-        }),
-      );
+      toast.success(t('errors.exportAllSuccess', { count: rules.length }));
     } catch {
-      toast.error(t('exportError', { defaultValue: 'Failed to export rules' }));
+      toast.error(t('errors.exportError'));
     }
   };
 
@@ -219,24 +233,16 @@ export function RuleListPage() {
       queryClient.invalidateQueries({ queryKey: ['rules'] });
 
       if (importedCount > 0 && errorCount === 0) {
-        toast.success(
-          t('importSuccess', {
-            defaultValue: `Imported ${importedCount} rules successfully`,
-            count: importedCount,
-          }),
-        );
+        toast.success(t('errors.importSuccess', { count: importedCount }));
       } else if (importedCount > 0 && errorCount > 0) {
         toast.warning(
-          t('importPartial', {
-            defaultValue: `Imported ${importedCount} rules, ${errorCount} failed`,
+          t('errors.importPartial', {
             count: importedCount,
             errorCount,
           }),
         );
       } else {
-        toast.error(
-          t('importError', { defaultValue: 'Failed to import rules' }),
-        );
+        toast.error(t('errors.importError'));
       }
     };
     input.click();
@@ -244,7 +250,7 @@ export function RuleListPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-100">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     );
@@ -254,7 +260,9 @@ export function RuleListPage() {
     return (
       <Card className="border-destructive">
         <CardHeader>
-          <CardTitle className="text-destructive">{t('error')}</CardTitle>
+          <CardTitle className="text-destructive">
+            {t('errors.error')}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <p>{String(error)}</p>
@@ -264,7 +272,7 @@ export function RuleListPage() {
               queryClient.invalidateQueries({ queryKey: ['rules'] })
             }
           >
-            {t('retry', { defaultValue: 'Retry' })}
+            {t('common.retry')}
           </Button>
         </CardContent>
       </Card>
@@ -276,24 +284,24 @@ export function RuleListPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">{t('rules')}</h2>
+          <h2 className="text-3xl font-bold tracking-tight">
+            {t('common.rules')}
+          </h2>
           <p className="text-muted-foreground">
-            {t('ruleEditorDescription', {
-              defaultValue: 'Manage your crawler rules for content extraction',
-            })}
+            {t('common.ruleEditorDescription')}
           </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={handleImportRules}>
             <Upload className="h-4 w-4 mr-1" />
-            {t('import')}
+            {t('common.import')}
           </Button>
           <Button variant="outline" size="sm" onClick={handleExportAllRules}>
             <Download className="h-4 w-4 mr-1" />
-            {t('exportAll', { defaultValue: 'Export All' })}
+            {t('common.exportAll')}
           </Button>
           <Button size="sm" onClick={handleCreateRule}>
-            {t('newRule')}
+            {t('common.newRule')}
           </Button>
         </div>
       </div>
@@ -301,7 +309,7 @@ export function RuleListPage() {
       {/* Search */}
       <div className="flex items-center gap-4">
         <Input
-          placeholder={t('searchRules', { defaultValue: 'Search rules...' })}
+          placeholder={t('common.searchRules')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="max-w-sm"
@@ -319,7 +327,7 @@ export function RuleListPage() {
                     mediaTypeColors[mediaType] || mediaTypeColors.generic
                   }
                 >
-                  {t(`mediaType.${mediaType}`, { defaultValue: mediaType })}
+                  {t(mediaTypeKeys[mediaType] || 'rules.mediaTypeGeneric')}
                 </Badge>
                 <span className="text-sm text-muted-foreground">
                   ({mediaRules.length})
@@ -354,7 +362,7 @@ export function RuleListPage() {
                                 handleEditRule(rule.id);
                               }}
                             >
-                              {t('edit')}
+                              {t('common.edit')}
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={(e) => {
@@ -362,7 +370,7 @@ export function RuleListPage() {
                                 handleExportRule(rule);
                               }}
                             >
-                              {t('export')}
+                              {t('common.export')}
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               className="text-destructive"
@@ -371,16 +379,13 @@ export function RuleListPage() {
                                 setDeleteRuleId(rule.id);
                               }}
                             >
-                              {t('delete')}
+                              {t('common.delete')}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
                       <CardDescription className="line-clamp-2">
-                        {rule.description ||
-                          t('noDescription', {
-                            defaultValue: 'No description',
-                          })}
+                        {rule.description || t('common.noDescription')}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -402,8 +407,7 @@ export function RuleListPage() {
                       </div>
                       {rule.author && (
                         <p className="text-xs text-muted-foreground mt-2">
-                          {t('author', { defaultValue: 'Author' })}:{' '}
-                          {rule.author}
+                          {t('common.author')}: {rule.author}
                         </p>
                       )}
                     </CardContent>
@@ -416,13 +420,8 @@ export function RuleListPage() {
       ) : (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <p className="text-muted-foreground mb-4">
-              {t('noRules', {
-                defaultValue:
-                  'No rules yet. Create your first rule to get started.',
-              })}
-            </p>
-            <Button onClick={handleCreateRule}>{t('newRule')}</Button>
+            <p className="text-muted-foreground mb-4">{t('common.noRules')}</p>
+            <Button onClick={handleCreateRule}>{t('common.newRule')}</Button>
           </CardContent>
         </Card>
       )}
@@ -434,23 +433,18 @@ export function RuleListPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('confirmDelete', { defaultValue: 'Delete Rule?' })}
-            </AlertDialogTitle>
+            <AlertDialogTitle>{t('common.confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('confirmDeleteDescription', {
-                defaultValue:
-                  'This action cannot be undone. This will permanently delete the rule.',
-              })}
+              {t('common.confirmDeleteDescription')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => deleteRuleId && handleDeleteRule(deleteRuleId)}
             >
-              {t('delete')}
+              {t('common.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

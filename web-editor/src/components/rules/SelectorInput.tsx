@@ -81,9 +81,7 @@ export function SelectorInput({
           onClick={onStartSelection}
           disabled={disabled || isSelecting}
           className={isSelecting ? 'animate-pulse' : ''}
-          title={t('selectElement', {
-            defaultValue: 'Select element from page',
-          })}
+          title={t('preview.selectElement')}
         >
           <Crosshair className="h-4 w-4" />
         </Button>

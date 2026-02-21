@@ -14,21 +14,24 @@ class RulesRoutes {
   final RuleParser _ruleParser;
 
   /// 创建包含所有路由的路由器。
+  ///
+  /// 注意：此路由器会被挂载到 /api 路径下，
+  /// 所以内部路由不需要 /api 前缀。
   Router<Handler> get router => Router<Handler>()
-    // GET /api/rules - 列出所有规则
-    ..get('/api/rules', _listRules)
-    // GET /api/rules/:id - 获取单个规则
-    ..get('/api/rules/:id', _getRule)
-    // POST /api/rules - 创建新规则
-    ..post('/api/rules', _createRule)
-    // PUT /api/rules/:id - 更新已有规则
-    ..put('/api/rules/:id', _updateRule)
-    // DELETE /api/rules/:id - 删除规则
-    ..delete('/api/rules/:id', _deleteRule)
-    // POST /api/validate - 验证规则
-    ..post('/api/validate', _validateRule)
-    // POST /api/execute - 对 URL 执行规则
-    ..post('/api/execute', _executeRule);
+    // GET /rules - 列出所有规则
+    ..get('/rules', _listRules)
+    // GET /rules/:id - 获取单个规则
+    ..get('/rules/:id', _getRule)
+    // POST /rules - 创建新规则
+    ..post('/rules', _createRule)
+    // PUT /rules/:id - 更新已有规则
+    ..put('/rules/:id', _updateRule)
+    // DELETE /rules/:id - 删除规则
+    ..delete('/rules/:id', _deleteRule)
+    // POST /validate - 验证规则
+    ..post('/validate', _validateRule)
+    // POST /execute - 对 URL 执行规则
+    ..post('/execute', _executeRule);
 
   /// 获取所有规则。
   Future<Response> _listRules(Request request) async {
