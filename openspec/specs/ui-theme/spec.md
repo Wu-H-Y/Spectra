@@ -146,3 +146,161 @@ lib/core/theme/
     ├── text_tokens.dart    # 字体令牌
     └── effect_tokens.dart  # 效果令牌
 ```
+
+---
+
+## 响应式布局
+
+### Requirement: Sizer 集成
+
+使用 sizer 包实现响应式布局：
+
+- Sizer widget 包裹 MaterialApp
+- 设备类型断点：mobile ≤ 599px, tablet ≤ 1024px
+- 支持百分比尺寸单位 (`.w`, `.h`, `.sp`)
+
+```dart
+Sizer(
+  maxMobileWidth: 599,
+  maxTabletWidth: 1024,
+  builder: (context, orientation, screenType) {
+    return MaterialApp(...);
+  },
+)
+```
+
+---
+
+### Requirement: 设备类型检测
+
+| 类型 | 宽度范围 |
+|------|----------|
+| mobile | ≤ 599px |
+| tablet | 600px - 1024px |
+| desktop | > 1024px |
+
+```dart
+if (Device.screenType == ScreenType.mobile) {
+  return MobileLayout();
+} else if (Device.screenType == ScreenType.tablet) {
+  return TabletLayout();
+} else {
+  return DesktopLayout();
+}
+```
+
+---
+
+### Requirement: 响应式尺寸单位
+
+| 单位 | 用途 | 计算方式 |
+|------|------|----------|
+| `.w` | 宽度百分比 | 屏幕宽度 × 百分比 |
+| `.h` | 高度百分比 | 屏幕高度 × 百分比 |
+| `.sp` | 响应式字体 | 基于像素密度和屏幕比例 |
+| `.dp` | 响应式 dp | 基于像素密度 |
+
+```dart
+Container(
+  width: 80.w,      // 屏幕宽度的 80%
+  height: 20.h,     // 屏幕高度的 20%
+  padding: EdgeInsets.all(4.w),
+)
+
+Text('标题', style: TextStyle(fontSize: 16.sp))
+```
+
+---
+
+### Requirement: 移动端布局
+
+宽度 ≤ 599px：
+
+- 单列内容布局
+- 底部导航栏 (BottomNavigationBar)
+- 全宽卡片和列表
+- 抽屉式菜单 (Drawer)
+- 悬浮操作按钮 (FAB)
+
+---
+
+### Requirement: 平板/桌面端布局
+
+宽度 > 600px：
+
+- 双列或多列布局
+- 侧边导航栏 (NavigationRail / NavigationDrawer)
+- 网格卡片布局
+- 主从式界面 (Master-Detail)
+
+```dart
+GridView.builder(
+  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: Device.screenType == ScreenType.mobile ? 1 : 2,
+    mainAxisSpacing: 2.h,
+    crossAxisSpacing: 2.w,
+    childAspectRatio: 0.7,
+  ),
+  itemBuilder: (context, index) => ContentCard(item: items[index]),
+)
+```
+
+---
+
+### Requirement: 屏幕方向适配
+
+- 检测 `Device.orientation` 变化
+- 竖屏和横屏布局切换
+- 自动重新计算布局
+
+```dart
+Device.orientation == Orientation.portrait
+  ? PortraitLayout()
+  : LandscapeLayout();
+```
+
+---
+
+### Requirement: 响应式间距和组件
+
+**间距**: 使用百分比单位，不同设备类型使用不同基础间距
+
+```dart
+Padding(
+  padding: EdgeInsets.symmetric(
+    horizontal: Device.screenType == ScreenType.mobile ? 4.w : 2.w,
+    vertical: 2.h,
+  ),
+)
+```
+
+**图标和按钮**: 根据设备类型调整大小，移动端触摸目标 ≥ 48dp
+
+```dart
+Icon(
+  Icons.menu,
+  size: Device.screenType == ScreenType.mobile ? 24.sp : 20.sp,
+)
+
+IconButton(
+  iconSize: 24.sp,
+  constraints: BoxConstraints(minWidth: 12.w, minHeight: 12.w),
+)
+```
+
+---
+
+### Requirement: Web 编辑器响应式
+
+使用 Tailwind CSS 响应式断点：
+
+- `mobile`: max-width 599px
+- `tablet`: min-width 600px  
+- `desktop`: min-width 1024px
+
+```tsx
+<div className="flex flex-col tablet:flex-row">
+  <aside className="w-full tablet:w-64">侧边栏</aside>
+  <main className="flex-1">主内容</main>
+</div>
+```

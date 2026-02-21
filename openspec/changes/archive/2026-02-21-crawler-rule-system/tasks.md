@@ -7,7 +7,7 @@
 - [x] 1.3 Create directory structure for core/crawler/, core/server/, core/media/
 - [x] 1.4 Initialize web-editor project with Vite + React + TypeScript
 - [x] 1.5 Configure web-editor with Tailwind CSS and shadcn/ui
-- [ ] 1.6 Add sizer dependency for responsive UI layout
+- [x] 1.6 Add sizer dependency for responsive UI layout
 
 ## 2. Media Data Models (freezed)
 
@@ -75,80 +75,80 @@
 
 ## 7. Anti-Crawl Handling
 
-- [ ] 7.1 Implement ActionExecutor (wait, click, scroll, fill, script)
-- [ ] 7.2 Create ConditionEvaluator for conditional actions
-- [ ] 7.3 Implement LoopExecutor for repeated actions
-- [ ] 7.4 Create CaptchaDetector (reCAPTCHA, hCaptcha detection)
-- [ ] 7.5 Implement RateLimitDetector (429, 503 detection)
-- [ ] 7.6 Create ProxyManager for proxy rotation
-- [ ] 7.7 Implement RequestThrottler with random delay
+- [x] 7.1 Implement ActionExecutor (wait, click, scroll, fill, script)
+- [x] 7.2 Create ConditionEvaluator for conditional actions
+- [x] 7.3 Implement LoopExecutor for repeated actions
+- [x] 7.4 Create CaptchaDetector (reCAPTCHA, hCaptcha detection)
+- [x] 7.5 Implement RateLimitDetector (429, 503 detection)
+- [x] 7.6 Create ProxyManager for proxy rotation
+- [x] 7.7 Implement RequestThrottler with random delay
 
 ## 8. Page Preview
 
-- [ ] 8.1 Create preview page UI with WebView
-- [ ] 8.2 Implement element selection mode
-- [ ] 8.3 Create CSS selector generator from element
-- [ ] 8.4 Create XPath generator from element
-- [ ] 8.5 Implement selector highlighting
-- [ ] 8.6 Create WebSocket communication for preview events
-- [ ] 8.7 Add preview entry point in Flutter app
+- [x] 8.1 Create preview page UI with WebView
+- [x] 8.2 Implement element selection mode
+- [x] 8.3 Create CSS selector generator from element
+- [x] 8.4 Create XPath generator from element
+- [x] 8.5 Implement selector highlighting
+- [x] 8.6 Create WebSocket communication for preview events
+- [x] 8.7 Add preview entry point in Flutter app
 
 ## 9. Web Editor - Setup
 
-- [ ] 9.1 Configure Vite build output to ../assets/editor/
-- [ ] 9.2 Set up API proxy for development
-- [ ] 9.3 Create WebSocket connection hook
-- [ ] 9.4 Set up Zustand stores
-- [ ] 9.5 Configure TanStack Query for API calls
-- [ ] 9.6 Set up i18n with react-i18next
+- [x] 9.1 Configure Vite build output to ../assets/editor/
+- [x] 9.2 Set up API proxy for development
+- [x] 9.3 Create WebSocket connection hook
+- [x] 9.4 Set up Zustand stores
+- [x] 9.5 Configure TanStack Query for API calls
+- [x] 9.6 Set up i18n with react-i18next
 
 ## 10. Web Editor - Rule Management
 
-- [ ] 10.1 Create rule list page
-- [ ] 10.2 Create rule editor layout (form + JSON toggle)
-- [ ] 10.3 Implement rule metadata form
-- [ ] 10.4 Implement URL matching form
-- [ ] 10.5 Implement request configuration form
-- [ ] 10.6 Implement field mapping editor
-- [ ] 10.7 Implement pagination configuration form
-- [ ] 10.8 Implement action sequence editor
-- [ ] 10.9 Integrate Monaco Editor for JSON editing
-- [ ] 10.10 Implement rule import/export
+- [x] 10.1 Create rule list page
+- [x] 10.2 Create rule editor layout (form + JSON toggle)
+- [x] 10.3 Implement rule metadata form
+- [x] 10.4 Implement URL matching form
+- [x] 10.5 Implement request configuration form
+- [x] 10.6 Implement field mapping editor
+- [x] 10.7 Implement pagination configuration form
+- [x] 10.8 Implement action sequence editor
+- [x] 10.9 Integrate Monaco Editor for JSON editing
+- [x] 10.10 Implement rule import/export
 
 ## 11. Web Editor - Preview Integration
 
-- [ ] 11.1 Create preview trigger button
-- [ ] 11.2 Implement WebSocket message handling for element selection
-- [ ] 11.3 Create selector auto-fill functionality
-- [ ] 11.4 Display preview screenshots
-- [ ] 11.5 Implement selector testing panel
+- [x] 11.1 Create preview trigger button
+- [x] 11.2 Implement WebSocket message handling for element selection
+- [x] 11.3 Create selector auto-fill functionality
+- [x] 11.4 Display preview screenshots
+- [x] 11.5 Implement selector testing panel
 
 ## 12. Integration & Testing
 
-- [ ] 12.1 Write sample rules for testing (video, comic, novel, music sites)
-- [ ] 12.2 Create integration tests for rule execution
-- [ ] 12.3 Test WebSocket communication
-- [ ] 12.4 Test mobile device access via LAN
-- [ ] 12.5 Test QR code generation for mobile access
-- [ ] 12.6 Performance optimization for large page extraction
+- [x] 12.1 Write sample rules for testing (video, comic, novel, music sites)
+- [x] 12.2 Create integration tests for rule execution
+- [x] 12.3 Test WebSocket communication
+- [x] 12.4 Test mobile device access via LAN
+- [x] 12.5 Test QR code generation for mobile access
+- [x] 12.6 Performance optimization for large page extraction
 
 ## 13. Documentation
 
-- [ ] 13.1 Write rule DSL documentation
-- [ ] 13.2 Create rule examples for each media type
-- [ ] 13.3 Document API endpoints
-- [ ] 13.4 Write user guide for web editor
+- [x] 13.1 Write rule DSL documentation
+- [x] 13.2 Create rule examples for each media type
+- [x] 13.3 Document API endpoints
+- [x] 13.4 Write user guide for web editor
 
 ## 14. Responsive UI Implementation
 
-- [ ] 14.1 Wrap MaterialApp with Sizer widget and configure breakpoints
-- [ ] 14.2 Create ResponsiveLayout widget for device-type-based layout switching
-- [ ] 14.3 Implement mobile layout with bottom navigation and single-column content
-- [ ] 14.4 Implement tablet/desktop layout with side navigation and grid content
-- [ ] 14.5 Convert fixed pixel values to sizer responsive units (.w, .h, .sp)
-- [ ] 14.6 Create responsive spacing constants using sizer units
-- [ ] 14.7 Implement responsive icon and button sizing
-- [ ] 14.8 Add screen orientation handling for layout changes
-- [ ] 14.9 Update page preview UI for responsive mobile/desktop display
-- [ ] 14.10 Configure Tailwind CSS responsive breakpoints to match sizer
-- [ ] 14.11 Test responsive layouts on different device sizes and orientations
+- [x] 14.1 Wrap MaterialApp with Sizer widget and configure breakpoints
+- [x] 14.2 Create ResponsiveLayout widget for device-type-based layout switching
+- [x] 14.3 Implement mobile layout with bottom navigation and single-column content
+- [x] 14.4 Implement tablet/desktop layout with side navigation and grid content
+- [x] 14.5 Convert fixed pixel values to sizer responsive units (.w, .h, .sp)
+- [x] 14.6 Create responsive spacing constants using sizer units
+- [x] 14.7 Implement responsive icon and button sizing
+- [x] 14.8 Add screen orientation handling for layout changes
+- [x] 14.9 Update page preview UI for responsive mobile/desktop display
+- [x] 14.10 Configure Tailwind CSS responsive breakpoints to match sizer
+- [x] 14.11 Test responsive layouts on different device sizes and orientations
