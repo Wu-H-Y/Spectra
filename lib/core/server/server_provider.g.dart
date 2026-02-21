@@ -43,7 +43,7 @@ final class ServerProvider extends $NotifierProvider<Server, ServerStatus> {
   }
 }
 
-String _$serverHash() => r'd40bc04563c017dab34e9e1544b20344823b6477';
+String _$serverHash() => r'91f630e433b211d5c7cec6bb12da606a6f4b0de3';
 
 /// HTTP 服务器 Provider。
 

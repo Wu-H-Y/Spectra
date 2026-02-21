@@ -61,5 +61,21 @@
     "errorCacheError": "缓存操作失败，请稍后重试",
     "errorUnknown": "发生未知错误，请稍后重试",
 
-    "retry": "重试"
+    "retry": "重试",
+
+    "previewPage": "页面预览",
+    "enterUrl": "输入网址",
+    "enterUrlToPreview": "输入网址以预览页面",
+    "go": "前往",
+    "refresh": "刷新",
+    "selectElement": "选择元素",
+    "cancelSelection": "取消选择",
+    "tapToSelectElement": "点击页面以选择元素",
+    "cancel": "取消",
+    "copy": "复制",
+    "copiedToClipboard": "已复制到剪贴板",
+    "selectedElement": "已选元素",
+    "textContent": "文本内容",
+    "sendToEditor": "发送到编辑器",
+    "webViewPlaceholder": "WebView 将在此显示"
 }

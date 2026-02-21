@@ -2,13 +2,18 @@
     "mcpServers": {
         "dart": {
             "args": [
-                "/c",
-                "dart",
                 "mcp-server"
             ],
-            "command": "cmd",
+            "command": "dart",
             "env": {},
             "type": "stdio"
+        },
+        "shadcn": {
+            "command": "npx",
+            "args": [
+                "shadcn@latest",
+                "mcp"
+            ]
         }
     }
 }

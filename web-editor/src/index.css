@@ -5,6 +5,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* 响应式断点 - 与 Flutter sizer 保持一致 */
+  --breakpoint-mobile: 599px;
+  --breakpoint-tablet: 600px;
+  --breakpoint-desktop: 1024px;
+
+  /* 颜色主题 */
   --color-background: hsl(0 0% 100%);
   --color-foreground: hsl(222.2 84% 4.9%);
   --color-card: hsl(0 0% 100%);

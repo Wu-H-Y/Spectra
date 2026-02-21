@@ -8,7 +8,6 @@
 library;
 
 export 'handlers/static_handler.dart';
-export 'handlers/websocket_handler.dart';
 export 'middleware/cors_middleware.dart' hide logMiddleware;
 export 'routes/rules_routes.dart';
 export 'routes/server_routes.dart';

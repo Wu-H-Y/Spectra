@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import type { CrawlerRule } from '@/api/types';
+import type { CrawlerRule, Selector } from '@/api/types';
 
 interface RuleState {
   rules: CrawlerRule[];
@@ -38,16 +38,26 @@ export const useRuleStore = create<RuleState>((set) => ({
   setError: (error) => set({ error }),
 }));
 
+// 活动字段路径类型
+type ActiveFieldPath =
+  | { type: 'list_item_field'; index: number }
+  | { type: 'detail_item_field'; index: number }
+  | { type: 'list_container' }
+  | { type: 'pagination_next' }
+  | { type: 'custom'; path: string };
+
 interface EditorState {
   isJsonMode: boolean;
   jsonValue: string;
   previewUrl: string;
   isPreviewVisible: boolean;
+  activeFieldPath: ActiveFieldPath | null;
 
   toggleJsonMode: () => void;
   setJsonValue: (value: string) => void;
   setPreviewUrl: (url: string) => void;
   setPreviewVisible: (visible: boolean) => void;
+  setActiveFieldPath: (path: ActiveFieldPath | null) => void;
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
@@ -55,9 +65,26 @@ export const useEditorStore = create<EditorState>((set) => ({
   jsonValue: '',
   previewUrl: '',
   isPreviewVisible: false,
+  activeFieldPath: null,
 
   toggleJsonMode: () => set((state) => ({ isJsonMode: !state.isJsonMode })),
   setJsonValue: (jsonValue) => set({ jsonValue }),
   setPreviewUrl: (previewUrl) => set({ previewUrl }),
   setPreviewVisible: (isPreviewVisible) => set({ isPreviewVisible }),
+  setActiveFieldPath: (activeFieldPath) => set({ activeFieldPath }),
+}));
+
+// 选择器应用回调类型
+interface SelectorApplyCallback {
+  (selector: Selector): void;
+}
+
+interface SelectorApplyState {
+  applyCallback: SelectorApplyCallback | null;
+  setApplyCallback: (callback: SelectorApplyCallback | null) => void;
+}
+
+export const useSelectorApplyStore = create<SelectorApplyState>((set) => ({
+  applyCallback: null,
+  setApplyCallback: (applyCallback) => set({ applyCallback }),
 }));

@@ -39,9 +39,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "appName": MessageLookupByLibrary.simpleMessage("Spectra"),
     "appearanceSettings": MessageLookupByLibrary.simpleMessage("Appearance"),
     "back": MessageLookupByLibrary.simpleMessage("Back"),
+    "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "cancelSelection": MessageLookupByLibrary.simpleMessage("Cancel Selection"),
+    "copiedToClipboard": MessageLookupByLibrary.simpleMessage(
+      "Copied to clipboard",
+    ),
+    "copy": MessageLookupByLibrary.simpleMessage("Copy"),
     "currentLanguage": MessageLookupByLibrary.simpleMessage("Current language"),
     "currentTheme": MessageLookupByLibrary.simpleMessage("Current theme"),
     "developerTools": MessageLookupByLibrary.simpleMessage("Developer Tools"),
+    "enterUrl": MessageLookupByLibrary.simpleMessage("Enter URL"),
+    "enterUrlToPreview": MessageLookupByLibrary.simpleMessage(
+      "Enter a URL to preview the page",
+    ),
     "errorBadRequest": MessageLookupByLibrary.simpleMessage(
       "Invalid request parameters. Please check and try again.",
     ),
@@ -94,6 +104,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "featureNovel": MessageLookupByLibrary.simpleMessage("Novel Collection"),
     "featureVideo": MessageLookupByLibrary.simpleMessage("Video Collection"),
     "generalSettings": MessageLookupByLibrary.simpleMessage("General"),
+    "go": MessageLookupByLibrary.simpleMessage("Go"),
     "goHome": MessageLookupByLibrary.simpleMessage("Go Home"),
     "homeSubtitle": MessageLookupByLibrary.simpleMessage(
       "A modern multimedia data collection application",
@@ -106,11 +117,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageNotFound": MessageLookupByLibrary.simpleMessage(
       "404 - Page Not Found",
     ),
+    "previewPage": MessageLookupByLibrary.simpleMessage("Page Preview"),
+    "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
     "retry": MessageLookupByLibrary.simpleMessage("Retry"),
     "ruleEditor": MessageLookupByLibrary.simpleMessage("Rule Editor"),
     "ruleEditorDescription": MessageLookupByLibrary.simpleMessage(
       "Open web-based rule editor for crawler rules",
     ),
+    "selectElement": MessageLookupByLibrary.simpleMessage("Select Element"),
+    "selectedElement": MessageLookupByLibrary.simpleMessage("Selected Element"),
+    "sendToEditor": MessageLookupByLibrary.simpleMessage("Send to Editor"),
     "serverRunning": MessageLookupByLibrary.simpleMessage("Running"),
     "serverStart": MessageLookupByLibrary.simpleMessage("Start Server"),
     "serverStartError": MessageLookupByLibrary.simpleMessage(
@@ -121,10 +137,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "serverStopped": MessageLookupByLibrary.simpleMessage("Stopped"),
     "serverUrl": MessageLookupByLibrary.simpleMessage("Server URL"),
     "settingsTitle": MessageLookupByLibrary.simpleMessage("Settings"),
+    "tapToSelectElement": MessageLookupByLibrary.simpleMessage(
+      "Tap on the page to select an element",
+    ),
+    "textContent": MessageLookupByLibrary.simpleMessage("Text Content"),
     "themeMode": MessageLookupByLibrary.simpleMessage("Theme Mode"),
     "themeModeDark": MessageLookupByLibrary.simpleMessage("Dark"),
     "themeModeLight": MessageLookupByLibrary.simpleMessage("Light"),
     "themeModeSystem": MessageLookupByLibrary.simpleMessage("System"),
     "version": MessageLookupByLibrary.simpleMessage("Version"),
+    "webViewPlaceholder": MessageLookupByLibrary.simpleMessage(
+      "WebView will be displayed here",
+    ),
   };
 }

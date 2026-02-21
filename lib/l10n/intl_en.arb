@@ -61,5 +61,21 @@
     "errorCacheError": "Cache operation failed. Please try again later.",
     "errorUnknown": "An unknown error occurred. Please try again later.",
 
-    "retry": "Retry"
+    "retry": "Retry",
+
+    "previewPage": "Page Preview",
+    "enterUrl": "Enter URL",
+    "enterUrlToPreview": "Enter a URL to preview the page",
+    "go": "Go",
+    "refresh": "Refresh",
+    "selectElement": "Select Element",
+    "cancelSelection": "Cancel Selection",
+    "tapToSelectElement": "Tap on the page to select an element",
+    "cancel": "Cancel",
+    "copy": "Copy",
+    "copiedToClipboard": "Copied to clipboard",
+    "selectedElement": "Selected Element",
+    "textContent": "Text Content",
+    "sendToEditor": "Send to Editor",
+    "webViewPlaceholder": "WebView will be displayed here"
 }

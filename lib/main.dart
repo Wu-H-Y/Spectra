@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sizer/sizer.dart';
 import 'package:spectra/core/database/drift/app_database.dart';
 import 'package:spectra/core/database/hive/hive_service.dart';
 import 'package:spectra/core/router/app_router.dart';
@@ -89,27 +90,31 @@ class SpectraApp extends HookConsumerWidget {
     final themeMode = ref.watch(persistedThemeModeProvider);
     final locale = ref.watch(persistedLocaleProvider);
 
-    return MaterialApp.router(
-      title: 'Spectra',
-      debugShowCheckedModeBanner: false,
+    return Sizer(
+      builder: (context, orientation, screenType) {
+        return MaterialApp.router(
+          title: 'Spectra',
+          debugShowCheckedModeBanner: false,
 
-      // 路由配置
-      routerConfig: router,
+          // 路由配置
+          routerConfig: router,
 
-      // 本地化配置
-      localizationsDelegates: const [
-        S.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: S.delegate.supportedLocales,
-      locale: locale,
+          // 本地化配置
+          localizationsDelegates: const [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          locale: locale,
 
-      // 主题配置
-      theme: SpectraTheme.light,
-      darkTheme: SpectraTheme.dark,
-      themeMode: themeMode.flutterThemeMode,
+          // 主题配置
+          theme: SpectraTheme.light,
+          darkTheme: SpectraTheme.dark,
+          themeMode: themeMode.flutterThemeMode,
+        );
+      },
     );
   }
 }

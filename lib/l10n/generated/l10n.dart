@@ -448,6 +448,101 @@ class S {
   String get retry {
     return Intl.message('重试', name: 'retry', desc: '', args: []);
   }
+
+  /// `页面预览`
+  String get previewPage {
+    return Intl.message('页面预览', name: 'previewPage', desc: '', args: []);
+  }
+
+  /// `输入网址`
+  String get enterUrl {
+    return Intl.message('输入网址', name: 'enterUrl', desc: '', args: []);
+  }
+
+  /// `输入网址以预览页面`
+  String get enterUrlToPreview {
+    return Intl.message(
+      '输入网址以预览页面',
+      name: 'enterUrlToPreview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `前往`
+  String get go {
+    return Intl.message('前往', name: 'go', desc: '', args: []);
+  }
+
+  /// `刷新`
+  String get refresh {
+    return Intl.message('刷新', name: 'refresh', desc: '', args: []);
+  }
+
+  /// `选择元素`
+  String get selectElement {
+    return Intl.message('选择元素', name: 'selectElement', desc: '', args: []);
+  }
+
+  /// `取消选择`
+  String get cancelSelection {
+    return Intl.message('取消选择', name: 'cancelSelection', desc: '', args: []);
+  }
+
+  /// `点击页面以选择元素`
+  String get tapToSelectElement {
+    return Intl.message(
+      '点击页面以选择元素',
+      name: 'tapToSelectElement',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `取消`
+  String get cancel {
+    return Intl.message('取消', name: 'cancel', desc: '', args: []);
+  }
+
+  /// `复制`
+  String get copy {
+    return Intl.message('复制', name: 'copy', desc: '', args: []);
+  }
+
+  /// `已复制到剪贴板`
+  String get copiedToClipboard {
+    return Intl.message(
+      '已复制到剪贴板',
+      name: 'copiedToClipboard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已选元素`
+  String get selectedElement {
+    return Intl.message('已选元素', name: 'selectedElement', desc: '', args: []);
+  }
+
+  /// `文本内容`
+  String get textContent {
+    return Intl.message('文本内容', name: 'textContent', desc: '', args: []);
+  }
+
+  /// `发送到编辑器`
+  String get sendToEditor {
+    return Intl.message('发送到编辑器', name: 'sendToEditor', desc: '', args: []);
+  }
+
+  /// `WebView 将在此显示`
+  String get webViewPlaceholder {
+    return Intl.message(
+      'WebView 将在此显示',
+      name: 'webViewPlaceholder',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

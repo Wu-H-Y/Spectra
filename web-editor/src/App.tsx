@@ -1,47 +1,22 @@
-import { useTranslation } from 'react-i18next';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { RuleEditorPage } from '@/pages/rules/RuleEditorPage';
+import { RuleListPage } from '@/pages/rules/RuleListPage';
 
+/**
+ * 应用主入口组件。
+ * 配置路由和全局布局。
+ */
 function App() {
-  const { t } = useTranslation();
-
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">{t('appTitle')}</h1>
-          <div className="flex gap-2">
-            <Button variant="outline">{t('import')}</Button>
-            <Button>{t('newRule')}</Button>
-          </div>
-        </div>
-      </header>
-
-      <main className="container mx-auto px-4 py-6">
-        <div className="grid gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('rules')}</CardTitle>
-              <CardDescription>
-                Manage your crawler rules for content extraction
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                No rules yet. Create your first rule to get started.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/rules" replace />} />
+        <Route path="/rules" element={<RuleListPage />} />
+        <Route path="/rules/new" element={<RuleEditorPage />} />
+        <Route path="/rules/:id" element={<RuleEditorPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

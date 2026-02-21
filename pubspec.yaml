@@ -39,6 +39,7 @@ dependencies:
   qs_dart: ^1.7.0 # URL 参数编解码
   relic: ^1.0.0 # 现代 HTTP 服务器框架
   riverpod_annotation: ^4.0.2 # Riverpod 注解
+  sizer: ^3.0.3 # 响应式 UI 布局
   talker: ^5.1.13 # 日志和错误处理
   talker_dio_logger: ^5.1.13 # Talker Dio 日志拦截器
   talker_flutter: ^5.1.13 # Talker Flutter 支持
