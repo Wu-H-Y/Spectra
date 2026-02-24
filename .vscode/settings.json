@@ -11,5 +11,7 @@
   "rust-analyzer.checkOnSave": true,
   "rust-analyzer.showSyntaxTree": true,
   "rust-analyzer.check.command": "clippy",
-  "rust-analyzer.check.features": "all"
+  "rust-analyzer.check.features": "all",
+  "oxc.path.oxfmt": "web-editor\\node_modules\\oxfmt\\bin\\oxfmt",
+  "oxc.path.oxlint": "web-editor\\node_modules\\oxlint\\bin\\oxlint"
 }
