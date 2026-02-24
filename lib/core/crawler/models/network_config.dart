@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:spectra/core/crawler/models/v2/network_config/fallback_config.dart';
-import 'package:spectra/core/crawler/models/v2/network_config/proxy_config.dart';
-import 'package:spectra/core/crawler/models/v2/network_config/tls_fingerprint.dart';
+import 'package:spectra/core/crawler/models/network_config/fallback_config.dart';
+import 'package:spectra/core/crawler/models/network_config/proxy_config.dart';
+import 'package:spectra/core/crawler/models/network_config/tls_fingerprint.dart';
 
 part 'network_config.freezed.dart';
 part 'network_config.g.dart';

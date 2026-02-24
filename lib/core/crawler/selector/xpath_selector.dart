@@ -1,5 +1,3 @@
-import 'package:spectra/core/crawler/models/selector.dart';
-import 'package:spectra/core/crawler/models/selector_type.dart';
 import 'package:xml/xml.dart';
 import 'package:xml/xpath.dart';
 
@@ -47,33 +45,45 @@ class XPathSelectorEvaluator {
   /// 对 HTML 内容求值 XPath 表达式。
   ///
   /// [html] - 要搜索的 HTML 内容。
-  /// [selector] - 选择器配置。
+  /// [expression] - XPath 表达式。
+  /// [attribute] - 可选的属性名。
+  /// [firstOnly] - 是否只返回第一个匹配。
   ///
   /// 返回包含匹配节点和提取值的 [XPathSelectorResult]。
-  XPathSelectorResult evaluate(String html, Selector selector) {
+  XPathSelectorResult evaluate(
+    String html,
+    String expression, {
+    String? attribute,
+    bool firstOnly = false,
+  }) {
     final document = parseHtml(html);
-    return evaluateDocument(document, selector);
+    return evaluateDocument(document, expression,
+        attribute: attribute, firstOnly: firstOnly);
   }
 
   /// 对已解析的文档求值 XPath 表达式。
   ///
   /// [document] - 已解析的 XML/HTML 文档。
-  /// [selector] - 选择器配置。
+  /// [expression] - XPath 表达式。
+  /// [attribute] - 可选的属性名。
+  /// [firstOnly] - 是否只返回第一个匹配。
   ///
   /// 返回包含匹配节点和提取值的 [XPathSelectorResult]。
   XPathSelectorResult evaluateDocument(
     XmlDocument document,
-    Selector selector,
-  ) {
+    String expression, {
+    String? attribute,
+    bool firstOnly = false,
+  }) {
     try {
       // ignore: experimental_member_use - XPath 是 xml 包的实验性功能
-      final nodes = document.xpath(selector.expression).toList();
+      final nodes = document.xpath(expression).toList();
 
-      if (selector.firstOnly && nodes.isNotEmpty) {
-        return _extractFromNodes([nodes.first], selector.attribute);
+      if (firstOnly && nodes.isNotEmpty) {
+        return _extractFromNodes([nodes.first], attribute);
       }
 
-      return _extractFromNodes(nodes, selector.attribute);
+      return _extractFromNodes(nodes, attribute);
     } on XmlException {
       // XPath 错误时返回空结果
       return const XPathSelectorResult(
@@ -149,12 +159,9 @@ class XPathSelectorEvaluator {
   String? extractFirst(String html, String expression, {String? attribute}) {
     final result = evaluate(
       html,
-      Selector(
-        type: SelectorType.xpath,
-        expression: expression,
-        attribute: attribute,
-        firstOnly: true,
-      ),
+      expression,
+      attribute: attribute,
+      firstOnly: true,
     );
 
     if (attribute != null && attribute.isNotEmpty) {
@@ -167,14 +174,7 @@ class XPathSelectorEvaluator {
   ///
   /// 返回匹配的文本内容列表。
   List<String> extractAll(String html, String expression, {String? attribute}) {
-    final result = evaluate(
-      html,
-      Selector(
-        type: SelectorType.xpath,
-        expression: expression,
-        attribute: attribute,
-      ),
-    );
+    final result = evaluate(html, expression, attribute: attribute);
 
     if (attribute != null && attribute.isNotEmpty) {
       return result.attributes;

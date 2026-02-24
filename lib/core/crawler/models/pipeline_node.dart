@@ -42,6 +42,40 @@ sealed class PipelineNode with _$PipelineNode {
       _$PipelineNodeFromJson(json);
 }
 
+/// 获取节点类型。
+PipelineNodeType getNodeType(String operator) {
+  return switch (operator) {
+    'css' ||
+    'xpath' ||
+    'jsonpath' ||
+    'regex' ||
+    'js' =>
+      PipelineNodeType.selector,
+    'text' ||
+    'attr' ||
+    'html' ||
+    'href' ||
+    'src' =>
+      PipelineNodeType.extractor,
+    'trim' ||
+    'replace' ||
+    'regexreplace' ||
+    'url' ||
+    'lower' ||
+    'upper' ||
+    'number' ||
+    'date' =>
+      PipelineNodeType.transform,
+    'first' ||
+    'last' ||
+    'join' ||
+    'array' ||
+    'flat' =>
+      PipelineNodeType.aggregation,
+    _ => PipelineNodeType.transform,
+  };
+}
+
 /// Pipeline 定义 - 一组按顺序执行的节点。
 ///
 /// 可以表示为字符串数组或解析后的节点对象列表。
@@ -55,6 +89,29 @@ sealed class Pipeline with _$Pipeline {
     /// 输出字段名。
     String? outputField,
   }) = _Pipeline;
+
+  /// 从字符串数组解析 Pipeline。
+  ///
+  /// 示例: `["@css:.title", "@text", "@trim"]`
+  factory Pipeline.fromStringList(List<String> list) {
+    final nodes = list.map((str) {
+      final match = RegExp(r'^@(\w+)(?::(.+))?$').firstMatch(str);
+      if (match == null) {
+        throw FormatException('Invalid pipeline node: $str');
+      }
+
+      final operator = match.group(1)!;
+      final argument = match.group(2);
+
+      return PipelineNode(
+        type: getNodeType(operator),
+        operator: operator,
+        argument: argument,
+      );
+    }).toList();
+
+    return Pipeline(nodes: nodes);
+  }
 
   factory Pipeline.fromJson(Map<String, dynamic> json) =>
       _$PipelineFromJson(json);
@@ -72,55 +129,5 @@ extension PipelineParsing on Pipeline {
       }
       return '@${node.operator}';
     }).toList();
-  }
-
-  /// 从字符串数组解析 Pipeline。
-  static Pipeline fromStringList(List<String> list) {
-    final nodes = list.map((str) {
-      final match = RegExp(r'^@(\w+)(?::(.+))?$').firstMatch(str);
-      if (match == null) {
-        throw FormatException('Invalid pipeline node: $str');
-      }
-
-      final operator = match.group(1)!;
-      final argument = match.group(2);
-
-      return PipelineNode(
-        type: _getNodeType(operator),
-        operator: operator,
-        argument: argument,
-      );
-    }).toList();
-
-    return Pipeline(nodes: nodes);
-  }
-
-  static PipelineNodeType _getNodeType(String operator) {
-    return switch (operator) {
-      'css' ||
-      'xpath' ||
-      'jsonpath' ||
-      'regex' ||
-      'js' => PipelineNodeType.selector,
-      'text' ||
-      'attr' ||
-      'html' ||
-      'href' ||
-      'src' => PipelineNodeType.extractor,
-      'trim' ||
-      'replace' ||
-      'regexreplace' ||
-      'url' ||
-      'lower' ||
-      'upper' ||
-      'number' ||
-      'date' => PipelineNodeType.transform,
-      'first' ||
-      'last' ||
-      'join' ||
-      'array' ||
-      'flat' => PipelineNodeType.aggregation,
-      _ => PipelineNodeType.transform,
-    };
   }
 }

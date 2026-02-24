@@ -1,8 +1,5 @@
 import 'package:flutter_js/flutter_js.dart';
 
-import 'package:spectra/core/crawler/models/selector.dart';
-import 'package:spectra/core/crawler/models/selector_type.dart';
-
 /// JavaScript 表达式求值结果。
 class JsSelectorResult {
   /// 创建 JS 选择器结果。
@@ -114,11 +111,10 @@ class JsSelectorEvaluator {
   /// 这对于从 HTML 页面中提取嵌入的 JSON 数据很有用。
   ///
   /// [html] - HTML 内容。
-  /// [selector] - 选择器配置。表达式应该是
-  ///   提取所需数据的 JavaScript 表达式。
+  /// [expression] - JavaScript 表达式。
   ///
   /// 返回包含提取数据的 [JsSelectorResult]。
-  JsSelectorResult evaluate(String html, Selector selector) {
+  JsSelectorResult evaluate(String html, String expression) {
     // 构建一个解析 HTML 并使其可用的上下文脚本
     final contextScript =
         '''
@@ -126,7 +122,7 @@ class JsSelectorEvaluator {
       var __html__ = ${_escapeJsString(html)};
     ''';
 
-    return evaluateWithContext(contextScript, selector.expression);
+    return evaluateWithContext(contextScript, expression);
   }
 
   /// 从 HTML 页面中提取嵌入的 JSON。
@@ -136,13 +132,13 @@ class JsSelectorEvaluator {
   ///
   /// [html] - 要搜索的 HTML 内容。
   /// [variableName] - 要提取的 JavaScript 变量名。
-  /// [selector] - 选择器配置。
+  /// [expression] - JavaScript 表达式。
   ///
   /// 返回包含提取的 JSON 数据的 [JsSelectorResult]。
   JsSelectorResult extractEmbeddedJson(
     String html,
     String variableName,
-    Selector selector,
+    String expression,
   ) {
     // 首先尝试在 HTML 中查找变量赋值
     final pattern = RegExp(
@@ -168,7 +164,7 @@ class JsSelectorEvaluator {
       var $variableName = $jsonStr;
     ''';
 
-    return evaluateWithContext(contextScript, selector.expression);
+    return evaluateWithContext(contextScript, expression);
   }
 
   /// 从 script 标签内容中提取 JSON。
@@ -227,14 +223,7 @@ class JsSelectorEvaluator {
   ///
   /// 返回字符串形式的结果，如果求值失败则返回 null。
   String? extractFirst(String html, String expression) {
-    final result = evaluate(
-      html,
-      Selector(
-        type: SelectorType.js,
-        expression: expression,
-        firstOnly: true,
-      ),
-    );
+    final result = evaluate(html, expression);
 
     if (result.isError) return null;
     return result.stringValue;

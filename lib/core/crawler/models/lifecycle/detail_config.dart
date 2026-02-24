@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:spectra/core/crawler/models/v2/pipeline_node.dart';
+import 'package:spectra/core/crawler/models/pipeline_node.dart';
 
 part 'detail_config.freezed.dart';
 part 'detail_config.g.dart';

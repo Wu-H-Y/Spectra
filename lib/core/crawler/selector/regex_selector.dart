@@ -1,6 +1,3 @@
-import 'package:spectra/core/crawler/models/selector.dart';
-import 'package:spectra/core/crawler/models/selector_type.dart';
-
 /// 正则提取结果。
 class RegexSelectorResult {
   /// 创建正则选择器结果。
@@ -27,18 +24,25 @@ class RegexSelectorEvaluator {
   /// 使用正则模式从文本中提取数据。
   ///
   /// [text] - 要搜索的文本内容。
-  /// [selector] - 选择器配置（expression 是正则模式）。
+  /// [pattern] - 正则表达式模式。
+  /// [group] - 可选的分组索引（字符串形式）。
+  /// [firstOnly] - 是否只返回第一个匹配。
   ///
   /// 返回包含匹配和提取分组的 [RegexSelectorResult]。
-  RegexSelectorResult evaluate(String text, Selector selector) {
-    final regex = RegExp(selector.expression);
+  RegexSelectorResult evaluate(
+    String text,
+    String pattern, {
+    String? group,
+    bool firstOnly = false,
+  }) {
+    final regex = RegExp(pattern);
     final matches = regex.allMatches(text).toList();
 
-    if (selector.firstOnly && matches.isNotEmpty) {
-      return _extractFromMatches([matches.first], selector.attribute);
+    if (firstOnly && matches.isNotEmpty) {
+      return _extractFromMatches([matches.first], group);
     }
 
-    return _extractFromMatches(matches, selector.attribute);
+    return _extractFromMatches(matches, group);
   }
 
   RegexSelectorResult _extractFromMatches(
@@ -90,16 +94,7 @@ class RegexSelectorEvaluator {
   ///
   /// 返回第一个匹配的分组，如果没有匹配则返回 null。
   String? extractFirst(String text, String pattern, {String? group}) {
-    final result = evaluate(
-      text,
-      Selector(
-        type: SelectorType.regex,
-        expression: pattern,
-        attribute: group,
-        firstOnly: true,
-      ),
-    );
-
+    final result = evaluate(text, pattern, group: group, firstOnly: true);
     return result.groups.firstOrNull;
   }
 
@@ -107,15 +102,7 @@ class RegexSelectorEvaluator {
   ///
   /// 返回匹配分组的列表。
   List<String> extractAll(String text, String pattern, {String? group}) {
-    final result = evaluate(
-      text,
-      Selector(
-        type: SelectorType.regex,
-        expression: pattern,
-        attribute: group,
-      ),
-    );
-
+    final result = evaluate(text, pattern, group: group);
     return result.groups;
   }
 

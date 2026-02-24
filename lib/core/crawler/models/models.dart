@@ -1,15 +1,23 @@
-/// 用于定义提取规则的爬虫规则 DSL 模型。
+/// Crawler Rule System Models
+///
+/// 基于Pipeline DSL的爬虫规则模型。
 library;
 
-export 'action.dart';
+export 'aggregation_config.dart';
+// Core Models
 export 'crawler_rule.dart';
-export 'detection_config.dart';
-export 'extract_config.dart';
-export 'field_mapping.dart';
-export 'match_config.dart';
+// Lifecycle Models
+export 'lifecycle/content_config.dart';
+export 'lifecycle/detail_config.dart';
+export 'lifecycle/explore_config.dart';
+export 'lifecycle/pagination.dart';
+export 'lifecycle/search_config.dart';
+export 'lifecycle/toc_config.dart';
+// Shared Types
 export 'media_type.dart';
-export 'pagination_config.dart';
-export 'request_config.dart';
-export 'selector.dart';
-export 'selector_type.dart';
-export 'transform.dart';
+export 'network_config.dart';
+// Network Config Sub-models
+export 'network_config/fallback_config.dart';
+export 'network_config/proxy_config.dart';
+export 'network_config/tls_fingerprint.dart';
+export 'pipeline_node.dart';

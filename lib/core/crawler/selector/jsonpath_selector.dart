@@ -2,9 +2,6 @@ import 'dart:convert';
 
 import 'package:json_path/json_path.dart';
 
-import 'package:spectra/core/crawler/models/selector.dart';
-import 'package:spectra/core/crawler/models/selector_type.dart';
-
 /// JSONPath 求值结果。
 class JsonPathSelectorResult {
   /// 创建 JSONPath 选择器结果。
@@ -36,10 +33,17 @@ class JsonPathSelectorEvaluator {
   /// 对 JSON 内容求值 JSONPath 表达式。
   ///
   /// [json] - JSON 内容（字符串或已解析的数据）。
-  /// [selector] - 选择器配置。
+  /// [expression] - JSONPath 表达式。
+  /// [attribute] - 可选的属性名。
+  /// [firstOnly] - 是否只返回第一个匹配。
   ///
   /// 返回包含匹配和提取值的 [JsonPathSelectorResult]。
-  JsonPathSelectorResult evaluate(dynamic json, Selector selector) {
+  JsonPathSelectorResult evaluate(
+    dynamic json,
+    String expression, {
+    String? attribute,
+    bool firstOnly = false,
+  }) {
     // 如果是字符串则解析 JSON
     dynamic jsonData = json;
     if (json is String) {
@@ -47,16 +51,16 @@ class JsonPathSelectorEvaluator {
     }
 
     // 从表达式创建 JSONPath
-    final jsonPath = JsonPath(selector.expression);
+    final jsonPath = JsonPath(expression);
 
     // 读取匹配
     final matches = jsonPath.read(jsonData).toList();
 
-    if (selector.firstOnly && matches.isNotEmpty) {
-      return _extractFromMatches([matches.first], selector.attribute);
+    if (firstOnly && matches.isNotEmpty) {
+      return _extractFromMatches([matches.first], attribute);
     }
 
-    return _extractFromMatches(matches, selector.attribute);
+    return _extractFromMatches(matches, attribute);
   }
 
   JsonPathSelectorResult _extractFromMatches(
@@ -97,17 +101,17 @@ class JsonPathSelectorEvaluator {
   /// 使用 JSONPath 从 JSON 中提取第一个值。
   ///
   /// 返回第一个匹配的值，如果没有匹配则返回 null。
-  dynamic extractFirst(dynamic json, String expression, {String? attribute}) {
+  dynamic extractFirst(
+    dynamic json,
+    String expression, {
+    String? attribute,
+  }) {
     final result = evaluate(
       json,
-      Selector(
-        type: SelectorType.jsonpath,
-        expression: expression,
-        attribute: attribute,
-        firstOnly: true,
-      ),
+      expression,
+      attribute: attribute,
+      firstOnly: true,
     );
-
     return result.values.firstOrNull;
   }
 
@@ -119,15 +123,7 @@ class JsonPathSelectorEvaluator {
     String expression, {
     String? attribute,
   }) {
-    final result = evaluate(
-      json,
-      Selector(
-        type: SelectorType.jsonpath,
-        expression: expression,
-        attribute: attribute,
-      ),
-    );
-
+    final result = evaluate(json, expression, attribute: attribute);
     return result.values;
   }
 

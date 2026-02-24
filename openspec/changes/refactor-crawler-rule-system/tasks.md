@@ -64,31 +64,31 @@
 - [x] 创建 `SimilarityService` 服务类 (@SquadronService)
 - [x] 运行 build_runner 生成 Worker 和 WorkerPool 代码
 - [x] 实现 `CrawlerExecutor` Worker Pool 管理
-- [ ] 编写 Worker 生命周期测试
+- [x] 编写 Worker 生命周期测试
 
 ### 2.1 Node Parsers
-- [ ] 实现 `parsePipeline()` 函数
-- [ ] 实现节点类型识别
-- [ ] 实现参数解析
-- [ ] 编写解析器测试
+- [x] 实现 `parsePipeline()` 函数
+- [x] 实现节点类型识别
+- [x] 实现参数解析
+- [x] 编写解析器测试
 
 ### 2.2 Node Handlers
-- [ ] 实现 CSS 选择器处理器
-- [ ] 实现 XPath 选择器处理器
-- [ ] 实现 JSONPath 处理器
-- [ ] 实现 Regex 处理器
-- [ ] 实现 JavaScript 执行器
-- [ ] 实现提取节点处理器 (@text, @attr, @html)
-- [ ] 实现变换节点处理器 (@trim, @replace, @url)
-- [ ] 实现聚合节点处理器 (@first, @join)
+- [x] 实现 CSS 选择器处理器
+- [x] 实现 XPath 选择器处理器
+- [x] 实现 JSONPath 处理器
+- [x] 实现 Regex 处理器
+- [x] 实现 JavaScript 执行器
+- [x] 实现提取节点处理器 (@text, @attr, @html)
+- [x] 实现变换节点处理器 (@trim, @replace, @url)
+- [x] 实现聚合节点处理器 (@first, @join)
 
 ### 2.3 Lifecycle Executor
-- [ ] 实现 `ExploreExecutor`
-- [ ] 实现 `SearchExecutor`
-- [ ] 实现 `DetailExecutor`
-- [ ] 实现 `TocExecutor`
-- [ ] 实现 `ContentExecutor` (含 sniff 策略)
-- [ ] 实现变量插值 `{{host}}`, `{{key}}`, `{{page}}`
+- [x] 实现 `ExploreExecutor`
+- [x] 实现 `SearchExecutor`
+- [x] 实现 `DetailExecutor`
+- [x] 实现 `TocExecutor`
+- [x] 实现 `ContentExecutor` (含 sniff 策略)
+- [x] 实现变量插值 `{{host}}`, `{{key}}`, `{{page}}`
 
 ---
 
@@ -221,29 +221,29 @@
 ## Phase 7: Code Cleanup (1 周)
 
 ### 7.1 迁移 v2 模型
-- [ ] 将 `models/v2/` 下的所有文件移动到 `models/`
-- [ ] 更新所有 import 路径
-- [ ] 删除 `models/v2/` 目录
-- [ ] 移除旧模型文件
-- [ ] 运行 `flutter analyze` 确保无错误
+- [x] 将 `models/v2/` 下的所有文件移动到 `models/`
+- [x] 更新所有 import 路径
+- [x] 删除 `models/v2/` 目录
+- [x] 移除旧模型文件
+- [x] 运行 `flutter analyze` 确保无错误
 
 ### 7.2 清理旧代码
-- [ ] 删除旧的 `Transform` 模型 (被 `PipelineNode` 替代)
-- [ ] 删除旧的 `Selector` 模型 (被新的 Pipeline DSL 替代)
-- [ ] 删除旧的 `ExtractConfig` 模型
-- [ ] 删除旧的 `RequestConfig` 模型
-- [ ] 删除旧的 `PaginationConfig` 模型
-- [ ] 删除旧的 Dart `JaccardSimilarity` 类 (被 Rust FFI 替代)
-- [ ] 删除旧的 Dart `LevenshteinDistance` 类 (被 Rust FFI 替代)
-- [ ] 删除旧的 Dart `TitleNormalizer` 类 (被 Rust FFI 替代)
-- [ ] 删除旧的 Dart 测试类 (被 Rust FFI 替代)
-- [ ] 更新 `models/models.dart` 导出
+- [x] 删除旧的 `Transform` 模型 (被 `PipelineNode` 替代)
+- [x] 删除旧的 `Selector` 模型 (被新的 Pipeline DSL 替代)
+- [x] 删除旧的 `ExtractConfig` 模型
+- [x] 删除旧的 `RequestConfig` 模型
+- [x] 删除旧的 `PaginationConfig` 模型
+- [x] 删除旧的 Dart `JaccardSimilarity` 类 (被 Rust FFI 替代)
+- [x] 删除旧的 Dart `LevenshteinDistance` 类 (被 Rust FFI 替代)
+- [x] 删除旧的 Dart `TitleNormalizer` 类 (被 Rust FFI 替代)
+- [x] 删除旧的 Dart 测试类 (被 Rust FFI 替代)
+- [x] 更新 `models/models.dart` 导出
 
 ### 7.3 更新执行器
-- [ ] 更新 `executor/` 使用新的模型
-- [ ] 删除旧的 `transform_pipeline.dart`
-- [ ] 删除旧的 `rule_parser.dart`
-- [ ] 实现 `PipelineExecutor` 使用新模型
+- [x] 更新 `executor/` 使用新的模型
+- [x] 删除旧的 `transform_pipeline.dart`
+- [x] 删除旧的 `rule_parser.dart`
+- [x] 实现 `PipelineExecutor` 使用新模型
 
 ### 7.4 验证清理
 - [ ] 运行 `flutter analyze --fatal-infos`

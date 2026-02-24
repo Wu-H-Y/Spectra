@@ -2,16 +2,12 @@ import 'dart:convert';
 
 import 'package:relic/relic.dart';
 
-import 'package:spectra/core/crawler/executor/executor.dart';
+import 'package:spectra/core/crawler/models/models.dart';
 
 /// 规则 CRUD 操作路由。
 class RulesRoutes {
   /// 创建规则路由。
-  RulesRoutes({
-    RuleParser? ruleParser,
-  }) : _ruleParser = ruleParser ?? RuleParser();
-
-  final RuleParser _ruleParser;
+  RulesRoutes();
 
   /// 创建包含所有路由的路由器。
   ///
@@ -60,25 +56,14 @@ class RulesRoutes {
   Future<Response> _createRule(Request request) async {
     try {
       final body = await request.readAsString();
-      final result = _ruleParser.parseAndValidate(body);
-
-      if (!result.isSuccess) {
-        return Response.badRequest(
-          body: Body.fromString(
-            jsonEncode({
-              'valid': false,
-              'errors': result.errors,
-            }),
-            mimeType: MimeType.json,
-          ),
-        );
-      }
+      final json = jsonDecode(body) as Map<String, dynamic>;
+      final rule = CrawlerRule.fromJson(json);
 
       // TODO(developer): 保存到数据库
 
       return Response.ok(
         body: Body.fromString(
-          _ruleParser.toJsonString(result.rule!),
+          jsonEncode(rule.toJson()),
           mimeType: MimeType.json,
         ),
       );
@@ -103,25 +88,14 @@ class RulesRoutes {
   Future<Response> _updateRule(Request request) async {
     try {
       final body = await request.readAsString();
-      final result = _ruleParser.parseAndValidate(body);
-
-      if (!result.isSuccess) {
-        return Response.badRequest(
-          body: Body.fromString(
-            jsonEncode({
-              'valid': false,
-              'errors': result.errors,
-            }),
-            mimeType: MimeType.json,
-          ),
-        );
-      }
+      final json = jsonDecode(body) as Map<String, dynamic>;
+      final rule = CrawlerRule.fromJson(json);
 
       // TODO(developer): 在数据库中更新
 
       return Response.ok(
         body: Body.fromString(
-          _ruleParser.toJsonString(result.rule!),
+          jsonEncode(rule.toJson()),
           mimeType: MimeType.json,
         ),
       );
@@ -159,14 +133,15 @@ class RulesRoutes {
   Future<Response> _validateRule(Request request) async {
     try {
       final body = await request.readAsString();
-      final result = _ruleParser.parseAndValidate(body);
+      final json = jsonDecode(body) as Map<String, dynamic>;
+      final rule = CrawlerRule.fromJson(json);
 
       return Response.ok(
         body: Body.fromString(
           jsonEncode({
-            'valid': result.isSuccess,
-            'errors': result.errors,
-            'rule': result.rule?.toJson(),
+            'valid': true,
+            'errors': <String>[],
+            'rule': rule.toJson(),
           }),
           mimeType: MimeType.json,
         ),
@@ -220,21 +195,8 @@ class RulesRoutes {
         );
       }
 
-      // 解析并验证规则
-      final parseResult = _ruleParser.parseJson(ruleJson);
-      if (!parseResult.isSuccess) {
-        return Response.badRequest(
-          body: Body.fromString(
-            jsonEncode({
-              'success': false,
-              'errors': parseResult.errors,
-            }),
-            mimeType: MimeType.json,
-          ),
-        );
-      }
-
-      final rule = parseResult.rule!;
+      // 解析规则
+      final rule = CrawlerRule.fromJson(ruleJson);
 
       // 目前返回模拟执行结果
       // 完整执行需要从 URL 获取 HTML
@@ -251,10 +213,8 @@ class RulesRoutes {
 
       // TODO(developer): 实现完整执行：
       // 1. 如需要则从 URL 获取 HTML
-      // 2. 执行 before actions
-      // 3. 根据类型运行提取
-      // 4. 执行 after actions
-      // 5. 返回提取的数据
+      // 2. 使用新的 PipelineExecutor 执行
+      // 3. 返回提取的数据
 
       return Response.ok(
         body: Body.fromString(

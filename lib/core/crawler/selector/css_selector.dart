@@ -1,9 +1,6 @@
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
 
-import 'package:spectra/core/crawler/models/selector.dart';
-import 'package:spectra/core/crawler/models/selector_type.dart';
-
 /// CSS 选择器求值结果。
 class CssSelectorResult {
   /// 创建 CSS 选择器结果。
@@ -40,47 +37,66 @@ class CssSelectorEvaluator {
   /// 对 HTML 内容求值 CSS 选择器。
   ///
   /// [html] - 要搜索的 HTML 内容。
-  /// [selector] - 选择器配置。
+  /// [expression] - CSS 选择器表达式。
+  /// [attribute] - 可选的属性名。
+  /// [firstOnly] - 是否只返回第一个匹配。
   ///
   /// 返回包含匹配元素和提取值的 [CssSelectorResult]。
-  CssSelectorResult evaluate(String html, Selector selector) {
+  CssSelectorResult evaluate(
+    String html,
+    String expression, {
+    String? attribute,
+    bool firstOnly = false,
+  }) {
     final document = parseDocument(html);
-    return evaluateDocument(document, selector);
+    return evaluateDocument(document, expression,
+        attribute: attribute, firstOnly: firstOnly);
   }
 
   /// 对已解析的文档求值 CSS 选择器。
   ///
   /// [document] - 已解析的 HTML 文档。
-  /// [selector] - 选择器配置。
+  /// [expression] - CSS 选择器表达式。
+  /// [attribute] - 可选的属性名。
+  /// [firstOnly] - 是否只返回第一个匹配。
   ///
   /// 返回包含匹配元素和提取值的 [CssSelectorResult]。
-  CssSelectorResult evaluateDocument(dom.Document document, Selector selector) {
-    final elements = document.querySelectorAll(selector.expression).toList();
+  CssSelectorResult evaluateDocument(
+    dom.Document document,
+    String expression, {
+    String? attribute,
+    bool firstOnly = false,
+  }) {
+    final elements = document.querySelectorAll(expression).toList();
 
-    if (selector.firstOnly && elements.isNotEmpty) {
-      return _extractFromElements([elements.first], selector.attribute);
+    if (firstOnly && elements.isNotEmpty) {
+      return _extractFromElements([elements.first], attribute);
     }
 
-    return _extractFromElements(elements, selector.attribute);
+    return _extractFromElements(elements, attribute);
   }
 
   /// 对元素求值 CSS 选择器。
   ///
   /// [element] - 要在其中搜索的父元素。
-  /// [selector] - 选择器配置。
+  /// [expression] - CSS 选择器表达式。
+  /// [attribute] - 可选的属性名。
+  /// [firstOnly] - 是否只返回第一个匹配。
   ///
   /// 返回包含匹配元素和提取值的 [CssSelectorResult]。
   CssSelectorResult evaluateElement(
     dom.Element element,
-    Selector selector,
-  ) {
-    final elements = element.querySelectorAll(selector.expression).toList();
+    String expression, {
+    String? attribute,
+    bool firstOnly = false,
+  }) {
+    final elements = element.querySelectorAll(expression).toList();
 
-    if (selector.firstOnly && elements.isNotEmpty) {
-      return _extractFromElements([elements.first], selector.attribute);
+    if (firstOnly && elements.isNotEmpty) {
+      return _extractFromElements([elements.first], attribute);
     }
 
-    return _extractFromElements(elements, selector.attribute);
+    return _extractFromElements(elements, attribute);
   }
 
   CssSelectorResult _extractFromElements(
@@ -124,12 +140,9 @@ class CssSelectorEvaluator {
   String? extractFirst(String html, String expression, {String? attribute}) {
     final result = evaluate(
       html,
-      Selector(
-        type: SelectorType.css,
-        expression: expression,
-        attribute: attribute,
-        firstOnly: true,
-      ),
+      expression,
+      attribute: attribute,
+      firstOnly: true,
     );
 
     if (attribute != null && attribute.isNotEmpty) {
@@ -142,14 +155,7 @@ class CssSelectorEvaluator {
   ///
   /// 返回匹配的文本内容列表。
   List<String> extractAll(String html, String expression, {String? attribute}) {
-    final result = evaluate(
-      html,
-      Selector(
-        type: SelectorType.css,
-        expression: expression,
-        attribute: attribute,
-      ),
-    );
+    final result = evaluate(html, expression, attribute: attribute);
 
     if (attribute != null && attribute.isNotEmpty) {
       return result.attributes;

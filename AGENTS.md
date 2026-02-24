@@ -67,7 +67,100 @@ lib/
 
 - **行宽**: 80 字符
 - **注释**: 中文
-- **Lint**: `flutter_lints` + `very_good_analysis`
+---
+
+## LINT RULES
+
+> 以下规则必须严格遵守，违反会导致 CI 失败。
+
+### 1. public_member_api_docs
+
+所有公共成员（类、构造函数、属性、方法）必须有文档注释。
+
+```dart
+// [DO]
+/// 列表项数据。
+class ListItem {
+  /// 创建列表项。
+  const ListItem({required this.fields});
+
+  /// 字段数据。
+  final Map<String, String> fields;
+}
+
+// [DON'T] - 缺少文档注释
+class ListItem {
+  const ListItem({required this.fields});
+  final Map<String, String> fields;
+}
+```
+
+### 2. avoid_catches_without_on_clauses
+
+catch 子句必须使用 `on` 指定异常类型，避免捕获所有异常。
+
+```dart
+// [DO]
+try {
+  // ...
+} on Exception catch (e) {
+  return PipelineResult(values: [], errors: ['错误: $e']);
+} on FormatException catch (e) {
+  return PipelineResult(values: [], errors: ['格式错误: $e']);
+}
+
+// [DON'T] - 未指定异常类型
+try {
+  // ...
+} catch (e) {
+  return PipelineResult(values: [], errors: ['错误: $e']);
+}
+```
+
+### 3. lines_longer_than_80_chars
+
+行宽不能超过 80 字符。长行应拆分为多行。
+
+```dart
+// [DO]
+final result = evaluate(
+  html,
+  expression,
+  attribute: attribute,
+  firstOnly: true,
+);
+
+// [DON'T] - 超过 80 字符
+final result = evaluate(html, expression, attribute: attribute, firstOnly: true);
+```
+
+### 4. unused_catch_clause
+
+未使用的 catch 变量应使用 `_` 替代。
+
+```dart
+// [DO]
+} on Exception catch (_) {
+  return url; // 不需要异常信息
+}
+
+// [DON'T] - 未使用的变量 e
+} on Exception catch (e) {
+  return url;
+}
+```
+
+### 5. inference_failure_on_collection_literal
+
+集合字面量（`{}`、`[]`）在类型无法推断时需显式指定类型。
+
+```dart
+// [DO]
+return jsonString.isEmpty ? <String, dynamic>{} : jsonString;
+
+// [DON'T] - 类型推断失败
+return jsonString.isEmpty ? {} : jsonString;
+```
 
 ---
 
