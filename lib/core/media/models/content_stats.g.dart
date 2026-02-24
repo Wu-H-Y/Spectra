@@ -8,22 +8,22 @@ part of 'content_stats.dart';
 
 _ContentStats _$ContentStatsFromJson(Map<String, dynamic> json) =>
     _ContentStats(
-      viewCount: (json['viewCount'] as num?)?.toInt(),
-      likeCount: (json['likeCount'] as num?)?.toInt(),
-      favoriteCount: (json['favoriteCount'] as num?)?.toInt(),
-      commentCount: (json['commentCount'] as num?)?.toInt(),
-      shareCount: (json['shareCount'] as num?)?.toInt(),
+      viewCount: (json['view_count'] as num?)?.toInt(),
+      likeCount: (json['like_count'] as num?)?.toInt(),
+      favoriteCount: (json['favorite_count'] as num?)?.toInt(),
+      commentCount: (json['comment_count'] as num?)?.toInt(),
+      shareCount: (json['share_count'] as num?)?.toInt(),
       rating: (json['rating'] as num?)?.toDouble(),
-      ratingCount: (json['ratingCount'] as num?)?.toInt(),
+      ratingCount: (json['rating_count'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ContentStatsToJson(_ContentStats instance) =>
     <String, dynamic>{
-      'viewCount': instance.viewCount,
-      'likeCount': instance.likeCount,
-      'favoriteCount': instance.favoriteCount,
-      'commentCount': instance.commentCount,
-      'shareCount': instance.shareCount,
-      'rating': instance.rating,
-      'ratingCount': instance.ratingCount,
+      'view_count': ?instance.viewCount,
+      'like_count': ?instance.likeCount,
+      'favorite_count': ?instance.favoriteCount,
+      'comment_count': ?instance.commentCount,
+      'share_count': ?instance.shareCount,
+      'rating': ?instance.rating,
+      'rating_count': ?instance.ratingCount,
     };

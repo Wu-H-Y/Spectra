@@ -35,19 +35,19 @@ _WaitAction _$WaitActionFromJson(Map<String, dynamic> json) => _WaitAction(
 
 Map<String, dynamic> _$WaitActionToJson(_WaitAction instance) =>
     <String, dynamic>{
-      'selector': instance.selector,
+      'selector': ?instance.selector,
       'timeout': instance.timeout,
     };
 
 _ClickAction _$ClickActionFromJson(Map<String, dynamic> json) => _ClickAction(
   selector: json['selector'] as String,
-  scrollIntoView: json['scrollIntoView'] as bool? ?? true,
+  scrollIntoView: json['scroll_into_view'] as bool? ?? true,
 );
 
 Map<String, dynamic> _$ClickActionToJson(_ClickAction instance) =>
     <String, dynamic>{
       'selector': instance.selector,
-      'scrollIntoView': instance.scrollIntoView,
+      'scroll_into_view': instance.scrollIntoView,
     };
 
 _ScrollAction _$ScrollActionFromJson(Map<String, dynamic> json) =>
@@ -76,35 +76,35 @@ const _$ScrollDirectionEnumMap = {
 _FillAction _$FillActionFromJson(Map<String, dynamic> json) => _FillAction(
   selector: json['selector'] as String,
   value: json['value'] as String,
-  simulateTyping: json['simulateTyping'] as bool? ?? false,
+  simulateTyping: json['simulate_typing'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$FillActionToJson(_FillAction instance) =>
     <String, dynamic>{
       'selector': instance.selector,
       'value': instance.value,
-      'simulateTyping': instance.simulateTyping,
+      'simulate_typing': instance.simulateTyping,
     };
 
 _ScriptAction _$ScriptActionFromJson(Map<String, dynamic> json) =>
     _ScriptAction(
       code: json['code'] as String,
-      awaitCompletion: json['awaitCompletion'] as bool? ?? true,
+      awaitCompletion: json['await_completion'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$ScriptActionToJson(_ScriptAction instance) =>
     <String, dynamic>{
       'code': instance.code,
-      'awaitCompletion': instance.awaitCompletion,
+      'await_completion': instance.awaitCompletion,
     };
 
 _ConditionAction _$ConditionActionFromJson(Map<String, dynamic> json) =>
     _ConditionAction(
       check: json['check'] as String,
-      thenActions: (json['thenActions'] as List<dynamic>)
+      thenActions: (json['then_actions'] as List<dynamic>)
           .map((e) => CrawlerAction.fromJson(e as Map<String, dynamic>))
           .toList(),
-      elseActions: (json['elseActions'] as List<dynamic>?)
+      elseActions: (json['else_actions'] as List<dynamic>?)
           ?.map((e) => CrawlerAction.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -112,8 +112,8 @@ _ConditionAction _$ConditionActionFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ConditionActionToJson(_ConditionAction instance) =>
     <String, dynamic>{
       'check': instance.check,
-      'thenActions': instance.thenActions,
-      'elseActions': instance.elseActions,
+      'then_actions': instance.thenActions.map((e) => e.toJson()).toList(),
+      'else_actions': ?instance.elseActions?.map((e) => e.toJson()).toList(),
     };
 
 _LoopAction _$LoopActionFromJson(Map<String, dynamic> json) => _LoopAction(
@@ -121,12 +121,12 @@ _LoopAction _$LoopActionFromJson(Map<String, dynamic> json) => _LoopAction(
   actions: (json['actions'] as List<dynamic>)
       .map((e) => CrawlerAction.fromJson(e as Map<String, dynamic>))
       .toList(),
-  delayMs: (json['delayMs'] as num?)?.toInt() ?? 1000,
+  delayMs: (json['delay_ms'] as num?)?.toInt() ?? 1000,
 );
 
 Map<String, dynamic> _$LoopActionToJson(_LoopAction instance) =>
     <String, dynamic>{
       'count': instance.count,
-      'actions': instance.actions,
-      'delayMs': instance.delayMs,
+      'actions': instance.actions.map((e) => e.toJson()).toList(),
+      'delay_ms': instance.delayMs,
     };

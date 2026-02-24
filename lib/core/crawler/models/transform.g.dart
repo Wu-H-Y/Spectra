@@ -14,7 +14,7 @@ _Transform _$TransformFromJson(Map<String, dynamic> json) => _Transform(
 Map<String, dynamic> _$TransformToJson(_Transform instance) =>
     <String, dynamic>{
       'type': _$TransformTypeEnumMap[instance.type]!,
-      'params': instance.params,
+      'params': ?instance.params,
     };
 
 const _$TransformTypeEnumMap = {

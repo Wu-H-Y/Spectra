@@ -23,7 +23,7 @@ Map<String, dynamic> _$ComicChapterToJson(_ComicChapter instance) =>
       'title': instance.title,
       'images': instance.images,
       'index': instance.index,
-      'url': instance.url,
+      'url': ?instance.url,
     };
 
 _ComicContent _$ComicContentFromJson(Map<String, dynamic> json) =>
@@ -44,44 +44,44 @@ _ComicContent _$ComicContentFromJson(Map<String, dynamic> json) =>
       stats: json['stats'] == null
           ? null
           : ContentStats.fromJson(json['stats'] as Map<String, dynamic>),
-      createdAt: json['createdAt'] == null
+      createdAt: json['created_at'] == null
           ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
+          : DateTime.parse(json['created_at'] as String),
+      updatedAt: json['updated_at'] == null
           ? null
-          : DateTime.parse(json['updatedAt'] as String),
+          : DateTime.parse(json['updated_at'] as String),
       status: $enumDecodeNullable(_$ComicStatusEnumMap, json['status']),
-      lastChapter: json['lastChapter'] == null
+      lastChapter: json['last_chapter'] == null
           ? null
-          : ComicChapter.fromJson(json['lastChapter'] as Map<String, dynamic>),
+          : ComicChapter.fromJson(json['last_chapter'] as Map<String, dynamic>),
       readDirection:
-          $enumDecodeNullable(_$ReadDirectionEnumMap, json['readDirection']) ??
+          $enumDecodeNullable(_$ReadDirectionEnumMap, json['read_direction']) ??
           ReadDirection.ltr,
-      ageRating: json['ageRating'] as String?,
-      chapterCount: (json['chapterCount'] as num?)?.toInt(),
-      totalImages: (json['totalImages'] as num?)?.toInt(),
+      ageRating: json['age_rating'] as String?,
+      chapterCount: (json['chapter_count'] as num?)?.toInt(),
+      totalImages: (json['total_images'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ComicContentToJson(_ComicContent instance) =>
     <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
-      'source': instance.source,
-      'chapters': instance.chapters,
-      'cover': instance.cover,
-      'description': instance.description,
-      'author': instance.author,
-      'tags': instance.tags,
-      'category': instance.category,
-      'stats': instance.stats,
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
-      'status': _$ComicStatusEnumMap[instance.status],
-      'lastChapter': instance.lastChapter,
-      'readDirection': _$ReadDirectionEnumMap[instance.readDirection]!,
-      'ageRating': instance.ageRating,
-      'chapterCount': instance.chapterCount,
-      'totalImages': instance.totalImages,
+      'source': instance.source.toJson(),
+      'chapters': instance.chapters.map((e) => e.toJson()).toList(),
+      'cover': ?instance.cover,
+      'description': ?instance.description,
+      'author': ?instance.author?.toJson(),
+      'tags': ?instance.tags,
+      'category': ?instance.category,
+      'stats': ?instance.stats?.toJson(),
+      'created_at': ?instance.createdAt?.toIso8601String(),
+      'updated_at': ?instance.updatedAt?.toIso8601String(),
+      'status': ?_$ComicStatusEnumMap[instance.status],
+      'last_chapter': ?instance.lastChapter?.toJson(),
+      'read_direction': _$ReadDirectionEnumMap[instance.readDirection]!,
+      'age_rating': ?instance.ageRating,
+      'chapter_count': ?instance.chapterCount,
+      'total_images': ?instance.totalImages,
     };
 
 const _$ComicStatusEnumMap = {

@@ -1611,7 +1611,6 @@ class CachedContentCompanion extends UpdateCompanion<CachedContentData> {
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
-  _$AppDatabase.connect(DatabaseConnection c) : super.connect(c);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $CrawlRulesTable crawlRules = $CrawlRulesTable(this);
   late final $CachedContentTable cachedContent = $CachedContentTable(this);

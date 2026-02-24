@@ -17,17 +17,17 @@
 
 ---
 
-## ✨ 功能特性
+## 功能特性
 
-- 🎬 **视频采集** - 支持多种视频源的采集和下载
-- 🎵 **音乐采集** - 批量采集音乐资源
-- 📚 **小说采集** - 支持网络小说和本地小说管理
-- 📖 **漫画采集** - 漫画资源采集与阅读
-- 🖼️ **图片采集** - 图片批量采集和管理
-- 🔧 **自定义规则** - 灵活的爬虫规则系统，支持用户自定义
-- 📱 **跨平台** - 支持 Android、iOS、Windows、macOS、Linux
+- **视频采集** - 支持多种视频源的采集和下载
+- **音乐采集** - 批量采集音乐资源
+- **小说采集** - 支持网络小说和本地小说管理
+- **漫画采集** - 漫画资源采集与阅读
+- **图片采集** - 图片批量采集和管理
+- **自定义规则** - 灵活的爬虫规则系统，支持用户自定义
+- **跨平台** - 支持 Android、iOS、Windows、macOS、Linux
 
-## 📥 安装
+## 安装
 
 ### 下载安装包
 
@@ -90,26 +90,26 @@ flutter build <platform> --release
 
 跳过检查：`git commit --no-verify`
 
-## 🚀 快速开始
+## 快速开始
 
 1. **添加数据源** - 在设置中添加自定义爬虫规则
 2. **浏览内容** - 使用内置浏览器访问目标网站
 3. **采集数据** - 一键采集所需的多媒体资源
 4. **管理收藏** - 在本地管理和查看采集的内容
 
-## 📖 文档
+## 文档
 
 - [贡献指南](.github/CONTRIBUTING.md) - 如何参与项目开发
 - [分支规则](docs/BRANCHING.md) - Git 分支管理规范
 - [提交规范](docs/COMMIT_CONVENTION.md) - Conventional Commits 规范
 - [发布指南](docs/RELEASE.md) - 版本发布流程
 
-## 🛠️ 技术栈
+## 技术栈
 
 - [Flutter](https://flutter.dev/) - UI 框架
 - [Dart](https://dart.dev/) - 编程语言
 
-## 🤝 贡献
+## 贡献
 
 欢迎贡献代码、报告 Bug 或提出新功能建议！
 
@@ -121,11 +121,11 @@ flutter build <platform> --release
 
 详见 [贡献指南](.github/CONTRIBUTING.md)。
 
-## 📝 开发状态
+## 开发状态
 
 项目正在积极开发中，功能可能会发生变化。
 
-## ⚠️ 免责声明
+## 免责声明
 
 **请在使用本软件前仔细阅读以下声明：**
 
@@ -143,9 +143,9 @@ flutter build <platform> --release
 
 **使用本软件即表示您已阅读、理解并同意遵守以上声明。如果您不同意，请勿使用本软件。**
 
-📄 完整免责声明请查看 [DISCLAIMER.md](DISCLAIMER.md)。
+完整免责声明请查看 [DISCLAIMER.md](DISCLAIMER.md)。
 
-## 📄 许可证
+## 许可证
 
 本项目采用 GNU Affero General Public License v3.0 许可证 - 详见 [LICENSE](LICENSE) 文件。
 
@@ -155,7 +155,7 @@ flutter build <platform> --release
 - 网络服务使用也必须提供源代码
 - 必须保留版权声明和许可证副本
 
-## 👤 作者
+## 作者
 
 **Wu-H-Y**
 
@@ -165,6 +165,6 @@ flutter build <platform> --release
 
 <div align="center">
 
-如果这个项目对你有帮助，请给一个 ⭐️ Star 支持一下！
+如果这个项目对你有帮助，请给一个 Star 支持一下！
 
 </div>

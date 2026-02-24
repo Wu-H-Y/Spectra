@@ -10,27 +10,27 @@ _ExecutionState _$ExecutionStateFromJson(
   Map<String, dynamic> json,
 ) => _ExecutionState(
   id: json['id'] as String,
-  ruleId: json['ruleId'] as String,
+  ruleId: json['rule_id'] as String,
   status:
       $enumDecodeNullable(_$ExecutionStatusEnumMap, json['status']) ??
       ExecutionStatus.idle,
-  currentUrl: json['currentUrl'] as String?,
-  currentPage: (json['currentPage'] as num?)?.toInt() ?? 1,
-  totalPages: (json['totalPages'] as num?)?.toInt() ?? 0,
-  extractedCount: (json['extractedCount'] as num?)?.toInt() ?? 0,
-  failedCount: (json['failedCount'] as num?)?.toInt() ?? 0,
+  currentUrl: json['current_url'] as String?,
+  currentPage: (json['current_page'] as num?)?.toInt() ?? 1,
+  totalPages: (json['total_pages'] as num?)?.toInt() ?? 0,
+  extractedCount: (json['extracted_count'] as num?)?.toInt() ?? 0,
+  failedCount: (json['failed_count'] as num?)?.toInt() ?? 0,
   errors:
       (json['errors'] as List<dynamic>?)?.map((e) => e as String).toList() ??
       const [],
   warnings:
       (json['warnings'] as List<dynamic>?)?.map((e) => e as String).toList() ??
       const [],
-  startTime: json['startTime'] == null
+  startTime: json['start_time'] == null
       ? null
-      : DateTime.parse(json['startTime'] as String),
-  endTime: json['endTime'] == null
+      : DateTime.parse(json['start_time'] as String),
+  endTime: json['end_time'] == null
       ? null
-      : DateTime.parse(json['endTime'] as String),
+      : DateTime.parse(json['end_time'] as String),
   phase:
       $enumDecodeNullable(_$ExecutionPhaseEnumMap, json['phase']) ??
       ExecutionPhase.initializing,
@@ -40,17 +40,17 @@ _ExecutionState _$ExecutionStateFromJson(
 Map<String, dynamic> _$ExecutionStateToJson(_ExecutionState instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'ruleId': instance.ruleId,
+      'rule_id': instance.ruleId,
       'status': _$ExecutionStatusEnumMap[instance.status]!,
-      'currentUrl': instance.currentUrl,
-      'currentPage': instance.currentPage,
-      'totalPages': instance.totalPages,
-      'extractedCount': instance.extractedCount,
-      'failedCount': instance.failedCount,
+      'current_url': ?instance.currentUrl,
+      'current_page': instance.currentPage,
+      'total_pages': instance.totalPages,
+      'extracted_count': instance.extractedCount,
+      'failed_count': instance.failedCount,
       'errors': instance.errors,
       'warnings': instance.warnings,
-      'startTime': instance.startTime?.toIso8601String(),
-      'endTime': instance.endTime?.toIso8601String(),
+      'start_time': ?instance.startTime?.toIso8601String(),
+      'end_time': ?instance.endTime?.toIso8601String(),
       'phase': _$ExecutionPhaseEnumMap[instance.phase]!,
       'metadata': instance.metadata,
     };

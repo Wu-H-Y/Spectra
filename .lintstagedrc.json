@@ -1,10 +1,15 @@
 {
   "$schema": "https://json.schemastore.org/lintstagedrc.schema.json",
-  "*.dart": [
-    "dart format"
+  "lib/**/*.dart": [
+    "bun run lint:fix:dart",
+    "bun run format:dart"
+  ],
+  "rust/**/*.rs": [
+    "bun run lint:fix:rust",
+    "bun run format:rust"
   ],
   "web-editor/**/*.{ts,tsx,json,css,scss,md}": [
-    "bun run --cwd web-editor lint:fix",
-    "bun run --cwd web-editor fmt"
+    "bun run lint:fix:web",
+    "bun run format:web"
   ]
 }

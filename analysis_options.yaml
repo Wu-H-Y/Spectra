@@ -19,9 +19,13 @@ analyzer:
     - "**/*.gen.dart"
     # 排除本地化生成文件
     - "lib/l10n/generated/**"
+    # 排除 FRB 生成的 Rust FFI 代码
+    - "lib/core/rust/**"
+    - "lib/src/rust/**"
     # 排除构建工具目录
     - ".dart_tool/**"
     - "build/**"
+    - "rust_builder/**"
   errors:
     # Freezed 生成的代码会触发此警告,禁用以避免噪音
     invalid_annotation_target: ignore

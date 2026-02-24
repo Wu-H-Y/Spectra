@@ -10,7 +10,7 @@ _FieldMapping _$FieldMappingFromJson(Map<String, dynamic> json) =>
     _FieldMapping(
       field: json['field'] as String,
       selector: Selector.fromJson(json['selector'] as Map<String, dynamic>),
-      defaultValue: json['defaultValue'] as String?,
+      defaultValue: json['default_value'] as String?,
       transforms: (json['transforms'] as List<dynamic>?)
           ?.map((e) => Transform.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -20,8 +20,8 @@ _FieldMapping _$FieldMappingFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$FieldMappingToJson(_FieldMapping instance) =>
     <String, dynamic>{
       'field': instance.field,
-      'selector': instance.selector,
-      'defaultValue': instance.defaultValue,
-      'transforms': instance.transforms,
+      'selector': instance.selector.toJson(),
+      'default_value': ?instance.defaultValue,
+      'transforms': ?instance.transforms?.map((e) => e.toJson()).toList(),
       'required': instance.required,
     };

@@ -9,10 +9,16 @@
     "build:web": "cd web-editor && bun run build",
     "lint:dart": "dart analyze",
     "lint:web": "cd web-editor && bun run lint",
-    "lint": "bun run lint:dart && bun run lint:web",
+    "lint:rust": "cd rust && cargo clippy --all-targets --all-features -- -D warnings",
+    "lint": "bun run lint:dart && bun run lint:web && bun run lint:rust",
+    "lint:fix:web": "cd web-editor && bun run lint:fix",
+    "lint:fix:dart": "dart fix --apply",
+    "lint:fix:rust": "cd rust && cargo clippy --fix --allow-dirty --allow-staged",
+    "lint:fix": "bun run lint:fix:dart && bun run lint:fix:web && bun run lint:fix:rust",
     "format:dart": "dart format .",
     "format:web": "cd web-editor && bun run fmt",
-    "format": "bun run format:dart && bun run format:web"
+    "format:rust": "cd rust && cargo +nightly fmt --all",
+    "format": "bun run format:dart && bun run format:web && bun run format:rust"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.4.2",

@@ -9,31 +9,31 @@ part of 'pagination_config.dart';
 _PaginationConfig _$PaginationConfigFromJson(Map<String, dynamic> json) =>
     _PaginationConfig(
       type: $enumDecode(_$PaginationTypeEnumMap, json['type']),
-      nextSelector: json['nextSelector'] == null
+      nextSelector: json['next_selector'] == null
           ? null
-          : Selector.fromJson(json['nextSelector'] as Map<String, dynamic>),
-      urlTemplate: json['urlTemplate'] as String?,
-      clickSelector: json['clickSelector'] == null
+          : Selector.fromJson(json['next_selector'] as Map<String, dynamic>),
+      urlTemplate: json['url_template'] as String?,
+      clickSelector: json['click_selector'] == null
           ? null
-          : Selector.fromJson(json['clickSelector'] as Map<String, dynamic>),
-      scrollContainer: json['scrollContainer'] == null
+          : Selector.fromJson(json['click_selector'] as Map<String, dynamic>),
+      scrollContainer: json['scroll_container'] == null
           ? null
-          : Selector.fromJson(json['scrollContainer'] as Map<String, dynamic>),
-      maxPages: (json['maxPages'] as num?)?.toInt() ?? 0,
-      delayMs: (json['delayMs'] as num?)?.toInt() ?? 1000,
-      waitAfterLoadMs: (json['waitAfterLoadMs'] as num?)?.toInt() ?? 2000,
+          : Selector.fromJson(json['scroll_container'] as Map<String, dynamic>),
+      maxPages: (json['max_pages'] as num?)?.toInt() ?? 0,
+      delayMs: (json['delay_ms'] as num?)?.toInt() ?? 1000,
+      waitAfterLoadMs: (json['wait_after_load_ms'] as num?)?.toInt() ?? 2000,
     );
 
 Map<String, dynamic> _$PaginationConfigToJson(_PaginationConfig instance) =>
     <String, dynamic>{
       'type': _$PaginationTypeEnumMap[instance.type]!,
-      'nextSelector': instance.nextSelector,
-      'urlTemplate': instance.urlTemplate,
-      'clickSelector': instance.clickSelector,
-      'scrollContainer': instance.scrollContainer,
-      'maxPages': instance.maxPages,
-      'delayMs': instance.delayMs,
-      'waitAfterLoadMs': instance.waitAfterLoadMs,
+      'next_selector': ?instance.nextSelector?.toJson(),
+      'url_template': ?instance.urlTemplate,
+      'click_selector': ?instance.clickSelector?.toJson(),
+      'scroll_container': ?instance.scrollContainer?.toJson(),
+      'max_pages': instance.maxPages,
+      'delay_ms': instance.delayMs,
+      'wait_after_load_ms': instance.waitAfterLoadMs,
     };
 
 const _$PaginationTypeEnumMap = {

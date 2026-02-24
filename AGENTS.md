@@ -1,152 +1,217 @@
 # SPECTRA 项目知识库
 
-**Generated:** 2026-02-21
-**Commit:** 8d1f27c
-**Branch:** feature/architecture
-
-## OVERVIEW
-
 跨平台多媒体数据采集应用，通过自定义爬虫规则系统实现视频/音乐/小说/漫画/图片的采集。
 
-**Stack**: Flutter 3.x / Dart 3.x / Material 3 / Riverpod 3.x / fpdart 1.x / relic 1.x
+**Stack**: Flutter 3.x / Dart 3.11+ / Material 3 / Riverpod 3.x / fpdart 1.x
 
-## WHERE TO LOOK
-
-| Task | Location | Notes |
-|------|----------|-------|
-| 添加新功能 | `lib/features/<feature>/` | Clean Architecture: data/domain/presentation |
-| 修改路由 | `lib/core/router/app_router.dart` | 使用 `@TypedGoRoute` 注解 |
-| 全局状态 | `lib/shared/providers/` | Riverpod providers |
-| 爬虫规则 | `lib/core/crawler/` | 详见 `lib/core/crawler/AGENTS.md` |
-| 主题定制 | `lib/core/theme/tokens/` | 设计令牌架构 |
-| 数据库 | `lib/core/database/` | Drift (SQLite) + Hive CE |
-| HTTP 服务 | `lib/core/server/` | relic 服务器 |
-| 国际化 | `lib/l10n/intl_*.arb` | 主语言: zh |
-| 错误处理 | `lib/core/errors/`, `lib/core/functional/` | sealed class + fpdart |
-| Web 编辑器 | `web-editor/` | React + TypeScript + Vite |
+---
 
 ## COMMANDS
 
 ```bash
-# 开发
-flutter pub get                    # 安装依赖
-flutter run                        # 运行应用
-bun install                        # 初始化 Git Hooks
+# 单文件命令 (优先使用)
+flutter analyze lib/path/to/file.dart    # 单文件分析
+dart format lib/path/to/file.dart        # 单文件格式化
+flutter test test/path/to/file_test.dart # 单文件测试
 
-# 代码生成 (修改注解类后必须运行)
+# 代码生成 (修改 @freezed/@riverpod/@TypedGoRoute 后必须运行)
 dart run build_runner build --delete-conflicting-outputs
 
-# 质量检查
-flutter analyze --fatal-infos      # 静态分析 (CI 使用 --fatal-infos)
-dart format .                      # 格式化
-flutter test                       # 测试
-
-# 构建
-flutter build <platform> --release # platform: apk, ios, windows, macos, linux
+# 全量检查 (CI 使用)
+flutter analyze --fatal-infos && flutter test
 ```
 
-**重要**: Git Hooks 必须 全部通过，禁止使用 `--no-verify` 跳过。
+**Git Hooks**: 提交时自动运行 lint 和格式化，禁止 `--no-verify`。
 
-## Coding Standards
+---
 
-### Naming Conventions
+## DO / DON'T
 
-- **文件**: snake_case (`home_page.dart`)
-- **类**: PascalCase (`HomePage`)
-- **变量/函数**: camelCase (`userName`)
-- **常量**: camelCase (`defaultTimeout`)
-- **目录**: kebab-case 或小写 (`video/`, `download-manager/`)
+| Do                                 | Don't                       |
+| ----------------------------------- | --------------------------- |
+| `talker.debug('消息')`              | `print()` / `debugPrint()`  |
+| `Text(S.current.loginButton)`       | `Text('登录')`              |
+| `failure.localizedMessage(context)` | `e.toString()` 给用户看     |
+| `Either<Failure, T>` 业务返回       | 抛异常处理业务错误          |
+| `sealed class` 错误类型             | `String` 类型错误           |
+| 顶层调用 Hooks                      | `if`/`for`/嵌套函数中调用   |
+| `const` 构造函数                    | 省略 `const`                |
+| `ListView.builder` 长列表           | `Column([...])` 长列表      |
+| 私有 Widget 类                      | 私有 helper 方法返回 Widget |
 
-### Line Length: 80 characters
+---
 
-### Lint Configuration
+## PROJECT STRUCTURE
 
-- 使用 `flutter_lints` + `very_good_analysis`
-- 生成的代码 (`*.g.dart`, `*.freezed.dart`) 已排除分析
+```
+lib/
+├── core/           # 核心基础设施 (crawler/database/errors/functional/router/server/theme)
+├── features/       # 功能模块 (Clean Architecture: data/domain/presentation)
+├── l10n/           # 国际化 (主语言: zh)
+├── shared/         # 共享模块 (全局 Providers)
+└── main.dart
+```
 
-## ANTI-PATTERNS (禁止模式)
+**定位**: 路由 `lib/core/router/` | 全局状态 `lib/shared/providers/` | 爬虫 `lib/core/crawler/`
 
-| 禁止 | 替代方案 | 原因 |
-|------|---------|------|
-| `print()` / `debugPrint()` / `log()` | `talker.debug()` / `talker.info()` | 统一日志系统 |
-| `Text('登录')` | `Text(S.current.loginButton)` | UI 文本必须国际化 |
-| 在 `if`/`for`/嵌套函数中调用 Hooks | 顶层无条件调用 | Hooks 规则 |
-| `e.toString()` 展示给用户 | `failure.localizedMessage(context)` | 错误国际化 |
-| 直接使用 `String` 类型错误 | `sealed class AppFailure` | 类型安全错误处理 |
+---
 
-## UNIQUE STYLES (项目特有)
+## CODE STYLE
 
-### 函数式错误处理
+| 类型      | 格式       | 示例             |
+| --------- | ---------- | ---------------- |
+| 文件      | snake_case | `home_page.dart` |
+| 类        | PascalCase | `HomePage`       |
+| 变量/函数 | camelCase  | `userName`       |
+| 目录      | kebab-case | `video/`         |
 
-使用 fpdart 的 `Either<Failure, T>` 替代异常：
+- **行宽**: 80 字符
+- **注释**: 中文
+- **Lint**: `flutter_lints` + `very_good_analysis`
+
+---
+
+## ERROR HANDLING
+
+**原则**: 日志看原始堆栈，用户看本地化文案。
 
 ```dart
-// 业务逻辑返回 Either
-Future<Either<Failure, User>> getUser(String id);
+  // [DO] 业务层返回 Either
+Future<Either<Failure, User>> getUser(String id) async {
+  try {
+    return Right(await api.fetchUser(id));
+  } catch (e) {
+    return Left(NetworkFailure(e.toString()));
+  }
+}
 
-// UI 层使用 EitherBuilder
-EitherBuilder<User>(
-  either: userEither,
-  data: (user) => UserCard(user: user),
-  error: (failure) => FailureWidget(failure: failure),
-)
+  // [DO] UI 层 pattern matching
+either.fold(
+  (failure) => showError(failure.localizedMessage(context)),
+  (user) => showUser(user),
+);
 ```
 
-### 双数据库策略
+---
 
-- **Drift (SQLite)**: 关系型数据 — 爬虫规则、内容、任务
-- **Hive CE**: 键值存储 — 用户设置、缓存、凭证
+## STATE MANAGEMENT
 
-### Documentation Language
+```dart
+@riverpod
+class ThemeMode extends _$ThemeMode {
+  @override
+  AppThemeMode build() => AppThemeMode.dark;
 
-项目采用统一的中文文档和注释规范：
+  Future<void> setMode(AppThemeMode mode) async {
+    state = mode;
+    await _persist(mode);
+  }
+}
 
-- 代码注释/日志输出**必须使用中文**
-- UI 文本**必须通过国际化系统访问** (`S.current.xxx`)
-- 例外：第三方库注释、测试断言、技术术语
+// 使用: ref.watch(themeModeProvider)
+```
 
-## Commit Convention
+---
 
-遵循 Conventional Commits 规范，使用中文描述:
+## LEARNING FROM MISTAKES
+
+| 错误模式                 | 正确做法                       |
+| ------------------------ | ------------------------------ |
+| Widget 中直接 HTTP 请求  | 通过 Repository 层             |
+| 忘记国际化               | 所有 UI 文本走 `S.current.xxx` |
+| `late` 强制解包          | `?` 安全访问或默认值           |
+| Provider 命名不一致      | `XxxProvider` / `xxxProvider`  |
+| 测试无 `group()`         | `group('Feature', () { ... })` |
+| 忘记 `part 'xxx.g.dart'` | 注解类需 part 声明             |
+| 猜测包 API               | 先查 pub.dev 文档              |
+
+**每次修复后思考是否添加到此表。**
+
+---
+
+## MCP TOOLS (优先使用)
+
+| 操作   | MCP 工具              |
+| ------ | --------------------- |
+| 格式化 | `dart_dart_format`    |
+| 修复   | `dart_dart_fix`       |
+| 分析   | `dart_analyze_files`  |
+| 测试   | `dart_run_tests`      |
+| 依赖   | `dart_pub`            |
+| 搜索包 | `dart_pub_dev_search` |
+
+---
+
+## PACKAGE DOCUMENTATION
+
+不熟悉的包或版本，**先查官方文档，不要猜测 API**:
+
+| 来源             | 链接格式                                               |
+| ---------------- | ------------------------------------------------------ |
+| pub.dev 包详情   | `https://pub.dev/packages/<package_name>`              |
+| pub.dev API 文档 | `https://pub.dev/documentation/<package_name>/latest/` |
+| context7 MCP     | `resolve-library-id` → `query-docs`                    |
+
+**示例**:
+
+- riverpod: https://pub.dev/packages/riverpod
+- riverpod API: https://pub.dev/documentation/riverpod/latest/
+- fpdart: https://pub.dev/packages/fpdart
+- go_router: https://pub.dev/documentation/go_router/latest/
+
+---
+
+## COMMIT
 
 ```
 <type>(<scope>): <description>
 ```
 
-**类型**:
-| 类型 | 说明 | 版本影响 |
-|------|------|----------|
-| `feat` | 新功能 | minor |
-| `fix` | Bug 修复 | patch |
-| `deps` | 依赖更新 | patch |
-| `docs` | 文档 | 无 |
-| `refactor` | 重构 | 无 |
-| `test` | 测试 | 无 |
-| `chore` | 其他 | 无 |
+| 类型       | 说明     |
+| ---------- | -------- |
+| `feat`     | 新功能   |
+| `fix`      | Bug 修复 |
+| `deps`     | 依赖更新 |
+| `refactor` | 重构     |
+| `test`     | 测试     |
+| `chore`    | 其他     |
 
 **示例**: `feat(crawler): 添加 XPath 选择器节点`
 
-详见 `docs/COMMIT_CONVENTION.md`
+---
 
-## MCP Tools Preference
+## TESTING
 
-优先使用 MCP 工具而非 shell 命令。
+```dart
+void main() {
+  group('FeatureName', () {
+    test('should do something', () {
+      // Arrange → Act → Assert
+    });
+  });
+}
+```
 
-### Dart MCP 工具
+- 单元/Widget: `package:test` / `package:flutter_test`
+- Mock: 优先 fakes/stubs
 
-- `dart_format`: 代码格式化
-- `dart_fix`: 自动修复代码问题
-- `analyze_files`: 静态分析
-- `run_tests`: 运行测试
-- `pub`: 包管理
+---
 
-## Library Documentation Lookup
+## PERMISSIONS
 
-当使用库或包不熟悉时，**优先查询官方文档**获取准确用法:
+**允许**: 读文件 | 单文件 analyze/format/test | `flutter pub get`
 
-1. **context7 MCP**: 使用 `resolve-library-id` 和 `query-docs` 查询库文档
-2. **pub.dev**: 使用 `pub_dev_search` 搜索包信息
-3. **网页爬取**: 使用 `fetch` MCP 工具获取官方文档
-4. **shadcn-ui**: 优先使用mcp工具和[llms.txt](https://ui.shadcn.com/llms.txt)获取相关文档
+**需询问**: 装新包 | `git push` | 删除文件 | 全项目构建 | 修改 pubspec/CI
 
-**不要猜测 API 用法，先查文档再实现。**
+---
+
+## WHEN STUCK
+
+1. 提具体问题或建议方案
+2. **不猜测 API**，先查文档:
+   - pub.dev: `https://pub.dev/packages/<name>`
+   - API 文档: `https://pub.dev/documentation/<name>/latest/`
+   - context7 MCP: `resolve-library-id` → `query-docs`
+3. 用 `// TODO(xxx):` 标记草稿
+4. 不确认不重构
+5. 编写任何文档一定不使用Unicode表情符号

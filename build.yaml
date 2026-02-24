@@ -9,8 +9,44 @@ targets:
           - '!lib/**/*.g.dart'
           - '!lib/**/*.freezed.dart'
 
+      # Freezed generator
+      freezed:
+        generate_for:
+          - lib/**/*.dart
+          - '!lib/**/*.g.dart'
+          - '!lib/**/*.freezed.dart'
+        options:
+          # 支持 JSON 序列化
+          generic_argument_factories: true
+          # 联合类型配置
+          union_key: 'runtimeType'
+          union_value_case: snake
+
+      # JSON serializable generator
+      json_serializable:
+        generate_for:
+          - lib/**/*.dart
+          - '!lib/**/*.g.dart'
+          - '!lib/**/*.freezed.dart'
+        options:
+          # 嵌套对象需要显式调用 toJson
+          explicit_to_json: true
+          # 包含 null 值
+          include_if_null: false
+          # 字段重命名
+          field_rename: snake
+
       # Drift database generator
       drift_dev:
         options:
-          apply_converters_on_variables: true
-          generate_connect_constructor: true
+          databases:
+            default: lib/core/database/drift/app_database.dart
+          sql:
+            dialect: sqlite
+            options:
+              version: "3.38"
+              modules: [fts5]
+      # Squadron worker generator
+      squadron_builder:worker_builder:
+        generate_for:
+          - lib/core/crawler/executor/workers/*.dart

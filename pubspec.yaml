@@ -13,6 +13,7 @@ dependencies:
   dio: ^5.9.1 # HTTP 客户端
   drift: ^2.22.1 # SQLite ORM 关系型数据库
   drift_flutter: ^0.2.4 # Drift Flutter 支持
+  ffi: ^2.1.4 # FFI 支持库
   flex_color_scheme: ^8.4.0 # Material 3 主题系统
   flutter:
     sdk: flutter
@@ -21,6 +22,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.4.6 # 原生启动屏
+  flutter_rust_bridge: 2.11.1
   fpdart: ^1.2.0 # 函数式编程核心库
   freezed_annotation: ^3.1.0 # Freezed 注解
   go_router: ^17.1.0 # 声明式路由
@@ -30,24 +32,26 @@ dependencies:
   hooks_riverpod: ^3.2.1 # Riverpod 状态管理 (带 hooks 支持)
   html: ^0.15.6 # HTML 解析和 CSS 选择器
   intl: ^0.20.2 # 国际化
-  json_annotation: ^4.10.0 # JSON 序列化注解
+  json_annotation: ^4.11.0 # JSON 序列化注解
   json_path: ^0.9.0 # JSONPath 查询语言
   meta: 1.17.0 # Dart 元数据注解
-  mime: any # MIME 类型检测
+  mime: 2.0.0 # MIME 类型检测
   package_info_plus: ^9.0.0 # 应用信息
   pub_semver: ^2.1.5 # 语义化版本
   qs_dart: ^1.7.0 # URL 参数编解码
   relic: ^1.0.0 # 现代 HTTP 服务器框架
   riverpod_annotation: ^4.0.2 # Riverpod 注解
   sizer: ^3.0.3 # 响应式 UI 布局
+  spectra_native:
+    path: rust_builder
+  squadron: ^7.4.0 # Isolate 并行执行器
   talker: ^5.1.13 # 日志和错误处理
   talker_dio_logger: ^5.1.13 # Talker Dio 日志拦截器
   talker_flutter: ^5.1.13 # Talker Flutter 支持
   talker_riverpod_logger: ^5.1.13 # Talker Riverpod 日志观察者
   url_launcher: ^6.3.1 # URL 启动器
   uuid: ^4.5.1 # UUID 生成
-  web_socket: any # WebSocket 客户端
-  web_socket_channel: any # WebSocket 通道
+  web_socket: 1.0.1 # WebSocket 客户端
   window_manager: ^0.5.1 # 桌面窗口管理
   xml: ^6.6.1 # XML/HTML 解析和 XPath 选择器
 dev_dependencies:
@@ -60,9 +64,12 @@ dev_dependencies:
   freezed: ^3.2.5 # Freezed 不可变数据类生成器
   go_router_builder: ^4.2.0 # go_router 路由生成器
   hive_ce_generator: ^1.11.0 # Hive CE 类型适配器生成器
+  integration_test:
+    sdk: flutter
   intl_utils: ^2.8.14 # Intl 代码生成
   json_serializable: ^6.12.0 # JSON 序列化代码生成器
   riverpod_generator: ^4.0.3 # Riverpod 代码生成器
+  squadron_builder: ^9.1.0 # Squadron 代码生成器
   very_good_analysis: ^10.2.0 # Very Good Analysis Lint 规则
 
 flutter:

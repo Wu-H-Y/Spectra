@@ -1,0 +1,23 @@
+[package]
+name = "spectra_native"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+flutter_rust_bridge = "=2.11.1"
+# 中文处理
+jieba-rs = { version = "0.8.1", features = ["default-dict", "tfidf"] }
+chinese-number = "0.7.8"
+ferrous-opencc = "0.3.1"
+# 正则表达式
+regex = "1.12.3"
+# 日志
+log = "0.4.29"
+# 相似度计算
+textdistance = "1.1.1"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }

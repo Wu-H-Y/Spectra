@@ -13,15 +13,15 @@ _Selector _$SelectorFromJson(Map<String, dynamic> json) => _Selector(
   fallbacks: (json['fallbacks'] as List<dynamic>?)
       ?.map((e) => Selector.fromJson(e as Map<String, dynamic>))
       .toList(),
-  firstOnly: json['firstOnly'] as bool? ?? false,
+  firstOnly: json['first_only'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$SelectorToJson(_Selector instance) => <String, dynamic>{
   'type': _$SelectorTypeEnumMap[instance.type]!,
   'expression': instance.expression,
-  'attribute': instance.attribute,
-  'fallbacks': instance.fallbacks,
-  'firstOnly': instance.firstOnly,
+  'attribute': ?instance.attribute,
+  'fallbacks': ?instance.fallbacks?.map((e) => e.toJson()).toList(),
+  'first_only': instance.firstOnly,
 };
 
 const _$SelectorTypeEnumMap = {

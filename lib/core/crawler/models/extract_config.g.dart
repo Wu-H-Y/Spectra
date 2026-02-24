@@ -19,10 +19,10 @@ _ListExtract _$ListExtractFromJson(Map<String, dynamic> json) => _ListExtract(
 
 Map<String, dynamic> _$ListExtractToJson(_ListExtract instance) =>
     <String, dynamic>{
-      'container': instance.container,
-      'items': instance.items,
-      'pagination': instance.pagination,
-      'url': instance.url,
+      'container': instance.container.toJson(),
+      'items': instance.items.map((e) => e.toJson()).toList(),
+      'pagination': ?instance.pagination?.toJson(),
+      'url': ?instance.url,
     };
 
 _DetailExtract _$DetailExtractFromJson(Map<String, dynamic> json) =>
@@ -30,9 +30,9 @@ _DetailExtract _$DetailExtractFromJson(Map<String, dynamic> json) =>
       items: (json['items'] as List<dynamic>)
           .map((e) => FieldMapping.fromJson(e as Map<String, dynamic>))
           .toList(),
-      urlFromList: json['urlFromList'] == null
+      urlFromList: json['url_from_list'] == null
           ? null
-          : Selector.fromJson(json['urlFromList'] as Map<String, dynamic>),
+          : Selector.fromJson(json['url_from_list'] as Map<String, dynamic>),
       chapters: json['chapters'] == null
           ? null
           : ChapterExtract.fromJson(json['chapters'] as Map<String, dynamic>),
@@ -40,9 +40,9 @@ _DetailExtract _$DetailExtractFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$DetailExtractToJson(_DetailExtract instance) =>
     <String, dynamic>{
-      'items': instance.items,
-      'urlFromList': instance.urlFromList,
-      'chapters': instance.chapters,
+      'items': instance.items.map((e) => e.toJson()).toList(),
+      'url_from_list': ?instance.urlFromList?.toJson(),
+      'chapters': ?instance.chapters?.toJson(),
     };
 
 _ChapterExtract _$ChapterExtractFromJson(Map<String, dynamic> json) =>
@@ -51,14 +51,14 @@ _ChapterExtract _$ChapterExtractFromJson(Map<String, dynamic> json) =>
       items: (json['items'] as List<dynamic>)
           .map((e) => FieldMapping.fromJson(e as Map<String, dynamic>))
           .toList(),
-      reverseOrder: json['reverseOrder'] as bool? ?? false,
+      reverseOrder: json['reverse_order'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$ChapterExtractToJson(_ChapterExtract instance) =>
     <String, dynamic>{
-      'container': instance.container,
-      'items': instance.items,
-      'reverseOrder': instance.reverseOrder,
+      'container': instance.container.toJson(),
+      'items': instance.items.map((e) => e.toJson()).toList(),
+      'reverse_order': instance.reverseOrder,
     };
 
 _ContentExtract _$ContentExtractFromJson(Map<String, dynamic> json) =>
@@ -79,70 +79,70 @@ _ContentExtract _$ContentExtractFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ContentExtractToJson(_ContentExtract instance) =>
     <String, dynamic>{
-      'video': instance.video,
-      'comic': instance.comic,
-      'novel': instance.novel,
-      'music': instance.music,
+      'video': ?instance.video?.toJson(),
+      'comic': ?instance.comic?.toJson(),
+      'novel': ?instance.novel?.toJson(),
+      'music': ?instance.music?.toJson(),
     };
 
 _VideoExtract _$VideoExtractFromJson(Map<String, dynamic> json) =>
     _VideoExtract(
-      playUrl: json['playUrl'] == null
+      playUrl: json['play_url'] == null
           ? null
-          : Selector.fromJson(json['playUrl'] as Map<String, dynamic>),
+          : Selector.fromJson(json['play_url'] as Map<String, dynamic>),
       qualities: json['qualities'] == null
           ? null
           : Selector.fromJson(json['qualities'] as Map<String, dynamic>),
-      jsExtract: json['jsExtract'] as String?,
+      jsExtract: json['js_extract'] as String?,
     );
 
 Map<String, dynamic> _$VideoExtractToJson(_VideoExtract instance) =>
     <String, dynamic>{
-      'playUrl': instance.playUrl,
-      'qualities': instance.qualities,
-      'jsExtract': instance.jsExtract,
+      'play_url': ?instance.playUrl?.toJson(),
+      'qualities': ?instance.qualities?.toJson(),
+      'js_extract': ?instance.jsExtract,
     };
 
 _ComicExtract _$ComicExtractFromJson(Map<String, dynamic> json) =>
     _ComicExtract(
       images: Selector.fromJson(json['images'] as Map<String, dynamic>),
-      jsExtract: json['jsExtract'] as String?,
+      jsExtract: json['js_extract'] as String?,
     );
 
 Map<String, dynamic> _$ComicExtractToJson(_ComicExtract instance) =>
     <String, dynamic>{
-      'images': instance.images,
-      'jsExtract': instance.jsExtract,
+      'images': instance.images.toJson(),
+      'js_extract': ?instance.jsExtract,
     };
 
 _NovelExtract _$NovelExtractFromJson(Map<String, dynamic> json) =>
     _NovelExtract(
       content: Selector.fromJson(json['content'] as Map<String, dynamic>),
-      jsExtract: json['jsExtract'] as String?,
+      jsExtract: json['js_extract'] as String?,
     );
 
 Map<String, dynamic> _$NovelExtractToJson(_NovelExtract instance) =>
     <String, dynamic>{
-      'content': instance.content,
-      'jsExtract': instance.jsExtract,
+      'content': instance.content.toJson(),
+      'js_extract': ?instance.jsExtract,
     };
 
 _MusicExtract _$MusicExtractFromJson(Map<String, dynamic> json) =>
     _MusicExtract(
-      audioUrl: json['audioUrl'] == null
+      audioUrl: json['audio_url'] == null
           ? null
-          : Selector.fromJson(json['audioUrl'] as Map<String, dynamic>),
+          : Selector.fromJson(json['audio_url'] as Map<String, dynamic>),
       lyrics: json['lyrics'] == null
           ? null
           : Selector.fromJson(json['lyrics'] as Map<String, dynamic>),
-      jsExtract: json['jsExtract'] as String?,
+      jsExtract: json['js_extract'] as String?,
     );
 
 Map<String, dynamic> _$MusicExtractToJson(_MusicExtract instance) =>
     <String, dynamic>{
-      'audioUrl': instance.audioUrl,
-      'lyrics': instance.lyrics,
-      'jsExtract': instance.jsExtract,
+      'audio_url': ?instance.audioUrl?.toJson(),
+      'lyrics': ?instance.lyrics?.toJson(),
+      'js_extract': ?instance.jsExtract,
     };
 
 _ExtractConfig _$ExtractConfigFromJson(Map<String, dynamic> json) =>
@@ -160,7 +160,7 @@ _ExtractConfig _$ExtractConfigFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ExtractConfigToJson(_ExtractConfig instance) =>
     <String, dynamic>{
-      'list': instance.list,
-      'detail': instance.detail,
-      'content': instance.content,
+      'list': ?instance.list?.toJson(),
+      'detail': ?instance.detail?.toJson(),
+      'content': ?instance.content?.toJson(),
     };

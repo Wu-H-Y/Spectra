@@ -6,6 +6,7 @@ import 'package:sizer/sizer.dart';
 import 'package:spectra/core/database/drift/app_database.dart';
 import 'package:spectra/core/database/hive/hive_service.dart';
 import 'package:spectra/core/router/app_router.dart';
+import 'package:spectra/core/rust/frb_generated.dart';
 import 'package:spectra/core/theme/theme.dart';
 import 'package:spectra/l10n/generated/l10n.dart';
 import 'package:spectra/shared/providers/settings_provider.dart';
@@ -67,6 +68,9 @@ Future<void> _initializeHeavyTasks() async {
   // 初始化 Drift 数据库
   // ignore: unused_local_variable
   final db = AppDatabase();
+
+  // 初始化 rustlib
+  await RustLib.init();
 
   // TODO(developer): 添加其他初始化任务
 }

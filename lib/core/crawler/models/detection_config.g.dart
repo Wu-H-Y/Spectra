@@ -11,83 +11,83 @@ _DetectionConfig _$DetectionConfigFromJson(Map<String, dynamic> json) =>
       captcha: json['captcha'] == null
           ? null
           : CaptchaDetection.fromJson(json['captcha'] as Map<String, dynamic>),
-      rateLimit: json['rateLimit'] == null
+      rateLimit: json['rate_limit'] == null
           ? null
           : RateLimitDetection.fromJson(
-              json['rateLimit'] as Map<String, dynamic>,
+              json['rate_limit'] as Map<String, dynamic>,
             ),
       login: json['login'] == null
           ? null
           : LoginDetection.fromJson(json['login'] as Map<String, dynamic>),
-      detectCloudflare: json['detectCloudflare'] as bool? ?? true,
-      autoRetry: json['autoRetry'] as bool? ?? true,
-      maxRetries: (json['maxRetries'] as num?)?.toInt() ?? 3,
+      detectCloudflare: json['detect_cloudflare'] as bool? ?? true,
+      autoRetry: json['auto_retry'] as bool? ?? true,
+      maxRetries: (json['max_retries'] as num?)?.toInt() ?? 3,
     );
 
 Map<String, dynamic> _$DetectionConfigToJson(_DetectionConfig instance) =>
     <String, dynamic>{
-      'captcha': instance.captcha,
-      'rateLimit': instance.rateLimit,
-      'login': instance.login,
-      'detectCloudflare': instance.detectCloudflare,
-      'autoRetry': instance.autoRetry,
-      'maxRetries': instance.maxRetries,
+      'captcha': ?instance.captcha?.toJson(),
+      'rate_limit': ?instance.rateLimit?.toJson(),
+      'login': ?instance.login?.toJson(),
+      'detect_cloudflare': instance.detectCloudflare,
+      'auto_retry': instance.autoRetry,
+      'max_retries': instance.maxRetries,
     };
 
 _CaptchaDetection _$CaptchaDetectionFromJson(Map<String, dynamic> json) =>
     _CaptchaDetection(
-      detectRecaptcha: json['detectRecaptcha'] as bool? ?? true,
-      detectHcaptcha: json['detectHcaptcha'] as bool? ?? true,
-      detectGeneric: json['detectGeneric'] as bool? ?? true,
-      solverApiKey: json['solverApiKey'] as String?,
-      solverService: json['solverService'] as String?,
+      detectRecaptcha: json['detect_recaptcha'] as bool? ?? true,
+      detectHcaptcha: json['detect_hcaptcha'] as bool? ?? true,
+      detectGeneric: json['detect_generic'] as bool? ?? true,
+      solverApiKey: json['solver_api_key'] as String?,
+      solverService: json['solver_service'] as String?,
     );
 
 Map<String, dynamic> _$CaptchaDetectionToJson(_CaptchaDetection instance) =>
     <String, dynamic>{
-      'detectRecaptcha': instance.detectRecaptcha,
-      'detectHcaptcha': instance.detectHcaptcha,
-      'detectGeneric': instance.detectGeneric,
-      'solverApiKey': instance.solverApiKey,
-      'solverService': instance.solverService,
+      'detect_recaptcha': instance.detectRecaptcha,
+      'detect_hcaptcha': instance.detectHcaptcha,
+      'detect_generic': instance.detectGeneric,
+      'solver_api_key': ?instance.solverApiKey,
+      'solver_service': ?instance.solverService,
     };
 
 _RateLimitDetection _$RateLimitDetectionFromJson(Map<String, dynamic> json) =>
     _RateLimitDetection(
       statusCodes:
-          (json['statusCodes'] as List<dynamic>?)
+          (json['status_codes'] as List<dynamic>?)
               ?.map((e) => (e as num).toInt())
               .toList() ??
           const [429, 503, 520, 521, 522, 523, 524],
-      textPatterns: (json['textPatterns'] as List<dynamic>?)
+      textPatterns: (json['text_patterns'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      minDelayMs: (json['minDelayMs'] as num?)?.toInt() ?? 1000,
-      maxDelayMs: (json['maxDelayMs'] as num?)?.toInt() ?? 5000,
-      exponentialBackoff: json['exponentialBackoff'] as bool? ?? true,
+      minDelayMs: (json['min_delay_ms'] as num?)?.toInt() ?? 1000,
+      maxDelayMs: (json['max_delay_ms'] as num?)?.toInt() ?? 5000,
+      exponentialBackoff: json['exponential_backoff'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$RateLimitDetectionToJson(_RateLimitDetection instance) =>
     <String, dynamic>{
-      'statusCodes': instance.statusCodes,
-      'textPatterns': instance.textPatterns,
-      'minDelayMs': instance.minDelayMs,
-      'maxDelayMs': instance.maxDelayMs,
-      'exponentialBackoff': instance.exponentialBackoff,
+      'status_codes': instance.statusCodes,
+      'text_patterns': ?instance.textPatterns,
+      'min_delay_ms': instance.minDelayMs,
+      'max_delay_ms': instance.maxDelayMs,
+      'exponential_backoff': instance.exponentialBackoff,
     };
 
 _LoginDetection _$LoginDetectionFromJson(Map<String, dynamic> json) =>
     _LoginDetection(
-      detectLoginPage: json['detectLoginPage'] as bool? ?? true,
-      loginSelectors: (json['loginSelectors'] as List<dynamic>?)
+      detectLoginPage: json['detect_login_page'] as bool? ?? true,
+      loginSelectors: (json['login_selectors'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      pauseOnLogin: json['pauseOnLogin'] as bool? ?? true,
+      pauseOnLogin: json['pause_on_login'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$LoginDetectionToJson(_LoginDetection instance) =>
     <String, dynamic>{
-      'detectLoginPage': instance.detectLoginPage,
-      'loginSelectors': instance.loginSelectors,
-      'pauseOnLogin': instance.pauseOnLogin,
+      'detect_login_page': instance.detectLoginPage,
+      'login_selectors': ?instance.loginSelectors,
+      'pause_on_login': instance.pauseOnLogin,
     };
