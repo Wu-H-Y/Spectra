@@ -2,106 +2,103 @@
 
 ## Overview
 
-网络策略模块提供多种请求方式，从简单的 HTTP 到完整的浏览器模拟，支持各种反爬场景。
+网络策略模块提供两层请求方式：
+1. **HTTP Strategy** - Rust wreq TLS/HTTP2 指纹伪装 (主力)
+2. **WebView Interactive Strategy** - 用户手动交互 (回退)
+
+## 架构决策
+
+**问题**: 由 Rust 还是 Flutter 发起请求？
+
+**决策**: **Rust 统一处理所有 HTTP 请求**
+
+**理由**:
+1. **TLS 指纹伪装**: wreq 提供 JA3/JA4 指纹模拟，需要底层网络控制
+2. **HTTP/2 指纹**: 精确控制 SETTINGS、Priority Frames
+3. **性能**: Rust 异步 HTTP 客户端比 Dart 更高效
+4. **一致性**: 所有网络请求逻辑集中在 Rust 层
 
 ## Strategies
 
-### 1. HTTP Strategy
+### 1. HTTP Strategy (主力)
 
-纯 HTTP 请求，最快但容易被检测。
+使用 Rust wreq 实现 HTTP 请求，支持 TLS 和 HTTP/2 指纹伪装。
 
 ```dart
 @freezed
-class HttpStrategy with _$HttpStrategy {
-  const factory HttpStrategy({
-    /// TLS 指纹配置
-    TlsFingerprint? tls,
-    
+class NetworkConfig with _$NetworkConfig {
+  const factory NetworkConfig({
+    /// 网络策略
+    @Default(NetworkStrategy.http) NetworkStrategy strategy,
+
+    /// 设备模拟
+    @Default(BrowserEmulation.chrome131) BrowserEmulation emulation,
+
     /// 请求头
     Map<String, String>? headers,
-    
+
     /// Cookie
     Map<String, String>? cookies,
-    
+
     /// 超时 (ms)
     @Default(15000) int timeout,
-    
+
     /// 重定向
     @Default(true) bool followRedirects,
-  }) = _HttpStrategy;
+
+    /// 回退配置
+    FallbackConfig? fallback,
+
+    /// 代理配置
+    ProxyConfig? proxy,
+  }) = _NetworkConfig;
+}
+
+/// 设备模拟类型
+enum BrowserEmulation {
+  chrome131,
+  chrome120,
+  firefox133,
+  safari18,
+  edge127,
+}
+
+/// 网络策略
+enum NetworkStrategy {
+  http,
+  webviewInteractive,
 }
 ```
 
 **适用场景**:
-- 无反爬保护的 API
-- 静态 HTML 页面
+- 大多数网站的 API 和页面请求
+- 需要 TLS 指纹伪装的场景
 - 快速批量请求
 
-### 2. WebView Headless Strategy
+**wreq 特性**:
+- TLS 指纹伪装 (JA3/JA4)
+- HTTP/2 指纹模拟
+- 100+ 预置设备配置 (wreq-util)
+- Cookie Store
+- 代理支持
 
-无头浏览器，自动执行 JavaScript。
+### 2. WebView Interactive Strategy (回退)
 
-```dart
-@freezed
-class WebViewHeadlessStrategy with _$WebViewHeadlessStrategy {
-  const factory WebViewHeadlessStrategy({
-    /// 浏览器指纹
-    BrowserFingerprint? fingerprint,
-    
-    /// 等待策略
-    @Default(WaitStrategy.networkIdle) WaitStrategy waitStrategy,
-    
-    /// 等待超时 (ms)
-    @Default(30000) int waitTimeout,
-    
-    /// 执行前动作
-    List<CrawlerAction>? beforeActions,
-    
-    /// Cookie 同步
-    @Default(true) bool syncCookies,
-  }) = _WebViewHeadlessStrategy;
-}
-
-enum WaitStrategy {
-  /// 等待网络空闲
-  networkIdle,
-  
-  /// 等待 DOM 内容加载
-  domContentLoaded,
-  
-  /// 等待特定元素
-  selector,
-  
-  /// 固定等待时间
-  fixed,
-}
-```
-
-**适用场景**:
-- JavaScript 渲染页面
-- Cloudflare 五秒盾 (部分)
-- 动态加载内容
-
-### 3. WebView Interact Strategy
-
-交互式浏览器，需要用户操作。
+交互式浏览器，用于需要用户手动操作的场景。
 
 ```dart
 @freezed
-class WebViewInteractStrategy with _$WebViewInteractStrategy {
-  const factory WebViewInteractStrategy({
-    /// 是否显示界面
-    @Default(true) bool showUI,
-    
+class WebViewInteractiveConfig with _$WebViewInteractiveConfig {
+  const factory WebViewInteractiveConfig({
     /// 超时 (ms)
     @Default(120000) int timeout,
-    
+
     /// 成功检测
     SuccessDetection? successDetection,
-    
-    /// 完成后回调
+
+    /// 完成后同步 Cookie
     @Default(true) bool syncCookiesOnComplete,
-  }) = _WebViewInteractStrategy;
+  }) = _WebViewInteractiveConfig;
 }
 
 @freezed
@@ -109,10 +106,10 @@ class SuccessDetection with _$SuccessDetection {
   const factory SuccessDetection({
     /// 成功 URL 模式
     String? urlPattern,
-    
+
     /// 成功选择器
     String? selector,
-    
+
     /// 成功状态码
     @Default([200]) List<int> statusCodes,
   }) = _SuccessDetection;
@@ -121,154 +118,119 @@ class SuccessDetection with _$SuccessDetection {
 
 **适用场景**:
 - 登录验证
-- 复杂验证码
-- 人工确认场景
+- 复杂验证码 (需要人工识别)
+- 需要用户交互的鉴权流程
+- HTTP 策略失败后的回退
 
-## TLS Fingerprint
+## Rust HTTP Client API
 
-模拟真实浏览器的 TLS 握手特征。
+### wreq 集成
 
-```dart
-@freezed
-class TlsFingerprint with _$TlsFingerprint {
-  const factory TlsFingerprint({
-    /// 模拟的浏览器
-    @Default(BrowserType.chrome120) BrowserType browser,
-    
-    /// 是否使用 curl-impersonate
-    @Default(true) bool useImpersonate,
-  }) = _TlsFingerprint;
+```rust
+// rust/src/api/http_client.rs
+use wreq::{Client, Response};
+use wreq_util::Emulation;
+
+/// HTTP 请求配置
+pub struct HttpRequest {
+    pub url: String,
+    pub method: String,
+    pub headers: Option<HashMap<String, String>>,
+    pub body: Option<String>,
+    pub emulation: BrowserEmulation,
+    pub timeout_ms: u32,
+    pub follow_redirects: bool,
+    pub proxy: Option<ProxyConfig>,
 }
 
-enum BrowserType {
-  chrome110,
-  chrome120,
-  chrome130,
-  firefox110,
-  safari156,
-  safari17,
-  edge101,
-}
-```
-
-**实现方式**:
-- 使用 `curl_cffi` (Python) 或 `curl-impersonate` 模拟
-- Dart 端可通过 FFI 调用
-
-## Browser Fingerprint
-
-修补 headless 浏览器的检测点。
-
-```dart
-@freezed
-class BrowserFingerprint with _$BrowserFingerprint {
-  const factory BrowserFingerprint({
-    /// 隐藏 webdriver 标志
-    @Default(true) bool hideWebdriver,
-    
-    /// 模拟 Chrome runtime
-    @Default(true) bool mockChromeRuntime,
-    
-    /// 模拟权限 API
-    @Default(true) bool mockPermissions,
-    
-    /// 模拟插件列表
-    @Default(true) bool mockPlugins,
-    
-    /// 模拟语言
-    @Default(true) bool mockLanguages,
-    
-    /// WebGL 厂商信息
-    @Default(true) bool mockWebGL,
-    
-    /// 媒体设备
-    @Default(true) bool mockMediaDevices,
-    
-    /// User Agent (空则自动)
-    String? userAgent,
-    
-    /// 视口
-    Viewport? viewport,
-    
-    /// 时区
-    String? timezone,
-    
-    /// 语言
-    String? language,
-  }) = _BrowserFingerprint;
+/// HTTP 响应
+pub struct HttpResponse {
+    pub status: u16,
+    pub headers: HashMap<String, String>,
+    pub body: String,
+    pub url: String,
+    pub cookies: Vec<Cookie>,
 }
 
-@freezed
-class Viewport with _$Viewport {
-  const factory Viewport({
-    required int width,
-    required int height,
-    double? deviceScaleFactor,
-    bool? isMobile,
-    bool? hasTouch,
-  }) = _Viewport;
-}
-```
-
-**检测点修补** (参考 playwright-stealth):
-
-| 检测点 | 修补方式 |
-|--------|---------|
-| navigator.webdriver | 删除属性 |
-| Chrome runtime | 注入模拟对象 |
-| Permissions API | 返回默认权限 |
-| Plugin array | 注入真实插件信息 |
-| WebGL vendor | 修改渲染器信息 |
-| iframe contentWindow | 修补差异 |
-
-## Request Interceptors
-
-请求拦截器，在发送前或失败后执行。
-
-```dart
-@freezed
-class Interceptors with _$Interceptors {
-  const factory Interceptors({
-    /// 请求前拦截
-    List<Interceptor>? onBeforeRequest,
-    
-    /// 失败回退
-    FallbackConfig? onFallback,
-  }) = _Interceptors;
+/// 设备模拟类型
+pub enum BrowserEmulation {
+    Chrome131,
+    Chrome120,
+    Firefox133,
+    Safari18,
+    Edge127,
 }
 
-@freezed
-class Interceptor with _$Interceptor {
-  const factory Interceptor({
-    /// 类型
-    required InterceptorType type,
-    
-    /// JS 脚本 (type = js)
-    String? script,
-    
-    /// 自定义头 (type = headers)
-    Map<String, String>? headers,
-  }) = _Interceptor;
-}
+/// 发送 HTTP 请求
+pub async fn fetch(request: HttpRequest) -> Result<HttpResponse, String> {
+    let emulation = match request.emulation {
+        BrowserEmulation::Chrome131 => Emulation::Chrome131,
+        BrowserEmulation::Chrome120 => Emulation::Chrome120,
+        BrowserEmulation::Firefox133 => Emulation::Firefox133,
+        BrowserEmulation::Safari18 => Emulation::Safari18,
+        BrowserEmulation::Edge127 => Emulation::Edge127,
+    };
 
-enum InterceptorType {
-  js,
-  headers,
-  sign,
+    let mut builder = Client::builder()
+        .emulation(emulation)
+        .timeout(Duration::from_millis(request.timeout_ms as u64));
+
+    if !request.follow_redirects {
+        builder = builder.redirect(wreq::redirect::Policy::none());
+    }
+
+    if let Some(proxy) = request.proxy {
+        builder = builder.proxy(proxy.into());
+    }
+
+    let client = builder.build().map_err(|e| e.to_string())?;
+
+    // 构建请求
+    let mut req = match request.method.as_str() {
+        "GET" => client.get(&request.url),
+        "POST" => client.post(&request.url),
+        "PUT" => client.put(&request.url),
+        "DELETE" => client.delete(&request.url),
+        _ => return Err(format!("Unsupported method: {}", request.method)),
+    };
+
+    // 设置请求头
+    if let Some(headers) = request.headers {
+        for (key, value) in headers {
+            req = req.header(&key, &value);
+        }
+    }
+
+    // 设置请求体
+    if let Some(body) = request.body {
+        req = req.body(body);
+    }
+
+    // 发送请求
+    let response = req.send().await.map_err(|e| e.to_string())?;
+
+    // 提取 Cookie
+    let cookies = extract_cookies(&response);
+
+    Ok(HttpResponse {
+        status: response.status().as_u16(),
+        headers: response.headers().iter()
+            .map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string()))
+            .collect(),
+        body: response.text().await.map_err(|e| e.to_string())?,
+        url: response.url().to_string(),
+        cookies,
+    })
 }
 ```
 
-**使用示例**:
+### Dart FFI 调用
 
-```json
-{
-  "interceptors": {
-    "onBeforeRequest": [
-      {
-        "type": "js",
-        "script": "const token = generateSign(request.url); request.headers['X-Auth'] = token; return request;"
-      }
-    ]
+```dart
+// 自动生成的 Dart API (flutter_rust_bridge)
+class RustHttpClient {
+  Future<HttpResponse> fetch(HttpRequest request) async {
+    return await api.fetch(request: request);
   }
 }
 ```
@@ -283,18 +245,12 @@ class FallbackConfig with _$FallbackConfig {
   const factory FallbackConfig({
     /// 触发条件
     required List<TriggerCondition> trigger,
-    
+
     /// 回退动作
-    required FallbackAction action,
-    
-    /// 解决超时 (ms)
-    @Default(30000) int timeout,
-    
-    /// 同步 Cookie
-    @Default(true) bool syncCookies,
-    
-    /// 最大重试次数
-    @Default(3) int maxRetries,
+    @Default(FallbackAction.webviewInteractive) FallbackAction action,
+
+    /// 超时 (ms)
+    @Default(60000) int timeout,
   }) = _FallbackConfig;
 }
 
@@ -303,25 +259,16 @@ class TriggerCondition with _$TriggerCondition {
   const factory TriggerCondition({
     /// 状态码
     int? statusCode,
-    
+
     /// 正则匹配响应体
     String? bodyRegex,
-    
-    /// 响应头匹配
-    String? headerPattern,
   }) = _TriggerCondition;
 }
 
 enum FallbackAction {
-  /// 切换到 WebView 解决
-  webviewSolve,
-  
-  /// 切换代理
-  switchProxy,
-  
-  /// 等待重试
-  waitRetry,
-  
+  /// 切换到 WebView Interactive (用户手动鉴权)
+  webviewInteractive,
+
   /// 放弃
   abort,
 }
@@ -331,16 +278,107 @@ enum FallbackAction {
 
 ```json
 {
-  "onFallback": {
-    "trigger": [
-      { "statusCode": 403 },
-      { "statusCode": 503 },
-      { "bodyRegex": "Cloudflare|cf-browser-verification" }
-    ],
-    "action": "webviewSolve",
-    "timeout": 30000,
-    "syncCookies": true
+  "network": {
+    "strategy": "http",
+    "emulation": "chrome131",
+    "fallback": {
+      "trigger": [
+        { "statusCode": 403 },
+        { "statusCode": 503 },
+        { "bodyRegex": "Cloudflare|cf-browser-verification" }
+      ],
+      "action": "webviewInteractive",
+      "timeout": 60000
+    }
   }
+}
+```
+
+## Session Management
+
+Cookie 和鉴权状态持久化。
+
+```dart
+/// 会话管理器
+class SessionManager {
+  final CookieStorage _cookieStorage;
+  final AuthStateStorage _authStateStorage;
+
+  SessionManager({
+    required CookieStorage cookieStorage,
+    required AuthStateStorage authStateStorage,
+  }) : _cookieStorage = cookieStorage,
+       _authStateStorage = authStateStorage;
+
+  /// 保存会话
+  Future<void> saveSession({
+    required String sourceId,
+    required List<Cookie> cookies,
+    AuthState? authState,
+  }) async {
+    await _cookieStorage.save(sourceId, cookies);
+    if (authState != null) {
+      await _authStateStorage.save(sourceId, authState);
+    }
+  }
+
+  /// 加载会话
+  Future<Session?> loadSession(String sourceId) async {
+    final cookies = await _cookieStorage.load(sourceId);
+    final authState = await _authStateStorage.load(sourceId);
+
+    if (cookies == null || cookies.isEmpty) {
+      return null;
+    }
+
+    // 检查是否过期
+    if (authState?.isExpired ?? false) {
+      await clearSession(sourceId);
+      return null;
+    }
+
+    return Session(cookies: cookies, authState: authState);
+  }
+
+  /// 清除会话
+  Future<void> clearSession(String sourceId) async {
+    await _cookieStorage.clear(sourceId);
+    await _authStateStorage.clear(sourceId);
+  }
+
+  /// 同步 Cookie 到 Rust HTTP 客户端
+  Future<void> syncToRust(String sourceId) async {
+    final session = await loadSession(sourceId);
+    if (session != null) {
+      await _rustHttpClient.setCookies(session.cookies);
+    }
+  }
+}
+
+@freezed
+class AuthState with _$AuthState {
+  const factory AuthState({
+    required bool isAuthenticated,
+    required DateTime authenticatedAt,
+    DateTime? expiresAt,
+    String? userId,
+    String? token,
+  }) = _AuthState;
+
+  const AuthState._();
+
+  bool get isExpired {
+    if (expiresAt == null) return false;
+    return DateTime.now().isAfter(expiresAt!);
+  }
+}
+
+@freezed
+class Session with _$Session {
+  const factory Session({
+    required List<Cookie> cookies,
+    AuthState? authState,
+  }) = _Session;
 }
 ```
 
@@ -352,61 +390,35 @@ enum FallbackAction {
 @freezed
 class ProxyConfig with _$ProxyConfig {
   const factory ProxyConfig({
-    /// 代理列表
-    required List<ProxyServer> servers,
-    
-    /// 轮换策略
-    @Default(ProxyRotation.roundRobin) ProxyRotation rotation,
-    
-    /// 失败切换
-    @Default(true) bool failover,
-    
-    /// 验证 URL
-    String? testUrl,
+    /// 代理服务器
+    required ProxyServer server,
+
+    /// 认证信息
+    ProxyAuth? auth,
   }) = _ProxyConfig;
 }
 
 @freezed
 class ProxyServer with _$ProxyServer {
   const factory ProxyServer({
-    /// 服务器地址
     required String host,
-    
-    /// 端口
     required int port,
-    
-    /// 类型
-    required ProxyType type,
-    
-    /// 用户名
-    String? username,
-    
-    /// 密码
-    String? password,
-    
-    /// 权重
-    @Default(1) int weight,
+    @Default(ProxyType.http) ProxyType type,
   }) = _ProxyServer;
+}
+
+@freezed
+class ProxyAuth with _$ProxyAuth {
+  const factory ProxyAuth({
+    required String username,
+    required String password,
+  }) = _ProxyAuth;
 }
 
 enum ProxyType {
   http,
   https,
   socks5,
-}
-
-enum ProxyRotation {
-  /// 顺序轮换
-  roundRobin,
-  
-  /// 随机选择
-  random,
-  
-  /// 按权重
-  weighted,
-  
-  /// 固定使用第一个
-  fixed,
 }
 ```
 
@@ -417,192 +429,181 @@ enum ProxyRotation {
 ```dart
 class NetworkStrategySelector {
   NetworkStrategy select(
-    CrawlerRule rule,
-    DetectionResult detection,
+    NetworkConfig config,
+    HttpResponse? response,
   ) {
     // 1. 规则明确指定
-    if (rule.network.strategy != null) {
-      return rule.network.strategy!;
+    if (config.strategy != NetworkStrategy.http) {
+      return config.strategy;
     }
-    
-    // 2. 根据检测结果选择
-    if (detection.requiresBrowser) {
-      return detection.requiresUserInteraction
-          ? NetworkStrategy.webviewInteract
-          : NetworkStrategy.webviewHeadless;
+
+    // 2. 检查是否需要回退
+    if (response != null && config.fallback != null) {
+      if (_shouldFallback(response, config.fallback!.trigger)) {
+        return NetworkStrategy.webviewInteractive;
+      }
     }
-    
+
     // 3. 默认 HTTP
     return NetworkStrategy.http;
+  }
+
+  bool _shouldFallback(HttpResponse response, List<TriggerCondition> triggers) {
+    for (final trigger in triggers) {
+      if (trigger.statusCode != null && response.status == trigger.statusCode) {
+        return true;
+      }
+      if (trigger.bodyRegex != null) {
+        final regex = RegExp(trigger.bodyRegex!);
+        if (regex.hasMatch(response.body)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
 ```
 
-### 指纹注入脚本
+### HTTP 策略执行器
 
-```javascript
-// 隐藏 webdriver
-Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+```dart
+class HttpStrategyExecutor {
+  final RustHttpClient _client;
+  final SessionManager _sessionManager;
 
-// 模拟 Chrome runtime
-window.chrome = { runtime: {} };
+  HttpStrategyExecutor(this._client, this._sessionManager);
 
-// 模拟权限
-const originalQuery = window.navigator.permissions.query;
-window.navigator.permissions.query = (parameters) => (
-  parameters.name === 'notifications' ?
-    Promise.resolve({ state: Notification.permission }) :
-    originalQuery(parameters)
-);
+  Future<Either<Failure, String>> execute({
+    required String url,
+    required NetworkConfig config,
+    String? method,
+    String? body,
+  }) async {
+    try {
+      // 1. 加载会话 Cookie
+      final session = await _sessionManager.loadSession(_extractSourceId(url));
+
+      // 2. 合并 Cookie
+      final cookies = <String, String>{
+        ...?config.cookies,
+        ...?session?.cookies.map((c) => MapEntry(c.name, c.value)),
+      };
+
+      // 3. 构建请求
+      final request = HttpRequest(
+        url: url,
+        method: method ?? 'GET',
+        headers: config.headers,
+        body: body,
+        emulation: _mapEmulation(config.emulation),
+        timeoutMs: config.timeout,
+        followRedirects: config.followRedirects,
+      );
+
+      // 4. 发送请求
+      final response = await _client.fetch(request);
+
+      // 5. 保存新的 Cookie
+      if (response.cookies.isNotEmpty) {
+        await _sessionManager.saveSession(
+          sourceId: _extractSourceId(url),
+          cookies: response.cookies,
+        );
+      }
+
+      // 6. 检查回退
+      if (config.fallback != null) {
+        if (_shouldFallback(response, config.fallback!.trigger)) {
+          return Left(FallbackRequiredFailure(config.fallback!));
+        }
+      }
+
+      // 7. 检查状态码
+      if (response.status >= 400) {
+        return Left(HttpFailure(
+          statusCode: response.status,
+          message: 'HTTP ${response.status}',
+        ));
+      }
+
+      return Right(response.body);
+    } on Exception catch (e) {
+      return Left(NetworkFailure(e.toString()));
+    }
+  }
+}
 ```
 
 ## Platform Support
 
-| 平台 | HTTP | WebView Headless | WebView Interact |
-|------|------|------------------|------------------|
-| Windows | ✅ | ✅ (InAppWebView) | ✅ (InAppWebView) |
-| macOS | ✅ | ✅ (InAppWebView) | ✅ (InAppWebView) |
-| Linux | ✅ | ✅ (InAppWebView) | ✅ (InAppWebView) |
-| Android | ✅ | ✅ (InAppWebView) | ✅ (Both) |
-| iOS | ✅ | ✅ (InAppWebView) | ✅ (Both) |
-| Web | ✅ | ❌ | ✅ (Official) |
+| 平台 | HTTP (Rust wreq) | WebView Interactive | 说明 |
+|------|------------------|---------------------|------|
+| Windows | 支持 | 支持 (InAppWebView) | 官方 CI 验证 |
+| macOS | 支持 | 支持 (InAppWebView) | 官方 CI 验证 |
+| Linux | 支持 | 支持 (InAppWebView) | 官方 CI 验证 |
+| Android | 支持 | 支持 (Both) | 官方 CI 验证 (cargo-ndk) |
+| iOS | 支持 | 支持 (Both) | 社区验证，需配置 |
+| Web | 支持 (WASM) | 支持 (Official) | flutter_rust_bridge WASM |
 
-**移动端限制**:
-- iOS 不支持 headless WebView
-- Android headless 功能有限
-- 建议移动端使用 HTTP + 后端代理
+### iOS 配置
 
-## WebView Engine Selection
-
-### 双引擎架构
-
-```dart
-/// WebView 策略抽象
-abstract class WebViewStrategy {
-  /// 加载 URL
-  Future<void> loadUrl(String url);
-  
-  /// 执行 JavaScript
-  Future<String?> evaluateJs(String script);
-  
-  /// Headless 模式运行
-  Future<void> runHeadless(String url);
-  
-  /// 请求拦截流
-  Stream<NetworkRequest>? interceptRequests();
-  
-  /// 设置 Cookie
-  Future<void> setCookies(List<Cookie> cookies);
-  
-  /// 设置代理
-  Future<void> setProxy(ProxyConfig? proxy);
-  
-  /// 是否支持 Headless
-  bool get supportsHeadless;
-  
-  /// 是否支持请求拦截
-  bool get supportsInterception;
-}
+```toml
+# Cargo.toml - 避免 Debug 模式栈溢出
+[profile.dev]
+opt-level = 1
 ```
 
-### InAppWebView 策略 (flutter_inappwebview)
+```bash
+# 添加 iOS 目标
+rustup target add aarch64-apple-ios aarch64-apple-ios-sim
 
-```dart
-class InAppWebViewStrategy implements WebViewStrategy {
-  HeadlessInAppWebView? _headlessWebView;
-  InAppWebViewController? _controller;
-  
-  @override
-  bool get supportsHeadless => true;
-  
-  @override
-  bool get supportsInterception => true;
-  
-  @override
-  Future<void> runHeadless(String url) async {
-    _headlessWebView = HeadlessInAppWebView(
-      initialUrlRequest: URLRequest(url: WebUri(url)),
-      initialSettings: InAppWebViewSettings(
-        javaScriptEnabled: true,
-        useShouldInterceptRequest: true,
-      ),
-      onLoadStop: (controller, url) async {
-        _controller = controller;
-      },
-    );
-    await _headlessWebView!.run();
-  }
-  
-  @override
-  Stream<NetworkRequest>? interceptRequests() {
-    // 通过 shouldInterceptRequest 实现
-  }
-}
+# 编译
+cargo build --target aarch64-apple-ios --release
+cargo build --target aarch64-apple-ios-sim --release
 ```
 
-### Official WebView 策略 (webview_flutter)
+## Dependencies
 
-```dart
-class OfficialWebViewStrategy implements WebViewStrategy {
-  WebViewController? _controller;
-  
-  @override
-  bool get supportsHeadless => false;
-  
-  @override
-  bool get supportsInterception => false;
-  
-  @override
-  Future<void> runHeadless(String url) async {
-    throw UnsupportedError('Official WebView does not support headless mode');
-  }
-  
-  @override
-  Stream<NetworkRequest>? interceptRequests() {
-    return null; // 不支持
-  }
-}
+### Rust (Cargo.toml)
+
+```toml
+[dependencies]
+wreq = "6.0.0-rc.28"
+wreq-util = "3.0.0-rc.10"
+flutter_rust_bridge = "=2.11.1"
 ```
 
-### 策略选择器
-
-```dart
-class WebViewStrategySelector {
-  static WebViewStrategy select({
-    required bool requiresHeadless,
-    required bool requiresInterception,
-  }) {
-    // Web 平台只能用官方 WebView
-    if (kIsWeb) {
-      return OfficialWebViewStrategy();
-    }
-    
-    // 需要 Headless 或请求拦截 → InAppWebView
-    if (requiresHeadless || requiresInterception) {
-      return InAppWebViewStrategy();
-    }
-    
-    // 桌面平台 → InAppWebView (唯一支持)
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      return InAppWebViewStrategy();
-    }
-    
-    // 默认 → InAppWebView (功能更全)
-    return InAppWebViewStrategy();
-  }
-}
-```
-
-### 依赖配置
+### Dart (pubspec.yaml)
 
 ```yaml
-# pubspec.yaml
 dependencies:
-  # WebView 主力引擎 (全平台 + Headless)
+  flutter_rust_bridge: ^2.11.1
   flutter_inappwebview: ^6.2.0-beta.3
-  
-  # WebView 备选引擎 (官方维护 + Web 平台)
   webview_flutter: ^4.13.1
-  webview_flutter_android: ^4.10.11
-  webview_flutter_wkwebview: ^3.23.7
+```
+
+## Build Requirements
+
+### Linux
+
+```bash
+sudo apt-get install build-essential cmake perl pkg-config libclang-dev musl-tools
+```
+
+### Windows
+
+- Visual Studio Build Tools 2022
+- CMake
+
+### macOS
+
+- Xcode Command Line Tools
+- CMake
+
+### 编译命令
+
+```bash
+# 启用 prefix-symbols 避免符号冲突
+cargo build --release --features prefix-symbols
 ```
