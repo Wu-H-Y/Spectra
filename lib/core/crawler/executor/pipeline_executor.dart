@@ -70,11 +70,11 @@ class PipelineContext {
 class PipelineExecutor {
   /// 创建 Pipeline 执行器。
   PipelineExecutor()
-      : _cssEvaluator = CssSelectorEvaluator(),
-        _xpathEvaluator = XPathSelectorEvaluator(),
-        _jsonPathEvaluator = JsonPathSelectorEvaluator(),
-        _regexEvaluator = RegexSelectorEvaluator(),
-        _jsEvaluator = JsSelectorEvaluator();
+    : _cssEvaluator = CssSelectorEvaluator(),
+      _xpathEvaluator = XPathSelectorEvaluator(),
+      _jsonPathEvaluator = JsonPathSelectorEvaluator(),
+      _regexEvaluator = RegexSelectorEvaluator(),
+      _jsEvaluator = JsSelectorEvaluator();
 
   final CssSelectorEvaluator _cssEvaluator;
   final XPathSelectorEvaluator _xpathEvaluator;
@@ -98,8 +98,11 @@ class PipelineExecutor {
     final errors = <String>[];
 
     for (final node in nodes) {
-      final result =
-          _executeNode(currentInput, node, context ?? const PipelineContext());
+      final result = _executeNode(
+        currentInput,
+        node,
+        context ?? const PipelineContext(),
+      );
       if (result.errors.isNotEmpty) {
         errors.addAll(result.errors);
       }
@@ -125,8 +128,7 @@ class PipelineExecutor {
       case PipelineNodeType.extractor:
         return _executeExtractor(input, node.operator, node.argument);
       case PipelineNodeType.transform:
-        return _executeTransform(
-            input, node.operator, node.argument, context);
+        return _executeTransform(input, node.operator, node.argument, context);
       case PipelineNodeType.aggregation:
         return _executeAggregation(input, node.operator, node.argument);
     }
@@ -139,8 +141,7 @@ class PipelineExecutor {
     String? argument,
   ) {
     if (argument == null || argument.isEmpty) {
-      return const PipelineResult(
-          values: [], errors: ['选择器表达式不能为空']);
+      return const PipelineResult(values: [], errors: ['选择器表达式不能为空']);
     }
 
     try {
@@ -156,8 +157,7 @@ class PipelineExecutor {
         case 'js':
           return _executeJs(input, argument);
         default:
-          return PipelineResult(
-              values: [], errors: ['未知选择器类型: $operator']);
+          return PipelineResult(values: [], errors: ['未知选择器类型: $operator']);
       }
     } on Exception catch (e) {
       return PipelineResult(values: [], errors: ['选择器执行错误: $e']);
@@ -180,8 +180,7 @@ class PipelineExecutor {
   PipelineResult _executeJsonPath(String jsonString, String jsonPath) {
     try {
       final json = _parseJson(jsonString);
-      final result =
-          _jsonPathEvaluator.extractAllAsString(json, jsonPath);
+      final result = _jsonPathEvaluator.extractAllAsString(json, jsonPath);
       return PipelineResult(values: result);
     } on Exception catch (e) {
       return PipelineResult(values: [], errors: ['JSON 解析错误: $e']);
@@ -233,8 +232,7 @@ class PipelineExecutor {
 
         case 'attr':
           if (argument == null || argument.isEmpty) {
-            return const PipelineResult(
-                values: [], errors: ['属性名不能为空']);
+            return const PipelineResult(values: [], errors: ['属性名不能为空']);
           }
           // 获取所有元素的指定属性
           final attrs = elements
@@ -271,8 +269,7 @@ class PipelineExecutor {
           return PipelineResult(values: srcs);
 
         default:
-          return PipelineResult(
-              values: [], errors: ['未知提取器类型: $operator']);
+          return PipelineResult(values: [], errors: ['未知提取器类型: $operator']);
       }
     } on Exception catch (e) {
       return PipelineResult(values: [], errors: ['提取器执行错误: $e']);
@@ -301,24 +298,29 @@ class PipelineExecutor {
       case 'replace':
         if (argument == null || !argument.contains('→')) {
           return const PipelineResult(
-              values: [], errors: ['replace 需要 from→to 格式参数']);
+            values: [],
+            errors: ['replace 需要 from→to 格式参数'],
+          );
         }
         final parts = argument.split('→');
         if (parts.length != 2) {
-          return const PipelineResult(
-              values: [], errors: ['replace 参数格式错误']);
+          return const PipelineResult(values: [], errors: ['replace 参数格式错误']);
         }
         output = input.replaceAll(parts[0], parts[1]);
 
       case 'regexreplace':
         if (argument == null || !argument.contains('→')) {
           return const PipelineResult(
-              values: [], errors: ['regexreplace 需要 pattern→replacement 格式参数']);
+            values: [],
+            errors: ['regexreplace 需要 pattern→replacement 格式参数'],
+          );
         }
         final parts = argument.split('→');
         if (parts.length != 2) {
           return const PipelineResult(
-              values: [], errors: ['regexreplace 参数格式错误']);
+            values: [],
+            errors: ['regexreplace 参数格式错误'],
+          );
         }
         try {
           output = input.replaceAll(RegExp(parts[0]), parts[1]);
@@ -360,12 +362,10 @@ class PipelineExecutor {
 
     switch (operator) {
       case 'first':
-        return PipelineResult(
-            values: values.isNotEmpty ? [values.first] : []);
+        return PipelineResult(values: values.isNotEmpty ? [values.first] : []);
 
       case 'last':
-        return PipelineResult(
-            values: values.isNotEmpty ? [values.last] : []);
+        return PipelineResult(values: values.isNotEmpty ? [values.last] : []);
 
       case 'join':
         final separator = argument ?? ',';
@@ -379,9 +379,9 @@ class PipelineExecutor {
         // 展平处理（递归拆分）
         final flattened = <String>[];
         for (final v in values) {
-          flattened.addAll(v
-              .split(RegExp(r'[\s,\|]+'))
-              .where((s) => s.isNotEmpty));
+          flattened.addAll(
+            v.split(RegExp(r'[\s,\|]+')).where((s) => s.isNotEmpty),
+          );
         }
         return PipelineResult(values: flattened);
 

@@ -5,8 +5,10 @@
 library;
 
 import 'package:spectra/core/crawler/crawler.dart' show PipelineExecutor;
-import 'package:spectra/core/crawler/executor/executor.dart' show PipelineExecutor;
-import 'package:spectra/core/crawler/executor/pipeline_executor.dart' show PipelineExecutor;
+import 'package:spectra/core/crawler/executor/executor.dart'
+    show PipelineExecutor;
+import 'package:spectra/core/crawler/executor/pipeline_executor.dart'
+    show PipelineExecutor;
 
 // 选择器实现已迁移到 pipeline_executor.dart
 // 通过 Pipeline 节点执行选择器操作

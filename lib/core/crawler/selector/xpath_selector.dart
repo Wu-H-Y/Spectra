@@ -57,8 +57,12 @@ class XPathSelectorEvaluator {
     bool firstOnly = false,
   }) {
     final document = parseHtml(html);
-    return evaluateDocument(document, expression,
-        attribute: attribute, firstOnly: firstOnly);
+    return evaluateDocument(
+      document,
+      expression,
+      attribute: attribute,
+      firstOnly: firstOnly,
+    );
   }
 
   /// 对已解析的文档求值 XPath 表达式。

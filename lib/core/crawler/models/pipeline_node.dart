@@ -49,14 +49,8 @@ PipelineNodeType getNodeType(String operator) {
     'xpath' ||
     'jsonpath' ||
     'regex' ||
-    'js' =>
-      PipelineNodeType.selector,
-    'text' ||
-    'attr' ||
-    'html' ||
-    'href' ||
-    'src' =>
-      PipelineNodeType.extractor,
+    'js' => PipelineNodeType.selector,
+    'text' || 'attr' || 'html' || 'href' || 'src' => PipelineNodeType.extractor,
     'trim' ||
     'replace' ||
     'regexreplace' ||
@@ -64,14 +58,12 @@ PipelineNodeType getNodeType(String operator) {
     'lower' ||
     'upper' ||
     'number' ||
-    'date' =>
-      PipelineNodeType.transform,
+    'date' => PipelineNodeType.transform,
     'first' ||
     'last' ||
     'join' ||
     'array' ||
-    'flat' =>
-      PipelineNodeType.aggregation,
+    'flat' => PipelineNodeType.aggregation,
     _ => PipelineNodeType.transform,
   };
 }

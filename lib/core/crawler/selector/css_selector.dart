@@ -49,8 +49,12 @@ class CssSelectorEvaluator {
     bool firstOnly = false,
   }) {
     final document = parseDocument(html);
-    return evaluateDocument(document, expression,
-        attribute: attribute, firstOnly: firstOnly);
+    return evaluateDocument(
+      document,
+      expression,
+      attribute: attribute,
+      firstOnly: firstOnly,
+    );
   }
 
   /// 对已解析的文档求值 CSS 选择器。

@@ -13,6 +13,7 @@ class ListItem {
 
   /// 字段数据。
   final Map<String, String> fields;
+
   /// 关联的 URL。
   final String? url;
 }
@@ -27,6 +28,7 @@ class DetailData {
 
   /// 字段数据。
   final Map<String, String> fields;
+
   /// 错误信息列表。
   final List<String> errors;
 }
@@ -41,6 +43,7 @@ class Chapter {
 
   /// 字段数据。
   final Map<String, String> fields;
+
   /// 章节链接。
   final String? url;
 }
@@ -58,12 +61,16 @@ class ContentData {
 
   /// 视频链接。
   final String? videoUrl;
+
   /// 图片列表。
   final List<String> images;
+
   /// 文本内容。
   final String? text;
+
   /// 音频链接。
   final String? audioUrl;
+
   /// 错误信息列表。
   final List<String> errors;
 
