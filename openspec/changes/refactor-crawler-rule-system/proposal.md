@@ -50,24 +50,41 @@ Spectra 当前的爬虫规则系统存在以下核心问题：
 3. **实现多源聚合** - 模糊匹配 + 权重优选
 4. **重构可视化编辑器** - React Flow 节点流编辑器
 
-### 架构决策: Rust 统一处理 HTTP 请求
+### 架构决策: Rust 优先爬虫引擎
 
-**问题**: 由 Rust 还是 Flutter 发起请求？
+**问题**: 爬虫逻辑应该在哪一层实现？
 
-**决策**: **Rust 统一处理所有 HTTP 请求**
+**决策**: **所有爬虫核心逻辑下沉到 Rust 层**
 
 **理由**:
-1. **TLS 指纹伪装**: wreq 提供 JA3/JA4 指纹模拟，需要底层网络控制
-2. **性能**: Rust 异步 HTTP 客户端比 Dart 更高效
-3. **一致性**: 所有网络请求逻辑集中在 Rust 层，便于维护
-4. **跨平台**: wreq 基于 BoringSSL，支持所有平台
+1. **性能**: HTML 解析、XPath/CSS 选择器在 Rust 层执行更高效
+2. **内存安全**: Rust 的内存管理避免 Dart VM 的 GC 压力
+3. **并发安全**: Rust 原生支持多线程，避免 Dart Isolate 复杂性
+4. **跨平台一致性**: 同一套 Rust 代码在所有平台行为一致
+5. **可测试性**: Rust 单元测试比 Dart Widget 测试更稳定
+
+**技术栈**:
+- **HTTP 请求**: wreq (TLS/HTTP2 指纹伪装)
+- **HTML 解析**: rlibxml2 (libxml2 绑定，专为爬虫优化)
+- **XPath 选择器**: rlibxml2 (完整 XPath 1.0 支持)
+- **CSS 选择器**: scraper (Rust CSS 选择器库)
+- **中文处理**: jieba-rs + ferrous-opencc
+- **相似度计算**: textdistance
 
 **请求链路**:
 ```
-Flutter (规则配置) -> Rust FFI (wreq 发起请求 + TLS 指纹) -> 目标网站
-       ^                                                    |
-       |___________________(响应/错误)______________________|
+Flutter (规则配置) -> Rust FFI (wreq 请求 + rlibxml2 解析 + 选择器执行) -> 目标网站
+       ^                                                                    |
+       |___________________________(结构化数据)_____________________________|
 ```
+
+**分层职责**:
+
+| 层级 | 职责 | 技术 |
+|------|------|------|
+| Flutter UI | 规则配置、结果渲染、用户交互 | Dart/Flutter |
+| Rust FFI | HTTP 请求、HTML 解析、选择器执行、数据处理 | wreq, rlibxml2, scraper |
+| Native | 底层网络、TLS、系统调用 | BoringSSL, libxml2 |
 
 ### 新增功能
 
@@ -188,6 +205,12 @@ Flutter (规则配置) -> Rust FFI (wreq 发起请求 + TLS 指纹) -> 目标网
 | `rule-lifecycle` | 完整的五阶段生命周期: Explore -> Search -> Detail -> TOC -> Content |
 | `dynamic-variables` | 动态变量插值: `{{host}}`, `{{key}}`, `{{page}}`, `{{category}}` |
 | `rust-http-client` | Rust wreq HTTP 客户端，统一处理所有 HTTP 请求，支持 TLS/HTTP2 指纹伪装 |
+| `rust-html-parser` | Rust rlibxml2 HTML 解析器，专为爬虫优化，支持容错解析 |
+| `rust-xpath-selector` | Rust rlibxml2 XPath 选择器，完整 XPath 1.0 语法支持 |
+| `rust-jsonpath-selector` | Rust jsonpath-rust JSONPath 选择器 |
+| `rust-js-executor` | Rust rquickjs JS 表达式执行器，支持 val/vars 上下文 |
+| `rust-pipeline-executor` | Rust Pipeline 执行器，在 Rust 层完成选择器链式执行 |
+| `rust-type-driven` | Rust 类型驱动设计: Newtype, Type State, Builder 模式 |
 | `device-emulation` | 设备模拟，100+ 预置浏览器设备配置 (Chrome/Firefox/Safari/Edge) |
 | `tls-fingerprint` | TLS 指纹伪装 (JA3/JA4)，模拟真实浏览器 TLS 握手特征 |
 | `http2-fingerprint` | HTTP/2 指纹模拟，精确控制 SETTINGS、Priority Frames |
@@ -199,7 +222,7 @@ Flutter (规则配置) -> Rust FFI (wreq 发起请求 + TLS 指纹) -> 目标网
 | `element-picker` | WebView 元素拾取，自动生成 CSS/XPath |
 | `realtime-preview` | 实时预览，修改规则后立即看到提取结果 |
 | `webview-abstraction` | WebView 抽象层，支持 flutter_inappwebview 和 webview_flutter 双引擎 |
-| `rust-ffi-chinese` | Rust FFI 中文处理模块 (jieba-rs 分词, ferrous-opencc 繁简转换, chinese-number 数字转中文, Jaccard/Levenshtein 相似度, 标题标准化) |
+| `rust-ffi-chinese` | Rust FFI 中文处理模块 (jieba-rs 分词, ferrous-opencc 繁简转换, chinese-number 数字转中文, 标题标准化) |
 | `isolate-executor` | 基于 Squadron 的 Isolate 并行执行器，爬虫任务在独立线程执行，避免阻塞 UI，支持 Worker Pool 和流式进度返回 |
 
 ### Modified Capabilities
@@ -316,15 +339,23 @@ spectra/
 
 ### Rust 依赖 (flutter_rust_bridge)
 
-| 依赖 | 用途 |
-|------|------|
-| flutter_rust_bridge | FRB Rust 运行时 |
-| wreq | HTTP 客户端 (TLS/HTTP2 指纹) |
-| wreq-util | 设备模拟配置 (100+ 浏览器) |
-| jieba-rs | 中文分词 |
-| chinese-number | 数字转中文 |
-| ferrous-opencc | 繁简体转换 |
-| textdistance | 相似度计算 |
+| 依赖 | 用途 | API 暴露 |
+|------|------|----------|
+| flutter_rust_bridge | FRB Rust 运行时 | 是 |
+| wreq | HTTP 客户端 (TLS/HTTP2 指纹) | 是 |
+| wreq-util | 设备模拟配置 (100+ 浏览器) | 是 |
+| rlibxml2 | HTML/XML 解析 + XPath 选择器 (私有库) | 是 |
+| jsonpath-rust | JSONPath 查询 | 是 |
+| rquickjs | JS 表达式执行 (https://github.com/DelSkayn/rquickjs) | 否 (内部) |
+| rquickjs-serde | JS Serde 序列化 (可选) | 否 (内部) |
+| jieba-rs | 中文分词 | 是 |
+| chinese-number | 数字转中文 | 是 |
+| ferrous-opencc | 繁简体转换 | 是 |
+| textdistance | 相似度计算 | 否 (内部) |
+| regex | 正则表达式 | 否 (内部) |
+| serde | 序列化 | 否 (内部) |
+| serde_json | JSON 处理 | 否 (内部) |
+| url | URL 解析 | 否 (内部) |
 
 ### API 变更
 

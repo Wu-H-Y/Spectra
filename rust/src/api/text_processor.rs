@@ -1,14 +1,15 @@
-use chinese_number::{ChineseCase, ChineseVariant, NumberToChinese};
-use ferrous_opencc::{config::BuiltinConfig, OpenCC};
+use std::sync::OnceLock;
+
 /// 中文处理 API
 ///
 /// 提供：
 /// - 中文分词 (jieba-rs)
 /// - 繁简转换 (ferrous-opencc)
 /// - 数字转中文 (chinese-number)
+use chinese_number::{ChineseCase, ChineseVariant, NumberToChinese};
+use ferrous_opencc::{config::BuiltinConfig, OpenCC};
 use flutter_rust_bridge::frb;
 use jieba_rs::Jieba;
-use std::sync::OnceLock;
 
 /// 全局 Jieba 实例
 static JIEBA: OnceLock<Jieba> = OnceLock::new();

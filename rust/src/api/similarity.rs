@@ -1,3 +1,5 @@
+use std::{collections::HashSet, sync::OnceLock};
+
 /// 相似度计算 API
 ///
 /// 提供：
@@ -7,8 +9,6 @@
 /// - 模糊搜索评分
 use flutter_rust_bridge::frb;
 use regex::Regex;
-use std::collections::HashSet;
-use std::sync::OnceLock;
 use textdistance::{Algorithm, Levenshtein, SorensenDice};
 
 use super::text_processor::get_jieba;

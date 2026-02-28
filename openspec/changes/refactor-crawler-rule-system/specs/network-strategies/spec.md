@@ -6,17 +6,34 @@
 1. **HTTP Strategy** - Rust wreq TLS/HTTP2 指纹伪装 (主力)
 2. **WebView Interactive Strategy** - 用户手动交互 (回退)
 
-## 架构决策
+## 架构决策: Rust 优先爬虫引擎
 
-**问题**: 由 Rust 还是 Flutter 发起请求？
+**问题**: 爬虫逻辑应该在哪一层实现？
 
-**决策**: **Rust 统一处理所有 HTTP 请求**
+**决策**: **所有爬虫核心逻辑下沉到 Rust 层**
 
 **理由**:
 1. **TLS 指纹伪装**: wreq 提供 JA3/JA4 指纹模拟，需要底层网络控制
 2. **HTTP/2 指纹**: 精确控制 SETTINGS、Priority Frames
 3. **性能**: Rust 异步 HTTP 客户端比 Dart 更高效
-4. **一致性**: 所有网络请求逻辑集中在 Rust 层
+4. **HTML 解析**: rlibxml2 提供完整 XPath 1.0 支持，容错解析
+5. **一致性**: 所有网络请求和数据处理逻辑集中在 Rust 层
+6. **可测试性**: Rust 单元测试比 Dart Widget 测试更稳定
+
+**分层职责**:
+
+| 层级 | 职责 | 技术 |
+|------|------|------|
+| Flutter UI | 规则配置、结果渲染 | Dart/Flutter |
+| Rust FFI | HTTP 请求、HTML 解析、选择器执行 | wreq, rlibxml2, jsonpath-rust |
+| Native | 底层网络、TLS | BoringSSL, libxml2 |
+
+**请求链路**:
+```
+Flutter (规则配置) -> Rust FFI (wreq 请求 + rlibxml2 解析 + 选择器执行) -> 目标网站
+       ^                                                                    |
+       |___________________________(结构化数据)_____________________________|
+```
 
 ## Strategies
 

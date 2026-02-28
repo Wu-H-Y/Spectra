@@ -88,36 +88,179 @@
 
 ---
 
-## Phase 3: Rust HTTP Client (wreq) (待实施)
+## Phase 3: Rust HTTP Client (wreq) (已完成)
 
 ### 3.1 wreq 集成
-- [ ] 添加 wreq 和 wreq-util Rust 依赖
-- [ ] 配置 BoringSSL 编译环境
-- [ ] 实现 `BrowserEmulation` 枚举映射
-- [ ] 实现 `HttpRequest` 结构体
-- [ ] 实现 `HttpResponse` 结构体
-- [ ] 编写 wreq 集成测试
+- [x] 添加 wreq 和 wreq-util Rust 依赖
+- [x] 配置 BoringSSL 编译环境
+- [x] 实现 `Emulation` 枚举映射 (完整 48 种浏览器)
+- [x] 实现 `EmulationOS` 操作系统模拟
+- [x] 实现 `HttpRequest` 结构体
+- [x] 实现 `HttpResponse` 结构体
+- [x] 实现 `HttpClient` 可复用客户端
+- [x] 编写单元测试
 
 ### 3.2 HTTP Client API (Rust FFI)
-- [ ] 创建 `rust/src/api/http_client.rs`
-- [ ] 实现 `fetch(request: HttpRequest) -> HttpResponse`
-- [ ] 实现 TLS 指纹配置 (Chrome/Firefox/Safari)
-- [ ] 实现代理支持
-- [ ] 实现 Cookie 提取
-- [ ] 运行 FRB 代码生成
+- [x] 创建 `rust/src/api/http_client.rs`
+- [x] 实现 `fetch(request: HttpRequest) -> HttpResponse`
+- [x] 实现 `http_get/http_post/http_fetch` 便捷函数
+- [x] 实现 TLS 指纹配置 (Chrome/Firefox/Safari/Edge/OkHttp)
+- [x] 实现代理支持 (ProxySettings/ProxyConfig)
+- [x] 实现 Cookie 存储 (CookieSettings)
+- [x] 实现 EmulationOption 高级配置
+- [x] 实现超时配置 (TimeoutSettings)
+- [x] 实现重定向配置 (RedirectSettings)
+- [x] 运行 FRB 代码生成
 
-### 3.3 Dart HTTP Strategy
+### 3.3 编译配置 (CI/CD)
+- [x] 配置 Linux 编译依赖 (cmake, perl, pkg-config, libclang-dev)
+- [x] 配置 Windows 编译依赖 (cmake, perl, pkg-config, llvm, nasm)
+- [x] 配置 macOS/iOS 编译依赖 (cmake, pkg-config, llvm)
+- [x] 配置 Android NDK (cargo-ndk)
+- [x] 启用 `prefix-symbols` feature (避免 Linux/Android 符号冲突)
+
+---
+
+## Phase 3.5: 清理旧 Dart 选择器代码 (优先)
+
+### 3.5.1 标记废弃
+- [ ] 标记 `CssSelectorEvaluator` 为废弃
+- [ ] 标记 `XPathSelectorEvaluator` 为废弃
+- [ ] 标记 `JsonPathSelectorEvaluator` 为废弃
+- [ ] 标记 `RegexSelectorEvaluator` 为废弃
+- [ ] 标记 `JsSelectorEvaluator` 为废弃
+- [ ] 标记 `PipelineExecutor` (Dart) 为废弃
+
+### 3.5.2 删除旧代码
+- [ ] 删除 `lib/core/crawler/selector/css_selector.dart`
+- [ ] 删除 `lib/core/crawler/selector/xpath_selector.dart`
+- [ ] 删除 `lib/core/crawler/selector/jsonpath_selector.dart`
+- [ ] 删除 `lib/core/crawler/selector/regex_selector.dart`
+- [ ] 删除 `lib/core/crawler/selector/js_selector.dart`
+- [ ] 删除 `lib/core/crawler/selector/selector.dart`
+- [ ] 删除 `lib/core/crawler/executor/pipeline_executor.dart`
+
+### 3.5.3 清理依赖
+- [ ] 从 pubspec.yaml 移除 `html` 包
+- [ ] 从 pubspec.yaml 移除 `xml` 包
+- [ ] 从 pubspec.yaml 移除 `flutter_js` 包 (如果不再需要)
+- [ ] 运行 `flutter pub get`
+
+### 3.5.4 验证编译
+- [ ] 运行 `flutter analyze` 确认无错误
+- [ ] 修复任何因删除代码导致的编译错误
+
+---
+
+## Phase 3.6: Rust HTML Parser (rlibxml2) (待实施)
+
+### 3.6.1 依赖集成
+- [ ] 添加 rlibxml2 Rust 依赖 (git 依赖)
+- [ ] 添加 jsonpath-rust Rust 依赖
+- [ ] 添加 rquickjs Rust 依赖
+- [ ] 添加 rquickjs-serde Rust 依赖 (可选)
+- [ ] 添加 url Rust 依赖
+- [ ] 添加 serde/serde_json Rust 依赖
+- [ ] 添加 thiserror Rust 依赖 (错误处理)
+- [ ] 运行 `cargo build` 验证编译
+
+### 3.6.2 模块结构创建
+- [ ] 创建 `rust/src/error.rs` (错误类型定义)
+- [ ] 创建 `rust/src/domain/mod.rs`
+- [ ] 创建 `rust/src/domain/types.rs` (Newtype 类型)
+- [ ] 创建 `rust/src/domain/pipeline.rs` (Pipeline 节点定义)
+- [ ] 创建 `rust/src/executor/mod.rs`
+- [ ] 创建 `rust/src/executor/selector/mod.rs`
+- [ ] 创建 `rust/src/executor/transform/mod.rs`
+- [ ] 创建 `rust/src/util/mod.rs`
+
+### 3.6.3 类型定义 (Type-Driven Design)
+- [ ] 实现 `XPath` newtype
+- [ ] 实现 `JsonPath` newtype
+- [ ] 实现 `Regex` newtype
+- [ ] 实现 `Url` newtype (已验证)
+- [ ] 实现 `Operator` 枚举
+- [ ] 实现 `ContentType` 枚举
+- [ ] 实现 `CrawlerError` 错误类型 (thiserror)
+- [ ] 实现 `ParseError` 错误类型
+- [ ] 实现 `BuildError` 错误类型
+- [ ] 实现 `Result<T>` 类型别名
+
+### 3.6.4 HTML Parser (Rust FFI)
+- [ ] 创建 `rust/src/api/html_parser.rs`
+- [ ] 实现 `detect_content_type()` 自动检测
+- [ ] 实现 `parse_html()` 函数
+- [ ] 实现 `HtmlDocument` 封装类
+- [ ] 实现 `xpath_extract_texts()` 方法
+- [ ] 实现 `xpath_extract_first()` 方法
+- [ ] 实现 `xpath_select()` 方法
+- [ ] 实现 `xpath_extract_attr()` 方法
+- [ ] 实现 `xpath_extract_number()` 方法
+- [ ] 实现 `xpath_extract_boolean()` 方法
+- [ ] 编写 Rust 单元测试
+
+### 3.6.5 选择器实现 (内部模块)
+- [ ] 创建 `rust/src/executor/selector/xpath.rs`
+- [ ] 实现 `XPathExecutor` 结构体
+- [ ] 创建 `rust/src/executor/selector/jsonpath.rs`
+- [ ] 实现 `JsonPathExecutor` 结构体
+- [ ] 创建 `rust/src/executor/selector/regex.rs`
+- [ ] 实现 `RegexExecutor` 结构体
+- [ ] 编写 Rust 单元测试
+
+### 3.6.6 变换器实现 (内部模块)
+- [ ] 创建 `rust/src/executor/transform/string_ops.rs`
+- [ ] 实现 `trim`, `lower`, `upper`, `replace`, `url`, `number`
+- [ ] 创建 `rust/src/executor/transform/js.rs`
+- [ ] 实现 `JsExecutor` 结构体 (Arc<Mutex<Runtime>>)
+- [ ] 实现 `execute_js_expression()` 函数
+- [ ] 设置 `val` 输入变量
+- [ ] 设置 `vars` 上下文变量
+- [ ] 编写 Rust 单元测试
+
+### 3.6.7 聚合器实现 (内部模块)
+- [ ] 创建 `rust/src/executor/aggregation.rs`
+- [ ] 实现 `first`, `last`, `join`, `array` 聚合操作
+- [ ] 编写 Rust 单元测试
+
+### 3.6.8 Pipeline Executor (统一入口)
+- [ ] 创建 `rust/src/api/pipeline.rs`
+- [ ] 实现 `PipelineExecuteRequest` 结构体
+- [ ] 实现 `PipelineExecuteResult` 结构体
+- [ ] 实现 `execute_pipeline()` 函数
+- [ ] 实现 `execute_node()` 节点分发
+- [ ] 集成选择器、变换器、聚合器
+- [ ] 编写 Rust 单元测试
+
+### 3.6.5 FRB 代码生成
+- [ ] 更新 `rust/src/api/mod.rs` 添加新模块
+- [ ] 运行 `flutter_rust_bridge_codegen generate`
+- [ ] 验证生成的 Dart 代码 (`lib/core/rust/api/html_parser.dart`)
+- [ ] 验证生成的 Dart 代码 (`lib/core/rust/api/pipeline_executor.dart`)
+
+### 3.6.6 Dart Pipeline 策略 (调用 Rust FFI)
+- [ ] 创建 `RustPipelineStrategy` 类
+- [ ] 实现请求构建 (Dart -> Rust)
+- [ ] 实现响应处理 (Rust -> Dart)
+- [ ] 实现错误处理
+- [ ] 编写 Dart 集成测试
+
+### 3.6.10 迁移使用方
+- [ ] 更新 `CrawlerService` 使用 `RustPipelineStrategy`
+- [ ] 更新 `LifecycleExecutor` 使用 Rust FFI
+- [ ] 更新测试用例使用新 API
+- [ ] 验证所有功能正常
+
+---
+
+## Phase 3.7: Dart HTTP Strategy (待实施)
+
+### 3.7.1 Dart HTTP Strategy
 - [ ] 创建 `HttpStrategy` 类 (调用 Rust FFI)
 - [ ] 实现请求构建
 - [ ] 实现响应处理
 - [ ] 实现错误处理
 - [ ] 实现回退检测
-
-### 3.4 编译配置
-- [ ] 配置 Linux 编译依赖 (cmake, perl, pkg-config)
-- [ ] 配置 Windows 编译依赖 (VS Build Tools, NASM)
-- [ ] 配置 macOS 编译依赖 (Xcode CLI Tools)
-- [ ] 启用 `prefix-symbols` feature (避免符号冲突)
 
 ---
 
@@ -263,16 +406,23 @@
 
 ### Rust (flutter_rust_bridge)
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| flutter_rust_bridge | 2.11.1 | FRB Rust 运行时 |
-| wreq | 6.0.0-rc.28 | HTTP 客户端 (TLS/HTTP2 指纹) |
-| wreq-util | 3.0.0-rc.10 | 设备模拟配置 |
-| jieba-rs | 0.8.x | 中文分词 |
-| chinese-number | 0.7.x | 数字转中文 |
-| ferrous-opencc | 0.3.x | 繁简体转换 |
-| textdistance | 1.1.x | 相似度计算 |
-| regex | 1.x | 标题标准化 |
+| Package | Version | Purpose | API 暴露 |
+|---------|---------|---------|----------|
+| flutter_rust_bridge | 2.11.1 | FRB Rust 运行时 | 是 |
+| wreq | 6.0.0-rc.28 | HTTP 客户端 (TLS/HTTP2 指纹) | 是 |
+| wreq-util | 3.0.0-rc.10 | 设备模拟配置 | 是 |
+| rlibxml2 | git | HTML/XML 解析 + XPath (私有库) | 是 |
+| jsonpath-rust | latest | JSONPath 查询 | 是 |
+| rquickjs | 0.6.x | JS 表达式执行 | 否 (内部) |
+| rquickjs-serde | latest | JS Serde 序列化 (可选) | 否 (内部) |
+| jieba-rs | 0.8.x | 中文分词 | 是 |
+| chinese-number | 0.7.x | 数字转中文 | 是 |
+| ferrous-opencc | 0.3.x | 繁简体转换 | 是 |
+| textdistance | 1.1.x | 相似度计算 | 否 (内部) |
+| regex | 1.x | 正则表达式 | 否 (内部) |
+| serde | 1.x | 序列化 | 否 (内部) |
+| serde_json | 1.x | JSON 处理 | 否 (内部) |
+| url | 2.x | URL 解析 | 否 (内部) |
 
 ### Web Editor
 

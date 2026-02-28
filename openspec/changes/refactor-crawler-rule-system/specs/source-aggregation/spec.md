@@ -4,6 +4,8 @@
 
 多源聚合模块负责将来自不同爬虫规则的搜索结果合并、去重，并按权重自动优选最佳来源。
 
+**架构说明**: 相似度计算使用 Rust FFI 实现 (textdistance 库)，在 Rust 层完成高性能的 Jaccard/Levenshtein 相似度计算。
+
 ## Architecture
 
 ```

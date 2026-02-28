@@ -6,6 +6,7 @@
 // Static analysis wrongly picks the IO variant, thus ignore this
 // ignore_for_file: argument_type_not_assignable
 
+import 'api/http_client.dart';
 import 'api/similarity.dart';
 import 'api/text_processor.dart';
 import 'dart:async';
@@ -21,11 +22,93 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     required super.portManager,
   });
 
+  CrossPlatformFinalizerArg
+  get rust_arc_decrement_strong_count_HttpClientPtr => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient;
+
+  @protected
+  HttpClient
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+    dynamic raw,
+  );
+
+  @protected
+  HttpClient
+  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+    dynamic raw,
+  );
+
+  @protected
+  Map<String, String> dco_decode_Map_String_String_None(dynamic raw);
+
+  @protected
+  HttpClient
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+    dynamic raw,
+  );
+
   @protected
   String dco_decode_String(dynamic raw);
 
   @protected
+  bool dco_decode_bool(dynamic raw);
+
+  @protected
+  bool dco_decode_box_autoadd_bool(dynamic raw);
+
+  @protected
+  ClientSettings dco_decode_box_autoadd_client_settings(dynamic raw);
+
+  @protected
+  CookieSettings dco_decode_box_autoadd_cookie_settings(dynamic raw);
+
+  @protected
+  Emulation dco_decode_box_autoadd_emulation(dynamic raw);
+
+  @protected
+  EmulationOption dco_decode_box_autoadd_emulation_option(dynamic raw);
+
+  @protected
+  EmulationOS dco_decode_box_autoadd_emulation_os(dynamic raw);
+
+  @protected
+  HttpRequest dco_decode_box_autoadd_http_request(dynamic raw);
+
+  @protected
+  ProxySettings dco_decode_box_autoadd_proxy_settings(dynamic raw);
+
+  @protected
+  RedirectSettings dco_decode_box_autoadd_redirect_settings(dynamic raw);
+
+  @protected
+  TimeoutSettings dco_decode_box_autoadd_timeout_settings(dynamic raw);
+
+  @protected
+  int dco_decode_box_autoadd_u_32(dynamic raw);
+
+  @protected
+  ClientSettings dco_decode_client_settings(dynamic raw);
+
+  @protected
+  CookieSettings dco_decode_cookie_settings(dynamic raw);
+
+  @protected
+  Emulation dco_decode_emulation(dynamic raw);
+
+  @protected
+  EmulationOption dco_decode_emulation_option(dynamic raw);
+
+  @protected
+  EmulationOS dco_decode_emulation_os(dynamic raw);
+
+  @protected
   double dco_decode_f_64(dynamic raw);
+
+  @protected
+  HttpRequest dco_decode_http_request(dynamic raw);
+
+  @protected
+  HttpResponse dco_decode_http_response(dynamic raw);
 
   @protected
   int dco_decode_i_32(dynamic raw);
@@ -37,16 +120,174 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
+  List<ProxyConfig> dco_decode_list_proxy_config(dynamic raw);
+
+  @protected
+  List<(String, String)> dco_decode_list_record_string_string(dynamic raw);
+
+  @protected
+  Map<String, String>? dco_decode_opt_Map_String_String_None(dynamic raw);
+
+  @protected
+  String? dco_decode_opt_String(dynamic raw);
+
+  @protected
+  bool? dco_decode_opt_box_autoadd_bool(dynamic raw);
+
+  @protected
+  CookieSettings? dco_decode_opt_box_autoadd_cookie_settings(dynamic raw);
+
+  @protected
+  Emulation? dco_decode_opt_box_autoadd_emulation(dynamic raw);
+
+  @protected
+  EmulationOption? dco_decode_opt_box_autoadd_emulation_option(dynamic raw);
+
+  @protected
+  EmulationOS? dco_decode_opt_box_autoadd_emulation_os(dynamic raw);
+
+  @protected
+  ProxySettings? dco_decode_opt_box_autoadd_proxy_settings(dynamic raw);
+
+  @protected
+  RedirectSettings? dco_decode_opt_box_autoadd_redirect_settings(dynamic raw);
+
+  @protected
+  TimeoutSettings? dco_decode_opt_box_autoadd_timeout_settings(dynamic raw);
+
+  @protected
+  int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
+
+  @protected
+  ProxyCondition dco_decode_proxy_condition(dynamic raw);
+
+  @protected
+  ProxyConfig dco_decode_proxy_config(dynamic raw);
+
+  @protected
+  ProxySettings dco_decode_proxy_settings(dynamic raw);
+
+  @protected
+  (String, String) dco_decode_record_string_string(dynamic raw);
+
+  @protected
+  RedirectSettings dco_decode_redirect_settings(dynamic raw);
+
+  @protected
+  TimeoutSettings dco_decode_timeout_settings(dynamic raw);
+
+  @protected
+  int dco_decode_u_16(dynamic raw);
+
+  @protected
+  int dco_decode_u_32(dynamic raw);
+
+  @protected
   int dco_decode_u_8(dynamic raw);
 
   @protected
   void dco_decode_unit(dynamic raw);
 
   @protected
+  BigInt dco_decode_usize(dynamic raw);
+
+  @protected
+  HttpClient
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  HttpClient
+  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  Map<String, String> sse_decode_Map_String_String_None(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  HttpClient
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
+  bool sse_decode_bool(SseDeserializer deserializer);
+
+  @protected
+  bool sse_decode_box_autoadd_bool(SseDeserializer deserializer);
+
+  @protected
+  ClientSettings sse_decode_box_autoadd_client_settings(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  CookieSettings sse_decode_box_autoadd_cookie_settings(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  Emulation sse_decode_box_autoadd_emulation(SseDeserializer deserializer);
+
+  @protected
+  EmulationOption sse_decode_box_autoadd_emulation_option(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  EmulationOS sse_decode_box_autoadd_emulation_os(SseDeserializer deserializer);
+
+  @protected
+  HttpRequest sse_decode_box_autoadd_http_request(SseDeserializer deserializer);
+
+  @protected
+  ProxySettings sse_decode_box_autoadd_proxy_settings(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  RedirectSettings sse_decode_box_autoadd_redirect_settings(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  TimeoutSettings sse_decode_box_autoadd_timeout_settings(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
+
+  @protected
+  ClientSettings sse_decode_client_settings(SseDeserializer deserializer);
+
+  @protected
+  CookieSettings sse_decode_cookie_settings(SseDeserializer deserializer);
+
+  @protected
+  Emulation sse_decode_emulation(SseDeserializer deserializer);
+
+  @protected
+  EmulationOption sse_decode_emulation_option(SseDeserializer deserializer);
+
+  @protected
+  EmulationOS sse_decode_emulation_os(SseDeserializer deserializer);
+
+  @protected
   double sse_decode_f_64(SseDeserializer deserializer);
+
+  @protected
+  HttpRequest sse_decode_http_request(SseDeserializer deserializer);
+
+  @protected
+  HttpResponse sse_decode_http_response(SseDeserializer deserializer);
 
   @protected
   int sse_decode_i_32(SseDeserializer deserializer);
@@ -58,19 +299,220 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
+  List<ProxyConfig> sse_decode_list_proxy_config(SseDeserializer deserializer);
+
+  @protected
+  List<(String, String)> sse_decode_list_record_string_string(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  Map<String, String>? sse_decode_opt_Map_String_String_None(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  String? sse_decode_opt_String(SseDeserializer deserializer);
+
+  @protected
+  bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer);
+
+  @protected
+  CookieSettings? sse_decode_opt_box_autoadd_cookie_settings(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  Emulation? sse_decode_opt_box_autoadd_emulation(SseDeserializer deserializer);
+
+  @protected
+  EmulationOption? sse_decode_opt_box_autoadd_emulation_option(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  EmulationOS? sse_decode_opt_box_autoadd_emulation_os(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ProxySettings? sse_decode_opt_box_autoadd_proxy_settings(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  RedirectSettings? sse_decode_opt_box_autoadd_redirect_settings(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  TimeoutSettings? sse_decode_opt_box_autoadd_timeout_settings(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
+
+  @protected
+  ProxyCondition sse_decode_proxy_condition(SseDeserializer deserializer);
+
+  @protected
+  ProxyConfig sse_decode_proxy_config(SseDeserializer deserializer);
+
+  @protected
+  ProxySettings sse_decode_proxy_settings(SseDeserializer deserializer);
+
+  @protected
+  (String, String) sse_decode_record_string_string(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  RedirectSettings sse_decode_redirect_settings(SseDeserializer deserializer);
+
+  @protected
+  TimeoutSettings sse_decode_timeout_settings(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_u_16(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_u_32(SseDeserializer deserializer);
+
+  @protected
   int sse_decode_u_8(SseDeserializer deserializer);
 
   @protected
   void sse_decode_unit(SseDeserializer deserializer);
 
   @protected
-  bool sse_decode_bool(SseDeserializer deserializer);
+  BigInt sse_decode_usize(SseDeserializer deserializer);
+
+  @protected
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+    HttpClient self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+    HttpClient self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_Map_String_String_None(
+    Map<String, String> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+    HttpClient self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
 
   @protected
+  void sse_encode_bool(bool self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_client_settings(
+    ClientSettings self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_cookie_settings(
+    CookieSettings self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_emulation(
+    Emulation self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_emulation_option(
+    EmulationOption self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_emulation_os(
+    EmulationOS self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_http_request(
+    HttpRequest self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_proxy_settings(
+    ProxySettings self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_redirect_settings(
+    RedirectSettings self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_timeout_settings(
+    TimeoutSettings self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_client_settings(
+    ClientSettings self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_cookie_settings(
+    CookieSettings self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_emulation(Emulation self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_emulation_option(
+    EmulationOption self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_emulation_os(EmulationOS self, SseSerializer serializer);
+
+  @protected
   void sse_encode_f_64(double self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_http_request(HttpRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_http_response(HttpResponse self, SseSerializer serializer);
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
@@ -85,19 +527,140 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_proxy_config(
+    List<ProxyConfig> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_record_string_string(
+    List<(String, String)> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_Map_String_String_None(
+    Map<String, String>? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_String(String? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_cookie_settings(
+    CookieSettings? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_emulation(
+    Emulation? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_emulation_option(
+    EmulationOption? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_emulation_os(
+    EmulationOS? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_proxy_settings(
+    ProxySettings? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_redirect_settings(
+    RedirectSettings? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_timeout_settings(
+    TimeoutSettings? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_proxy_condition(
+    ProxyCondition self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_proxy_config(ProxyConfig self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_proxy_settings(ProxySettings self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_string_string(
+    (String, String) self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_redirect_settings(
+    RedirectSettings self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_timeout_settings(
+    TimeoutSettings self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_u_16(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_u_32(int self, SseSerializer serializer);
+
+  @protected
   void sse_encode_u_8(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_unit(void self, SseSerializer serializer);
 
   @protected
-  void sse_encode_bool(bool self, SseSerializer serializer);
+  void sse_encode_usize(BigInt self, SseSerializer serializer);
 }
 
 // Section: wire_class
 
 class RustLibWire implements BaseWire {
   RustLibWire.fromExternalLibrary(ExternalLibrary lib);
+
+  void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+    int ptr,
+  ) => wasmModule
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+        ptr,
+      );
+
+  void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+    int ptr,
+  ) => wasmModule
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+        ptr,
+      );
 }
 
 @JS('wasm_bindgen')
@@ -105,4 +668,14 @@ external RustLibWasmModule get wasmModule;
 
 @JS()
 @anonymous
-extension type RustLibWasmModule._(JSObject _) implements JSObject {}
+extension type RustLibWasmModule._(JSObject _) implements JSObject {
+  external void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+    int ptr,
+  );
+
+  external void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
+    int ptr,
+  );
+}

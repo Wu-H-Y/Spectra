@@ -12,10 +12,16 @@ flutter_rust_bridge = "=2.11.1"
 jieba-rs = { version = "0.8.1", features = ["default-dict", "tfidf"] }
 chinese-number = "0.7.8"
 ferrous-opencc = "0.3.1"
+# HTTP 客户端 (TLS 指纹)
+# 启用 prefix-symbols 避免 Linux/Android 上与 openssl-sys 的符号冲突
+wreq = { version = "6.0.0-rc.28", features = ["cookies", "prefix-symbols"] }
+wreq-util = "3.0.0-rc.10"
 # 正则表达式
 regex = "1.12.3"
 # 日志
 log = "0.4.29"
+# 异步运行时
+tokio = { version = "1", features = ["full"] }
 # 相似度计算
 textdistance = "1.1.1"
 

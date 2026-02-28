@@ -4,6 +4,11 @@
 
 基于 React Flow 的节点流可视化编辑器，支持拖拽创建 Pipeline、WebView 元素拾取、实时预览。
 
+**架构说明**:
+- Pipeline 执行在 Rust 层完成 (rlibxml2 + jsonpath-rust)
+- 编辑器通过 HTTP API 调用 Rust FFI 进行预览
+- 支持 XPath 和 JSONPath 选择器 (CSS 选择器暂不支持)
+
 ## Architecture
 
 ```
