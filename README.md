@@ -73,6 +73,10 @@ flutter pub get
 
 # 安装 Node.js 依赖并初始化 Git Hooks
 bun install
+cd web-editor && bun install
+
+# 构建web
+bun run build:web
 
 # 运行应用
 flutter run
