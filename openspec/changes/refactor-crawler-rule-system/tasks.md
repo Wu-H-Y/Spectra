@@ -124,21 +124,21 @@
 ## Phase 3.5: 清理旧 Dart 选择器代码 (优先)
 
 ### 3.5.1 标记废弃
-- [ ] 标记 `CssSelectorEvaluator` 为废弃
-- [ ] 标记 `XPathSelectorEvaluator` 为废弃
-- [ ] 标记 `JsonPathSelectorEvaluator` 为废弃
-- [ ] 标记 `RegexSelectorEvaluator` 为废弃
-- [ ] 标记 `JsSelectorEvaluator` 为废弃
-- [ ] 标记 `PipelineExecutor` (Dart) 为废弃
+- [x] 标记 `CssSelectorEvaluator` 为废弃
+- [x] 标记 `XPathSelectorEvaluator` 为废弃
+- [x] 标记 `JsonPathSelectorEvaluator` 为废弃
+- [x] 标记 `RegexSelectorEvaluator` 为废弃
+- [x] 标记 `JsSelectorEvaluator` 为废弃
+- [x] 标记 `PipelineExecutor` (Dart) 为废弃
 
 ### 3.5.2 删除旧代码
-- [ ] 删除 `lib/core/crawler/selector/css_selector.dart`
-- [ ] 删除 `lib/core/crawler/selector/xpath_selector.dart`
-- [ ] 删除 `lib/core/crawler/selector/jsonpath_selector.dart`
-- [ ] 删除 `lib/core/crawler/selector/regex_selector.dart`
-- [ ] 删除 `lib/core/crawler/selector/js_selector.dart`
-- [ ] 删除 `lib/core/crawler/selector/selector.dart`
-- [ ] 删除 `lib/core/crawler/executor/pipeline_executor.dart`
+- [x] 删除 `lib/core/crawler/selector/css_selector.dart`
+- [x] 删除 `lib/core/crawler/selector/xpath_selector.dart`
+- [x] 删除 `lib/core/crawler/selector/jsonpath_selector.dart`
+- [x] 删除 `lib/core/crawler/selector/regex_selector.dart`
+- [x] 删除 `lib/core/crawler/selector/js_selector.dart`
+- [x] 删除 `lib/core/crawler/selector/selector.dart`
+- [x] 删除 `lib/core/crawler/executor/pipeline_executor.dart`
 
 ### 3.5.3 清理依赖
 - [ ] 从 pubspec.yaml 移除 `html` 包
