@@ -18,7 +18,6 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_hooks: ^0.21.2 # React 风格 hooks 支持
-  flutter_js: ^0.8.7 # js 运行时
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.4.6 # 原生启动屏
@@ -30,10 +29,8 @@ dependencies:
   hive_ce: ^2.19.3 # Hive CE 键值存储
   hive_ce_flutter: ^2.3.4 # Hive CE Flutter 支持
   hooks_riverpod: ^3.2.1 # Riverpod 状态管理 (带 hooks 支持)
-  html: ^0.15.6 # HTML 解析和 CSS 选择器
   intl: ^0.20.2 # 国际化
   json_annotation: ^4.11.0 # JSON 序列化注解
-  json_path: ^0.9.0 # JSONPath 查询语言
   meta: 1.17.0 # Dart 元数据注解
   mime: 2.0.0 # MIME 类型检测
   package_info_plus: ^9.0.0 # 应用信息
@@ -53,7 +50,6 @@ dependencies:
   uuid: ^4.5.1 # UUID 生成
   web_socket: 1.0.1 # WebSocket 客户端
   window_manager: ^0.5.1 # 桌面窗口管理
-  xml: ^6.6.1 # XML/HTML 解析和 XPath 选择器
 dev_dependencies:
   build_runner: ^2.11.1 # 代码生成
   drift_dev: ^2.31.0 # Drift 数据库生成器

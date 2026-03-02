@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  flutter_js
   screen_retriever_windows
   share_plus
   sqlite3_flutter_libs

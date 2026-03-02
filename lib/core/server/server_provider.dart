@@ -6,7 +6,6 @@ import 'package:relic/relic.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spectra/core/server/handlers/static_handler.dart';
 import 'package:spectra/core/server/middleware/cors_middleware.dart';
-import 'package:spectra/core/server/routes/rules_routes.dart';
 import 'package:spectra/core/server/routes/server_routes.dart';
 import 'package:spectra/shared/providers/talker_provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -130,7 +129,6 @@ class Server extends _$Server {
 
   /// 创建 Relic 应用。
   RelicApp _createApp() {
-    final rulesRoutes = RulesRoutes();
     final serverRoutes = ServerRoutes(
       isRunning: () => isRunning,
       port: () => currentPort,
@@ -156,7 +154,6 @@ class Server extends _$Server {
       ..get('/ws', _handleWebSocket)
       // API 路由
       ..attach('/api/server', serverRoutes.router)
-      ..attach('/api', rulesRoutes.router)
       // 静态文件（编辑器）
       ..fallback = staticHandler;
 
