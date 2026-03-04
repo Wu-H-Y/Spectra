@@ -33,8 +33,6 @@ use flutter_rust_bridge::{
     Handler, IntoIntoDart,
 };
 
-use crate::api::http_client::*;
-
 // Section: boilerplate
 
 flutter_rust_bridge::frb_generated_boilerplate!(
@@ -43,7 +41,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.11.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 353116892;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1886878696;
 
 // Section: executor
 
@@ -51,7 +49,7 @@ flutter_rust_bridge::frb_generated_default_handler!();
 
 // Section: wire_funcs
 
-fn wire__crate__api__http_client__HttpClient_default_client_impl(
+fn wire__crate__api__crawler_models__create_empty_pipeline_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -59,253 +57,7 @@ fn wire__crate__api__http_client__HttpClient_default_client_impl(
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "HttpClient_default_client",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, String>((move || {
-                    let output_ok = crate::api::http_client::HttpClient::default_client()?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__HttpClient_get_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "HttpClient_get",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HttpClient>,
-            >>::sse_decode(&mut deserializer);
-            let api_url = <String>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, String>(
-                    (move || async move {
-                        let mut api_that_guard = None;
-                        let decode_indices_ =
-                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
-                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                    &api_that, 0, false,
-                                )],
-                            );
-                        for i in decode_indices_ {
-                            match i {
-                                0 => {
-                                    api_that_guard =
-                                        Some(api_that.lockable_decode_async_ref().await)
-                                }
-                                _ => unreachable!(),
-                            }
-                        }
-                        let api_that_guard = api_that_guard.unwrap();
-                        let output_ok =
-                            crate::api::http_client::HttpClient::get(&*api_that_guard, api_url)
-                                .await?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__HttpClient_new_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "HttpClient_new",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_settings =
-                <crate::api::http_client::ClientSettings>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, String>((move || {
-                    let output_ok = crate::api::http_client::HttpClient::new(api_settings)?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__HttpClient_post_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "HttpClient_post",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HttpClient>,
-            >>::sse_decode(&mut deserializer);
-            let api_url = <String>::sse_decode(&mut deserializer);
-            let api_body = <String>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, String>(
-                    (move || async move {
-                        let mut api_that_guard = None;
-                        let decode_indices_ =
-                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
-                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                    &api_that, 0, false,
-                                )],
-                            );
-                        for i in decode_indices_ {
-                            match i {
-                                0 => {
-                                    api_that_guard =
-                                        Some(api_that.lockable_decode_async_ref().await)
-                                }
-                                _ => unreachable!(),
-                            }
-                        }
-                        let api_that_guard = api_that_guard.unwrap();
-                        let output_ok = crate::api::http_client::HttpClient::post(
-                            &*api_that_guard,
-                            api_url,
-                            api_body,
-                        )
-                        .await?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__HttpClient_request_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "HttpClient_request",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<
-                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HttpClient>,
-            >>::sse_decode(&mut deserializer);
-            let api_request = <crate::api::http_client::HttpRequest>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, String>(
-                    (move || async move {
-                        let mut api_that_guard = None;
-                        let decode_indices_ =
-                            flutter_rust_bridge::for_generated::lockable_compute_decode_order(
-                                vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(
-                                    &api_that, 0, false,
-                                )],
-                            );
-                        for i in decode_indices_ {
-                            match i {
-                                0 => {
-                                    api_that_guard =
-                                        Some(api_that.lockable_decode_async_ref().await)
-                                }
-                                _ => unreachable!(),
-                            }
-                        }
-                        let api_that_guard = api_that_guard.unwrap();
-                        let output_ok = crate::api::http_client::HttpClient::request(
-                            &*api_that_guard,
-                            api_request,
-                        )
-                        .await?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__client_settings_default_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "client_settings_default",
+            debug_name: "create_empty_pipeline",
             port: Some(port_),
             mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
         },
@@ -323,177 +75,9 @@ fn wire__crate__api__http_client__client_settings_default_impl(
             move |context| {
                 transform_result_sse::<_, ()>((move || {
                     let output_ok =
-                        Result::<_, ()>::Ok(crate::api::http_client::ClientSettings::default())?;
+                        Result::<_, ()>::Ok(crate::api::crawler_models::create_empty_pipeline())?;
                     Ok(output_ok)
                 })())
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__cookie_settings_default_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "cookie_settings_default",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let output_ok =
-                        Result::<_, ()>::Ok(crate::api::http_client::CookieSettings::default())?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__emulation_default_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "emulation_default",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let output_ok =
-                        Result::<_, ()>::Ok(crate::api::http_client::Emulation::default())?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__emulation_option_default_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "emulation_option_default",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let output_ok =
-                        Result::<_, ()>::Ok(crate::api::http_client::EmulationOption::default())?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__emulation_os_default_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "emulation_os_default",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let output_ok =
-                        Result::<_, ()>::Ok(crate::api::http_client::EmulationOS::default())?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__fetch_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "fetch",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_request = <crate::api::http_client::HttpRequest>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, String>(
-                    (move || async move {
-                        let output_ok = crate::api::http_client::fetch(api_request).await?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
             }
         },
     )
@@ -562,156 +146,6 @@ fn wire__crate__api__text_processor__get_jieba_impl(
                     let output_ok = Result::<_, ()>::Ok({
                         crate::api::text_processor::get_jieba();
                     })?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__http_fetch_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "http_fetch",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_url = <String>::sse_decode(&mut deserializer);
-            let api_emulation = <crate::api::http_client::Emulation>::sse_decode(&mut deserializer);
-            let api_timeout_ms = <u32>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, String>(
-                    (move || async move {
-                        let output_ok = crate::api::http_client::http_fetch(
-                            api_url,
-                            api_emulation,
-                            api_timeout_ms,
-                        )
-                        .await?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__http_get_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "http_get",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_url = <String>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, String>(
-                    (move || async move {
-                        let output_ok = crate::api::http_client::http_get(api_url).await?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__http_post_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "http_post",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_url = <String>::sse_decode(&mut deserializer);
-            let api_body = <String>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, String>(
-                    (move || async move {
-                        let output_ok =
-                            crate::api::http_client::http_post(api_url, api_body).await?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__http_request_default_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "http_request_default",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let output_ok =
-                        Result::<_, ()>::Ok(crate::api::http_client::HttpRequest::default())?;
                     Ok(output_ok)
                 })())
             }
@@ -893,105 +327,6 @@ fn wire__crate__api__text_processor__number_to_chinese_impl(
         },
     )
 }
-fn wire__crate__api__http_client__proxy_condition_default_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "proxy_condition_default",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let output_ok =
-                        Result::<_, ()>::Ok(crate::api::http_client::ProxyCondition::default())?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__proxy_settings_default_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "proxy_settings_default",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let output_ok =
-                        Result::<_, ()>::Ok(crate::api::http_client::ProxySettings::default())?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__redirect_settings_default_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "redirect_settings_default",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let output_ok =
-                        Result::<_, ()>::Ok(crate::api::http_client::RedirectSettings::default())?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
 fn wire__crate__api__text_processor__segment_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1055,39 +390,6 @@ fn wire__crate__api__similarity__sorensen_dice_impl(
                 transform_result_sse::<_, ()>((move || {
                     let output_ok =
                         Result::<_, ()>::Ok(crate::api::similarity::sorensen_dice(api_a, api_b))?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__http_client__timeout_settings_default_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "timeout_settings_default",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, ()>((move || {
-                    let output_ok =
-                        Result::<_, ()>::Ok(crate::api::http_client::TimeoutSettings::default())?;
                     Ok(output_ok)
                 })())
             }
@@ -1162,40 +464,49 @@ fn wire__crate__api__text_processor__to_traditional_impl(
         },
     )
 }
-
-// Section: related_funcs
-
-flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
-    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HttpClient>
-);
+fn wire__crate__api__crawler_models__validate_rule_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "validate_rule",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_rule =
+                <crate::domain::rule::crawler_rule::CrawlerRule>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, ()>((move || {
+                    let output_ok =
+                        Result::<_, ()>::Ok(crate::api::crawler_models::validate_rule(api_rule))?;
+                    Ok(output_ok)
+                })())
+            }
+        },
+    )
+}
 
 // Section: dart2rust
-
-impl SseDecode for HttpClient {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut inner = <RustOpaqueMoi<
-            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HttpClient>,
-        >>::sse_decode(deserializer);
-        return flutter_rust_bridge::for_generated::rust_auto_opaque_decode_owned(inner);
-    }
-}
 
 impl SseDecode for std::collections::HashMap<String, String> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <Vec<(String, String)>>::sse_decode(deserializer);
         return inner.into_iter().collect();
-    }
-}
-
-impl SseDecode
-    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HttpClient>>
-{
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut inner = <usize>::sse_decode(deserializer);
-        return decode_rust_opaque_moi(inner);
     }
 }
 
@@ -1207,6 +518,48 @@ impl SseDecode for String {
     }
 }
 
+impl SseDecode for crate::domain::rule::crawler_rule::AggregationConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_enabled = <bool>::sse_decode(deserializer);
+        let mut var_weight = <u8>::sse_decode(deserializer);
+        let mut var_matching =
+            <crate::domain::rule::crawler_rule::MatchingConfig>::sse_decode(deserializer);
+        return crate::domain::rule::crawler_rule::AggregationConfig {
+            enabled: var_enabled,
+            weight: var_weight,
+            matching: var_matching,
+        };
+    }
+}
+
+impl SseDecode for crate::domain::rule::pipeline::AggregationDef {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                return crate::domain::rule::pipeline::AggregationDef::First;
+            }
+            1 => {
+                return crate::domain::rule::pipeline::AggregationDef::Last;
+            }
+            2 => {
+                let mut var_separator = <String>::sse_decode(deserializer);
+                return crate::domain::rule::pipeline::AggregationDef::Join {
+                    separator: var_separator,
+                };
+            }
+            3 => {
+                return crate::domain::rule::pipeline::AggregationDef::Array;
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
 impl SseDecode for bool {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1214,110 +567,125 @@ impl SseDecode for bool {
     }
 }
 
-impl SseDecode for crate::api::http_client::ClientSettings {
+impl SseDecode for crate::domain::rule::lifecycle::ContentConfig {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_emulation =
-            <Option<crate::api::http_client::Emulation>>::sse_decode(deserializer);
-        let mut var_emulationOption =
-            <Option<crate::api::http_client::EmulationOption>>::sse_decode(deserializer);
-        let mut var_cookieSettings =
-            <Option<crate::api::http_client::CookieSettings>>::sse_decode(deserializer);
-        let mut var_timeoutSettings =
-            <Option<crate::api::http_client::TimeoutSettings>>::sse_decode(deserializer);
-        let mut var_proxySettings =
-            <Option<crate::api::http_client::ProxySettings>>::sse_decode(deserializer);
-        let mut var_redirectSettings =
-            <Option<crate::api::http_client::RedirectSettings>>::sse_decode(deserializer);
-        let mut var_userAgent = <Option<String>>::sse_decode(deserializer);
-        return crate::api::http_client::ClientSettings {
-            emulation: var_emulation,
-            emulation_option: var_emulationOption,
-            cookie_settings: var_cookieSettings,
-            timeout_settings: var_timeoutSettings,
-            proxy_settings: var_proxySettings,
-            redirect_settings: var_redirectSettings,
-            user_agent: var_userAgent,
+        let mut var_pipeline =
+            <crate::domain::rule::pipeline::PipelineGraph>::sse_decode(deserializer);
+        let mut var_sniffMedia = <bool>::sse_decode(deserializer);
+        return crate::domain::rule::lifecycle::ContentConfig {
+            pipeline: var_pipeline,
+            sniff_media: var_sniffMedia,
         };
     }
 }
 
-impl SseDecode for crate::api::http_client::CookieSettings {
+impl SseDecode for crate::domain::rule::crawler_rule::CrawlerRule {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_storeCookies = <bool>::sse_decode(deserializer);
-        return crate::api::http_client::CookieSettings {
-            store_cookies: var_storeCookies,
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_description = <String>::sse_decode(deserializer);
+        let mut var_author = <String>::sse_decode(deserializer);
+        let mut var_version = <String>::sse_decode(deserializer);
+        let mut var_network =
+            <Option<crate::domain::rule::network::NetworkConfig>>::sse_decode(deserializer);
+        let mut var_aggregation =
+            <Option<crate::domain::rule::crawler_rule::AggregationConfig>>::sse_decode(
+                deserializer,
+            );
+        let mut var_lifecycle =
+            <crate::domain::rule::lifecycle::Lifecycle>::sse_decode(deserializer);
+        return crate::domain::rule::crawler_rule::CrawlerRule {
+            id: var_id,
+            name: var_name,
+            description: var_description,
+            author: var_author,
+            version: var_version,
+            network: var_network,
+            aggregation: var_aggregation,
+            lifecycle: var_lifecycle,
         };
     }
 }
 
-impl SseDecode for crate::api::http_client::Emulation {
+impl SseDecode for crate::domain::rule::lifecycle::DetailConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_pipeline =
+            <crate::domain::rule::pipeline::PipelineGraph>::sse_decode(deserializer);
+        return crate::domain::rule::lifecycle::DetailConfig {
+            pipeline: var_pipeline,
+        };
+    }
+}
+
+impl SseDecode for crate::domain::rule::network::Emulation {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::http_client::Emulation::Chrome131,
-            1 => crate::api::http_client::Emulation::Chrome132,
-            2 => crate::api::http_client::Emulation::Chrome133,
-            3 => crate::api::http_client::Emulation::Chrome134,
-            4 => crate::api::http_client::Emulation::Chrome135,
-            5 => crate::api::http_client::Emulation::Chrome136,
-            6 => crate::api::http_client::Emulation::Chrome120,
-            7 => crate::api::http_client::Emulation::Chrome124,
-            8 => crate::api::http_client::Emulation::Chrome126,
-            9 => crate::api::http_client::Emulation::Chrome127,
-            10 => crate::api::http_client::Emulation::Chrome128,
-            11 => crate::api::http_client::Emulation::Chrome129,
-            12 => crate::api::http_client::Emulation::Chrome130,
-            13 => crate::api::http_client::Emulation::Safari18,
-            14 => crate::api::http_client::Emulation::Safari18_2,
-            15 => crate::api::http_client::Emulation::Safari18_3,
-            16 => crate::api::http_client::Emulation::Safari18_5,
-            17 => crate::api::http_client::Emulation::Safari26,
-            18 => crate::api::http_client::Emulation::SafariIos18_1_1,
-            19 => crate::api::http_client::Emulation::Firefox133,
-            20 => crate::api::http_client::Emulation::Firefox135,
-            21 => crate::api::http_client::Emulation::Firefox136,
-            22 => crate::api::http_client::Emulation::Firefox139,
-            23 => crate::api::http_client::Emulation::Firefox142,
-            24 => crate::api::http_client::Emulation::Firefox143,
-            25 => crate::api::http_client::Emulation::Firefox144,
-            26 => crate::api::http_client::Emulation::Firefox145,
-            27 => crate::api::http_client::Emulation::Firefox146,
-            28 => crate::api::http_client::Emulation::Firefox147,
-            29 => crate::api::http_client::Emulation::Edge127,
-            30 => crate::api::http_client::Emulation::Edge131,
-            31 => crate::api::http_client::Emulation::Edge134,
-            32 => crate::api::http_client::Emulation::Edge135,
-            33 => crate::api::http_client::Emulation::Edge136,
-            34 => crate::api::http_client::Emulation::Edge137,
-            35 => crate::api::http_client::Emulation::Edge138,
-            36 => crate::api::http_client::Emulation::Edge139,
-            37 => crate::api::http_client::Emulation::Edge140,
-            38 => crate::api::http_client::Emulation::Edge141,
-            39 => crate::api::http_client::Emulation::Edge142,
-            40 => crate::api::http_client::Emulation::Edge143,
-            41 => crate::api::http_client::Emulation::Edge144,
-            42 => crate::api::http_client::Emulation::Edge145,
-            43 => crate::api::http_client::Emulation::OkHttp3_14,
-            44 => crate::api::http_client::Emulation::OkHttp4_12,
-            45 => crate::api::http_client::Emulation::OkHttp5,
+            0 => crate::domain::rule::network::Emulation::Chrome131,
+            1 => crate::domain::rule::network::Emulation::Chrome132,
+            2 => crate::domain::rule::network::Emulation::Chrome133,
+            3 => crate::domain::rule::network::Emulation::Chrome134,
+            4 => crate::domain::rule::network::Emulation::Chrome135,
+            5 => crate::domain::rule::network::Emulation::Chrome136,
+            6 => crate::domain::rule::network::Emulation::Chrome120,
+            7 => crate::domain::rule::network::Emulation::Chrome124,
+            8 => crate::domain::rule::network::Emulation::Chrome126,
+            9 => crate::domain::rule::network::Emulation::Chrome127,
+            10 => crate::domain::rule::network::Emulation::Chrome128,
+            11 => crate::domain::rule::network::Emulation::Chrome129,
+            12 => crate::domain::rule::network::Emulation::Chrome130,
+            13 => crate::domain::rule::network::Emulation::Safari18,
+            14 => crate::domain::rule::network::Emulation::Safari18_2,
+            15 => crate::domain::rule::network::Emulation::Safari18_3,
+            16 => crate::domain::rule::network::Emulation::Safari18_5,
+            17 => crate::domain::rule::network::Emulation::Safari26,
+            18 => crate::domain::rule::network::Emulation::SafariIos18_1_1,
+            19 => crate::domain::rule::network::Emulation::Firefox133,
+            20 => crate::domain::rule::network::Emulation::Firefox135,
+            21 => crate::domain::rule::network::Emulation::Firefox136,
+            22 => crate::domain::rule::network::Emulation::Firefox139,
+            23 => crate::domain::rule::network::Emulation::Firefox142,
+            24 => crate::domain::rule::network::Emulation::Firefox143,
+            25 => crate::domain::rule::network::Emulation::Firefox144,
+            26 => crate::domain::rule::network::Emulation::Firefox145,
+            27 => crate::domain::rule::network::Emulation::Firefox146,
+            28 => crate::domain::rule::network::Emulation::Firefox147,
+            29 => crate::domain::rule::network::Emulation::Edge127,
+            30 => crate::domain::rule::network::Emulation::Edge131,
+            31 => crate::domain::rule::network::Emulation::Edge134,
+            32 => crate::domain::rule::network::Emulation::Edge135,
+            33 => crate::domain::rule::network::Emulation::Edge136,
+            34 => crate::domain::rule::network::Emulation::Edge137,
+            35 => crate::domain::rule::network::Emulation::Edge138,
+            36 => crate::domain::rule::network::Emulation::Edge139,
+            37 => crate::domain::rule::network::Emulation::Edge140,
+            38 => crate::domain::rule::network::Emulation::Edge141,
+            39 => crate::domain::rule::network::Emulation::Edge142,
+            40 => crate::domain::rule::network::Emulation::Edge143,
+            41 => crate::domain::rule::network::Emulation::Edge144,
+            42 => crate::domain::rule::network::Emulation::Edge145,
+            43 => crate::domain::rule::network::Emulation::OkHttp3_14,
+            44 => crate::domain::rule::network::Emulation::OkHttp4_12,
+            45 => crate::domain::rule::network::Emulation::OkHttp5,
             _ => unreachable!("Invalid variant for Emulation: {}", inner),
         };
     }
 }
 
-impl SseDecode for crate::api::http_client::EmulationOption {
+impl SseDecode for crate::domain::rule::network::EmulationOption {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_emulation =
-            <Option<crate::api::http_client::Emulation>>::sse_decode(deserializer);
+            <Option<crate::domain::rule::network::Emulation>>::sse_decode(deserializer);
         let mut var_emulationOs =
-            <Option<crate::api::http_client::EmulationOS>>::sse_decode(deserializer);
+            <Option<crate::domain::rule::network::EmulationOS>>::sse_decode(deserializer);
         let mut var_skipHttp2 = <Option<bool>>::sse_decode(deserializer);
         let mut var_skipHeaders = <Option<bool>>::sse_decode(deserializer);
-        return crate::api::http_client::EmulationOption {
+        return crate::domain::rule::network::EmulationOption {
             emulation: var_emulation,
             emulation_os: var_emulationOs,
             skip_http2: var_skipHttp2,
@@ -1326,17 +694,30 @@ impl SseDecode for crate::api::http_client::EmulationOption {
     }
 }
 
-impl SseDecode for crate::api::http_client::EmulationOS {
+impl SseDecode for crate::domain::rule::network::EmulationOS {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::api::http_client::EmulationOS::Windows,
-            1 => crate::api::http_client::EmulationOS::MacOS,
-            2 => crate::api::http_client::EmulationOS::Linux,
-            3 => crate::api::http_client::EmulationOS::Android,
-            4 => crate::api::http_client::EmulationOS::IOS,
+            0 => crate::domain::rule::network::EmulationOS::Windows,
+            1 => crate::domain::rule::network::EmulationOS::MacOS,
+            2 => crate::domain::rule::network::EmulationOS::Linux,
+            3 => crate::domain::rule::network::EmulationOS::Android,
+            4 => crate::domain::rule::network::EmulationOS::IOS,
             _ => unreachable!("Invalid variant for EmulationOS: {}", inner),
+        };
+    }
+}
+
+impl SseDecode for crate::domain::rule::lifecycle::ExploreConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_url = <String>::sse_decode(deserializer);
+        let mut var_pipeline =
+            <crate::domain::rule::pipeline::PipelineGraph>::sse_decode(deserializer);
+        return crate::domain::rule::lifecycle::ExploreConfig {
+            url: var_url,
+            pipeline: var_pipeline,
         };
     }
 }
@@ -1348,41 +729,46 @@ impl SseDecode for f64 {
     }
 }
 
-impl SseDecode for crate::api::http_client::HttpRequest {
+impl SseDecode for crate::domain::rule::network::FallbackConfig {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_url = <String>::sse_decode(deserializer);
-        let mut var_method = <String>::sse_decode(deserializer);
-        let mut var_headers =
-            <Option<std::collections::HashMap<String, String>>>::sse_decode(deserializer);
-        let mut var_body = <Option<String>>::sse_decode(deserializer);
-        let mut var_emulation = <crate::api::http_client::Emulation>::sse_decode(deserializer);
-        let mut var_timeoutMs = <u32>::sse_decode(deserializer);
-        let mut var_followRedirects = <bool>::sse_decode(deserializer);
-        return crate::api::http_client::HttpRequest {
-            url: var_url,
-            method: var_method,
-            headers: var_headers,
-            body: var_body,
-            emulation: var_emulation,
-            timeout_ms: var_timeoutMs,
-            follow_redirects: var_followRedirects,
+        let mut var_triggerStatus = <Vec<i32>>::sse_decode(deserializer);
+        let mut var_triggerKeywords = <Vec<String>>::sse_decode(deserializer);
+        let mut var_action = <String>::sse_decode(deserializer);
+        return crate::domain::rule::network::FallbackConfig {
+            trigger_status: var_triggerStatus,
+            trigger_keywords: var_triggerKeywords,
+            action: var_action,
         };
     }
 }
 
-impl SseDecode for crate::api::http_client::HttpResponse {
+impl SseDecode for crate::domain::rule::pipeline::FlowEdge {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_status = <u16>::sse_decode(deserializer);
-        let mut var_headers = <std::collections::HashMap<String, String>>::sse_decode(deserializer);
-        let mut var_body = <String>::sse_decode(deserializer);
-        let mut var_url = <String>::sse_decode(deserializer);
-        return crate::api::http_client::HttpResponse {
-            status: var_status,
-            headers: var_headers,
-            body: var_body,
-            url: var_url,
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_source = <String>::sse_decode(deserializer);
+        let mut var_target = <String>::sse_decode(deserializer);
+        return crate::domain::rule::pipeline::FlowEdge {
+            id: var_id,
+            source: var_source,
+            target: var_target,
+        };
+    }
+}
+
+impl SseDecode for crate::domain::rule::pipeline::FlowNode {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_x = <f64>::sse_decode(deserializer);
+        let mut var_y = <f64>::sse_decode(deserializer);
+        let mut var_data = <crate::domain::rule::pipeline::NodePayload>::sse_decode(deserializer);
+        return crate::domain::rule::pipeline::FlowNode {
+            id: var_id,
+            x: var_x,
+            y: var_y,
+            data: var_data,
         };
     }
 }
@@ -1394,6 +780,29 @@ impl SseDecode for i32 {
     }
 }
 
+impl SseDecode for crate::domain::rule::lifecycle::Lifecycle {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_explore =
+            <Option<crate::domain::rule::lifecycle::ExploreConfig>>::sse_decode(deserializer);
+        let mut var_search =
+            <Option<crate::domain::rule::lifecycle::SearchConfig>>::sse_decode(deserializer);
+        let mut var_detail =
+            <Option<crate::domain::rule::lifecycle::DetailConfig>>::sse_decode(deserializer);
+        let mut var_toc =
+            <Option<crate::domain::rule::lifecycle::TocConfig>>::sse_decode(deserializer);
+        let mut var_content =
+            <Option<crate::domain::rule::lifecycle::ContentConfig>>::sse_decode(deserializer);
+        return crate::domain::rule::lifecycle::Lifecycle {
+            explore: var_explore,
+            search: var_search,
+            detail: var_detail,
+            toc: var_toc,
+            content: var_content,
+        };
+    }
+}
+
 impl SseDecode for Vec<String> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1401,6 +810,60 @@ impl SseDecode for Vec<String> {
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
             ans_.push(<String>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::domain::rule::pipeline::FlowEdge> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::domain::rule::pipeline::FlowEdge>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::domain::rule::pipeline::FlowNode> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::domain::rule::pipeline::FlowNode>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::domain::rule::crawler_rule::MatchingDimension> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(
+                <crate::domain::rule::crawler_rule::MatchingDimension>::sse_decode(deserializer),
+            );
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<i32> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<i32>::sse_decode(deserializer));
         }
         return ans_;
     }
@@ -1418,20 +881,6 @@ impl SseDecode for Vec<u8> {
     }
 }
 
-impl SseDecode for Vec<crate::api::http_client::ProxyConfig> {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut len_ = <i32>::sse_decode(deserializer);
-        let mut ans_ = vec![];
-        for idx_ in 0..len_ {
-            ans_.push(<crate::api::http_client::ProxyConfig>::sse_decode(
-                deserializer,
-            ));
-        }
-        return ans_;
-    }
-}
-
 impl SseDecode for Vec<(String, String)> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1441,6 +890,86 @@ impl SseDecode for Vec<(String, String)> {
             ans_.push(<(String, String)>::sse_decode(deserializer));
         }
         return ans_;
+    }
+}
+
+impl SseDecode for crate::domain::rule::crawler_rule::MatchingConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_strategy = <String>::sse_decode(deserializer);
+        let mut var_dimensions =
+            <Vec<crate::domain::rule::crawler_rule::MatchingDimension>>::sse_decode(deserializer);
+        return crate::domain::rule::crawler_rule::MatchingConfig {
+            strategy: var_strategy,
+            dimensions: var_dimensions,
+        };
+    }
+}
+
+impl SseDecode for crate::domain::rule::crawler_rule::MatchingDimension {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_field = <String>::sse_decode(deserializer);
+        let mut var_matchType = <String>::sse_decode(deserializer);
+        let mut var_threshold = <f64>::sse_decode(deserializer);
+        return crate::domain::rule::crawler_rule::MatchingDimension {
+            field: var_field,
+            match_type: var_matchType,
+            threshold: var_threshold,
+        };
+    }
+}
+
+impl SseDecode for crate::domain::rule::network::NetworkConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_strategy = <String>::sse_decode(deserializer);
+        let mut var_emulation =
+            <Option<crate::domain::rule::network::EmulationOption>>::sse_decode(deserializer);
+        let mut var_connectTimeout = <Option<u64>>::sse_decode(deserializer);
+        let mut var_readTimeout = <Option<u64>>::sse_decode(deserializer);
+        let mut var_headers =
+            <Option<std::collections::HashMap<String, String>>>::sse_decode(deserializer);
+        let mut var_proxy =
+            <Option<crate::domain::rule::network::RuleProxyConfig>>::sse_decode(deserializer);
+        let mut var_fallback =
+            <Option<crate::domain::rule::network::FallbackConfig>>::sse_decode(deserializer);
+        return crate::domain::rule::network::NetworkConfig {
+            strategy: var_strategy,
+            emulation: var_emulation,
+            connect_timeout: var_connectTimeout,
+            read_timeout: var_readTimeout,
+            headers: var_headers,
+            proxy: var_proxy,
+            fallback: var_fallback,
+        };
+    }
+}
+
+impl SseDecode for crate::domain::rule::pipeline::NodePayload {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                let mut var_field0 =
+                    <crate::domain::rule::pipeline::SelectorDef>::sse_decode(deserializer);
+                return crate::domain::rule::pipeline::NodePayload::Selector(var_field0);
+            }
+            1 => {
+                let mut var_field0 =
+                    <crate::domain::rule::pipeline::TransformDef>::sse_decode(deserializer);
+                return crate::domain::rule::pipeline::NodePayload::Transform(var_field0);
+            }
+            2 => {
+                let mut var_field0 =
+                    <crate::domain::rule::pipeline::AggregationDef>::sse_decode(deserializer);
+                return crate::domain::rule::pipeline::NodePayload::Aggregation(var_field0);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
     }
 }
 
@@ -1468,6 +997,19 @@ impl SseDecode for Option<String> {
     }
 }
 
+impl SseDecode for Option<crate::domain::rule::crawler_rule::AggregationConfig> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(
+                <crate::domain::rule::crawler_rule::AggregationConfig>::sse_decode(deserializer),
+            );
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<bool> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1479,11 +1021,11 @@ impl SseDecode for Option<bool> {
     }
 }
 
-impl SseDecode for Option<crate::api::http_client::CookieSettings> {
+impl SseDecode for Option<crate::domain::rule::lifecycle::ContentConfig> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
-            return Some(<crate::api::http_client::CookieSettings>::sse_decode(
+            return Some(<crate::domain::rule::lifecycle::ContentConfig>::sse_decode(
                 deserializer,
             ));
         } else {
@@ -1492,11 +1034,11 @@ impl SseDecode for Option<crate::api::http_client::CookieSettings> {
     }
 }
 
-impl SseDecode for Option<crate::api::http_client::Emulation> {
+impl SseDecode for Option<crate::domain::rule::lifecycle::DetailConfig> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
-            return Some(<crate::api::http_client::Emulation>::sse_decode(
+            return Some(<crate::domain::rule::lifecycle::DetailConfig>::sse_decode(
                 deserializer,
             ));
         } else {
@@ -1505,11 +1047,11 @@ impl SseDecode for Option<crate::api::http_client::Emulation> {
     }
 }
 
-impl SseDecode for Option<crate::api::http_client::EmulationOption> {
+impl SseDecode for Option<crate::domain::rule::network::Emulation> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
-            return Some(<crate::api::http_client::EmulationOption>::sse_decode(
+            return Some(<crate::domain::rule::network::Emulation>::sse_decode(
                 deserializer,
             ));
         } else {
@@ -1518,11 +1060,11 @@ impl SseDecode for Option<crate::api::http_client::EmulationOption> {
     }
 }
 
-impl SseDecode for Option<crate::api::http_client::EmulationOS> {
+impl SseDecode for Option<crate::domain::rule::network::EmulationOption> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
-            return Some(<crate::api::http_client::EmulationOS>::sse_decode(
+            return Some(<crate::domain::rule::network::EmulationOption>::sse_decode(
                 deserializer,
             ));
         } else {
@@ -1531,11 +1073,11 @@ impl SseDecode for Option<crate::api::http_client::EmulationOS> {
     }
 }
 
-impl SseDecode for Option<crate::api::http_client::ProxySettings> {
+impl SseDecode for Option<crate::domain::rule::network::EmulationOS> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
-            return Some(<crate::api::http_client::ProxySettings>::sse_decode(
+            return Some(<crate::domain::rule::network::EmulationOS>::sse_decode(
                 deserializer,
             ));
         } else {
@@ -1544,11 +1086,11 @@ impl SseDecode for Option<crate::api::http_client::ProxySettings> {
     }
 }
 
-impl SseDecode for Option<crate::api::http_client::RedirectSettings> {
+impl SseDecode for Option<crate::domain::rule::lifecycle::ExploreConfig> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
-            return Some(<crate::api::http_client::RedirectSettings>::sse_decode(
+            return Some(<crate::domain::rule::lifecycle::ExploreConfig>::sse_decode(
                 deserializer,
             ));
         } else {
@@ -1557,11 +1099,11 @@ impl SseDecode for Option<crate::api::http_client::RedirectSettings> {
     }
 }
 
-impl SseDecode for Option<crate::api::http_client::TimeoutSettings> {
+impl SseDecode for Option<crate::domain::rule::network::FallbackConfig> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
-            return Some(<crate::api::http_client::TimeoutSettings>::sse_decode(
+            return Some(<crate::domain::rule::network::FallbackConfig>::sse_decode(
                 deserializer,
             ));
         } else {
@@ -1570,59 +1112,80 @@ impl SseDecode for Option<crate::api::http_client::TimeoutSettings> {
     }
 }
 
-impl SseDecode for Option<u32> {
+impl SseDecode for Option<crate::domain::rule::network::NetworkConfig> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
-            return Some(<u32>::sse_decode(deserializer));
+            return Some(<crate::domain::rule::network::NetworkConfig>::sse_decode(
+                deserializer,
+            ));
         } else {
             return None;
         }
     }
 }
 
-impl SseDecode for crate::api::http_client::ProxyCondition {
+impl SseDecode for Option<crate::domain::rule::network::RuleProxyConfig> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut inner = <i32>::sse_decode(deserializer);
-        return match inner {
-            0 => crate::api::http_client::ProxyCondition::All,
-            1 => crate::api::http_client::ProxyCondition::Http,
-            2 => crate::api::http_client::ProxyCondition::Https,
-            _ => unreachable!("Invalid variant for ProxyCondition: {}", inner),
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::domain::rule::network::RuleProxyConfig>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<crate::domain::rule::lifecycle::SearchConfig> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::domain::rule::lifecycle::SearchConfig>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<crate::domain::rule::lifecycle::TocConfig> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::domain::rule::lifecycle::TocConfig>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<u64> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<u64>::sse_decode(deserializer));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for crate::domain::rule::pipeline::PipelineGraph {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_nodes =
+            <Vec<crate::domain::rule::pipeline::FlowNode>>::sse_decode(deserializer);
+        let mut var_edges =
+            <Vec<crate::domain::rule::pipeline::FlowEdge>>::sse_decode(deserializer);
+        return crate::domain::rule::pipeline::PipelineGraph {
+            nodes: var_nodes,
+            edges: var_edges,
         };
-    }
-}
-
-impl SseDecode for crate::api::http_client::ProxyConfig {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_url = <String>::sse_decode(deserializer);
-        let mut var_condition = <crate::api::http_client::ProxyCondition>::sse_decode(deserializer);
-        return crate::api::http_client::ProxyConfig {
-            url: var_url,
-            condition: var_condition,
-        };
-    }
-}
-
-impl SseDecode for crate::api::http_client::ProxySettings {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut tag_ = <i32>::sse_decode(deserializer);
-        match tag_ {
-            0 => {
-                return crate::api::http_client::ProxySettings::NoProxy;
-            }
-            1 => {
-                let mut var_field0 =
-                    <Vec<crate::api::http_client::ProxyConfig>>::sse_decode(deserializer);
-                return crate::api::http_client::ProxySettings::Custom(var_field0);
-            }
-            _ => {
-                unimplemented!("");
-            }
-        }
     }
 }
 
@@ -1635,17 +1198,59 @@ impl SseDecode for (String, String) {
     }
 }
 
-impl SseDecode for crate::api::http_client::RedirectSettings {
+impl SseDecode for crate::domain::rule::network::RuleProxyConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_enabled = <bool>::sse_decode(deserializer);
+        let mut var_http = <Option<String>>::sse_decode(deserializer);
+        let mut var_https = <Option<String>>::sse_decode(deserializer);
+        let mut var_socks5 = <Option<String>>::sse_decode(deserializer);
+        return crate::domain::rule::network::RuleProxyConfig {
+            enabled: var_enabled,
+            http: var_http,
+            https: var_https,
+            socks5: var_socks5,
+        };
+    }
+}
+
+impl SseDecode for crate::domain::rule::lifecycle::SearchConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_url = <String>::sse_decode(deserializer);
+        let mut var_pipeline =
+            <crate::domain::rule::pipeline::PipelineGraph>::sse_decode(deserializer);
+        return crate::domain::rule::lifecycle::SearchConfig {
+            url: var_url,
+            pipeline: var_pipeline,
+        };
+    }
+}
+
+impl SseDecode for crate::domain::rule::pipeline::SelectorDef {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut tag_ = <i32>::sse_decode(deserializer);
         match tag_ {
             0 => {
-                return crate::api::http_client::RedirectSettings::None;
+                let mut var_selector = <String>::sse_decode(deserializer);
+                return crate::domain::rule::pipeline::SelectorDef::Css {
+                    selector: var_selector,
+                };
             }
             1 => {
-                let mut var_field0 = <i32>::sse_decode(deserializer);
-                return crate::api::http_client::RedirectSettings::Limited(var_field0);
+                let mut var_query = <String>::sse_decode(deserializer);
+                return crate::domain::rule::pipeline::SelectorDef::XPath { query: var_query };
+            }
+            2 => {
+                let mut var_path = <String>::sse_decode(deserializer);
+                return crate::domain::rule::pipeline::SelectorDef::JsonPath { path: var_path };
+            }
+            3 => {
+                let mut var_pattern = <String>::sse_decode(deserializer);
+                return crate::domain::rule::pipeline::SelectorDef::Regex {
+                    pattern: var_pattern,
+                };
             }
             _ => {
                 unimplemented!("");
@@ -1654,29 +1259,64 @@ impl SseDecode for crate::api::http_client::RedirectSettings {
     }
 }
 
-impl SseDecode for crate::api::http_client::TimeoutSettings {
+impl SseDecode for crate::domain::rule::lifecycle::TocConfig {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_timeoutMs = <Option<u32>>::sse_decode(deserializer);
-        let mut var_connectTimeoutMs = <Option<u32>>::sse_decode(deserializer);
-        return crate::api::http_client::TimeoutSettings {
-            timeout_ms: var_timeoutMs,
-            connect_timeout_ms: var_connectTimeoutMs,
+        let mut var_pipeline =
+            <crate::domain::rule::pipeline::PipelineGraph>::sse_decode(deserializer);
+        return crate::domain::rule::lifecycle::TocConfig {
+            pipeline: var_pipeline,
         };
     }
 }
 
-impl SseDecode for u16 {
+impl SseDecode for crate::domain::rule::pipeline::TransformDef {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        deserializer.cursor.read_u16::<NativeEndian>().unwrap()
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                return crate::domain::rule::pipeline::TransformDef::Trim;
+            }
+            1 => {
+                return crate::domain::rule::pipeline::TransformDef::Lower;
+            }
+            2 => {
+                return crate::domain::rule::pipeline::TransformDef::Upper;
+            }
+            3 => {
+                let mut var_pattern = <String>::sse_decode(deserializer);
+                let mut var_replace = <String>::sse_decode(deserializer);
+                return crate::domain::rule::pipeline::TransformDef::RegexReplace {
+                    pattern: var_pattern,
+                    replace: var_replace,
+                };
+            }
+            4 => {
+                return crate::domain::rule::pipeline::TransformDef::Text;
+            }
+            5 => {
+                let mut var_name = <String>::sse_decode(deserializer);
+                return crate::domain::rule::pipeline::TransformDef::Attr { name: var_name };
+            }
+            6 => {
+                return crate::domain::rule::pipeline::TransformDef::Url;
+            }
+            7 => {
+                let mut var_script = <String>::sse_decode(deserializer);
+                return crate::domain::rule::pipeline::TransformDef::Js { script: var_script };
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
     }
 }
 
-impl SseDecode for u32 {
+impl SseDecode for u64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        deserializer.cursor.read_u32::<NativeEndian>().unwrap()
+        deserializer.cursor.read_u64::<NativeEndian>().unwrap()
     }
 }
 
@@ -1692,13 +1332,6 @@ impl SseDecode for () {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {}
 }
 
-impl SseDecode for usize {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        deserializer.cursor.read_u64::<NativeEndian>().unwrap() as _
-    }
-}
-
 fn pde_ffi_dispatcher_primary_impl(
     func_id: i32,
     port: flutter_rust_bridge::for_generated::MessagePort,
@@ -1708,105 +1341,38 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        1 => wire__crate__api__http_client__HttpClient_default_client_impl(
+        1 => wire__crate__api__crawler_models__create_empty_pipeline_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        2 => wire__crate__api__http_client__HttpClient_get_impl(port, ptr, rust_vec_len, data_len),
-        3 => wire__crate__api__http_client__HttpClient_new_impl(port, ptr, rust_vec_len, data_len),
-        4 => wire__crate__api__http_client__HttpClient_post_impl(port, ptr, rust_vec_len, data_len),
-        5 => wire__crate__api__http_client__HttpClient_request_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        6 => wire__crate__api__http_client__client_settings_default_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        7 => wire__crate__api__http_client__cookie_settings_default_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        8 => {
-            wire__crate__api__http_client__emulation_default_impl(port, ptr, rust_vec_len, data_len)
-        }
-        9 => wire__crate__api__http_client__emulation_option_default_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        10 => wire__crate__api__http_client__emulation_os_default_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        11 => wire__crate__api__http_client__fetch_impl(port, ptr, rust_vec_len, data_len),
-        12 => {
+        2 => {
             wire__crate__api__similarity__fuzzy_search_score_impl(port, ptr, rust_vec_len, data_len)
         }
-        13 => wire__crate__api__text_processor__get_jieba_impl(port, ptr, rust_vec_len, data_len),
-        14 => wire__crate__api__http_client__http_fetch_impl(port, ptr, rust_vec_len, data_len),
-        15 => wire__crate__api__http_client__http_get_impl(port, ptr, rust_vec_len, data_len),
-        16 => wire__crate__api__http_client__http_post_impl(port, ptr, rust_vec_len, data_len),
-        17 => wire__crate__api__http_client__http_request_default_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        18 => wire__crate__api__similarity__jaccard_impl(port, ptr, rust_vec_len, data_len),
-        19 => wire__crate__api__similarity__levenshtein_impl(port, ptr, rust_vec_len, data_len),
-        20 => {
+        3 => wire__crate__api__text_processor__get_jieba_impl(port, ptr, rust_vec_len, data_len),
+        4 => wire__crate__api__similarity__jaccard_impl(port, ptr, rust_vec_len, data_len),
+        5 => wire__crate__api__similarity__levenshtein_impl(port, ptr, rust_vec_len, data_len),
+        6 => {
             wire__crate__api__similarity__levenshtein_tokens_impl(port, ptr, rust_vec_len, data_len)
         }
-        21 => wire__crate__api__similarity__normalize_title_impl(port, ptr, rust_vec_len, data_len),
-        22 => wire__crate__api__text_processor__number_to_chinese_impl(
+        7 => wire__crate__api__similarity__normalize_title_impl(port, ptr, rust_vec_len, data_len),
+        8 => wire__crate__api__text_processor__number_to_chinese_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        23 => wire__crate__api__http_client__proxy_condition_default_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        24 => wire__crate__api__http_client__proxy_settings_default_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        25 => wire__crate__api__http_client__redirect_settings_default_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        26 => wire__crate__api__text_processor__segment_impl(port, ptr, rust_vec_len, data_len),
-        27 => wire__crate__api__similarity__sorensen_dice_impl(port, ptr, rust_vec_len, data_len),
-        28 => wire__crate__api__http_client__timeout_settings_default_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        29 => {
+        9 => wire__crate__api__text_processor__segment_impl(port, ptr, rust_vec_len, data_len),
+        10 => wire__crate__api__similarity__sorensen_dice_impl(port, ptr, rust_vec_len, data_len),
+        11 => {
             wire__crate__api__text_processor__to_simplified_impl(port, ptr, rust_vec_len, data_len)
         }
-        30 => {
+        12 => {
             wire__crate__api__text_processor__to_traditional_impl(port, ptr, rust_vec_len, data_len)
+        }
+        13 => {
+            wire__crate__api__crawler_models__validate_rule_impl(port, ptr, rust_vec_len, data_len)
         }
         _ => unreachable!(),
     }
@@ -1827,65 +1393,121 @@ fn pde_ffi_dispatcher_sync_impl(
 // Section: rust2dart
 
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for FrbWrapper<HttpClient> {
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
-            .into_dart()
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<HttpClient> {}
-
-impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<HttpClient>> for HttpClient {
-    fn into_into_dart(self) -> FrbWrapper<HttpClient> {
-        self.into()
-    }
-}
-
-// Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::http_client::ClientSettings {
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::crawler_rule::AggregationConfig {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
-            self.emulation.into_into_dart().into_dart(),
-            self.emulation_option.into_into_dart().into_dart(),
-            self.cookie_settings.into_into_dart().into_dart(),
-            self.timeout_settings.into_into_dart().into_dart(),
-            self.proxy_settings.into_into_dart().into_dart(),
-            self.redirect_settings.into_into_dart().into_dart(),
-            self.user_agent.into_into_dart().into_dart(),
+            self.enabled.into_into_dart().into_dart(),
+            self.weight.into_into_dart().into_dart(),
+            self.matching.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::http_client::ClientSettings
+    for crate::domain::rule::crawler_rule::AggregationConfig
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::http_client::ClientSettings>
-    for crate::api::http_client::ClientSettings
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::crawler_rule::AggregationConfig>
+    for crate::domain::rule::crawler_rule::AggregationConfig
 {
-    fn into_into_dart(self) -> crate::api::http_client::ClientSettings {
+    fn into_into_dart(self) -> crate::domain::rule::crawler_rule::AggregationConfig {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::http_client::CookieSettings {
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::pipeline::AggregationDef {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        [self.store_cookies.into_into_dart().into_dart()].into_dart()
+        match self {
+            crate::domain::rule::pipeline::AggregationDef::First => [0.into_dart()].into_dart(),
+            crate::domain::rule::pipeline::AggregationDef::Last => [1.into_dart()].into_dart(),
+            crate::domain::rule::pipeline::AggregationDef::Join { separator } => {
+                [2.into_dart(), separator.into_into_dart().into_dart()].into_dart()
+            }
+            crate::domain::rule::pipeline::AggregationDef::Array => [3.into_dart()].into_dart(),
+            _ => {
+                unimplemented!("");
+            }
+        }
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::http_client::CookieSettings
+    for crate::domain::rule::pipeline::AggregationDef
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::http_client::CookieSettings>
-    for crate::api::http_client::CookieSettings
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::pipeline::AggregationDef>
+    for crate::domain::rule::pipeline::AggregationDef
 {
-    fn into_into_dart(self) -> crate::api::http_client::CookieSettings {
+    fn into_into_dart(self) -> crate::domain::rule::pipeline::AggregationDef {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::http_client::Emulation {
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::lifecycle::ContentConfig {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.pipeline.into_into_dart().into_dart(),
+            self.sniff_media.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::lifecycle::ContentConfig
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::lifecycle::ContentConfig>
+    for crate::domain::rule::lifecycle::ContentConfig
+{
+    fn into_into_dart(self) -> crate::domain::rule::lifecycle::ContentConfig {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::crawler_rule::CrawlerRule {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.name.into_into_dart().into_dart(),
+            self.description.into_into_dart().into_dart(),
+            self.author.into_into_dart().into_dart(),
+            self.version.into_into_dart().into_dart(),
+            self.network.into_into_dart().into_dart(),
+            self.aggregation.into_into_dart().into_dart(),
+            self.lifecycle.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::crawler_rule::CrawlerRule
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::crawler_rule::CrawlerRule>
+    for crate::domain::rule::crawler_rule::CrawlerRule
+{
+    fn into_into_dart(self) -> crate::domain::rule::crawler_rule::CrawlerRule {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::lifecycle::DetailConfig {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [self.pipeline.into_into_dart().into_dart()].into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::lifecycle::DetailConfig
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::lifecycle::DetailConfig>
+    for crate::domain::rule::lifecycle::DetailConfig
+{
+    fn into_into_dart(self) -> crate::domain::rule::lifecycle::DetailConfig {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::network::Emulation {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
             Self::Chrome131 => 0.into_dart(),
@@ -1939,18 +1561,18 @@ impl flutter_rust_bridge::IntoDart for crate::api::http_client::Emulation {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::http_client::Emulation
+    for crate::domain::rule::network::Emulation
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::http_client::Emulation>
-    for crate::api::http_client::Emulation
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::network::Emulation>
+    for crate::domain::rule::network::Emulation
 {
-    fn into_into_dart(self) -> crate::api::http_client::Emulation {
+    fn into_into_dart(self) -> crate::domain::rule::network::Emulation {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::http_client::EmulationOption {
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::network::EmulationOption {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.emulation.into_into_dart().into_dart(),
@@ -1962,18 +1584,18 @@ impl flutter_rust_bridge::IntoDart for crate::api::http_client::EmulationOption 
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::http_client::EmulationOption
+    for crate::domain::rule::network::EmulationOption
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::http_client::EmulationOption>
-    for crate::api::http_client::EmulationOption
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::network::EmulationOption>
+    for crate::domain::rule::network::EmulationOption
 {
-    fn into_into_dart(self) -> crate::api::http_client::EmulationOption {
+    fn into_into_dart(self) -> crate::domain::rule::network::EmulationOption {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::http_client::EmulationOS {
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::network::EmulationOS {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
             Self::Windows => 0.into_dart(),
@@ -1986,115 +1608,209 @@ impl flutter_rust_bridge::IntoDart for crate::api::http_client::EmulationOS {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::http_client::EmulationOS
+    for crate::domain::rule::network::EmulationOS
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::http_client::EmulationOS>
-    for crate::api::http_client::EmulationOS
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::network::EmulationOS>
+    for crate::domain::rule::network::EmulationOS
 {
-    fn into_into_dart(self) -> crate::api::http_client::EmulationOS {
+    fn into_into_dart(self) -> crate::domain::rule::network::EmulationOS {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::http_client::HttpRequest {
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::lifecycle::ExploreConfig {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.url.into_into_dart().into_dart(),
-            self.method.into_into_dart().into_dart(),
-            self.headers.into_into_dart().into_dart(),
-            self.body.into_into_dart().into_dart(),
+            self.pipeline.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::lifecycle::ExploreConfig
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::lifecycle::ExploreConfig>
+    for crate::domain::rule::lifecycle::ExploreConfig
+{
+    fn into_into_dart(self) -> crate::domain::rule::lifecycle::ExploreConfig {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::network::FallbackConfig {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.trigger_status.into_into_dart().into_dart(),
+            self.trigger_keywords.into_into_dart().into_dart(),
+            self.action.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::network::FallbackConfig
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::network::FallbackConfig>
+    for crate::domain::rule::network::FallbackConfig
+{
+    fn into_into_dart(self) -> crate::domain::rule::network::FallbackConfig {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::pipeline::FlowEdge {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.source.into_into_dart().into_dart(),
+            self.target.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::pipeline::FlowEdge
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::pipeline::FlowEdge>
+    for crate::domain::rule::pipeline::FlowEdge
+{
+    fn into_into_dart(self) -> crate::domain::rule::pipeline::FlowEdge {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::pipeline::FlowNode {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.x.into_into_dart().into_dart(),
+            self.y.into_into_dart().into_dart(),
+            self.data.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::pipeline::FlowNode
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::pipeline::FlowNode>
+    for crate::domain::rule::pipeline::FlowNode
+{
+    fn into_into_dart(self) -> crate::domain::rule::pipeline::FlowNode {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::lifecycle::Lifecycle {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.explore.into_into_dart().into_dart(),
+            self.search.into_into_dart().into_dart(),
+            self.detail.into_into_dart().into_dart(),
+            self.toc.into_into_dart().into_dart(),
+            self.content.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::lifecycle::Lifecycle
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::lifecycle::Lifecycle>
+    for crate::domain::rule::lifecycle::Lifecycle
+{
+    fn into_into_dart(self) -> crate::domain::rule::lifecycle::Lifecycle {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::crawler_rule::MatchingConfig {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.strategy.into_into_dart().into_dart(),
+            self.dimensions.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::crawler_rule::MatchingConfig
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::crawler_rule::MatchingConfig>
+    for crate::domain::rule::crawler_rule::MatchingConfig
+{
+    fn into_into_dart(self) -> crate::domain::rule::crawler_rule::MatchingConfig {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::crawler_rule::MatchingDimension {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.field.into_into_dart().into_dart(),
+            self.match_type.into_into_dart().into_dart(),
+            self.threshold.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::crawler_rule::MatchingDimension
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::crawler_rule::MatchingDimension>
+    for crate::domain::rule::crawler_rule::MatchingDimension
+{
+    fn into_into_dart(self) -> crate::domain::rule::crawler_rule::MatchingDimension {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::network::NetworkConfig {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.strategy.into_into_dart().into_dart(),
             self.emulation.into_into_dart().into_dart(),
-            self.timeout_ms.into_into_dart().into_dart(),
-            self.follow_redirects.into_into_dart().into_dart(),
-        ]
-        .into_dart()
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::http_client::HttpRequest
-{
-}
-impl flutter_rust_bridge::IntoIntoDart<crate::api::http_client::HttpRequest>
-    for crate::api::http_client::HttpRequest
-{
-    fn into_into_dart(self) -> crate::api::http_client::HttpRequest {
-        self
-    }
-}
-// Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::http_client::HttpResponse {
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        [
-            self.status.into_into_dart().into_dart(),
+            self.connect_timeout.into_into_dart().into_dart(),
+            self.read_timeout.into_into_dart().into_dart(),
             self.headers.into_into_dart().into_dart(),
-            self.body.into_into_dart().into_dart(),
-            self.url.into_into_dart().into_dart(),
+            self.proxy.into_into_dart().into_dart(),
+            self.fallback.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::http_client::HttpResponse
+    for crate::domain::rule::network::NetworkConfig
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::http_client::HttpResponse>
-    for crate::api::http_client::HttpResponse
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::network::NetworkConfig>
+    for crate::domain::rule::network::NetworkConfig
 {
-    fn into_into_dart(self) -> crate::api::http_client::HttpResponse {
+    fn into_into_dart(self) -> crate::domain::rule::network::NetworkConfig {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::http_client::ProxyCondition {
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::pipeline::NodePayload {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
-            Self::All => 0.into_dart(),
-            Self::Http => 1.into_dart(),
-            Self::Https => 2.into_dart(),
-            _ => unreachable!(),
-        }
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::http_client::ProxyCondition
-{
-}
-impl flutter_rust_bridge::IntoIntoDart<crate::api::http_client::ProxyCondition>
-    for crate::api::http_client::ProxyCondition
-{
-    fn into_into_dart(self) -> crate::api::http_client::ProxyCondition {
-        self
-    }
-}
-// Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::http_client::ProxyConfig {
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        [
-            self.url.into_into_dart().into_dart(),
-            self.condition.into_into_dart().into_dart(),
-        ]
-        .into_dart()
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::http_client::ProxyConfig
-{
-}
-impl flutter_rust_bridge::IntoIntoDart<crate::api::http_client::ProxyConfig>
-    for crate::api::http_client::ProxyConfig
-{
-    fn into_into_dart(self) -> crate::api::http_client::ProxyConfig {
-        self
-    }
-}
-// Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::http_client::ProxySettings {
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self {
-            crate::api::http_client::ProxySettings::NoProxy => [0.into_dart()].into_dart(),
-            crate::api::http_client::ProxySettings::Custom(field0) => {
+            crate::domain::rule::pipeline::NodePayload::Selector(field0) => {
+                [0.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::domain::rule::pipeline::NodePayload::Transform(field0) => {
                 [1.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::domain::rule::pipeline::NodePayload::Aggregation(field0) => {
+                [2.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
             _ => {
                 unimplemented!("");
@@ -2103,23 +1819,96 @@ impl flutter_rust_bridge::IntoDart for crate::api::http_client::ProxySettings {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::http_client::ProxySettings
+    for crate::domain::rule::pipeline::NodePayload
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::http_client::ProxySettings>
-    for crate::api::http_client::ProxySettings
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::pipeline::NodePayload>
+    for crate::domain::rule::pipeline::NodePayload
 {
-    fn into_into_dart(self) -> crate::api::http_client::ProxySettings {
+    fn into_into_dart(self) -> crate::domain::rule::pipeline::NodePayload {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::http_client::RedirectSettings {
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::pipeline::PipelineGraph {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.nodes.into_into_dart().into_dart(),
+            self.edges.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::pipeline::PipelineGraph
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::pipeline::PipelineGraph>
+    for crate::domain::rule::pipeline::PipelineGraph
+{
+    fn into_into_dart(self) -> crate::domain::rule::pipeline::PipelineGraph {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::network::RuleProxyConfig {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.enabled.into_into_dart().into_dart(),
+            self.http.into_into_dart().into_dart(),
+            self.https.into_into_dart().into_dart(),
+            self.socks5.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::network::RuleProxyConfig
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::network::RuleProxyConfig>
+    for crate::domain::rule::network::RuleProxyConfig
+{
+    fn into_into_dart(self) -> crate::domain::rule::network::RuleProxyConfig {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::lifecycle::SearchConfig {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.url.into_into_dart().into_dart(),
+            self.pipeline.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::lifecycle::SearchConfig
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::lifecycle::SearchConfig>
+    for crate::domain::rule::lifecycle::SearchConfig
+{
+    fn into_into_dart(self) -> crate::domain::rule::lifecycle::SearchConfig {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::pipeline::SelectorDef {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
-            crate::api::http_client::RedirectSettings::None => [0.into_dart()].into_dart(),
-            crate::api::http_client::RedirectSettings::Limited(field0) => {
-                [1.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            crate::domain::rule::pipeline::SelectorDef::Css { selector } => {
+                [0.into_dart(), selector.into_into_dart().into_dart()].into_dart()
+            }
+            crate::domain::rule::pipeline::SelectorDef::XPath { query } => {
+                [1.into_dart(), query.into_into_dart().into_dart()].into_dart()
+            }
+            crate::domain::rule::pipeline::SelectorDef::JsonPath { path } => {
+                [2.into_dart(), path.into_into_dart().into_dart()].into_dart()
+            }
+            crate::domain::rule::pipeline::SelectorDef::Regex { pattern } => {
+                [3.into_dart(), pattern.into_into_dart().into_dart()].into_dart()
             }
             _ => {
                 unimplemented!("");
@@ -2128,42 +1917,69 @@ impl flutter_rust_bridge::IntoDart for crate::api::http_client::RedirectSettings
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::http_client::RedirectSettings
+    for crate::domain::rule::pipeline::SelectorDef
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::http_client::RedirectSettings>
-    for crate::api::http_client::RedirectSettings
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::pipeline::SelectorDef>
+    for crate::domain::rule::pipeline::SelectorDef
 {
-    fn into_into_dart(self) -> crate::api::http_client::RedirectSettings {
+    fn into_into_dart(self) -> crate::domain::rule::pipeline::SelectorDef {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::http_client::TimeoutSettings {
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::lifecycle::TocConfig {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        [
-            self.timeout_ms.into_into_dart().into_dart(),
-            self.connect_timeout_ms.into_into_dart().into_dart(),
-        ]
-        .into_dart()
+        [self.pipeline.into_into_dart().into_dart()].into_dart()
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::http_client::TimeoutSettings
+    for crate::domain::rule::lifecycle::TocConfig
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::http_client::TimeoutSettings>
-    for crate::api::http_client::TimeoutSettings
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::lifecycle::TocConfig>
+    for crate::domain::rule::lifecycle::TocConfig
 {
-    fn into_into_dart(self) -> crate::api::http_client::TimeoutSettings {
+    fn into_into_dart(self) -> crate::domain::rule::lifecycle::TocConfig {
         self
     }
 }
-
-impl SseEncode for HttpClient {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HttpClient>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::pipeline::TransformDef {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            crate::domain::rule::pipeline::TransformDef::Trim => [0.into_dart()].into_dart(),
+            crate::domain::rule::pipeline::TransformDef::Lower => [1.into_dart()].into_dart(),
+            crate::domain::rule::pipeline::TransformDef::Upper => [2.into_dart()].into_dart(),
+            crate::domain::rule::pipeline::TransformDef::RegexReplace { pattern, replace } => [
+                3.into_dart(),
+                pattern.into_into_dart().into_dart(),
+                replace.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::domain::rule::pipeline::TransformDef::Text => [4.into_dart()].into_dart(),
+            crate::domain::rule::pipeline::TransformDef::Attr { name } => {
+                [5.into_dart(), name.into_into_dart().into_dart()].into_dart()
+            }
+            crate::domain::rule::pipeline::TransformDef::Url => [6.into_dart()].into_dart(),
+            crate::domain::rule::pipeline::TransformDef::Js { script } => {
+                [7.into_dart(), script.into_into_dart().into_dart()].into_dart()
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::pipeline::TransformDef
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::pipeline::TransformDef>
+    for crate::domain::rule::pipeline::TransformDef
+{
+    fn into_into_dart(self) -> crate::domain::rule::pipeline::TransformDef {
+        self
     }
 }
 
@@ -2174,21 +1990,43 @@ impl SseEncode for std::collections::HashMap<String, String> {
     }
 }
 
-impl SseEncode
-    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HttpClient>>
-{
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        let (ptr, size) = self.sse_encode_raw();
-        <usize>::sse_encode(ptr, serializer);
-        <i32>::sse_encode(size, serializer);
-    }
-}
-
 impl SseEncode for String {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <Vec<u8>>::sse_encode(self.into_bytes(), serializer);
+    }
+}
+
+impl SseEncode for crate::domain::rule::crawler_rule::AggregationConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.enabled, serializer);
+        <u8>::sse_encode(self.weight, serializer);
+        <crate::domain::rule::crawler_rule::MatchingConfig>::sse_encode(self.matching, serializer);
+    }
+}
+
+impl SseEncode for crate::domain::rule::pipeline::AggregationDef {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {
+            crate::domain::rule::pipeline::AggregationDef::First => {
+                <i32>::sse_encode(0, serializer);
+            }
+            crate::domain::rule::pipeline::AggregationDef::Last => {
+                <i32>::sse_encode(1, serializer);
+            }
+            crate::domain::rule::pipeline::AggregationDef::Join { separator } => {
+                <i32>::sse_encode(2, serializer);
+                <String>::sse_encode(separator, serializer);
+            }
+            crate::domain::rule::pipeline::AggregationDef::Array => {
+                <i32>::sse_encode(3, serializer);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
     }
 }
 
@@ -2199,92 +2037,89 @@ impl SseEncode for bool {
     }
 }
 
-impl SseEncode for crate::api::http_client::ClientSettings {
+impl SseEncode for crate::domain::rule::lifecycle::ContentConfig {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <Option<crate::api::http_client::Emulation>>::sse_encode(self.emulation, serializer);
-        <Option<crate::api::http_client::EmulationOption>>::sse_encode(
-            self.emulation_option,
-            serializer,
-        );
-        <Option<crate::api::http_client::CookieSettings>>::sse_encode(
-            self.cookie_settings,
-            serializer,
-        );
-        <Option<crate::api::http_client::TimeoutSettings>>::sse_encode(
-            self.timeout_settings,
-            serializer,
-        );
-        <Option<crate::api::http_client::ProxySettings>>::sse_encode(
-            self.proxy_settings,
-            serializer,
-        );
-        <Option<crate::api::http_client::RedirectSettings>>::sse_encode(
-            self.redirect_settings,
-            serializer,
-        );
-        <Option<String>>::sse_encode(self.user_agent, serializer);
+        <crate::domain::rule::pipeline::PipelineGraph>::sse_encode(self.pipeline, serializer);
+        <bool>::sse_encode(self.sniff_media, serializer);
     }
 }
 
-impl SseEncode for crate::api::http_client::CookieSettings {
+impl SseEncode for crate::domain::rule::crawler_rule::CrawlerRule {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <bool>::sse_encode(self.store_cookies, serializer);
+        <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.name, serializer);
+        <String>::sse_encode(self.description, serializer);
+        <String>::sse_encode(self.author, serializer);
+        <String>::sse_encode(self.version, serializer);
+        <Option<crate::domain::rule::network::NetworkConfig>>::sse_encode(self.network, serializer);
+        <Option<crate::domain::rule::crawler_rule::AggregationConfig>>::sse_encode(
+            self.aggregation,
+            serializer,
+        );
+        <crate::domain::rule::lifecycle::Lifecycle>::sse_encode(self.lifecycle, serializer);
     }
 }
 
-impl SseEncode for crate::api::http_client::Emulation {
+impl SseEncode for crate::domain::rule::lifecycle::DetailConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <crate::domain::rule::pipeline::PipelineGraph>::sse_encode(self.pipeline, serializer);
+    }
+}
+
+impl SseEncode for crate::domain::rule::network::Emulation {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(
             match self {
-                crate::api::http_client::Emulation::Chrome131 => 0,
-                crate::api::http_client::Emulation::Chrome132 => 1,
-                crate::api::http_client::Emulation::Chrome133 => 2,
-                crate::api::http_client::Emulation::Chrome134 => 3,
-                crate::api::http_client::Emulation::Chrome135 => 4,
-                crate::api::http_client::Emulation::Chrome136 => 5,
-                crate::api::http_client::Emulation::Chrome120 => 6,
-                crate::api::http_client::Emulation::Chrome124 => 7,
-                crate::api::http_client::Emulation::Chrome126 => 8,
-                crate::api::http_client::Emulation::Chrome127 => 9,
-                crate::api::http_client::Emulation::Chrome128 => 10,
-                crate::api::http_client::Emulation::Chrome129 => 11,
-                crate::api::http_client::Emulation::Chrome130 => 12,
-                crate::api::http_client::Emulation::Safari18 => 13,
-                crate::api::http_client::Emulation::Safari18_2 => 14,
-                crate::api::http_client::Emulation::Safari18_3 => 15,
-                crate::api::http_client::Emulation::Safari18_5 => 16,
-                crate::api::http_client::Emulation::Safari26 => 17,
-                crate::api::http_client::Emulation::SafariIos18_1_1 => 18,
-                crate::api::http_client::Emulation::Firefox133 => 19,
-                crate::api::http_client::Emulation::Firefox135 => 20,
-                crate::api::http_client::Emulation::Firefox136 => 21,
-                crate::api::http_client::Emulation::Firefox139 => 22,
-                crate::api::http_client::Emulation::Firefox142 => 23,
-                crate::api::http_client::Emulation::Firefox143 => 24,
-                crate::api::http_client::Emulation::Firefox144 => 25,
-                crate::api::http_client::Emulation::Firefox145 => 26,
-                crate::api::http_client::Emulation::Firefox146 => 27,
-                crate::api::http_client::Emulation::Firefox147 => 28,
-                crate::api::http_client::Emulation::Edge127 => 29,
-                crate::api::http_client::Emulation::Edge131 => 30,
-                crate::api::http_client::Emulation::Edge134 => 31,
-                crate::api::http_client::Emulation::Edge135 => 32,
-                crate::api::http_client::Emulation::Edge136 => 33,
-                crate::api::http_client::Emulation::Edge137 => 34,
-                crate::api::http_client::Emulation::Edge138 => 35,
-                crate::api::http_client::Emulation::Edge139 => 36,
-                crate::api::http_client::Emulation::Edge140 => 37,
-                crate::api::http_client::Emulation::Edge141 => 38,
-                crate::api::http_client::Emulation::Edge142 => 39,
-                crate::api::http_client::Emulation::Edge143 => 40,
-                crate::api::http_client::Emulation::Edge144 => 41,
-                crate::api::http_client::Emulation::Edge145 => 42,
-                crate::api::http_client::Emulation::OkHttp3_14 => 43,
-                crate::api::http_client::Emulation::OkHttp4_12 => 44,
-                crate::api::http_client::Emulation::OkHttp5 => 45,
+                crate::domain::rule::network::Emulation::Chrome131 => 0,
+                crate::domain::rule::network::Emulation::Chrome132 => 1,
+                crate::domain::rule::network::Emulation::Chrome133 => 2,
+                crate::domain::rule::network::Emulation::Chrome134 => 3,
+                crate::domain::rule::network::Emulation::Chrome135 => 4,
+                crate::domain::rule::network::Emulation::Chrome136 => 5,
+                crate::domain::rule::network::Emulation::Chrome120 => 6,
+                crate::domain::rule::network::Emulation::Chrome124 => 7,
+                crate::domain::rule::network::Emulation::Chrome126 => 8,
+                crate::domain::rule::network::Emulation::Chrome127 => 9,
+                crate::domain::rule::network::Emulation::Chrome128 => 10,
+                crate::domain::rule::network::Emulation::Chrome129 => 11,
+                crate::domain::rule::network::Emulation::Chrome130 => 12,
+                crate::domain::rule::network::Emulation::Safari18 => 13,
+                crate::domain::rule::network::Emulation::Safari18_2 => 14,
+                crate::domain::rule::network::Emulation::Safari18_3 => 15,
+                crate::domain::rule::network::Emulation::Safari18_5 => 16,
+                crate::domain::rule::network::Emulation::Safari26 => 17,
+                crate::domain::rule::network::Emulation::SafariIos18_1_1 => 18,
+                crate::domain::rule::network::Emulation::Firefox133 => 19,
+                crate::domain::rule::network::Emulation::Firefox135 => 20,
+                crate::domain::rule::network::Emulation::Firefox136 => 21,
+                crate::domain::rule::network::Emulation::Firefox139 => 22,
+                crate::domain::rule::network::Emulation::Firefox142 => 23,
+                crate::domain::rule::network::Emulation::Firefox143 => 24,
+                crate::domain::rule::network::Emulation::Firefox144 => 25,
+                crate::domain::rule::network::Emulation::Firefox145 => 26,
+                crate::domain::rule::network::Emulation::Firefox146 => 27,
+                crate::domain::rule::network::Emulation::Firefox147 => 28,
+                crate::domain::rule::network::Emulation::Edge127 => 29,
+                crate::domain::rule::network::Emulation::Edge131 => 30,
+                crate::domain::rule::network::Emulation::Edge134 => 31,
+                crate::domain::rule::network::Emulation::Edge135 => 32,
+                crate::domain::rule::network::Emulation::Edge136 => 33,
+                crate::domain::rule::network::Emulation::Edge137 => 34,
+                crate::domain::rule::network::Emulation::Edge138 => 35,
+                crate::domain::rule::network::Emulation::Edge139 => 36,
+                crate::domain::rule::network::Emulation::Edge140 => 37,
+                crate::domain::rule::network::Emulation::Edge141 => 38,
+                crate::domain::rule::network::Emulation::Edge142 => 39,
+                crate::domain::rule::network::Emulation::Edge143 => 40,
+                crate::domain::rule::network::Emulation::Edge144 => 41,
+                crate::domain::rule::network::Emulation::Edge145 => 42,
+                crate::domain::rule::network::Emulation::OkHttp3_14 => 43,
+                crate::domain::rule::network::Emulation::OkHttp4_12 => 44,
+                crate::domain::rule::network::Emulation::OkHttp5 => 45,
                 _ => {
                     unimplemented!("");
                 }
@@ -2294,32 +2129,43 @@ impl SseEncode for crate::api::http_client::Emulation {
     }
 }
 
-impl SseEncode for crate::api::http_client::EmulationOption {
+impl SseEncode for crate::domain::rule::network::EmulationOption {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <Option<crate::api::http_client::Emulation>>::sse_encode(self.emulation, serializer);
-        <Option<crate::api::http_client::EmulationOS>>::sse_encode(self.emulation_os, serializer);
+        <Option<crate::domain::rule::network::Emulation>>::sse_encode(self.emulation, serializer);
+        <Option<crate::domain::rule::network::EmulationOS>>::sse_encode(
+            self.emulation_os,
+            serializer,
+        );
         <Option<bool>>::sse_encode(self.skip_http2, serializer);
         <Option<bool>>::sse_encode(self.skip_headers, serializer);
     }
 }
 
-impl SseEncode for crate::api::http_client::EmulationOS {
+impl SseEncode for crate::domain::rule::network::EmulationOS {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(
             match self {
-                crate::api::http_client::EmulationOS::Windows => 0,
-                crate::api::http_client::EmulationOS::MacOS => 1,
-                crate::api::http_client::EmulationOS::Linux => 2,
-                crate::api::http_client::EmulationOS::Android => 3,
-                crate::api::http_client::EmulationOS::IOS => 4,
+                crate::domain::rule::network::EmulationOS::Windows => 0,
+                crate::domain::rule::network::EmulationOS::MacOS => 1,
+                crate::domain::rule::network::EmulationOS::Linux => 2,
+                crate::domain::rule::network::EmulationOS::Android => 3,
+                crate::domain::rule::network::EmulationOS::IOS => 4,
                 _ => {
                     unimplemented!("");
                 }
             },
             serializer,
         );
+    }
+}
+
+impl SseEncode for crate::domain::rule::lifecycle::ExploreConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.url, serializer);
+        <crate::domain::rule::pipeline::PipelineGraph>::sse_encode(self.pipeline, serializer);
     }
 }
 
@@ -2330,26 +2176,31 @@ impl SseEncode for f64 {
     }
 }
 
-impl SseEncode for crate::api::http_client::HttpRequest {
+impl SseEncode for crate::domain::rule::network::FallbackConfig {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <String>::sse_encode(self.url, serializer);
-        <String>::sse_encode(self.method, serializer);
-        <Option<std::collections::HashMap<String, String>>>::sse_encode(self.headers, serializer);
-        <Option<String>>::sse_encode(self.body, serializer);
-        <crate::api::http_client::Emulation>::sse_encode(self.emulation, serializer);
-        <u32>::sse_encode(self.timeout_ms, serializer);
-        <bool>::sse_encode(self.follow_redirects, serializer);
+        <Vec<i32>>::sse_encode(self.trigger_status, serializer);
+        <Vec<String>>::sse_encode(self.trigger_keywords, serializer);
+        <String>::sse_encode(self.action, serializer);
     }
 }
 
-impl SseEncode for crate::api::http_client::HttpResponse {
+impl SseEncode for crate::domain::rule::pipeline::FlowEdge {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <u16>::sse_encode(self.status, serializer);
-        <std::collections::HashMap<String, String>>::sse_encode(self.headers, serializer);
-        <String>::sse_encode(self.body, serializer);
-        <String>::sse_encode(self.url, serializer);
+        <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.source, serializer);
+        <String>::sse_encode(self.target, serializer);
+    }
+}
+
+impl SseEncode for crate::domain::rule::pipeline::FlowNode {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.id, serializer);
+        <f64>::sse_encode(self.x, serializer);
+        <f64>::sse_encode(self.y, serializer);
+        <crate::domain::rule::pipeline::NodePayload>::sse_encode(self.data, serializer);
     }
 }
 
@@ -2360,12 +2211,69 @@ impl SseEncode for i32 {
     }
 }
 
+impl SseEncode for crate::domain::rule::lifecycle::Lifecycle {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Option<crate::domain::rule::lifecycle::ExploreConfig>>::sse_encode(
+            self.explore,
+            serializer,
+        );
+        <Option<crate::domain::rule::lifecycle::SearchConfig>>::sse_encode(self.search, serializer);
+        <Option<crate::domain::rule::lifecycle::DetailConfig>>::sse_encode(self.detail, serializer);
+        <Option<crate::domain::rule::lifecycle::TocConfig>>::sse_encode(self.toc, serializer);
+        <Option<crate::domain::rule::lifecycle::ContentConfig>>::sse_encode(
+            self.content,
+            serializer,
+        );
+    }
+}
+
 impl SseEncode for Vec<String> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <String>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::domain::rule::pipeline::FlowEdge> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::domain::rule::pipeline::FlowEdge>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::domain::rule::pipeline::FlowNode> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::domain::rule::pipeline::FlowNode>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::domain::rule::crawler_rule::MatchingDimension> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::domain::rule::crawler_rule::MatchingDimension>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<i32> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <i32>::sse_encode(item, serializer);
         }
     }
 }
@@ -2380,22 +2288,74 @@ impl SseEncode for Vec<u8> {
     }
 }
 
-impl SseEncode for Vec<crate::api::http_client::ProxyConfig> {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <i32>::sse_encode(self.len() as _, serializer);
-        for item in self {
-            <crate::api::http_client::ProxyConfig>::sse_encode(item, serializer);
-        }
-    }
-}
-
 impl SseEncode for Vec<(String, String)> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <(String, String)>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for crate::domain::rule::crawler_rule::MatchingConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.strategy, serializer);
+        <Vec<crate::domain::rule::crawler_rule::MatchingDimension>>::sse_encode(
+            self.dimensions,
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::domain::rule::crawler_rule::MatchingDimension {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.field, serializer);
+        <String>::sse_encode(self.match_type, serializer);
+        <f64>::sse_encode(self.threshold, serializer);
+    }
+}
+
+impl SseEncode for crate::domain::rule::network::NetworkConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.strategy, serializer);
+        <Option<crate::domain::rule::network::EmulationOption>>::sse_encode(
+            self.emulation,
+            serializer,
+        );
+        <Option<u64>>::sse_encode(self.connect_timeout, serializer);
+        <Option<u64>>::sse_encode(self.read_timeout, serializer);
+        <Option<std::collections::HashMap<String, String>>>::sse_encode(self.headers, serializer);
+        <Option<crate::domain::rule::network::RuleProxyConfig>>::sse_encode(self.proxy, serializer);
+        <Option<crate::domain::rule::network::FallbackConfig>>::sse_encode(
+            self.fallback,
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::domain::rule::pipeline::NodePayload {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {
+            crate::domain::rule::pipeline::NodePayload::Selector(field0) => {
+                <i32>::sse_encode(0, serializer);
+                <crate::domain::rule::pipeline::SelectorDef>::sse_encode(field0, serializer);
+            }
+            crate::domain::rule::pipeline::NodePayload::Transform(field0) => {
+                <i32>::sse_encode(1, serializer);
+                <crate::domain::rule::pipeline::TransformDef>::sse_encode(field0, serializer);
+            }
+            crate::domain::rule::pipeline::NodePayload::Aggregation(field0) => {
+                <i32>::sse_encode(2, serializer);
+                <crate::domain::rule::pipeline::AggregationDef>::sse_encode(field0, serializer);
+            }
+            _ => {
+                unimplemented!("");
+            }
         }
     }
 }
@@ -2420,6 +2380,16 @@ impl SseEncode for Option<String> {
     }
 }
 
+impl SseEncode for Option<crate::domain::rule::crawler_rule::AggregationConfig> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::domain::rule::crawler_rule::AggregationConfig>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for Option<bool> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2430,126 +2400,131 @@ impl SseEncode for Option<bool> {
     }
 }
 
-impl SseEncode for Option<crate::api::http_client::CookieSettings> {
+impl SseEncode for Option<crate::domain::rule::lifecycle::ContentConfig> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
-            <crate::api::http_client::CookieSettings>::sse_encode(value, serializer);
+            <crate::domain::rule::lifecycle::ContentConfig>::sse_encode(value, serializer);
         }
     }
 }
 
-impl SseEncode for Option<crate::api::http_client::Emulation> {
+impl SseEncode for Option<crate::domain::rule::lifecycle::DetailConfig> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
-            <crate::api::http_client::Emulation>::sse_encode(value, serializer);
+            <crate::domain::rule::lifecycle::DetailConfig>::sse_encode(value, serializer);
         }
     }
 }
 
-impl SseEncode for Option<crate::api::http_client::EmulationOption> {
+impl SseEncode for Option<crate::domain::rule::network::Emulation> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
-            <crate::api::http_client::EmulationOption>::sse_encode(value, serializer);
+            <crate::domain::rule::network::Emulation>::sse_encode(value, serializer);
         }
     }
 }
 
-impl SseEncode for Option<crate::api::http_client::EmulationOS> {
+impl SseEncode for Option<crate::domain::rule::network::EmulationOption> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
-            <crate::api::http_client::EmulationOS>::sse_encode(value, serializer);
+            <crate::domain::rule::network::EmulationOption>::sse_encode(value, serializer);
         }
     }
 }
 
-impl SseEncode for Option<crate::api::http_client::ProxySettings> {
+impl SseEncode for Option<crate::domain::rule::network::EmulationOS> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
-            <crate::api::http_client::ProxySettings>::sse_encode(value, serializer);
+            <crate::domain::rule::network::EmulationOS>::sse_encode(value, serializer);
         }
     }
 }
 
-impl SseEncode for Option<crate::api::http_client::RedirectSettings> {
+impl SseEncode for Option<crate::domain::rule::lifecycle::ExploreConfig> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
-            <crate::api::http_client::RedirectSettings>::sse_encode(value, serializer);
+            <crate::domain::rule::lifecycle::ExploreConfig>::sse_encode(value, serializer);
         }
     }
 }
 
-impl SseEncode for Option<crate::api::http_client::TimeoutSettings> {
+impl SseEncode for Option<crate::domain::rule::network::FallbackConfig> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
-            <crate::api::http_client::TimeoutSettings>::sse_encode(value, serializer);
+            <crate::domain::rule::network::FallbackConfig>::sse_encode(value, serializer);
         }
     }
 }
 
-impl SseEncode for Option<u32> {
+impl SseEncode for Option<crate::domain::rule::network::NetworkConfig> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
-            <u32>::sse_encode(value, serializer);
+            <crate::domain::rule::network::NetworkConfig>::sse_encode(value, serializer);
         }
     }
 }
 
-impl SseEncode for crate::api::http_client::ProxyCondition {
+impl SseEncode for Option<crate::domain::rule::network::RuleProxyConfig> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <i32>::sse_encode(
-            match self {
-                crate::api::http_client::ProxyCondition::All => 0,
-                crate::api::http_client::ProxyCondition::Http => 1,
-                crate::api::http_client::ProxyCondition::Https => 2,
-                _ => {
-                    unimplemented!("");
-                }
-            },
-            serializer,
-        );
-    }
-}
-
-impl SseEncode for crate::api::http_client::ProxyConfig {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <String>::sse_encode(self.url, serializer);
-        <crate::api::http_client::ProxyCondition>::sse_encode(self.condition, serializer);
-    }
-}
-
-impl SseEncode for crate::api::http_client::ProxySettings {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        match self {
-            crate::api::http_client::ProxySettings::NoProxy => {
-                <i32>::sse_encode(0, serializer);
-            }
-            crate::api::http_client::ProxySettings::Custom(field0) => {
-                <i32>::sse_encode(1, serializer);
-                <Vec<crate::api::http_client::ProxyConfig>>::sse_encode(field0, serializer);
-            }
-            _ => {
-                unimplemented!("");
-            }
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::domain::rule::network::RuleProxyConfig>::sse_encode(value, serializer);
         }
+    }
+}
+
+impl SseEncode for Option<crate::domain::rule::lifecycle::SearchConfig> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::domain::rule::lifecycle::SearchConfig>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<crate::domain::rule::lifecycle::TocConfig> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::domain::rule::lifecycle::TocConfig>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<u64> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <u64>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for crate::domain::rule::pipeline::PipelineGraph {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<crate::domain::rule::pipeline::FlowNode>>::sse_encode(self.nodes, serializer);
+        <Vec<crate::domain::rule::pipeline::FlowEdge>>::sse_encode(self.edges, serializer);
     }
 }
 
@@ -2561,16 +2536,43 @@ impl SseEncode for (String, String) {
     }
 }
 
-impl SseEncode for crate::api::http_client::RedirectSettings {
+impl SseEncode for crate::domain::rule::network::RuleProxyConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.enabled, serializer);
+        <Option<String>>::sse_encode(self.http, serializer);
+        <Option<String>>::sse_encode(self.https, serializer);
+        <Option<String>>::sse_encode(self.socks5, serializer);
+    }
+}
+
+impl SseEncode for crate::domain::rule::lifecycle::SearchConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.url, serializer);
+        <crate::domain::rule::pipeline::PipelineGraph>::sse_encode(self.pipeline, serializer);
+    }
+}
+
+impl SseEncode for crate::domain::rule::pipeline::SelectorDef {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         match self {
-            crate::api::http_client::RedirectSettings::None => {
+            crate::domain::rule::pipeline::SelectorDef::Css { selector } => {
                 <i32>::sse_encode(0, serializer);
+                <String>::sse_encode(selector, serializer);
             }
-            crate::api::http_client::RedirectSettings::Limited(field0) => {
+            crate::domain::rule::pipeline::SelectorDef::XPath { query } => {
                 <i32>::sse_encode(1, serializer);
-                <i32>::sse_encode(field0, serializer);
+                <String>::sse_encode(query, serializer);
+            }
+            crate::domain::rule::pipeline::SelectorDef::JsonPath { path } => {
+                <i32>::sse_encode(2, serializer);
+                <String>::sse_encode(path, serializer);
+            }
+            crate::domain::rule::pipeline::SelectorDef::Regex { pattern } => {
+                <i32>::sse_encode(3, serializer);
+                <String>::sse_encode(pattern, serializer);
             }
             _ => {
                 unimplemented!("");
@@ -2579,25 +2581,56 @@ impl SseEncode for crate::api::http_client::RedirectSettings {
     }
 }
 
-impl SseEncode for crate::api::http_client::TimeoutSettings {
+impl SseEncode for crate::domain::rule::lifecycle::TocConfig {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <Option<u32>>::sse_encode(self.timeout_ms, serializer);
-        <Option<u32>>::sse_encode(self.connect_timeout_ms, serializer);
+        <crate::domain::rule::pipeline::PipelineGraph>::sse_encode(self.pipeline, serializer);
     }
 }
 
-impl SseEncode for u16 {
+impl SseEncode for crate::domain::rule::pipeline::TransformDef {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        serializer.cursor.write_u16::<NativeEndian>(self).unwrap();
+        match self {
+            crate::domain::rule::pipeline::TransformDef::Trim => {
+                <i32>::sse_encode(0, serializer);
+            }
+            crate::domain::rule::pipeline::TransformDef::Lower => {
+                <i32>::sse_encode(1, serializer);
+            }
+            crate::domain::rule::pipeline::TransformDef::Upper => {
+                <i32>::sse_encode(2, serializer);
+            }
+            crate::domain::rule::pipeline::TransformDef::RegexReplace { pattern, replace } => {
+                <i32>::sse_encode(3, serializer);
+                <String>::sse_encode(pattern, serializer);
+                <String>::sse_encode(replace, serializer);
+            }
+            crate::domain::rule::pipeline::TransformDef::Text => {
+                <i32>::sse_encode(4, serializer);
+            }
+            crate::domain::rule::pipeline::TransformDef::Attr { name } => {
+                <i32>::sse_encode(5, serializer);
+                <String>::sse_encode(name, serializer);
+            }
+            crate::domain::rule::pipeline::TransformDef::Url => {
+                <i32>::sse_encode(6, serializer);
+            }
+            crate::domain::rule::pipeline::TransformDef::Js { script } => {
+                <i32>::sse_encode(7, serializer);
+                <String>::sse_encode(script, serializer);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
     }
 }
 
-impl SseEncode for u32 {
+impl SseEncode for u64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        serializer.cursor.write_u32::<NativeEndian>(self).unwrap();
+        serializer.cursor.write_u64::<NativeEndian>(self).unwrap();
     }
 }
 
@@ -2611,16 +2644,6 @@ impl SseEncode for u8 {
 impl SseEncode for () {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {}
-}
-
-impl SseEncode for usize {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        serializer
-            .cursor
-            .write_u64::<NativeEndian>(self as _)
-            .unwrap();
-    }
 }
 
 #[cfg(not(target_family = "wasm"))]
@@ -2639,25 +2662,10 @@ mod io {
     };
 
     use super::*;
-    use crate::api::http_client::*;
 
     // Section: boilerplate
 
     flutter_rust_bridge::frb_generated_boilerplate_io!();
-
-    #[unsafe(no_mangle)]
-    pub extern "C" fn frbgen_spectra_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
-        ptr: *const std::ffi::c_void,
-    ) {
-        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HttpClient>>::increment_strong_count(ptr as _);
-    }
-
-    #[unsafe(no_mangle)]
-    pub extern "C" fn frbgen_spectra_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
-        ptr: *const std::ffi::c_void,
-    ) {
-        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HttpClient>>::decrement_strong_count(ptr as _);
-    }
 }
 #[cfg(not(target_family = "wasm"))]
 pub use io::*;
@@ -2681,25 +2689,10 @@ mod web {
     };
 
     use super::*;
-    use crate::api::http_client::*;
 
     // Section: boilerplate
 
     flutter_rust_bridge::frb_generated_boilerplate_web!();
-
-    #[wasm_bindgen]
-    pub fn rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
-        ptr: *const std::ffi::c_void,
-    ) {
-        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HttpClient>>::increment_strong_count(ptr as _);
-    }
-
-    #[wasm_bindgen]
-    pub fn rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHttpClient(
-        ptr: *const std::ffi::c_void,
-    ) {
-        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HttpClient>>::decrement_strong_count(ptr as _);
-    }
 }
 #[cfg(target_family = "wasm")]
 pub use web::*;
