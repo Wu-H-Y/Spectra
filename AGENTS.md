@@ -6,8 +6,8 @@
 
 **在特定目录下工作时，请务必先查阅并遵循对应的 Skill 指南：**
 
-- **Flutter / Dart** (目录: `lib/`, `test/`): 使用 `flutter-dart-guide`
-- **Rust / FFI** (目录: `rust/`): 使用 `rust-ffi-guide` 和 rust 相关技能
+- **Flutter / Dart** (目录: `lib/`, `test/`): 使用 `flutter-dart-guide` 和 flutter 相关技能
+- **Rust / FFI** (目录: `rust/`): 使用 `rust-ffi-guide` 和 rust-skill 相关技能
 - **React / Web** (目录: `web-editor/`): 使用 `react-web-editor-guide`
 
 ## 依赖管理规范
