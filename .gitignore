@@ -63,3 +63,6 @@ app.*.map.json
 .claude/settings.local.json
 .playwright-mcp
 .omc
+
+# Web editor build outputs
+assets/editor/
