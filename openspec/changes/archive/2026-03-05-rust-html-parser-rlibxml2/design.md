@@ -20,7 +20,7 @@ As the number of extraction rules and the size of the DOM increase, running DOM 
 ## Decisions
 
 **1. Parser and Selector Tooling in Rust:**
-- **Decision:** Use `rlibxml2` for HTML and XML parsing and XPath selection. Use `scraper` for CSS selectors. Use `jsonpath-rust` for JSONPath querying. Use `regex` for regex evaluation.
+- **Decision:** Use `rlibxml2` for HTML and XML parsing and XPath selection. Use `scraper` for CSS selectors. Use `jsonpath-rust` for JSONPath querying. Use `regex` for regex evaluation. (https://github.com/Wu-H-Y/rlibxml2 : This is my own public repository. I developed the libxml2 cross-platform FFI library for web crawlers.)
 - **Rationale:** `libxml2` is the industry standard for fast, fault-tolerant HTML parsing and complete XPath 1.0 support. `rlibxml2` is an existing, optimized Rust wrapper tailored for this use case. Placing all selector evaluation inside Rust minimizes the ping-ponging of massive HTML strings across the FFI boundary.
 
 **2. Transformation Tooling in Rust:**

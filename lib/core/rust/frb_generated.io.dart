@@ -4,6 +4,7 @@
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
 import 'api/crawler_models.dart';
+import 'api/html_parser.dart';
 import 'api/similarity.dart';
 import 'api/text_processor.dart';
 import 'dart:async';
@@ -76,6 +77,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   NetworkConfig dco_decode_box_autoadd_network_config(dynamic raw);
 
   @protected
+  PipelineExecuteRequest dco_decode_box_autoadd_pipeline_execute_request(
+    dynamic raw,
+  );
+
+  @protected
   RuleProxyConfig dco_decode_box_autoadd_rule_proxy_config(dynamic raw);
 
   @protected
@@ -143,6 +149,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<MatchingDimension> dco_decode_list_matching_dimension(dynamic raw);
+
+  @protected
+  List<PipelineOperation> dco_decode_list_pipeline_operation(dynamic raw);
 
   @protected
   Int32List dco_decode_list_prim_i_32_strict(dynamic raw);
@@ -214,7 +223,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BigInt? dco_decode_opt_box_autoadd_u_64(dynamic raw);
 
   @protected
+  PipelineExecuteRequest dco_decode_pipeline_execute_request(dynamic raw);
+
+  @protected
+  PipelineExecuteResult dco_decode_pipeline_execute_result(dynamic raw);
+
+  @protected
   PipelineGraph dco_decode_pipeline_graph(dynamic raw);
+
+  @protected
+  PipelineOperation dco_decode_pipeline_operation(dynamic raw);
 
   @protected
   (String, String) dco_decode_record_string_string(dynamic raw);
@@ -313,6 +331,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  PipelineExecuteRequest sse_decode_box_autoadd_pipeline_execute_request(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   RuleProxyConfig sse_decode_box_autoadd_rule_proxy_config(
     SseDeserializer deserializer,
   );
@@ -386,6 +409,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<MatchingDimension> sse_decode_list_matching_dimension(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<PipelineOperation> sse_decode_list_pipeline_operation(
     SseDeserializer deserializer,
   );
 
@@ -485,7 +513,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BigInt? sse_decode_opt_box_autoadd_u_64(SseDeserializer deserializer);
 
   @protected
+  PipelineExecuteRequest sse_decode_pipeline_execute_request(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  PipelineExecuteResult sse_decode_pipeline_execute_result(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   PipelineGraph sse_decode_pipeline_graph(SseDeserializer deserializer);
+
+  @protected
+  PipelineOperation sse_decode_pipeline_operation(SseDeserializer deserializer);
 
   @protected
   (String, String) sse_decode_record_string_string(
@@ -610,6 +651,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_box_autoadd_pipeline_execute_request(
+    PipelineExecuteRequest self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_rule_proxy_config(
     RuleProxyConfig self,
     SseSerializer serializer,
@@ -699,6 +746,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_matching_dimension(
     List<MatchingDimension> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_pipeline_operation(
+    List<PipelineOperation> self,
     SseSerializer serializer,
   );
 
@@ -826,7 +879,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_box_autoadd_u_64(BigInt? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_pipeline_execute_request(
+    PipelineExecuteRequest self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_pipeline_execute_result(
+    PipelineExecuteResult self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_pipeline_graph(PipelineGraph self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_pipeline_operation(
+    PipelineOperation self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_record_string_string(

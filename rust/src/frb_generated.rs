@@ -41,7 +41,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.11.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1886878696;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1450984822;
 
 // Section: executor
 
@@ -79,6 +79,111 @@ fn wire__crate__api__crawler_models__create_empty_pipeline_impl(
                     Ok(output_ok)
                 })())
             }
+        },
+    )
+}
+fn wire__crate__api__html_parser__css_select_attr_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "css_select_attr",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_html = <String>::sse_decode(&mut deserializer);
+            let api_selector = <String>::sse_decode(&mut deserializer);
+            let api_attr = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok = Result::<_, ()>::Ok(crate::api::html_parser::css_select_attr(
+                    api_html,
+                    api_selector,
+                    api_attr,
+                ))?;
+                Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__html_parser__execute_js_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "execute_js",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_script = <String>::sse_decode(&mut deserializer);
+            let api_val = <String>::sse_decode(&mut deserializer);
+            let api_vars_json = <Option<String>>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok = Result::<_, ()>::Ok(crate::api::html_parser::execute_js(
+                    api_script,
+                    api_val,
+                    api_vars_json,
+                ))?;
+                Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__html_parser__execute_pipeline_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "execute_pipeline",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_request = <crate::domain::rule::pipeline::PipelineExecuteRequest>::sse_decode(
+                &mut deserializer,
+            );
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok =
+                    Result::<_, ()>::Ok(crate::api::html_parser::execute_pipeline(api_request))?;
+                Ok(output_ok)
+            })())
         },
     )
 }
@@ -324,6 +429,42 @@ fn wire__crate__api__text_processor__number_to_chinese_impl(
                     Ok(output_ok)
                 })())
             }
+        },
+    )
+}
+fn wire__crate__api__html_parser__parse_html_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "parse_html",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_html = <String>::sse_decode(&mut deserializer);
+            let api_selector_type = <String>::sse_decode(&mut deserializer);
+            let api_query = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok = Result::<_, ()>::Ok(crate::api::html_parser::parse_html(
+                    api_html,
+                    api_selector_type,
+                    api_query,
+                ))?;
+                Ok(output_ok)
+            })())
         },
     )
 }
@@ -857,6 +998,18 @@ impl SseDecode for Vec<crate::domain::rule::crawler_rule::MatchingDimension> {
     }
 }
 
+impl SseDecode for Vec<crate::domain::rule::pipeline::PipelineOperation> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::domain::rule::pipeline::PipelineOperation>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<i32> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1175,6 +1328,37 @@ impl SseDecode for Option<u64> {
     }
 }
 
+impl SseDecode for crate::domain::rule::pipeline::PipelineExecuteRequest {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_content = <String>::sse_decode(deserializer);
+        let mut var_baseUrl = <Option<String>>::sse_decode(deserializer);
+        let mut var_vars = <Option<String>>::sse_decode(deserializer);
+        let mut var_operations =
+            <Vec<crate::domain::rule::pipeline::PipelineOperation>>::sse_decode(deserializer);
+        return crate::domain::rule::pipeline::PipelineExecuteRequest {
+            content: var_content,
+            base_url: var_baseUrl,
+            vars: var_vars,
+            operations: var_operations,
+        };
+    }
+}
+
+impl SseDecode for crate::domain::rule::pipeline::PipelineExecuteResult {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_success = <bool>::sse_decode(deserializer);
+        let mut var_data = <Vec<String>>::sse_decode(deserializer);
+        let mut var_error = <Option<String>>::sse_decode(deserializer);
+        return crate::domain::rule::pipeline::PipelineExecuteResult {
+            success: var_success,
+            data: var_data,
+            error: var_error,
+        };
+    }
+}
+
 impl SseDecode for crate::domain::rule::pipeline::PipelineGraph {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1185,6 +1369,20 @@ impl SseDecode for crate::domain::rule::pipeline::PipelineGraph {
         return crate::domain::rule::pipeline::PipelineGraph {
             nodes: var_nodes,
             edges: var_edges,
+        };
+    }
+}
+
+impl SseDecode for crate::domain::rule::pipeline::PipelineOperation {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_opType = <String>::sse_decode(deserializer);
+        let mut var_param = <Option<String>>::sse_decode(deserializer);
+        let mut var_param2 = <Option<String>>::sse_decode(deserializer);
+        return crate::domain::rule::pipeline::PipelineOperation {
+            op_type: var_opType,
+            param: var_param,
+            param2: var_param2,
         };
     }
 }
@@ -1347,31 +1545,31 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        2 => {
+        5 => {
             wire__crate__api__similarity__fuzzy_search_score_impl(port, ptr, rust_vec_len, data_len)
         }
-        3 => wire__crate__api__text_processor__get_jieba_impl(port, ptr, rust_vec_len, data_len),
-        4 => wire__crate__api__similarity__jaccard_impl(port, ptr, rust_vec_len, data_len),
-        5 => wire__crate__api__similarity__levenshtein_impl(port, ptr, rust_vec_len, data_len),
-        6 => {
+        6 => wire__crate__api__text_processor__get_jieba_impl(port, ptr, rust_vec_len, data_len),
+        7 => wire__crate__api__similarity__jaccard_impl(port, ptr, rust_vec_len, data_len),
+        8 => wire__crate__api__similarity__levenshtein_impl(port, ptr, rust_vec_len, data_len),
+        9 => {
             wire__crate__api__similarity__levenshtein_tokens_impl(port, ptr, rust_vec_len, data_len)
         }
-        7 => wire__crate__api__similarity__normalize_title_impl(port, ptr, rust_vec_len, data_len),
-        8 => wire__crate__api__text_processor__number_to_chinese_impl(
+        10 => wire__crate__api__similarity__normalize_title_impl(port, ptr, rust_vec_len, data_len),
+        11 => wire__crate__api__text_processor__number_to_chinese_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        9 => wire__crate__api__text_processor__segment_impl(port, ptr, rust_vec_len, data_len),
-        10 => wire__crate__api__similarity__sorensen_dice_impl(port, ptr, rust_vec_len, data_len),
-        11 => {
+        13 => wire__crate__api__text_processor__segment_impl(port, ptr, rust_vec_len, data_len),
+        14 => wire__crate__api__similarity__sorensen_dice_impl(port, ptr, rust_vec_len, data_len),
+        15 => {
             wire__crate__api__text_processor__to_simplified_impl(port, ptr, rust_vec_len, data_len)
         }
-        12 => {
+        16 => {
             wire__crate__api__text_processor__to_traditional_impl(port, ptr, rust_vec_len, data_len)
         }
-        13 => {
+        17 => {
             wire__crate__api__crawler_models__validate_rule_impl(port, ptr, rust_vec_len, data_len)
         }
         _ => unreachable!(),
@@ -1386,6 +1584,10 @@ fn pde_ffi_dispatcher_sync_impl(
 ) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
+        2 => wire__crate__api__html_parser__css_select_attr_impl(ptr, rust_vec_len, data_len),
+        3 => wire__crate__api__html_parser__execute_js_impl(ptr, rust_vec_len, data_len),
+        4 => wire__crate__api__html_parser__execute_pipeline_impl(ptr, rust_vec_len, data_len),
+        12 => wire__crate__api__html_parser__parse_html_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -1830,6 +2032,51 @@ impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::pipeline::NodePayloa
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::pipeline::PipelineExecuteRequest {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.content.into_into_dart().into_dart(),
+            self.base_url.into_into_dart().into_dart(),
+            self.vars.into_into_dart().into_dart(),
+            self.operations.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::pipeline::PipelineExecuteRequest
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::pipeline::PipelineExecuteRequest>
+    for crate::domain::rule::pipeline::PipelineExecuteRequest
+{
+    fn into_into_dart(self) -> crate::domain::rule::pipeline::PipelineExecuteRequest {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::pipeline::PipelineExecuteResult {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.success.into_into_dart().into_dart(),
+            self.data.into_into_dart().into_dart(),
+            self.error.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::pipeline::PipelineExecuteResult
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::pipeline::PipelineExecuteResult>
+    for crate::domain::rule::pipeline::PipelineExecuteResult
+{
+    fn into_into_dart(self) -> crate::domain::rule::pipeline::PipelineExecuteResult {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::domain::rule::pipeline::PipelineGraph {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -1847,6 +2094,28 @@ impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::pipeline::PipelineGr
     for crate::domain::rule::pipeline::PipelineGraph
 {
     fn into_into_dart(self) -> crate::domain::rule::pipeline::PipelineGraph {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::domain::rule::pipeline::PipelineOperation {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.op_type.into_into_dart().into_dart(),
+            self.param.into_into_dart().into_dart(),
+            self.param2.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::domain::rule::pipeline::PipelineOperation
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::domain::rule::pipeline::PipelineOperation>
+    for crate::domain::rule::pipeline::PipelineOperation
+{
+    fn into_into_dart(self) -> crate::domain::rule::pipeline::PipelineOperation {
         self
     }
 }
@@ -2268,6 +2537,16 @@ impl SseEncode for Vec<crate::domain::rule::crawler_rule::MatchingDimension> {
     }
 }
 
+impl SseEncode for Vec<crate::domain::rule::pipeline::PipelineOperation> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::domain::rule::pipeline::PipelineOperation>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<i32> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2520,11 +2799,42 @@ impl SseEncode for Option<u64> {
     }
 }
 
+impl SseEncode for crate::domain::rule::pipeline::PipelineExecuteRequest {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.content, serializer);
+        <Option<String>>::sse_encode(self.base_url, serializer);
+        <Option<String>>::sse_encode(self.vars, serializer);
+        <Vec<crate::domain::rule::pipeline::PipelineOperation>>::sse_encode(
+            self.operations,
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::domain::rule::pipeline::PipelineExecuteResult {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.success, serializer);
+        <Vec<String>>::sse_encode(self.data, serializer);
+        <Option<String>>::sse_encode(self.error, serializer);
+    }
+}
+
 impl SseEncode for crate::domain::rule::pipeline::PipelineGraph {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <Vec<crate::domain::rule::pipeline::FlowNode>>::sse_encode(self.nodes, serializer);
         <Vec<crate::domain::rule::pipeline::FlowEdge>>::sse_encode(self.edges, serializer);
+    }
+}
+
+impl SseEncode for crate::domain::rule::pipeline::PipelineOperation {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.op_type, serializer);
+        <Option<String>>::sse_encode(self.param, serializer);
+        <Option<String>>::sse_encode(self.param2, serializer);
     }
 }
 

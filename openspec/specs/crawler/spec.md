@@ -72,11 +72,21 @@ BaseContent (基础)
 | xpath | XPath表达式 | `//h1[@class='title']` |
 | regex | 正则表达式 | `data-id="(\d+)"` |
 | jsonpath | JSONPath | `$.data.items[*]` |
-| js | JavaScript表达式 | `document.title` |
+| js | JavaScript表达式（字符串变换） | `val.replace()` |
 
 #### Scenario: 选择器回退
 - **WHEN** 主选择器匹配失败
 - **THEN** 按顺序尝试备选选择器
+
+---
+
+### Requirement: 节点执行委托
+
+规则执行器 SHOULD 将节点求值（XPath、CSS、Regex、JSONPath、JS）以及数据转换委托给 Rust 执行引擎，并通过 `flutter_rust_bridge` FFI 返回结果，而不是在 Dart 侧使用第三方包完成解析与求值。
+
+#### Scenario: 复合节点求值
+- **WHEN** 执行一个复合规则路径（例如 `["@css:.title", "@js: val.replace()"]`）
+- **THEN** 将整个数组传递给 Rust 引擎，并返回最终转换后的字符串（或字符串数组）
 
 ---
 

@@ -1,50 +1,118 @@
 ## Context
 
-The system must support fetching raw HTML headers and bodies using advanced TLS and HTTP/2 spoofing via the Rust-based `wreq` client. However, powerful anti-bot systems (Cloudflare 5s checks, reCAPTCHA, Datadome, Akamai, custom Web Application Firewalls) often deploy Javascript challenges that `wreq` (being a command-line-style fetcher) fundamentally cannot solve.
+`rust-lifecycle-executor` 提供的 `execute_lifecycle_phase()` API 已经内置 WAF 拦截检测：
+- 自动检测 403/503 状态码
+- 识别 Cloudflare headers (`cf-ray`, `cf-mitigated`)
+- 返回 `CrawlerError::AuthRequired` 错误
 
-When the programmatic rust layer hits an impassable anti-bot wall, the system must gracefully yield execution back to the Flutter UI, display an interactive WebView (a real browser) where the user can manually pass the check, extract the valid session data (Cookies, User-Agent), and resume the programmatic Rust pipeline with the new credentials.
+当 Dart 侧收到 `AuthRequired` 错误时，需要：
+1. 暂停当前爬虫任务
+2. 弹出 WebView 让用户手动通过验证码
+3. 提取 WebView 的 Cookie 和 User-Agent
+4. 同步给后续的 Rust HTTP 请求
+5. 重试爬虫任务
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Implement "Yield and Resume" pattern: Rust executes pure stateless fetches. On 403/Challenge detection, it throws a specific `AuthRequired` exception, forcing Dart to handle it.
-- Dynamically invoke a Flutter WebView overlay (`flutter_inappwebview`) pointing at the targeted host.
-- Provide automatic cookie and User-Agent extraction once the WebView indicates a successful load (200 OK / challenge passed).
-- Re-run the paused Rust Pipeline seamlessly with injected session parameters.
+- 监听 `AuthRequired` 错误并触发 WebView
+- 自动提取 WebView 会话数据（Cookies, User-Agent）
+- 持久化会话数据供后续请求使用
+- 将会话数据同步给 Rust HTTP 客户端
 
 **Non-Goals:**
-- Completely automated, invisible Captcha solving (requires massive headless Chrome binaries and ML bypasses, unsuitable for mobile).
-- Replacing `wreq` with headless browsers globally (WebViews are too slow and resource-heavy for parallel crawling).
+- 自动解决验证码（需要 ML 模型，不适合移动端）
+- 替代 `execute_lifecycle_phase()` API
 
 ## Decisions
 
-**1. Architecture: The "Yield and Resume" Exception Pattern**
-- **Decision:** Do not let Rust attempt to spawn UI threads. Instead, if Rust's `wreq` receives an HTTP 403 or detects standard Cloudflare/Akamai HTML fingerprints, it immediately throws `CrawlerError::AuthRequired(url, reason)`. Dart `CrawlerExecutor` catches this, suspends the queue, pops the WebView, awaits user interaction, then resumes the scrape.
-- **Rationale:** Keeps Rust strictly as a stateless, high-performance execution engine and avoids complex FFI async polling loops connecting UI and background isolates.
+**1. 错误处理架构**
 
-**2. State Sync: Bi-Directional Session Manager**
-- **Decision:** Build `SessionManager` in Dart to store a global `host -> (Cookies, UserAgent)` map. When Dart calls Rust `executePipeline()`, it injects these specific headers dynamically in the FFI boundary request. When a WebView passes a challenge, Dart calls `CookieManager.getCookies(url)` and stores them in this map.
-- **Rationale:** Ensures that the Rust `wreq` engine flawlessly mimics the exact session of the real mobile browser engine that just solved the captcha logic, avoiding TLS/Cookie mismatch detection.
+- **决策**: Dart 侧监听 `AuthRequired` 错误，不主动检测 WAF
+- **理由**: WAF 检测逻辑已由 Rust 的 `execute_lifecycle_phase()` 处理
+- **实现**:
+  ```dart
+  final result = await rust.executeLifecyclePhase(rule, phase, context);
+  if (result.error is AuthRequired) {
+    await webViewStrategy.handleAuthRequired(result.error.url);
+    // 重试
+  }
+  ```
 
-**3. Anti-Bot / Anti-Fingerprint Strategies (Advanced)**
+**2. 会话管理**
 
-To bypass modern anti-bot systems (like Cloudflare, Datadome, Akamai), relying *solely* on WebViews is not enough, as some WebViews expose their mobile identifiers. Our design explicitly leverages the following techniques:
+- **决策**: 创建 `SessionManager` 管理主机到会话数据的映射
+- **理由**: 需要在 WebView 和 Rust HTTP 客户端之间共享会话
+- **实现**:
+  ```dart
+  class SessionManager {
+    // host -> (cookies, userAgent)
+    Map<String, SessionData> sessions;
+    
+    Future<void> syncFromWebView(String url);
+    Future<void> injectToRust(String host);
+  }
+  ```
 
-- **1. wreq TLS + HTTP/2 Fingerprinting (Rust Layer):**
-  - **Concept:** Firewalls inspect the JA3 (TLS client hello) and JA4 (HTTP/2 SETTINGS frames, window updates) of incoming requests. `wreq` + `wreq-util` provides byte-perfect mimicry of Chrome, Firefox, and Safari network stacks.
-  - **Design:** Instead of raw cURL/Dart HTTP requests, the API explicitly configures `wreq` to use `Emulation::Chrome131` (or newer) to disguise the underlying BoringSSL packets as a genuine desktop browser's handshake.
+**3. Cookie 持久化**
 
-- **2. WebView Fingerprint Obfuscation (Flutter Layer):**
-  - **Concept:** `flutter_inappwebview` on Android defaults to a `Version/4.0 Chrome/XX Mobile Safari/` string. Custom WAFs block `wv` (WebView) and older Chrome versions immediately.
-  - **Design:** Before launching the Interactive WebView, the `WebViewInteractiveStrategy` must **override the User-Agent** to perfectly match the `wreq` Desktop Chrome User-Agent used in step 1. Furthermore, we must set `applicationNameForUserAgent` to an empty string to erase the `wv` tag on Android.
+- **决策**: 使用 `CookieStorage` 持久化 Cookie
+- **理由**: 应用重启后仍能使用已通过的验证
+- **实现**: 基于 `shared_preferences` 或 SQLite
 
-- **3. Header Order Preservation (Rust Layer):**
-  - **Concept:** Go and Dart `http` packages reorder headers alphabetically or in unpredictable ways. Browsers send headers in a very specific order (e.g., `Host`, `Connection`, `Pragma`, `Cache-Control`, `User-Agent`, `Accept`).
-  - **Design:** Rely on `wreq`'s `HttpRequest` to preserve strict header ordering during the TLS payload construction.
+**4. User-Agent 同步**
+
+- **决策**: WebView User-Agent 必须与 Rust 侧的 `Emulation` 配置一致
+- **理由**: 避免指纹不匹配被检测
+- **实现**: 
+  - 读取规则的 `network.emulation` 配置
+  - 在 WebView 启动前设置对应的 User-Agent
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Dart Application                                           │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ CrawlerExecutor                                        │ │
+│  │  - 调用 execute_lifecycle_phase()                      │ │
+│  │  - 监听 AuthRequired 错误                              │ │
+│  │  - 触发 WebViewInteractiveStrategy                     │ │
+│  └────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│  WebViewInteractiveStrategy                                 │
+│  1. 弹出 WebView (设置 User-Agent)                          │
+│  2. 等待用户通过验证码                                      │
+│  3. 提取 Cookies                                           │
+│  4. 存储到 SessionManager                                  │
+│  5. 同步给 Rust                                            │
+│  6. 关闭 WebView                                           │
+└─────────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│  SessionManager                                             │
+│  - 持久化 Cookie                                           │
+│  - 提供 Cookie 给 Rust execute_lifecycle_phase()           │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## Risks / Trade-offs
 
-- **[Risk] Cookie Expiration during Long Crawls**: Cloudflare clearance cookies typically last between 30 minutes to 1 year. If a background download task is running and the clearance expires, throwing an interactive WebView popup while the app is backgrounded will crash or fail.
-- **[Mitigation]**: If the app is actively backgrounded, transition the queued crawler tasks to an "Auth Pending" global state and notify the user via local OS notifications to open the app, rather than attempting to render a WebView in a background isolate.
-- **[Risk] WebView Headless Defeats**: Some sites run intense JS challenges (Canvas fingerprinting, Audio context). Mobile WebViews can sometimes fail these due to hardware mismatch compared to the injected Desktop User-Agent.
-- **[Mitigation]**: Allow the fallback `WebViewInteractiveStrategy` to optionally use the native mobile User-Agent if the desktop emulation fails twice in a row, syncing the mobile UA down to Rust for subsequent requests.
+**[Risk] Cookie 过期**: 长时间爬虫任务中 Cookie 可能过期
+**[Mitigation]**: 
+- 监控 403 错误，重新触发 WebView
+- 提示用户验证码可能需要重新通过
+
+**[Risk] WebView 指纹检测**: 某些网站检测 WebView 环境
+**[Mitigation]**:
+- User-Agent 与 Rust 侧保持一致
+- 移除 WebView 标识 (`wv` tag on Android)
+
+**[Risk] 后台运行**: 应用后台时 WebView 无法显示
+**[Mitigation]**:
+- 检测应用状态，后台时暂停任务
+- 通过本地通知提示用户打开应用

@@ -302,7 +302,67 @@ export type NodePayload =
   | { type: 'Transform'; config: TransformDef }
   | { type: 'Aggregation'; config: AggregationDef };
 
+/**
+ * Pipeline 执行请求
+ *
+ * 包含执行 Pipeline 所需的所有输入数据
+ */
+export type PipelineExecuteRequest = {
+  /**
+   * 输入内容 (HTML/JSON/XML 字符串)
+   */
+  content: string;
+  /**
+   * 基础 URL (用于 URL 拼接)
+   */
+  base_url: string | null;
+  /**
+   * 上下文变量 (JSON 对象，用于 JS 执行)
+   */
+  vars: string | null;
+  /**
+   * 要执行的操作序列 (简化格式)
+   */
+  operations: Array<PipelineOperation>;
+};
+
+/**
+ * Pipeline 执行结果
+ */
+export type PipelineExecuteResult = {
+  /**
+   * 执行是否成功
+   */
+  success: boolean;
+  /**
+   * 结果数据
+   */
+  data: Array<string>;
+  /**
+   * 错误信息 (如果有)
+   */
+  error: string | null;
+};
+
 export type PipelineGraph = { nodes: Array<FlowNode>; edges: Array<FlowEdge> };
+
+/**
+ * Pipeline 操作定义 (简化格式，用于 FFI 传输)
+ */
+export type PipelineOperation = {
+  /**
+   * 操作类型: "xpath", "css", "jsonpath", "regex", "trim", "lower", "upper", "replace", "url", "js", "attr", "text"
+   */
+  type: string;
+  /**
+   * 操作参数
+   */
+  param: string | null;
+  /**
+   * 第二个参数 (用于 replace 等需要两个参数的操作)
+   */
+  param2: string | null;
+};
 
 /**
  * 规则级代理配置 (简化版，用户友好)
