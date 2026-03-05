@@ -88,7 +88,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
 ## TODOs
 > 说明：每个任务“实现+测试/验证”必须同一个任务完成。
 
-- [ ] 0. 旧代码清理（第一步）：直接删除旧 Rust 实现与现有生成物（Flutter/Web）并搭建新 workspace 骨架
+- [x] 0. 旧代码清理（第一步）：直接删除旧 Rust 实现与现有生成物（Flutter/Web）并搭建新 workspace 骨架
 
   **What to do**:
   - 决策（已确认）：项目初建阶段不需要旧规则数据兼容；旧 Rust 代码不保留，直接删除，全部按新架构重写。
@@ -157,7 +157,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
 
   **Commit**: YES | Message: `refactor(rust): delete legacy rust code and scaffold new workspace` | Files: `rust/**`, `flutter_rust_bridge.yaml`（如需）
 
-- [ ] 1. 定稿 IR v1（RuleIR + 版本封套）与 schemaVersion 策略
+- [x] 1. 定稿 IR v1（RuleIR + 版本封套）与 schemaVersion 策略
 
   **What to do**:
   - 定义 `RuleEnvelope { irVersion, metadata, graph, normalizedOutputs, capabilities }` 的 JSON 结构与版本号策略（硬切/升级函数）。
@@ -199,7 +199,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
 
   **Commit**: YES | Message: `feat(rules-ir): define v1 rule envelope schema` | Files: `rust/`（新 IR 类型与序列化）, `fixtures/`, `docs/`
 
-- [ ] 2. 定稿 NodeEvent 流协议（WS 消息结构 + seq + reconnect）
+- [x] 2. 定稿 NodeEvent 流协议（WS 消息结构 + seq + reconnect）
 
   **What to do**:
   - 定义 `NodeEvent` 枚举：RunStarted/NodeStarted/PortEmit/NodeLog/NodeError/NodeFinished/RunFinished。
@@ -245,7 +245,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
 
   **Commit**: YES | Message: `feat(protocol): add nodeevent v1 spec and examples` | Files: `docs/`, `rust/`（事件类型/测试）, `web-editor/`（ws 消费契约）
 
-- [ ] 3. 定义 HTTP API 契约（rules CRUD/validate/execute/preview）
+- [x] 3. 定义 HTTP API 契约（rules CRUD/validate/execute/preview）
 
   **What to do**:
   - 定义 endpoints、request/response、错误码、诊断结构（path/code/message/nodeId）。
@@ -291,7 +291,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
 
   **Commit**: YES | Message: `docs(api): specify rules CRUD/validate/execute/preview contracts` | Files: `docs/`
 
-- [ ] 4. DB 存储契约与 drift schema 版本字段设计
+- [x] 4. DB 存储契约与 drift schema 版本字段设计
 
   **What to do**:
   - 在 `CrawlRules` 的 `config/globalConfig/displayConfig` 基础上，定义“新规则存储最小字段集”：
@@ -337,7 +337,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
 
   **Commit**: YES | Message: `feat(db): add rule ir storage fields` | Files: `lib/core/database/drift/tables/crawl_rules.dart`, `lib/core/database/drift/app_database.dart`
 
-- [ ] 5. Rust crate 重组（workspace + 清晰模块边界）
+- [x] 5. Rust crate 重组（workspace + 清晰模块边界）
 
   **What to do**:
   - 前置说明：Task 0 已完成“旧实现删除 + workspace 骨架”；本任务负责把 crate 边界与依赖关系做实，并把根 crate 的 FRB 入口稳定为“薄门面”。
@@ -384,7 +384,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
 
   **Commit**: YES | Message: `refactor(rust): scaffold new workspace crates and ffi facade` | Files: `rust/Cargo.toml`, `rust/crates/**`, `rust/src/lib.rs`, `flutter_rust_bridge.yaml`（如需）
 
-- [ ] 6. 实现 RuleEnvelope/Graph/Port/Type 系统（Rust）并导出 TS/Dart
+- [x] 6. 实现 RuleEnvelope/Graph/Port/Type 系统（Rust）并导出 TS/Dart
 
   **What to do**:
   - 在 `rules_ir` 定义：

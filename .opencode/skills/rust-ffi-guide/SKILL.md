@@ -27,6 +27,7 @@ cd .. && dart run flutter_rust_bridge_codegen generate
 - 使用 `OnceLock` 管理全局单例。
 - 严禁修改 `frb_generated.rs`。
 - 注释必须使用中文。
+- 必须使用 `use xxx`. 而不是 `xxx:xxx` 使用
 
 ## FRB PATTERNS
 

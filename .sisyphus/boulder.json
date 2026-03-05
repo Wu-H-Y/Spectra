@@ -1,8 +1,11 @@
 {
   "active_plan": "D:\\workspace\\workspace_flutter\\Spectra\\.sisyphus\\plans\\rust-rules-architecture-refactor.md",
+  "worktree_path": "D:\\workspace\\workspace_flutter\\Spectra",
   "started_at": "2026-03-05T10:06:55.347Z",
   "session_ids": [
-    "ses_342890cbfffeGkYN9Lmsur96dw"
+    "ses_342890cbfffeGkYN9Lmsur96dw",
+    "ses_34280323effe4mDEZ5IPufIHuX",
+    "ses_34219220effeIJGHV4HfKWm97t"
   ],
   "plan_name": "rust-rules-architecture-refactor",
   "agent": "atlas"
