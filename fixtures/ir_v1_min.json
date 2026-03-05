@@ -1,0 +1,67 @@
+{
+  "irVersion": "1.0.0",
+  "metadata": {
+    "ruleId": "demo.min",
+    "name": "最小规则",
+    "description": "用于验证 IR v1 最小可解析结构"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "search_input",
+        "kind": { "type": "input" },
+        "phase": "search",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "query",
+            "dataType": { "type": "text" },
+            "optional": false
+          }
+        ]
+      },
+      {
+        "id": "search_output",
+        "kind": { "type": "output" },
+        "phase": "search",
+        "inputs": [
+          {
+            "name": "items",
+            "dataType": {
+              "type": "list",
+              "item": { "type": "normalizedModel" }
+            },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "normalized",
+            "dataType": {
+              "type": "list",
+              "item": { "type": "normalizedModel" }
+            },
+            "optional": false
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "from": { "nodeId": "search_input", "portName": "query" },
+        "to": { "nodeId": "search_output", "portName": "items" }
+      }
+    ],
+    "phaseEntrypoints": {
+      "search": { "nodeId": "search_input", "portName": "query" }
+    }
+  },
+  "normalizedOutputs": {
+    "search": { "nodeId": "search_output", "portName": "normalized" }
+  },
+  "capabilities": {
+    "supportsPagination": true,
+    "supportsConcurrency": false,
+    "requiresAuth": false
+  }
+}

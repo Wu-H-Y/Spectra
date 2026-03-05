@@ -1,0 +1,86 @@
+{
+  "irVersion": "1.0.0",
+  "metadata": {
+    "ruleId": "demo.invalid-edge",
+    "name": "无效边规则",
+    "description": "该示例可解析，但包含指向不存在节点的边"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "detail_extract",
+        "kind": { "type": "extract" },
+        "phase": "detail",
+        "inputs": [
+          {
+            "name": "url",
+            "dataType": { "type": "url" },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "content",
+            "dataType": { "type": "html" },
+            "optional": false
+          }
+        ]
+      },
+      {
+        "id": "content_normalize",
+        "kind": { "type": "normalize" },
+        "phase": "content",
+        "inputs": [
+          {
+            "name": "raw",
+            "dataType": {
+              "type": "record",
+              "fields": [
+                {
+                  "name": "title",
+                  "dataType": { "type": "text" },
+                  "optional": false
+                },
+                {
+                  "name": "payload",
+                  "dataType": { "type": "json" },
+                  "optional": true
+                }
+              ]
+            },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "normalized",
+            "dataType": { "type": "normalizedModel" },
+            "optional": false
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "from": { "nodeId": "detail_extract", "portName": "content" },
+        "to": { "nodeId": "content_normalize", "portName": "raw" }
+      },
+      {
+        "from": { "nodeId": "ghost_node", "portName": "missing" },
+        "to": { "nodeId": "content_normalize", "portName": "raw" }
+      }
+    ],
+    "phaseEntrypoints": {
+      "detail": { "nodeId": "detail_extract", "portName": "url" },
+      "content": { "nodeId": "content_normalize", "portName": "raw" }
+    }
+  },
+  "normalizedOutputs": {
+    "content": { "nodeId": "content_normalize", "portName": "normalized" }
+  },
+  "capabilities": {
+    "supportsPagination": false,
+    "supportsConcurrency": true,
+    "requiresAuth": true
+  }
+}
