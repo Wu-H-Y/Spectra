@@ -3,12 +3,11 @@
 part of 'app_database.dart';
 
 // ignore_for_file: type=lint
-class $CrawlRulesTable extends CrawlRules
-    with TableInfo<$CrawlRulesTable, CrawlRule> {
+class $RulesV1Table extends RulesV1 with TableInfo<$RulesV1Table, RulesV1Data> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $CrawlRulesTable(this.attachedDatabase, [this._alias]);
+  $RulesV1Table(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -28,10 +27,6 @@ class $CrawlRulesTable extends CrawlRules
     'rule_id',
     aliasedName,
     false,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 64,
-    ),
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
@@ -42,10 +37,6 @@ class $CrawlRulesTable extends CrawlRules
     'name',
     aliasedName,
     false,
-    additionalChecks: GeneratedColumn.checkTextLength(
-      minTextLength: 1,
-      maxTextLength: 100,
-    ),
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
@@ -57,82 +48,64 @@ class $CrawlRulesTable extends CrawlRules
     'description',
     aliasedName,
     true,
-    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 500),
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _irVersionMeta = const VerificationMeta(
+    'irVersion',
+  );
   @override
-  late final GeneratedColumnWithTypeConverter<CrawlRuleType, int> type =
-      GeneratedColumn<int>(
-        'type',
+  late final GeneratedColumn<String> irVersion = GeneratedColumn<String>(
+    'ir_version',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ruleEnvelopeJsonMeta = const VerificationMeta(
+    'ruleEnvelopeJson',
+  );
+  @override
+  late final GeneratedColumn<String> ruleEnvelopeJson = GeneratedColumn<String>(
+    'rule_envelope_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _displayConfigJsonMeta = const VerificationMeta(
+    'displayConfigJson',
+  );
+  @override
+  late final GeneratedColumn<String> displayConfigJson =
+      GeneratedColumn<String>(
+        'display_config_json',
         aliasedName,
-        false,
-        type: DriftSqlType.int,
-        requiredDuringInsert: true,
-      ).withConverter<CrawlRuleType>($CrawlRulesTable.$convertertype);
-  static const VerificationMeta _patternMeta = const VerificationMeta(
-    'pattern',
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _cookieJarEncryptedMeta =
+      const VerificationMeta('cookieJarEncrypted');
+  @override
+  late final GeneratedColumn<String> cookieJarEncrypted =
+      GeneratedColumn<String>(
+        'cookie_jar_encrypted',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _kvStoreEncryptedMeta = const VerificationMeta(
+    'kvStoreEncrypted',
   );
   @override
-  late final GeneratedColumn<String> pattern = GeneratedColumn<String>(
-    'pattern',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _versionMeta = const VerificationMeta(
-    'version',
-  );
-  @override
-  late final GeneratedColumn<String> version = GeneratedColumn<String>(
-    'version',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('1.0.0'),
-  );
-  static const VerificationMeta _configMeta = const VerificationMeta('config');
-  @override
-  late final GeneratedColumn<String> config = GeneratedColumn<String>(
-    'config',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _globalConfigMeta = const VerificationMeta(
-    'globalConfig',
-  );
-  @override
-  late final GeneratedColumn<String> globalConfig = GeneratedColumn<String>(
-    'global_config',
+  late final GeneratedColumn<String> kvStoreEncrypted = GeneratedColumn<String>(
+    'kv_store_encrypted',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-  );
-  static const VerificationMeta _displayConfigMeta = const VerificationMeta(
-    'displayConfig',
-  );
-  @override
-  late final GeneratedColumn<String> displayConfig = GeneratedColumn<String>(
-    'display_config',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _sourceMeta = const VerificationMeta('source');
-  @override
-  late final GeneratedColumn<String> source = GeneratedColumn<String>(
-    'source',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('user'),
   );
   static const VerificationMeta _enabledMeta = const VerificationMeta(
     'enabled',
@@ -148,27 +121,6 @@ class $CrawlRulesTable extends CrawlRules
       'CHECK ("enabled" IN (0, 1))',
     ),
     defaultValue: const Constant(true),
-  );
-  static const VerificationMeta _iconUrlMeta = const VerificationMeta(
-    'iconUrl',
-  );
-  @override
-  late final GeneratedColumn<String> iconUrl = GeneratedColumn<String>(
-    'icon_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _authorMeta = const VerificationMeta('author');
-  @override
-  late final GeneratedColumn<String> author = GeneratedColumn<String>(
-    'author',
-    aliasedName,
-    true,
-    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -200,16 +152,12 @@ class $CrawlRulesTable extends CrawlRules
     ruleId,
     name,
     description,
-    type,
-    pattern,
-    version,
-    config,
-    globalConfig,
-    displayConfig,
-    source,
+    irVersion,
+    ruleEnvelopeJson,
+    displayConfigJson,
+    cookieJarEncrypted,
+    kvStoreEncrypted,
     enabled,
-    iconUrl,
-    author,
     createdAt,
     updatedAt,
   ];
@@ -217,10 +165,10 @@ class $CrawlRulesTable extends CrawlRules
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'crawl_rules';
+  static const String $name = 'rules_v1';
   @override
   VerificationContext validateIntegrity(
-    Insertable<CrawlRule> instance, {
+    Insertable<RulesV1Data> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -253,68 +201,56 @@ class $CrawlRulesTable extends CrawlRules
         ),
       );
     }
-    if (data.containsKey('pattern')) {
+    if (data.containsKey('ir_version')) {
       context.handle(
-        _patternMeta,
-        pattern.isAcceptableOrUnknown(data['pattern']!, _patternMeta),
+        _irVersionMeta,
+        irVersion.isAcceptableOrUnknown(data['ir_version']!, _irVersionMeta),
       );
     } else if (isInserting) {
-      context.missing(_patternMeta);
+      context.missing(_irVersionMeta);
     }
-    if (data.containsKey('version')) {
+    if (data.containsKey('rule_envelope_json')) {
       context.handle(
-        _versionMeta,
-        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
-      );
-    }
-    if (data.containsKey('config')) {
-      context.handle(
-        _configMeta,
-        config.isAcceptableOrUnknown(data['config']!, _configMeta),
+        _ruleEnvelopeJsonMeta,
+        ruleEnvelopeJson.isAcceptableOrUnknown(
+          data['rule_envelope_json']!,
+          _ruleEnvelopeJsonMeta,
+        ),
       );
     } else if (isInserting) {
-      context.missing(_configMeta);
+      context.missing(_ruleEnvelopeJsonMeta);
     }
-    if (data.containsKey('global_config')) {
+    if (data.containsKey('display_config_json')) {
       context.handle(
-        _globalConfigMeta,
-        globalConfig.isAcceptableOrUnknown(
-          data['global_config']!,
-          _globalConfigMeta,
+        _displayConfigJsonMeta,
+        displayConfigJson.isAcceptableOrUnknown(
+          data['display_config_json']!,
+          _displayConfigJsonMeta,
         ),
       );
     }
-    if (data.containsKey('display_config')) {
+    if (data.containsKey('cookie_jar_encrypted')) {
       context.handle(
-        _displayConfigMeta,
-        displayConfig.isAcceptableOrUnknown(
-          data['display_config']!,
-          _displayConfigMeta,
+        _cookieJarEncryptedMeta,
+        cookieJarEncrypted.isAcceptableOrUnknown(
+          data['cookie_jar_encrypted']!,
+          _cookieJarEncryptedMeta,
         ),
       );
     }
-    if (data.containsKey('source')) {
+    if (data.containsKey('kv_store_encrypted')) {
       context.handle(
-        _sourceMeta,
-        source.isAcceptableOrUnknown(data['source']!, _sourceMeta),
+        _kvStoreEncryptedMeta,
+        kvStoreEncrypted.isAcceptableOrUnknown(
+          data['kv_store_encrypted']!,
+          _kvStoreEncryptedMeta,
+        ),
       );
     }
     if (data.containsKey('enabled')) {
       context.handle(
         _enabledMeta,
         enabled.isAcceptableOrUnknown(data['enabled']!, _enabledMeta),
-      );
-    }
-    if (data.containsKey('icon_url')) {
-      context.handle(
-        _iconUrlMeta,
-        iconUrl.isAcceptableOrUnknown(data['icon_url']!, _iconUrlMeta),
-      );
-    }
-    if (data.containsKey('author')) {
-      context.handle(
-        _authorMeta,
-        author.isAcceptableOrUnknown(data['author']!, _authorMeta),
       );
     }
     if (data.containsKey('created_at')) {
@@ -335,9 +271,9 @@ class $CrawlRulesTable extends CrawlRules
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  CrawlRule map(Map<String, dynamic> data, {String? tablePrefix}) {
+  RulesV1Data map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return CrawlRule(
+    return RulesV1Data(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -354,48 +290,30 @@ class $CrawlRulesTable extends CrawlRules
         DriftSqlType.string,
         data['${effectivePrefix}description'],
       ),
-      type: $CrawlRulesTable.$convertertype.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.int,
-          data['${effectivePrefix}type'],
-        )!,
+      irVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ir_version'],
+      )!,
+      ruleEnvelopeJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}rule_envelope_json'],
+      )!,
+      displayConfigJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}display_config_json'],
       ),
-      pattern: attachedDatabase.typeMapping.read(
+      cookieJarEncrypted: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}pattern'],
-      )!,
-      version: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}version'],
-      )!,
-      config: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}config'],
-      )!,
-      globalConfig: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}global_config'],
+        data['${effectivePrefix}cookie_jar_encrypted'],
       ),
-      displayConfig: attachedDatabase.typeMapping.read(
+      kvStoreEncrypted: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}display_config'],
+        data['${effectivePrefix}kv_store_encrypted'],
       ),
-      source: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}source'],
-      )!,
       enabled: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}enabled'],
       )!,
-      iconUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}icon_url'],
-      ),
-      author: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}author'],
-      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -408,19 +326,16 @@ class $CrawlRulesTable extends CrawlRules
   }
 
   @override
-  $CrawlRulesTable createAlias(String alias) {
-    return $CrawlRulesTable(attachedDatabase, alias);
+  $RulesV1Table createAlias(String alias) {
+    return $RulesV1Table(attachedDatabase, alias);
   }
-
-  static TypeConverter<CrawlRuleType, int> $convertertype =
-      const CrawlRuleTypeConverter();
 }
 
-class CrawlRule extends DataClass implements Insertable<CrawlRule> {
-  /// 规则 ID
+class RulesV1Data extends DataClass implements Insertable<RulesV1Data> {
+  /// 自增主键
   final int id;
 
-  /// 规则唯一标识符 (用于导入导出和分享)
+  /// 规则唯一标识
   final String ruleId;
 
   /// 规则名称
@@ -429,56 +344,40 @@ class CrawlRule extends DataClass implements Insertable<CrawlRule> {
   /// 规则描述
   final String? description;
 
-  /// 规则类型 (video, music, novel, comic, image, audio, rss, generic)
-  final CrawlRuleType type;
+  /// IR 版本标识
+  final String irVersion;
 
-  /// 目标网站 URL 模式
-  final String pattern;
+  /// 规则信封数据（JSON 字符串）
+  final String ruleEnvelopeJson;
 
-  /// 规则版本号 (语义化版本)
-  final String version;
+  /// 展示配置（JSON 字符串）
+  final String? displayConfigJson;
 
-  /// 规则配置 (JSON 格式,包含 flows, nodes, edges, display)
-  final String config;
+  /// 规则级 CookieJar 密文字段
+  final String? cookieJarEncrypted;
 
-  /// 全局配置 (JSON 格式,包含 baseUrl, headers, variables)
-  final String? globalConfig;
+  /// 规则级 KV 存储密文字段
+  final String? kvStoreEncrypted;
 
-  /// 展示配置 (JSON 格式,包含字段映射和模板配置)
-  final String? displayConfig;
-
-  /// 规则来源 (official/third_party/user)
-  final String source;
-
-  /// 是否启用
+  /// 启用状态
   final bool enabled;
-
-  /// 规则图标 URL
-  final String? iconUrl;
-
-  /// 规则作者
-  final String? author;
 
   /// 创建时间
   final DateTime createdAt;
 
   /// 更新时间
   final DateTime updatedAt;
-  const CrawlRule({
+  const RulesV1Data({
     required this.id,
     required this.ruleId,
     required this.name,
     this.description,
-    required this.type,
-    required this.pattern,
-    required this.version,
-    required this.config,
-    this.globalConfig,
-    this.displayConfig,
-    required this.source,
+    required this.irVersion,
+    required this.ruleEnvelopeJson,
+    this.displayConfigJson,
+    this.cookieJarEncrypted,
+    this.kvStoreEncrypted,
     required this.enabled,
-    this.iconUrl,
-    this.author,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -491,82 +390,68 @@ class CrawlRule extends DataClass implements Insertable<CrawlRule> {
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
-    {
-      map['type'] = Variable<int>($CrawlRulesTable.$convertertype.toSql(type));
+    map['ir_version'] = Variable<String>(irVersion);
+    map['rule_envelope_json'] = Variable<String>(ruleEnvelopeJson);
+    if (!nullToAbsent || displayConfigJson != null) {
+      map['display_config_json'] = Variable<String>(displayConfigJson);
     }
-    map['pattern'] = Variable<String>(pattern);
-    map['version'] = Variable<String>(version);
-    map['config'] = Variable<String>(config);
-    if (!nullToAbsent || globalConfig != null) {
-      map['global_config'] = Variable<String>(globalConfig);
+    if (!nullToAbsent || cookieJarEncrypted != null) {
+      map['cookie_jar_encrypted'] = Variable<String>(cookieJarEncrypted);
     }
-    if (!nullToAbsent || displayConfig != null) {
-      map['display_config'] = Variable<String>(displayConfig);
+    if (!nullToAbsent || kvStoreEncrypted != null) {
+      map['kv_store_encrypted'] = Variable<String>(kvStoreEncrypted);
     }
-    map['source'] = Variable<String>(source);
     map['enabled'] = Variable<bool>(enabled);
-    if (!nullToAbsent || iconUrl != null) {
-      map['icon_url'] = Variable<String>(iconUrl);
-    }
-    if (!nullToAbsent || author != null) {
-      map['author'] = Variable<String>(author);
-    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
-  CrawlRulesCompanion toCompanion(bool nullToAbsent) {
-    return CrawlRulesCompanion(
+  RulesV1Companion toCompanion(bool nullToAbsent) {
+    return RulesV1Companion(
       id: Value(id),
       ruleId: Value(ruleId),
       name: Value(name),
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
-      type: Value(type),
-      pattern: Value(pattern),
-      version: Value(version),
-      config: Value(config),
-      globalConfig: globalConfig == null && nullToAbsent
+      irVersion: Value(irVersion),
+      ruleEnvelopeJson: Value(ruleEnvelopeJson),
+      displayConfigJson: displayConfigJson == null && nullToAbsent
           ? const Value.absent()
-          : Value(globalConfig),
-      displayConfig: displayConfig == null && nullToAbsent
+          : Value(displayConfigJson),
+      cookieJarEncrypted: cookieJarEncrypted == null && nullToAbsent
           ? const Value.absent()
-          : Value(displayConfig),
-      source: Value(source),
+          : Value(cookieJarEncrypted),
+      kvStoreEncrypted: kvStoreEncrypted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(kvStoreEncrypted),
       enabled: Value(enabled),
-      iconUrl: iconUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(iconUrl),
-      author: author == null && nullToAbsent
-          ? const Value.absent()
-          : Value(author),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
   }
 
-  factory CrawlRule.fromJson(
+  factory RulesV1Data.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return CrawlRule(
+    return RulesV1Data(
       id: serializer.fromJson<int>(json['id']),
       ruleId: serializer.fromJson<String>(json['ruleId']),
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
-      type: serializer.fromJson<CrawlRuleType>(json['type']),
-      pattern: serializer.fromJson<String>(json['pattern']),
-      version: serializer.fromJson<String>(json['version']),
-      config: serializer.fromJson<String>(json['config']),
-      globalConfig: serializer.fromJson<String?>(json['globalConfig']),
-      displayConfig: serializer.fromJson<String?>(json['displayConfig']),
-      source: serializer.fromJson<String>(json['source']),
+      irVersion: serializer.fromJson<String>(json['irVersion']),
+      ruleEnvelopeJson: serializer.fromJson<String>(json['ruleEnvelopeJson']),
+      displayConfigJson: serializer.fromJson<String?>(
+        json['displayConfigJson'],
+      ),
+      cookieJarEncrypted: serializer.fromJson<String?>(
+        json['cookieJarEncrypted'],
+      ),
+      kvStoreEncrypted: serializer.fromJson<String?>(json['kvStoreEncrypted']),
       enabled: serializer.fromJson<bool>(json['enabled']),
-      iconUrl: serializer.fromJson<String?>(json['iconUrl']),
-      author: serializer.fromJson<String?>(json['author']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -579,80 +464,72 @@ class CrawlRule extends DataClass implements Insertable<CrawlRule> {
       'ruleId': serializer.toJson<String>(ruleId),
       'name': serializer.toJson<String>(name),
       'description': serializer.toJson<String?>(description),
-      'type': serializer.toJson<CrawlRuleType>(type),
-      'pattern': serializer.toJson<String>(pattern),
-      'version': serializer.toJson<String>(version),
-      'config': serializer.toJson<String>(config),
-      'globalConfig': serializer.toJson<String?>(globalConfig),
-      'displayConfig': serializer.toJson<String?>(displayConfig),
-      'source': serializer.toJson<String>(source),
+      'irVersion': serializer.toJson<String>(irVersion),
+      'ruleEnvelopeJson': serializer.toJson<String>(ruleEnvelopeJson),
+      'displayConfigJson': serializer.toJson<String?>(displayConfigJson),
+      'cookieJarEncrypted': serializer.toJson<String?>(cookieJarEncrypted),
+      'kvStoreEncrypted': serializer.toJson<String?>(kvStoreEncrypted),
       'enabled': serializer.toJson<bool>(enabled),
-      'iconUrl': serializer.toJson<String?>(iconUrl),
-      'author': serializer.toJson<String?>(author),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
-  CrawlRule copyWith({
+  RulesV1Data copyWith({
     int? id,
     String? ruleId,
     String? name,
     Value<String?> description = const Value.absent(),
-    CrawlRuleType? type,
-    String? pattern,
-    String? version,
-    String? config,
-    Value<String?> globalConfig = const Value.absent(),
-    Value<String?> displayConfig = const Value.absent(),
-    String? source,
+    String? irVersion,
+    String? ruleEnvelopeJson,
+    Value<String?> displayConfigJson = const Value.absent(),
+    Value<String?> cookieJarEncrypted = const Value.absent(),
+    Value<String?> kvStoreEncrypted = const Value.absent(),
     bool? enabled,
-    Value<String?> iconUrl = const Value.absent(),
-    Value<String?> author = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => CrawlRule(
+  }) => RulesV1Data(
     id: id ?? this.id,
     ruleId: ruleId ?? this.ruleId,
     name: name ?? this.name,
     description: description.present ? description.value : this.description,
-    type: type ?? this.type,
-    pattern: pattern ?? this.pattern,
-    version: version ?? this.version,
-    config: config ?? this.config,
-    globalConfig: globalConfig.present ? globalConfig.value : this.globalConfig,
-    displayConfig: displayConfig.present
-        ? displayConfig.value
-        : this.displayConfig,
-    source: source ?? this.source,
+    irVersion: irVersion ?? this.irVersion,
+    ruleEnvelopeJson: ruleEnvelopeJson ?? this.ruleEnvelopeJson,
+    displayConfigJson: displayConfigJson.present
+        ? displayConfigJson.value
+        : this.displayConfigJson,
+    cookieJarEncrypted: cookieJarEncrypted.present
+        ? cookieJarEncrypted.value
+        : this.cookieJarEncrypted,
+    kvStoreEncrypted: kvStoreEncrypted.present
+        ? kvStoreEncrypted.value
+        : this.kvStoreEncrypted,
     enabled: enabled ?? this.enabled,
-    iconUrl: iconUrl.present ? iconUrl.value : this.iconUrl,
-    author: author.present ? author.value : this.author,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
-  CrawlRule copyWithCompanion(CrawlRulesCompanion data) {
-    return CrawlRule(
+  RulesV1Data copyWithCompanion(RulesV1Companion data) {
+    return RulesV1Data(
       id: data.id.present ? data.id.value : this.id,
       ruleId: data.ruleId.present ? data.ruleId.value : this.ruleId,
       name: data.name.present ? data.name.value : this.name,
       description: data.description.present
           ? data.description.value
           : this.description,
-      type: data.type.present ? data.type.value : this.type,
-      pattern: data.pattern.present ? data.pattern.value : this.pattern,
-      version: data.version.present ? data.version.value : this.version,
-      config: data.config.present ? data.config.value : this.config,
-      globalConfig: data.globalConfig.present
-          ? data.globalConfig.value
-          : this.globalConfig,
-      displayConfig: data.displayConfig.present
-          ? data.displayConfig.value
-          : this.displayConfig,
-      source: data.source.present ? data.source.value : this.source,
+      irVersion: data.irVersion.present ? data.irVersion.value : this.irVersion,
+      ruleEnvelopeJson: data.ruleEnvelopeJson.present
+          ? data.ruleEnvelopeJson.value
+          : this.ruleEnvelopeJson,
+      displayConfigJson: data.displayConfigJson.present
+          ? data.displayConfigJson.value
+          : this.displayConfigJson,
+      cookieJarEncrypted: data.cookieJarEncrypted.present
+          ? data.cookieJarEncrypted.value
+          : this.cookieJarEncrypted,
+      kvStoreEncrypted: data.kvStoreEncrypted.present
+          ? data.kvStoreEncrypted.value
+          : this.kvStoreEncrypted,
       enabled: data.enabled.present ? data.enabled.value : this.enabled,
-      iconUrl: data.iconUrl.present ? data.iconUrl.value : this.iconUrl,
-      author: data.author.present ? data.author.value : this.author,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -660,21 +537,17 @@ class CrawlRule extends DataClass implements Insertable<CrawlRule> {
 
   @override
   String toString() {
-    return (StringBuffer('CrawlRule(')
+    return (StringBuffer('RulesV1Data(')
           ..write('id: $id, ')
           ..write('ruleId: $ruleId, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
-          ..write('type: $type, ')
-          ..write('pattern: $pattern, ')
-          ..write('version: $version, ')
-          ..write('config: $config, ')
-          ..write('globalConfig: $globalConfig, ')
-          ..write('displayConfig: $displayConfig, ')
-          ..write('source: $source, ')
+          ..write('irVersion: $irVersion, ')
+          ..write('ruleEnvelopeJson: $ruleEnvelopeJson, ')
+          ..write('displayConfigJson: $displayConfigJson, ')
+          ..write('cookieJarEncrypted: $cookieJarEncrypted, ')
+          ..write('kvStoreEncrypted: $kvStoreEncrypted, ')
           ..write('enabled: $enabled, ')
-          ..write('iconUrl: $iconUrl, ')
-          ..write('author: $author, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -687,113 +560,88 @@ class CrawlRule extends DataClass implements Insertable<CrawlRule> {
     ruleId,
     name,
     description,
-    type,
-    pattern,
-    version,
-    config,
-    globalConfig,
-    displayConfig,
-    source,
+    irVersion,
+    ruleEnvelopeJson,
+    displayConfigJson,
+    cookieJarEncrypted,
+    kvStoreEncrypted,
     enabled,
-    iconUrl,
-    author,
     createdAt,
     updatedAt,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CrawlRule &&
+      (other is RulesV1Data &&
           other.id == this.id &&
           other.ruleId == this.ruleId &&
           other.name == this.name &&
           other.description == this.description &&
-          other.type == this.type &&
-          other.pattern == this.pattern &&
-          other.version == this.version &&
-          other.config == this.config &&
-          other.globalConfig == this.globalConfig &&
-          other.displayConfig == this.displayConfig &&
-          other.source == this.source &&
+          other.irVersion == this.irVersion &&
+          other.ruleEnvelopeJson == this.ruleEnvelopeJson &&
+          other.displayConfigJson == this.displayConfigJson &&
+          other.cookieJarEncrypted == this.cookieJarEncrypted &&
+          other.kvStoreEncrypted == this.kvStoreEncrypted &&
           other.enabled == this.enabled &&
-          other.iconUrl == this.iconUrl &&
-          other.author == this.author &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
 
-class CrawlRulesCompanion extends UpdateCompanion<CrawlRule> {
+class RulesV1Companion extends UpdateCompanion<RulesV1Data> {
   final Value<int> id;
   final Value<String> ruleId;
   final Value<String> name;
   final Value<String?> description;
-  final Value<CrawlRuleType> type;
-  final Value<String> pattern;
-  final Value<String> version;
-  final Value<String> config;
-  final Value<String?> globalConfig;
-  final Value<String?> displayConfig;
-  final Value<String> source;
+  final Value<String> irVersion;
+  final Value<String> ruleEnvelopeJson;
+  final Value<String?> displayConfigJson;
+  final Value<String?> cookieJarEncrypted;
+  final Value<String?> kvStoreEncrypted;
   final Value<bool> enabled;
-  final Value<String?> iconUrl;
-  final Value<String?> author;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
-  const CrawlRulesCompanion({
+  const RulesV1Companion({
     this.id = const Value.absent(),
     this.ruleId = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
-    this.type = const Value.absent(),
-    this.pattern = const Value.absent(),
-    this.version = const Value.absent(),
-    this.config = const Value.absent(),
-    this.globalConfig = const Value.absent(),
-    this.displayConfig = const Value.absent(),
-    this.source = const Value.absent(),
+    this.irVersion = const Value.absent(),
+    this.ruleEnvelopeJson = const Value.absent(),
+    this.displayConfigJson = const Value.absent(),
+    this.cookieJarEncrypted = const Value.absent(),
+    this.kvStoreEncrypted = const Value.absent(),
     this.enabled = const Value.absent(),
-    this.iconUrl = const Value.absent(),
-    this.author = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
-  CrawlRulesCompanion.insert({
+  RulesV1Companion.insert({
     this.id = const Value.absent(),
     required String ruleId,
     required String name,
     this.description = const Value.absent(),
-    required CrawlRuleType type,
-    required String pattern,
-    this.version = const Value.absent(),
-    required String config,
-    this.globalConfig = const Value.absent(),
-    this.displayConfig = const Value.absent(),
-    this.source = const Value.absent(),
+    required String irVersion,
+    required String ruleEnvelopeJson,
+    this.displayConfigJson = const Value.absent(),
+    this.cookieJarEncrypted = const Value.absent(),
+    this.kvStoreEncrypted = const Value.absent(),
     this.enabled = const Value.absent(),
-    this.iconUrl = const Value.absent(),
-    this.author = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   }) : ruleId = Value(ruleId),
        name = Value(name),
-       type = Value(type),
-       pattern = Value(pattern),
-       config = Value(config);
-  static Insertable<CrawlRule> custom({
+       irVersion = Value(irVersion),
+       ruleEnvelopeJson = Value(ruleEnvelopeJson);
+  static Insertable<RulesV1Data> custom({
     Expression<int>? id,
     Expression<String>? ruleId,
     Expression<String>? name,
     Expression<String>? description,
-    Expression<int>? type,
-    Expression<String>? pattern,
-    Expression<String>? version,
-    Expression<String>? config,
-    Expression<String>? globalConfig,
-    Expression<String>? displayConfig,
-    Expression<String>? source,
+    Expression<String>? irVersion,
+    Expression<String>? ruleEnvelopeJson,
+    Expression<String>? displayConfigJson,
+    Expression<String>? cookieJarEncrypted,
+    Expression<String>? kvStoreEncrypted,
     Expression<bool>? enabled,
-    Expression<String>? iconUrl,
-    Expression<String>? author,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -802,54 +650,43 @@ class CrawlRulesCompanion extends UpdateCompanion<CrawlRule> {
       if (ruleId != null) 'rule_id': ruleId,
       if (name != null) 'name': name,
       if (description != null) 'description': description,
-      if (type != null) 'type': type,
-      if (pattern != null) 'pattern': pattern,
-      if (version != null) 'version': version,
-      if (config != null) 'config': config,
-      if (globalConfig != null) 'global_config': globalConfig,
-      if (displayConfig != null) 'display_config': displayConfig,
-      if (source != null) 'source': source,
+      if (irVersion != null) 'ir_version': irVersion,
+      if (ruleEnvelopeJson != null) 'rule_envelope_json': ruleEnvelopeJson,
+      if (displayConfigJson != null) 'display_config_json': displayConfigJson,
+      if (cookieJarEncrypted != null)
+        'cookie_jar_encrypted': cookieJarEncrypted,
+      if (kvStoreEncrypted != null) 'kv_store_encrypted': kvStoreEncrypted,
       if (enabled != null) 'enabled': enabled,
-      if (iconUrl != null) 'icon_url': iconUrl,
-      if (author != null) 'author': author,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
 
-  CrawlRulesCompanion copyWith({
+  RulesV1Companion copyWith({
     Value<int>? id,
     Value<String>? ruleId,
     Value<String>? name,
     Value<String?>? description,
-    Value<CrawlRuleType>? type,
-    Value<String>? pattern,
-    Value<String>? version,
-    Value<String>? config,
-    Value<String?>? globalConfig,
-    Value<String?>? displayConfig,
-    Value<String>? source,
+    Value<String>? irVersion,
+    Value<String>? ruleEnvelopeJson,
+    Value<String?>? displayConfigJson,
+    Value<String?>? cookieJarEncrypted,
+    Value<String?>? kvStoreEncrypted,
     Value<bool>? enabled,
-    Value<String?>? iconUrl,
-    Value<String?>? author,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
   }) {
-    return CrawlRulesCompanion(
+    return RulesV1Companion(
       id: id ?? this.id,
       ruleId: ruleId ?? this.ruleId,
       name: name ?? this.name,
       description: description ?? this.description,
-      type: type ?? this.type,
-      pattern: pattern ?? this.pattern,
-      version: version ?? this.version,
-      config: config ?? this.config,
-      globalConfig: globalConfig ?? this.globalConfig,
-      displayConfig: displayConfig ?? this.displayConfig,
-      source: source ?? this.source,
+      irVersion: irVersion ?? this.irVersion,
+      ruleEnvelopeJson: ruleEnvelopeJson ?? this.ruleEnvelopeJson,
+      displayConfigJson: displayConfigJson ?? this.displayConfigJson,
+      cookieJarEncrypted: cookieJarEncrypted ?? this.cookieJarEncrypted,
+      kvStoreEncrypted: kvStoreEncrypted ?? this.kvStoreEncrypted,
       enabled: enabled ?? this.enabled,
-      iconUrl: iconUrl ?? this.iconUrl,
-      author: author ?? this.author,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -870,37 +707,23 @@ class CrawlRulesCompanion extends UpdateCompanion<CrawlRule> {
     if (description.present) {
       map['description'] = Variable<String>(description.value);
     }
-    if (type.present) {
-      map['type'] = Variable<int>(
-        $CrawlRulesTable.$convertertype.toSql(type.value),
-      );
+    if (irVersion.present) {
+      map['ir_version'] = Variable<String>(irVersion.value);
     }
-    if (pattern.present) {
-      map['pattern'] = Variable<String>(pattern.value);
+    if (ruleEnvelopeJson.present) {
+      map['rule_envelope_json'] = Variable<String>(ruleEnvelopeJson.value);
     }
-    if (version.present) {
-      map['version'] = Variable<String>(version.value);
+    if (displayConfigJson.present) {
+      map['display_config_json'] = Variable<String>(displayConfigJson.value);
     }
-    if (config.present) {
-      map['config'] = Variable<String>(config.value);
+    if (cookieJarEncrypted.present) {
+      map['cookie_jar_encrypted'] = Variable<String>(cookieJarEncrypted.value);
     }
-    if (globalConfig.present) {
-      map['global_config'] = Variable<String>(globalConfig.value);
-    }
-    if (displayConfig.present) {
-      map['display_config'] = Variable<String>(displayConfig.value);
-    }
-    if (source.present) {
-      map['source'] = Variable<String>(source.value);
+    if (kvStoreEncrypted.present) {
+      map['kv_store_encrypted'] = Variable<String>(kvStoreEncrypted.value);
     }
     if (enabled.present) {
       map['enabled'] = Variable<bool>(enabled.value);
-    }
-    if (iconUrl.present) {
-      map['icon_url'] = Variable<String>(iconUrl.value);
-    }
-    if (author.present) {
-      map['author'] = Variable<String>(author.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -913,21 +736,17 @@ class CrawlRulesCompanion extends UpdateCompanion<CrawlRule> {
 
   @override
   String toString() {
-    return (StringBuffer('CrawlRulesCompanion(')
+    return (StringBuffer('RulesV1Companion(')
           ..write('id: $id, ')
           ..write('ruleId: $ruleId, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
-          ..write('type: $type, ')
-          ..write('pattern: $pattern, ')
-          ..write('version: $version, ')
-          ..write('config: $config, ')
-          ..write('globalConfig: $globalConfig, ')
-          ..write('displayConfig: $displayConfig, ')
-          ..write('source: $source, ')
+          ..write('irVersion: $irVersion, ')
+          ..write('ruleEnvelopeJson: $ruleEnvelopeJson, ')
+          ..write('displayConfigJson: $displayConfigJson, ')
+          ..write('cookieJarEncrypted: $cookieJarEncrypted, ')
+          ..write('kvStoreEncrypted: $kvStoreEncrypted, ')
           ..write('enabled: $enabled, ')
-          ..write('iconUrl: $iconUrl, ')
-          ..write('author: $author, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -935,12 +754,12 @@ class CrawlRulesCompanion extends UpdateCompanion<CrawlRule> {
   }
 }
 
-class $CachedContentTable extends CachedContent
-    with TableInfo<$CachedContentTable, CachedContentData> {
+class $SessionsV1Table extends SessionsV1
+    with TableInfo<$SessionsV1Table, SessionsV1Data> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $CachedContentTable(this.attachedDatabase, [this._alias]);
+  $SessionsV1Table(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -954,135 +773,81 @@ class $CachedContentTable extends CachedContent
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
-  static const VerificationMeta _contentIdMeta = const VerificationMeta(
-    'contentId',
+  static const VerificationMeta _sessionIdMeta = const VerificationMeta(
+    'sessionId',
   );
   @override
-  late final GeneratedColumn<String> contentId = GeneratedColumn<String>(
-    'content_id',
+  late final GeneratedColumn<String> sessionId = GeneratedColumn<String>(
+    'session_id',
     aliasedName,
     false,
-    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 128),
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
-  static const VerificationMeta _ruleIdMeta = const VerificationMeta('ruleId');
+  static const VerificationMeta _cookieJarEncryptedMeta =
+      const VerificationMeta('cookieJarEncrypted');
   @override
-  late final GeneratedColumn<int> ruleId = GeneratedColumn<int>(
-    'rule_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES crawl_rules (id)',
-    ),
-  );
-  @override
-  late final GeneratedColumnWithTypeConverter<CrawlRuleType, int> mediaType =
-      GeneratedColumn<int>(
-        'media_type',
+  late final GeneratedColumn<String> cookieJarEncrypted =
+      GeneratedColumn<String>(
+        'cookie_jar_encrypted',
         aliasedName,
-        false,
-        type: DriftSqlType.int,
-        requiredDuringInsert: true,
-      ).withConverter<CrawlRuleType>($CachedContentTable.$convertermediaType);
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
-  @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-    'title',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _coverUrlMeta = const VerificationMeta(
-    'coverUrl',
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _kvStoreEncryptedMeta = const VerificationMeta(
+    'kvStoreEncrypted',
   );
   @override
-  late final GeneratedColumn<String> coverUrl = GeneratedColumn<String>(
-    'cover_url',
+  late final GeneratedColumn<String> kvStoreEncrypted = GeneratedColumn<String>(
+    'kv_store_encrypted',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _authorMeta = const VerificationMeta('author');
-  @override
-  late final GeneratedColumn<String> author = GeneratedColumn<String>(
-    'author',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _descriptionMeta = const VerificationMeta(
-    'description',
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
   );
   @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-    'description',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _rawDataMeta = const VerificationMeta(
-    'rawData',
-  );
-  @override
-  late final GeneratedColumn<String> rawData = GeneratedColumn<String>(
-    'raw_data',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _cachedAtMeta = const VerificationMeta(
-    'cachedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> cachedAt = GeneratedColumn<DateTime>(
-    'cached_at',
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
     aliasedName,
     false,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
-  static const VerificationMeta _expiresAtMeta = const VerificationMeta(
-    'expiresAt',
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
   );
   @override
-  late final GeneratedColumn<DateTime> expiresAt = GeneratedColumn<DateTime>(
-    'expires_at',
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
-    contentId,
-    ruleId,
-    mediaType,
-    title,
-    coverUrl,
-    author,
-    description,
-    rawData,
-    cachedAt,
-    expiresAt,
+    sessionId,
+    cookieJarEncrypted,
+    kvStoreEncrypted,
+    createdAt,
+    updatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'cached_content';
+  static const String $name = 'sessions_v1';
   @override
   VerificationContext validateIntegrity(
-    Insertable<CachedContentData> instance, {
+    Insertable<SessionsV1Data> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -1090,69 +855,42 @@ class $CachedContentTable extends CachedContent
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('content_id')) {
+    if (data.containsKey('session_id')) {
       context.handle(
-        _contentIdMeta,
-        contentId.isAcceptableOrUnknown(data['content_id']!, _contentIdMeta),
+        _sessionIdMeta,
+        sessionId.isAcceptableOrUnknown(data['session_id']!, _sessionIdMeta),
       );
     } else if (isInserting) {
-      context.missing(_contentIdMeta);
+      context.missing(_sessionIdMeta);
     }
-    if (data.containsKey('rule_id')) {
+    if (data.containsKey('cookie_jar_encrypted')) {
       context.handle(
-        _ruleIdMeta,
-        ruleId.isAcceptableOrUnknown(data['rule_id']!, _ruleIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_ruleIdMeta);
-    }
-    if (data.containsKey('title')) {
-      context.handle(
-        _titleMeta,
-        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_titleMeta);
-    }
-    if (data.containsKey('cover_url')) {
-      context.handle(
-        _coverUrlMeta,
-        coverUrl.isAcceptableOrUnknown(data['cover_url']!, _coverUrlMeta),
-      );
-    }
-    if (data.containsKey('author')) {
-      context.handle(
-        _authorMeta,
-        author.isAcceptableOrUnknown(data['author']!, _authorMeta),
-      );
-    }
-    if (data.containsKey('description')) {
-      context.handle(
-        _descriptionMeta,
-        description.isAcceptableOrUnknown(
-          data['description']!,
-          _descriptionMeta,
+        _cookieJarEncryptedMeta,
+        cookieJarEncrypted.isAcceptableOrUnknown(
+          data['cookie_jar_encrypted']!,
+          _cookieJarEncryptedMeta,
         ),
       );
     }
-    if (data.containsKey('raw_data')) {
+    if (data.containsKey('kv_store_encrypted')) {
       context.handle(
-        _rawDataMeta,
-        rawData.isAcceptableOrUnknown(data['raw_data']!, _rawDataMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_rawDataMeta);
-    }
-    if (data.containsKey('cached_at')) {
-      context.handle(
-        _cachedAtMeta,
-        cachedAt.isAcceptableOrUnknown(data['cached_at']!, _cachedAtMeta),
+        _kvStoreEncryptedMeta,
+        kvStoreEncrypted.isAcceptableOrUnknown(
+          data['kv_store_encrypted']!,
+          _kvStoreEncryptedMeta,
+        ),
       );
     }
-    if (data.containsKey('expires_at')) {
+    if (data.containsKey('created_at')) {
       context.handle(
-        _expiresAtMeta,
-        expiresAt.isAcceptableOrUnknown(data['expires_at']!, _expiresAtMeta),
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
     }
     return context;
@@ -1161,184 +899,113 @@ class $CachedContentTable extends CachedContent
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  CachedContentData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  SessionsV1Data map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return CachedContentData(
+    return SessionsV1Data(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
-      contentId: attachedDatabase.typeMapping.read(
+      sessionId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}content_id'],
+        data['${effectivePrefix}session_id'],
       )!,
-      ruleId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}rule_id'],
-      )!,
-      mediaType: $CachedContentTable.$convertermediaType.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.int,
-          data['${effectivePrefix}media_type'],
-        )!,
+      cookieJarEncrypted: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cookie_jar_encrypted'],
       ),
-      title: attachedDatabase.typeMapping.read(
+      kvStoreEncrypted: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}title'],
-      )!,
-      coverUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}cover_url'],
+        data['${effectivePrefix}kv_store_encrypted'],
       ),
-      author: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}author'],
-      ),
-      description: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description'],
-      ),
-      rawData: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}raw_data'],
-      )!,
-      cachedAt: attachedDatabase.typeMapping.read(
+      createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
-        data['${effectivePrefix}cached_at'],
+        data['${effectivePrefix}created_at'],
       )!,
-      expiresAt: attachedDatabase.typeMapping.read(
+      updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
-        data['${effectivePrefix}expires_at'],
-      ),
+        data['${effectivePrefix}updated_at'],
+      )!,
     );
   }
 
   @override
-  $CachedContentTable createAlias(String alias) {
-    return $CachedContentTable(attachedDatabase, alias);
+  $SessionsV1Table createAlias(String alias) {
+    return $SessionsV1Table(attachedDatabase, alias);
   }
-
-  static TypeConverter<CrawlRuleType, int> $convertermediaType =
-      const CrawlRuleTypeConverter();
 }
 
-class CachedContentData extends DataClass
-    implements Insertable<CachedContentData> {
-  /// 缓存 ID
+class SessionsV1Data extends DataClass implements Insertable<SessionsV1Data> {
+  /// 自增主键
   final int id;
 
-  /// 内容唯一标识符 (用于多源关联)
-  final String contentId;
+  /// 会话唯一标识
+  final String sessionId;
 
-  /// 关联的规则 ID
-  final int ruleId;
+  /// CookieJar 密文字段
+  final String? cookieJarEncrypted;
 
-  /// 媒体类型
-  final CrawlRuleType mediaType;
+  /// KV 存储密文字段
+  final String? kvStoreEncrypted;
 
-  /// 内容标题
-  final String title;
+  /// 创建时间
+  final DateTime createdAt;
 
-  /// 封面 URL
-  final String? coverUrl;
-
-  /// 作者
-  final String? author;
-
-  /// 描述
-  final String? description;
-
-  /// 原始数据 (JSON 格式)
-  final String rawData;
-
-  /// 缓存时间
-  final DateTime cachedAt;
-
-  /// 过期时间
-  final DateTime? expiresAt;
-  const CachedContentData({
+  /// 更新时间
+  final DateTime updatedAt;
+  const SessionsV1Data({
     required this.id,
-    required this.contentId,
-    required this.ruleId,
-    required this.mediaType,
-    required this.title,
-    this.coverUrl,
-    this.author,
-    this.description,
-    required this.rawData,
-    required this.cachedAt,
-    this.expiresAt,
+    required this.sessionId,
+    this.cookieJarEncrypted,
+    this.kvStoreEncrypted,
+    required this.createdAt,
+    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['content_id'] = Variable<String>(contentId);
-    map['rule_id'] = Variable<int>(ruleId);
-    {
-      map['media_type'] = Variable<int>(
-        $CachedContentTable.$convertermediaType.toSql(mediaType),
-      );
+    map['session_id'] = Variable<String>(sessionId);
+    if (!nullToAbsent || cookieJarEncrypted != null) {
+      map['cookie_jar_encrypted'] = Variable<String>(cookieJarEncrypted);
     }
-    map['title'] = Variable<String>(title);
-    if (!nullToAbsent || coverUrl != null) {
-      map['cover_url'] = Variable<String>(coverUrl);
+    if (!nullToAbsent || kvStoreEncrypted != null) {
+      map['kv_store_encrypted'] = Variable<String>(kvStoreEncrypted);
     }
-    if (!nullToAbsent || author != null) {
-      map['author'] = Variable<String>(author);
-    }
-    if (!nullToAbsent || description != null) {
-      map['description'] = Variable<String>(description);
-    }
-    map['raw_data'] = Variable<String>(rawData);
-    map['cached_at'] = Variable<DateTime>(cachedAt);
-    if (!nullToAbsent || expiresAt != null) {
-      map['expires_at'] = Variable<DateTime>(expiresAt);
-    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
-  CachedContentCompanion toCompanion(bool nullToAbsent) {
-    return CachedContentCompanion(
+  SessionsV1Companion toCompanion(bool nullToAbsent) {
+    return SessionsV1Companion(
       id: Value(id),
-      contentId: Value(contentId),
-      ruleId: Value(ruleId),
-      mediaType: Value(mediaType),
-      title: Value(title),
-      coverUrl: coverUrl == null && nullToAbsent
+      sessionId: Value(sessionId),
+      cookieJarEncrypted: cookieJarEncrypted == null && nullToAbsent
           ? const Value.absent()
-          : Value(coverUrl),
-      author: author == null && nullToAbsent
+          : Value(cookieJarEncrypted),
+      kvStoreEncrypted: kvStoreEncrypted == null && nullToAbsent
           ? const Value.absent()
-          : Value(author),
-      description: description == null && nullToAbsent
-          ? const Value.absent()
-          : Value(description),
-      rawData: Value(rawData),
-      cachedAt: Value(cachedAt),
-      expiresAt: expiresAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(expiresAt),
+          : Value(kvStoreEncrypted),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
-  factory CachedContentData.fromJson(
+  factory SessionsV1Data.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return CachedContentData(
+    return SessionsV1Data(
       id: serializer.fromJson<int>(json['id']),
-      contentId: serializer.fromJson<String>(json['contentId']),
-      ruleId: serializer.fromJson<int>(json['ruleId']),
-      mediaType: serializer.fromJson<CrawlRuleType>(json['mediaType']),
-      title: serializer.fromJson<String>(json['title']),
-      coverUrl: serializer.fromJson<String?>(json['coverUrl']),
-      author: serializer.fromJson<String?>(json['author']),
-      description: serializer.fromJson<String?>(json['description']),
-      rawData: serializer.fromJson<String>(json['rawData']),
-      cachedAt: serializer.fromJson<DateTime>(json['cachedAt']),
-      expiresAt: serializer.fromJson<DateTime?>(json['expiresAt']),
+      sessionId: serializer.fromJson<String>(json['sessionId']),
+      cookieJarEncrypted: serializer.fromJson<String?>(
+        json['cookieJarEncrypted'],
+      ),
+      kvStoreEncrypted: serializer.fromJson<String?>(json['kvStoreEncrypted']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -1346,76 +1013,57 @@ class CachedContentData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'contentId': serializer.toJson<String>(contentId),
-      'ruleId': serializer.toJson<int>(ruleId),
-      'mediaType': serializer.toJson<CrawlRuleType>(mediaType),
-      'title': serializer.toJson<String>(title),
-      'coverUrl': serializer.toJson<String?>(coverUrl),
-      'author': serializer.toJson<String?>(author),
-      'description': serializer.toJson<String?>(description),
-      'rawData': serializer.toJson<String>(rawData),
-      'cachedAt': serializer.toJson<DateTime>(cachedAt),
-      'expiresAt': serializer.toJson<DateTime?>(expiresAt),
+      'sessionId': serializer.toJson<String>(sessionId),
+      'cookieJarEncrypted': serializer.toJson<String?>(cookieJarEncrypted),
+      'kvStoreEncrypted': serializer.toJson<String?>(kvStoreEncrypted),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
-  CachedContentData copyWith({
+  SessionsV1Data copyWith({
     int? id,
-    String? contentId,
-    int? ruleId,
-    CrawlRuleType? mediaType,
-    String? title,
-    Value<String?> coverUrl = const Value.absent(),
-    Value<String?> author = const Value.absent(),
-    Value<String?> description = const Value.absent(),
-    String? rawData,
-    DateTime? cachedAt,
-    Value<DateTime?> expiresAt = const Value.absent(),
-  }) => CachedContentData(
+    String? sessionId,
+    Value<String?> cookieJarEncrypted = const Value.absent(),
+    Value<String?> kvStoreEncrypted = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => SessionsV1Data(
     id: id ?? this.id,
-    contentId: contentId ?? this.contentId,
-    ruleId: ruleId ?? this.ruleId,
-    mediaType: mediaType ?? this.mediaType,
-    title: title ?? this.title,
-    coverUrl: coverUrl.present ? coverUrl.value : this.coverUrl,
-    author: author.present ? author.value : this.author,
-    description: description.present ? description.value : this.description,
-    rawData: rawData ?? this.rawData,
-    cachedAt: cachedAt ?? this.cachedAt,
-    expiresAt: expiresAt.present ? expiresAt.value : this.expiresAt,
+    sessionId: sessionId ?? this.sessionId,
+    cookieJarEncrypted: cookieJarEncrypted.present
+        ? cookieJarEncrypted.value
+        : this.cookieJarEncrypted,
+    kvStoreEncrypted: kvStoreEncrypted.present
+        ? kvStoreEncrypted.value
+        : this.kvStoreEncrypted,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
   );
-  CachedContentData copyWithCompanion(CachedContentCompanion data) {
-    return CachedContentData(
+  SessionsV1Data copyWithCompanion(SessionsV1Companion data) {
+    return SessionsV1Data(
       id: data.id.present ? data.id.value : this.id,
-      contentId: data.contentId.present ? data.contentId.value : this.contentId,
-      ruleId: data.ruleId.present ? data.ruleId.value : this.ruleId,
-      mediaType: data.mediaType.present ? data.mediaType.value : this.mediaType,
-      title: data.title.present ? data.title.value : this.title,
-      coverUrl: data.coverUrl.present ? data.coverUrl.value : this.coverUrl,
-      author: data.author.present ? data.author.value : this.author,
-      description: data.description.present
-          ? data.description.value
-          : this.description,
-      rawData: data.rawData.present ? data.rawData.value : this.rawData,
-      cachedAt: data.cachedAt.present ? data.cachedAt.value : this.cachedAt,
-      expiresAt: data.expiresAt.present ? data.expiresAt.value : this.expiresAt,
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      cookieJarEncrypted: data.cookieJarEncrypted.present
+          ? data.cookieJarEncrypted.value
+          : this.cookieJarEncrypted,
+      kvStoreEncrypted: data.kvStoreEncrypted.present
+          ? data.kvStoreEncrypted.value
+          : this.kvStoreEncrypted,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('CachedContentData(')
+    return (StringBuffer('SessionsV1Data(')
           ..write('id: $id, ')
-          ..write('contentId: $contentId, ')
-          ..write('ruleId: $ruleId, ')
-          ..write('mediaType: $mediaType, ')
-          ..write('title: $title, ')
-          ..write('coverUrl: $coverUrl, ')
-          ..write('author: $author, ')
-          ..write('description: $description, ')
-          ..write('rawData: $rawData, ')
-          ..write('cachedAt: $cachedAt, ')
-          ..write('expiresAt: $expiresAt')
+          ..write('sessionId: $sessionId, ')
+          ..write('cookieJarEncrypted: $cookieJarEncrypted, ')
+          ..write('kvStoreEncrypted: $kvStoreEncrypted, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -1423,129 +1071,81 @@ class CachedContentData extends DataClass
   @override
   int get hashCode => Object.hash(
     id,
-    contentId,
-    ruleId,
-    mediaType,
-    title,
-    coverUrl,
-    author,
-    description,
-    rawData,
-    cachedAt,
-    expiresAt,
+    sessionId,
+    cookieJarEncrypted,
+    kvStoreEncrypted,
+    createdAt,
+    updatedAt,
   );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CachedContentData &&
+      (other is SessionsV1Data &&
           other.id == this.id &&
-          other.contentId == this.contentId &&
-          other.ruleId == this.ruleId &&
-          other.mediaType == this.mediaType &&
-          other.title == this.title &&
-          other.coverUrl == this.coverUrl &&
-          other.author == this.author &&
-          other.description == this.description &&
-          other.rawData == this.rawData &&
-          other.cachedAt == this.cachedAt &&
-          other.expiresAt == this.expiresAt);
+          other.sessionId == this.sessionId &&
+          other.cookieJarEncrypted == this.cookieJarEncrypted &&
+          other.kvStoreEncrypted == this.kvStoreEncrypted &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
-class CachedContentCompanion extends UpdateCompanion<CachedContentData> {
+class SessionsV1Companion extends UpdateCompanion<SessionsV1Data> {
   final Value<int> id;
-  final Value<String> contentId;
-  final Value<int> ruleId;
-  final Value<CrawlRuleType> mediaType;
-  final Value<String> title;
-  final Value<String?> coverUrl;
-  final Value<String?> author;
-  final Value<String?> description;
-  final Value<String> rawData;
-  final Value<DateTime> cachedAt;
-  final Value<DateTime?> expiresAt;
-  const CachedContentCompanion({
+  final Value<String> sessionId;
+  final Value<String?> cookieJarEncrypted;
+  final Value<String?> kvStoreEncrypted;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const SessionsV1Companion({
     this.id = const Value.absent(),
-    this.contentId = const Value.absent(),
-    this.ruleId = const Value.absent(),
-    this.mediaType = const Value.absent(),
-    this.title = const Value.absent(),
-    this.coverUrl = const Value.absent(),
-    this.author = const Value.absent(),
-    this.description = const Value.absent(),
-    this.rawData = const Value.absent(),
-    this.cachedAt = const Value.absent(),
-    this.expiresAt = const Value.absent(),
+    this.sessionId = const Value.absent(),
+    this.cookieJarEncrypted = const Value.absent(),
+    this.kvStoreEncrypted = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   });
-  CachedContentCompanion.insert({
+  SessionsV1Companion.insert({
     this.id = const Value.absent(),
-    required String contentId,
-    required int ruleId,
-    required CrawlRuleType mediaType,
-    required String title,
-    this.coverUrl = const Value.absent(),
-    this.author = const Value.absent(),
-    this.description = const Value.absent(),
-    required String rawData,
-    this.cachedAt = const Value.absent(),
-    this.expiresAt = const Value.absent(),
-  }) : contentId = Value(contentId),
-       ruleId = Value(ruleId),
-       mediaType = Value(mediaType),
-       title = Value(title),
-       rawData = Value(rawData);
-  static Insertable<CachedContentData> custom({
+    required String sessionId,
+    this.cookieJarEncrypted = const Value.absent(),
+    this.kvStoreEncrypted = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  }) : sessionId = Value(sessionId);
+  static Insertable<SessionsV1Data> custom({
     Expression<int>? id,
-    Expression<String>? contentId,
-    Expression<int>? ruleId,
-    Expression<int>? mediaType,
-    Expression<String>? title,
-    Expression<String>? coverUrl,
-    Expression<String>? author,
-    Expression<String>? description,
-    Expression<String>? rawData,
-    Expression<DateTime>? cachedAt,
-    Expression<DateTime>? expiresAt,
+    Expression<String>? sessionId,
+    Expression<String>? cookieJarEncrypted,
+    Expression<String>? kvStoreEncrypted,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (contentId != null) 'content_id': contentId,
-      if (ruleId != null) 'rule_id': ruleId,
-      if (mediaType != null) 'media_type': mediaType,
-      if (title != null) 'title': title,
-      if (coverUrl != null) 'cover_url': coverUrl,
-      if (author != null) 'author': author,
-      if (description != null) 'description': description,
-      if (rawData != null) 'raw_data': rawData,
-      if (cachedAt != null) 'cached_at': cachedAt,
-      if (expiresAt != null) 'expires_at': expiresAt,
+      if (sessionId != null) 'session_id': sessionId,
+      if (cookieJarEncrypted != null)
+        'cookie_jar_encrypted': cookieJarEncrypted,
+      if (kvStoreEncrypted != null) 'kv_store_encrypted': kvStoreEncrypted,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
 
-  CachedContentCompanion copyWith({
+  SessionsV1Companion copyWith({
     Value<int>? id,
-    Value<String>? contentId,
-    Value<int>? ruleId,
-    Value<CrawlRuleType>? mediaType,
-    Value<String>? title,
-    Value<String?>? coverUrl,
-    Value<String?>? author,
-    Value<String?>? description,
-    Value<String>? rawData,
-    Value<DateTime>? cachedAt,
-    Value<DateTime?>? expiresAt,
+    Value<String>? sessionId,
+    Value<String?>? cookieJarEncrypted,
+    Value<String?>? kvStoreEncrypted,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
   }) {
-    return CachedContentCompanion(
+    return SessionsV1Companion(
       id: id ?? this.id,
-      contentId: contentId ?? this.contentId,
-      ruleId: ruleId ?? this.ruleId,
-      mediaType: mediaType ?? this.mediaType,
-      title: title ?? this.title,
-      coverUrl: coverUrl ?? this.coverUrl,
-      author: author ?? this.author,
-      description: description ?? this.description,
-      rawData: rawData ?? this.rawData,
-      cachedAt: cachedAt ?? this.cachedAt,
-      expiresAt: expiresAt ?? this.expiresAt,
+      sessionId: sessionId ?? this.sessionId,
+      cookieJarEncrypted: cookieJarEncrypted ?? this.cookieJarEncrypted,
+      kvStoreEncrypted: kvStoreEncrypted ?? this.kvStoreEncrypted,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -1555,55 +1155,33 @@ class CachedContentCompanion extends UpdateCompanion<CachedContentData> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (contentId.present) {
-      map['content_id'] = Variable<String>(contentId.value);
+    if (sessionId.present) {
+      map['session_id'] = Variable<String>(sessionId.value);
     }
-    if (ruleId.present) {
-      map['rule_id'] = Variable<int>(ruleId.value);
+    if (cookieJarEncrypted.present) {
+      map['cookie_jar_encrypted'] = Variable<String>(cookieJarEncrypted.value);
     }
-    if (mediaType.present) {
-      map['media_type'] = Variable<int>(
-        $CachedContentTable.$convertermediaType.toSql(mediaType.value),
-      );
+    if (kvStoreEncrypted.present) {
+      map['kv_store_encrypted'] = Variable<String>(kvStoreEncrypted.value);
     }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
     }
-    if (coverUrl.present) {
-      map['cover_url'] = Variable<String>(coverUrl.value);
-    }
-    if (author.present) {
-      map['author'] = Variable<String>(author.value);
-    }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
-    }
-    if (rawData.present) {
-      map['raw_data'] = Variable<String>(rawData.value);
-    }
-    if (cachedAt.present) {
-      map['cached_at'] = Variable<DateTime>(cachedAt.value);
-    }
-    if (expiresAt.present) {
-      map['expires_at'] = Variable<DateTime>(expiresAt.value);
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('CachedContentCompanion(')
+    return (StringBuffer('SessionsV1Companion(')
           ..write('id: $id, ')
-          ..write('contentId: $contentId, ')
-          ..write('ruleId: $ruleId, ')
-          ..write('mediaType: $mediaType, ')
-          ..write('title: $title, ')
-          ..write('coverUrl: $coverUrl, ')
-          ..write('author: $author, ')
-          ..write('description: $description, ')
-          ..write('rawData: $rawData, ')
-          ..write('cachedAt: $cachedAt, ')
-          ..write('expiresAt: $expiresAt')
+          ..write('sessionId: $sessionId, ')
+          ..write('cookieJarEncrypted: $cookieJarEncrypted, ')
+          ..write('kvStoreEncrypted: $kvStoreEncrypted, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -1612,83 +1190,49 @@ class CachedContentCompanion extends UpdateCompanion<CachedContentData> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final $CrawlRulesTable crawlRules = $CrawlRulesTable(this);
-  late final $CachedContentTable cachedContent = $CachedContentTable(this);
+  late final $RulesV1Table rulesV1 = $RulesV1Table(this);
+  late final $SessionsV1Table sessionsV1 = $SessionsV1Table(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [
-    crawlRules,
-    cachedContent,
-  ];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [rulesV1, sessionsV1];
 }
 
-typedef $$CrawlRulesTableCreateCompanionBuilder =
-    CrawlRulesCompanion Function({
+typedef $$RulesV1TableCreateCompanionBuilder =
+    RulesV1Companion Function({
       Value<int> id,
       required String ruleId,
       required String name,
       Value<String?> description,
-      required CrawlRuleType type,
-      required String pattern,
-      Value<String> version,
-      required String config,
-      Value<String?> globalConfig,
-      Value<String?> displayConfig,
-      Value<String> source,
+      required String irVersion,
+      required String ruleEnvelopeJson,
+      Value<String?> displayConfigJson,
+      Value<String?> cookieJarEncrypted,
+      Value<String?> kvStoreEncrypted,
       Value<bool> enabled,
-      Value<String?> iconUrl,
-      Value<String?> author,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
-typedef $$CrawlRulesTableUpdateCompanionBuilder =
-    CrawlRulesCompanion Function({
+typedef $$RulesV1TableUpdateCompanionBuilder =
+    RulesV1Companion Function({
       Value<int> id,
       Value<String> ruleId,
       Value<String> name,
       Value<String?> description,
-      Value<CrawlRuleType> type,
-      Value<String> pattern,
-      Value<String> version,
-      Value<String> config,
-      Value<String?> globalConfig,
-      Value<String?> displayConfig,
-      Value<String> source,
+      Value<String> irVersion,
+      Value<String> ruleEnvelopeJson,
+      Value<String?> displayConfigJson,
+      Value<String?> cookieJarEncrypted,
+      Value<String?> kvStoreEncrypted,
       Value<bool> enabled,
-      Value<String?> iconUrl,
-      Value<String?> author,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
 
-final class $$CrawlRulesTableReferences
-    extends BaseReferences<_$AppDatabase, $CrawlRulesTable, CrawlRule> {
-  $$CrawlRulesTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<$CachedContentTable, List<CachedContentData>>
-  _cachedContentRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.cachedContent,
-    aliasName: $_aliasNameGenerator(db.crawlRules.id, db.cachedContent.ruleId),
-  );
-
-  $$CachedContentTableProcessedTableManager get cachedContentRefs {
-    final manager = $$CachedContentTableTableManager(
-      $_db,
-      $_db.cachedContent,
-    ).filter((f) => f.ruleId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(_cachedContentRefsTable($_db));
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
-class $$CrawlRulesTableFilterComposer
-    extends Composer<_$AppDatabase, $CrawlRulesTable> {
-  $$CrawlRulesTableFilterComposer({
+class $$RulesV1TableFilterComposer
+    extends Composer<_$AppDatabase, $RulesV1Table> {
+  $$RulesV1TableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1715,54 +1259,33 @@ class $$CrawlRulesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<CrawlRuleType, CrawlRuleType, int> get type =>
-      $composableBuilder(
-        column: $table.type,
-        builder: (column) => ColumnWithTypeConverterFilters(column),
-      );
-
-  ColumnFilters<String> get pattern => $composableBuilder(
-    column: $table.pattern,
+  ColumnFilters<String> get irVersion => $composableBuilder(
+    column: $table.irVersion,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get version => $composableBuilder(
-    column: $table.version,
+  ColumnFilters<String> get ruleEnvelopeJson => $composableBuilder(
+    column: $table.ruleEnvelopeJson,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get config => $composableBuilder(
-    column: $table.config,
+  ColumnFilters<String> get displayConfigJson => $composableBuilder(
+    column: $table.displayConfigJson,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get globalConfig => $composableBuilder(
-    column: $table.globalConfig,
+  ColumnFilters<String> get cookieJarEncrypted => $composableBuilder(
+    column: $table.cookieJarEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get displayConfig => $composableBuilder(
-    column: $table.displayConfig,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get source => $composableBuilder(
-    column: $table.source,
+  ColumnFilters<String> get kvStoreEncrypted => $composableBuilder(
+    column: $table.kvStoreEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<bool> get enabled => $composableBuilder(
     column: $table.enabled,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get iconUrl => $composableBuilder(
-    column: $table.iconUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get author => $composableBuilder(
-    column: $table.author,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1775,36 +1298,11 @@ class $$CrawlRulesTableFilterComposer
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  Expression<bool> cachedContentRefs(
-    Expression<bool> Function($$CachedContentTableFilterComposer f) f,
-  ) {
-    final $$CachedContentTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.cachedContent,
-      getReferencedColumn: (t) => t.ruleId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CachedContentTableFilterComposer(
-            $db: $db,
-            $table: $db.cachedContent,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
-class $$CrawlRulesTableOrderingComposer
-    extends Composer<_$AppDatabase, $CrawlRulesTable> {
-  $$CrawlRulesTableOrderingComposer({
+class $$RulesV1TableOrderingComposer
+    extends Composer<_$AppDatabase, $RulesV1Table> {
+  $$RulesV1TableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1831,53 +1329,33 @@ class $$CrawlRulesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get type => $composableBuilder(
-    column: $table.type,
+  ColumnOrderings<String> get irVersion => $composableBuilder(
+    column: $table.irVersion,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get pattern => $composableBuilder(
-    column: $table.pattern,
+  ColumnOrderings<String> get ruleEnvelopeJson => $composableBuilder(
+    column: $table.ruleEnvelopeJson,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get version => $composableBuilder(
-    column: $table.version,
+  ColumnOrderings<String> get displayConfigJson => $composableBuilder(
+    column: $table.displayConfigJson,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get config => $composableBuilder(
-    column: $table.config,
+  ColumnOrderings<String> get cookieJarEncrypted => $composableBuilder(
+    column: $table.cookieJarEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get globalConfig => $composableBuilder(
-    column: $table.globalConfig,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get displayConfig => $composableBuilder(
-    column: $table.displayConfig,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get source => $composableBuilder(
-    column: $table.source,
+  ColumnOrderings<String> get kvStoreEncrypted => $composableBuilder(
+    column: $table.kvStoreEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 
   ColumnOrderings<bool> get enabled => $composableBuilder(
     column: $table.enabled,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get iconUrl => $composableBuilder(
-    column: $table.iconUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get author => $composableBuilder(
-    column: $table.author,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1892,9 +1370,9 @@ class $$CrawlRulesTableOrderingComposer
   );
 }
 
-class $$CrawlRulesTableAnnotationComposer
-    extends Composer<_$AppDatabase, $CrawlRulesTable> {
-  $$CrawlRulesTableAnnotationComposer({
+class $$RulesV1TableAnnotationComposer
+    extends Composer<_$AppDatabase, $RulesV1Table> {
+  $$RulesV1TableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1915,131 +1393,93 @@ class $$CrawlRulesTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumnWithTypeConverter<CrawlRuleType, int> get type =>
-      $composableBuilder(column: $table.type, builder: (column) => column);
+  GeneratedColumn<String> get irVersion =>
+      $composableBuilder(column: $table.irVersion, builder: (column) => column);
 
-  GeneratedColumn<String> get pattern =>
-      $composableBuilder(column: $table.pattern, builder: (column) => column);
-
-  GeneratedColumn<String> get version =>
-      $composableBuilder(column: $table.version, builder: (column) => column);
-
-  GeneratedColumn<String> get config =>
-      $composableBuilder(column: $table.config, builder: (column) => column);
-
-  GeneratedColumn<String> get globalConfig => $composableBuilder(
-    column: $table.globalConfig,
+  GeneratedColumn<String> get ruleEnvelopeJson => $composableBuilder(
+    column: $table.ruleEnvelopeJson,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get displayConfig => $composableBuilder(
-    column: $table.displayConfig,
+  GeneratedColumn<String> get displayConfigJson => $composableBuilder(
+    column: $table.displayConfigJson,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get source =>
-      $composableBuilder(column: $table.source, builder: (column) => column);
+  GeneratedColumn<String> get cookieJarEncrypted => $composableBuilder(
+    column: $table.cookieJarEncrypted,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get kvStoreEncrypted => $composableBuilder(
+    column: $table.kvStoreEncrypted,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get enabled =>
       $composableBuilder(column: $table.enabled, builder: (column) => column);
-
-  GeneratedColumn<String> get iconUrl =>
-      $composableBuilder(column: $table.iconUrl, builder: (column) => column);
-
-  GeneratedColumn<String> get author =>
-      $composableBuilder(column: $table.author, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
-
-  Expression<T> cachedContentRefs<T extends Object>(
-    Expression<T> Function($$CachedContentTableAnnotationComposer a) f,
-  ) {
-    final $$CachedContentTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.cachedContent,
-      getReferencedColumn: (t) => t.ruleId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CachedContentTableAnnotationComposer(
-            $db: $db,
-            $table: $db.cachedContent,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
-class $$CrawlRulesTableTableManager
+class $$RulesV1TableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $CrawlRulesTable,
-          CrawlRule,
-          $$CrawlRulesTableFilterComposer,
-          $$CrawlRulesTableOrderingComposer,
-          $$CrawlRulesTableAnnotationComposer,
-          $$CrawlRulesTableCreateCompanionBuilder,
-          $$CrawlRulesTableUpdateCompanionBuilder,
-          (CrawlRule, $$CrawlRulesTableReferences),
-          CrawlRule,
-          PrefetchHooks Function({bool cachedContentRefs})
+          $RulesV1Table,
+          RulesV1Data,
+          $$RulesV1TableFilterComposer,
+          $$RulesV1TableOrderingComposer,
+          $$RulesV1TableAnnotationComposer,
+          $$RulesV1TableCreateCompanionBuilder,
+          $$RulesV1TableUpdateCompanionBuilder,
+          (
+            RulesV1Data,
+            BaseReferences<_$AppDatabase, $RulesV1Table, RulesV1Data>,
+          ),
+          RulesV1Data,
+          PrefetchHooks Function()
         > {
-  $$CrawlRulesTableTableManager(_$AppDatabase db, $CrawlRulesTable table)
+  $$RulesV1TableTableManager(_$AppDatabase db, $RulesV1Table table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$CrawlRulesTableFilterComposer($db: db, $table: table),
+              $$RulesV1TableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$CrawlRulesTableOrderingComposer($db: db, $table: table),
+              $$RulesV1TableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$CrawlRulesTableAnnotationComposer($db: db, $table: table),
+              $$RulesV1TableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> ruleId = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> description = const Value.absent(),
-                Value<CrawlRuleType> type = const Value.absent(),
-                Value<String> pattern = const Value.absent(),
-                Value<String> version = const Value.absent(),
-                Value<String> config = const Value.absent(),
-                Value<String?> globalConfig = const Value.absent(),
-                Value<String?> displayConfig = const Value.absent(),
-                Value<String> source = const Value.absent(),
+                Value<String> irVersion = const Value.absent(),
+                Value<String> ruleEnvelopeJson = const Value.absent(),
+                Value<String?> displayConfigJson = const Value.absent(),
+                Value<String?> cookieJarEncrypted = const Value.absent(),
+                Value<String?> kvStoreEncrypted = const Value.absent(),
                 Value<bool> enabled = const Value.absent(),
-                Value<String?> iconUrl = const Value.absent(),
-                Value<String?> author = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
-              }) => CrawlRulesCompanion(
+              }) => RulesV1Companion(
                 id: id,
                 ruleId: ruleId,
                 name: name,
                 description: description,
-                type: type,
-                pattern: pattern,
-                version: version,
-                config: config,
-                globalConfig: globalConfig,
-                displayConfig: displayConfig,
-                source: source,
+                irVersion: irVersion,
+                ruleEnvelopeJson: ruleEnvelopeJson,
+                displayConfigJson: displayConfigJson,
+                cookieJarEncrypted: cookieJarEncrypted,
+                kvStoreEncrypted: kvStoreEncrypted,
                 enabled: enabled,
-                iconUrl: iconUrl,
-                author: author,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
@@ -2049,155 +1489,72 @@ class $$CrawlRulesTableTableManager
                 required String ruleId,
                 required String name,
                 Value<String?> description = const Value.absent(),
-                required CrawlRuleType type,
-                required String pattern,
-                Value<String> version = const Value.absent(),
-                required String config,
-                Value<String?> globalConfig = const Value.absent(),
-                Value<String?> displayConfig = const Value.absent(),
-                Value<String> source = const Value.absent(),
+                required String irVersion,
+                required String ruleEnvelopeJson,
+                Value<String?> displayConfigJson = const Value.absent(),
+                Value<String?> cookieJarEncrypted = const Value.absent(),
+                Value<String?> kvStoreEncrypted = const Value.absent(),
                 Value<bool> enabled = const Value.absent(),
-                Value<String?> iconUrl = const Value.absent(),
-                Value<String?> author = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
-              }) => CrawlRulesCompanion.insert(
+              }) => RulesV1Companion.insert(
                 id: id,
                 ruleId: ruleId,
                 name: name,
                 description: description,
-                type: type,
-                pattern: pattern,
-                version: version,
-                config: config,
-                globalConfig: globalConfig,
-                displayConfig: displayConfig,
-                source: source,
+                irVersion: irVersion,
+                ruleEnvelopeJson: ruleEnvelopeJson,
+                displayConfigJson: displayConfigJson,
+                cookieJarEncrypted: cookieJarEncrypted,
+                kvStoreEncrypted: kvStoreEncrypted,
                 enabled: enabled,
-                iconUrl: iconUrl,
-                author: author,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$CrawlRulesTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({cachedContentRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (cachedContentRefs) db.cachedContent,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (cachedContentRefs)
-                    await $_getPrefetchedData<
-                      CrawlRule,
-                      $CrawlRulesTable,
-                      CachedContentData
-                    >(
-                      currentTable: table,
-                      referencedTable: $$CrawlRulesTableReferences
-                          ._cachedContentRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$CrawlRulesTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).cachedContentRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.ruleId == item.id),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
 
-typedef $$CrawlRulesTableProcessedTableManager =
+typedef $$RulesV1TableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $CrawlRulesTable,
-      CrawlRule,
-      $$CrawlRulesTableFilterComposer,
-      $$CrawlRulesTableOrderingComposer,
-      $$CrawlRulesTableAnnotationComposer,
-      $$CrawlRulesTableCreateCompanionBuilder,
-      $$CrawlRulesTableUpdateCompanionBuilder,
-      (CrawlRule, $$CrawlRulesTableReferences),
-      CrawlRule,
-      PrefetchHooks Function({bool cachedContentRefs})
+      $RulesV1Table,
+      RulesV1Data,
+      $$RulesV1TableFilterComposer,
+      $$RulesV1TableOrderingComposer,
+      $$RulesV1TableAnnotationComposer,
+      $$RulesV1TableCreateCompanionBuilder,
+      $$RulesV1TableUpdateCompanionBuilder,
+      (RulesV1Data, BaseReferences<_$AppDatabase, $RulesV1Table, RulesV1Data>),
+      RulesV1Data,
+      PrefetchHooks Function()
     >;
-typedef $$CachedContentTableCreateCompanionBuilder =
-    CachedContentCompanion Function({
+typedef $$SessionsV1TableCreateCompanionBuilder =
+    SessionsV1Companion Function({
       Value<int> id,
-      required String contentId,
-      required int ruleId,
-      required CrawlRuleType mediaType,
-      required String title,
-      Value<String?> coverUrl,
-      Value<String?> author,
-      Value<String?> description,
-      required String rawData,
-      Value<DateTime> cachedAt,
-      Value<DateTime?> expiresAt,
+      required String sessionId,
+      Value<String?> cookieJarEncrypted,
+      Value<String?> kvStoreEncrypted,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
     });
-typedef $$CachedContentTableUpdateCompanionBuilder =
-    CachedContentCompanion Function({
+typedef $$SessionsV1TableUpdateCompanionBuilder =
+    SessionsV1Companion Function({
       Value<int> id,
-      Value<String> contentId,
-      Value<int> ruleId,
-      Value<CrawlRuleType> mediaType,
-      Value<String> title,
-      Value<String?> coverUrl,
-      Value<String?> author,
-      Value<String?> description,
-      Value<String> rawData,
-      Value<DateTime> cachedAt,
-      Value<DateTime?> expiresAt,
+      Value<String> sessionId,
+      Value<String?> cookieJarEncrypted,
+      Value<String?> kvStoreEncrypted,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
     });
 
-final class $$CachedContentTableReferences
-    extends
-        BaseReferences<_$AppDatabase, $CachedContentTable, CachedContentData> {
-  $$CachedContentTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $CrawlRulesTable _ruleIdTable(_$AppDatabase db) =>
-      db.crawlRules.createAlias(
-        $_aliasNameGenerator(db.cachedContent.ruleId, db.crawlRules.id),
-      );
-
-  $$CrawlRulesTableProcessedTableManager get ruleId {
-    final $_column = $_itemColumn<int>('rule_id')!;
-
-    final manager = $$CrawlRulesTableTableManager(
-      $_db,
-      $_db.crawlRules,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_ruleIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$CachedContentTableFilterComposer
-    extends Composer<_$AppDatabase, $CachedContentTable> {
-  $$CachedContentTableFilterComposer({
+class $$SessionsV1TableFilterComposer
+    extends Composer<_$AppDatabase, $SessionsV1Table> {
+  $$SessionsV1TableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2209,79 +1566,35 @@ class $$CachedContentTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get contentId => $composableBuilder(
-    column: $table.contentId,
+  ColumnFilters<String> get sessionId => $composableBuilder(
+    column: $table.sessionId,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<CrawlRuleType, CrawlRuleType, int>
-  get mediaType => $composableBuilder(
-    column: $table.mediaType,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
-
-  ColumnFilters<String> get title => $composableBuilder(
-    column: $table.title,
+  ColumnFilters<String> get cookieJarEncrypted => $composableBuilder(
+    column: $table.cookieJarEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get coverUrl => $composableBuilder(
-    column: $table.coverUrl,
+  ColumnFilters<String> get kvStoreEncrypted => $composableBuilder(
+    column: $table.kvStoreEncrypted,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get author => $composableBuilder(
-    column: $table.author,
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get description => $composableBuilder(
-    column: $table.description,
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnFilters<String> get rawData => $composableBuilder(
-    column: $table.rawData,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get cachedAt => $composableBuilder(
-    column: $table.cachedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get expiresAt => $composableBuilder(
-    column: $table.expiresAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$CrawlRulesTableFilterComposer get ruleId {
-    final $$CrawlRulesTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.ruleId,
-      referencedTable: $db.crawlRules,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CrawlRulesTableFilterComposer(
-            $db: $db,
-            $table: $db.crawlRules,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
-class $$CachedContentTableOrderingComposer
-    extends Composer<_$AppDatabase, $CachedContentTable> {
-  $$CachedContentTableOrderingComposer({
+class $$SessionsV1TableOrderingComposer
+    extends Composer<_$AppDatabase, $SessionsV1Table> {
+  $$SessionsV1TableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2293,78 +1606,35 @@ class $$CachedContentTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get contentId => $composableBuilder(
-    column: $table.contentId,
+  ColumnOrderings<String> get sessionId => $composableBuilder(
+    column: $table.sessionId,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get mediaType => $composableBuilder(
-    column: $table.mediaType,
+  ColumnOrderings<String> get cookieJarEncrypted => $composableBuilder(
+    column: $table.cookieJarEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get title => $composableBuilder(
-    column: $table.title,
+  ColumnOrderings<String> get kvStoreEncrypted => $composableBuilder(
+    column: $table.kvStoreEncrypted,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get coverUrl => $composableBuilder(
-    column: $table.coverUrl,
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get author => $composableBuilder(
-    column: $table.author,
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  ColumnOrderings<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get rawData => $composableBuilder(
-    column: $table.rawData,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get cachedAt => $composableBuilder(
-    column: $table.cachedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get expiresAt => $composableBuilder(
-    column: $table.expiresAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$CrawlRulesTableOrderingComposer get ruleId {
-    final $$CrawlRulesTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.ruleId,
-      referencedTable: $db.crawlRules,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CrawlRulesTableOrderingComposer(
-            $db: $db,
-            $table: $db.crawlRules,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
-class $$CachedContentTableAnnotationComposer
-    extends Composer<_$AppDatabase, $CachedContentTable> {
-  $$CachedContentTableAnnotationComposer({
+class $$SessionsV1TableAnnotationComposer
+    extends Composer<_$AppDatabase, $SessionsV1Table> {
+  $$SessionsV1TableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2374,210 +1644,118 @@ class $$CachedContentTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get contentId =>
-      $composableBuilder(column: $table.contentId, builder: (column) => column);
+  GeneratedColumn<String> get sessionId =>
+      $composableBuilder(column: $table.sessionId, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<CrawlRuleType, int> get mediaType =>
-      $composableBuilder(column: $table.mediaType, builder: (column) => column);
-
-  GeneratedColumn<String> get title =>
-      $composableBuilder(column: $table.title, builder: (column) => column);
-
-  GeneratedColumn<String> get coverUrl =>
-      $composableBuilder(column: $table.coverUrl, builder: (column) => column);
-
-  GeneratedColumn<String> get author =>
-      $composableBuilder(column: $table.author, builder: (column) => column);
-
-  GeneratedColumn<String> get description => $composableBuilder(
-    column: $table.description,
+  GeneratedColumn<String> get cookieJarEncrypted => $composableBuilder(
+    column: $table.cookieJarEncrypted,
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get rawData =>
-      $composableBuilder(column: $table.rawData, builder: (column) => column);
+  GeneratedColumn<String> get kvStoreEncrypted => $composableBuilder(
+    column: $table.kvStoreEncrypted,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<DateTime> get cachedAt =>
-      $composableBuilder(column: $table.cachedAt, builder: (column) => column);
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get expiresAt =>
-      $composableBuilder(column: $table.expiresAt, builder: (column) => column);
-
-  $$CrawlRulesTableAnnotationComposer get ruleId {
-    final $$CrawlRulesTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.ruleId,
-      referencedTable: $db.crawlRules,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CrawlRulesTableAnnotationComposer(
-            $db: $db,
-            $table: $db.crawlRules,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
-class $$CachedContentTableTableManager
+class $$SessionsV1TableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $CachedContentTable,
-          CachedContentData,
-          $$CachedContentTableFilterComposer,
-          $$CachedContentTableOrderingComposer,
-          $$CachedContentTableAnnotationComposer,
-          $$CachedContentTableCreateCompanionBuilder,
-          $$CachedContentTableUpdateCompanionBuilder,
-          (CachedContentData, $$CachedContentTableReferences),
-          CachedContentData,
-          PrefetchHooks Function({bool ruleId})
+          $SessionsV1Table,
+          SessionsV1Data,
+          $$SessionsV1TableFilterComposer,
+          $$SessionsV1TableOrderingComposer,
+          $$SessionsV1TableAnnotationComposer,
+          $$SessionsV1TableCreateCompanionBuilder,
+          $$SessionsV1TableUpdateCompanionBuilder,
+          (
+            SessionsV1Data,
+            BaseReferences<_$AppDatabase, $SessionsV1Table, SessionsV1Data>,
+          ),
+          SessionsV1Data,
+          PrefetchHooks Function()
         > {
-  $$CachedContentTableTableManager(_$AppDatabase db, $CachedContentTable table)
+  $$SessionsV1TableTableManager(_$AppDatabase db, $SessionsV1Table table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$CachedContentTableFilterComposer($db: db, $table: table),
+              $$SessionsV1TableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$CachedContentTableOrderingComposer($db: db, $table: table),
+              $$SessionsV1TableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$CachedContentTableAnnotationComposer($db: db, $table: table),
+              $$SessionsV1TableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<String> contentId = const Value.absent(),
-                Value<int> ruleId = const Value.absent(),
-                Value<CrawlRuleType> mediaType = const Value.absent(),
-                Value<String> title = const Value.absent(),
-                Value<String?> coverUrl = const Value.absent(),
-                Value<String?> author = const Value.absent(),
-                Value<String?> description = const Value.absent(),
-                Value<String> rawData = const Value.absent(),
-                Value<DateTime> cachedAt = const Value.absent(),
-                Value<DateTime?> expiresAt = const Value.absent(),
-              }) => CachedContentCompanion(
+                Value<String> sessionId = const Value.absent(),
+                Value<String?> cookieJarEncrypted = const Value.absent(),
+                Value<String?> kvStoreEncrypted = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => SessionsV1Companion(
                 id: id,
-                contentId: contentId,
-                ruleId: ruleId,
-                mediaType: mediaType,
-                title: title,
-                coverUrl: coverUrl,
-                author: author,
-                description: description,
-                rawData: rawData,
-                cachedAt: cachedAt,
-                expiresAt: expiresAt,
+                sessionId: sessionId,
+                cookieJarEncrypted: cookieJarEncrypted,
+                kvStoreEncrypted: kvStoreEncrypted,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                required String contentId,
-                required int ruleId,
-                required CrawlRuleType mediaType,
-                required String title,
-                Value<String?> coverUrl = const Value.absent(),
-                Value<String?> author = const Value.absent(),
-                Value<String?> description = const Value.absent(),
-                required String rawData,
-                Value<DateTime> cachedAt = const Value.absent(),
-                Value<DateTime?> expiresAt = const Value.absent(),
-              }) => CachedContentCompanion.insert(
+                required String sessionId,
+                Value<String?> cookieJarEncrypted = const Value.absent(),
+                Value<String?> kvStoreEncrypted = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => SessionsV1Companion.insert(
                 id: id,
-                contentId: contentId,
-                ruleId: ruleId,
-                mediaType: mediaType,
-                title: title,
-                coverUrl: coverUrl,
-                author: author,
-                description: description,
-                rawData: rawData,
-                cachedAt: cachedAt,
-                expiresAt: expiresAt,
+                sessionId: sessionId,
+                cookieJarEncrypted: cookieJarEncrypted,
+                kvStoreEncrypted: kvStoreEncrypted,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$CachedContentTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({ruleId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (ruleId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.ruleId,
-                                referencedTable: $$CachedContentTableReferences
-                                    ._ruleIdTable(db),
-                                referencedColumn: $$CachedContentTableReferences
-                                    ._ruleIdTable(db)
-                                    .id,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
 
-typedef $$CachedContentTableProcessedTableManager =
+typedef $$SessionsV1TableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $CachedContentTable,
-      CachedContentData,
-      $$CachedContentTableFilterComposer,
-      $$CachedContentTableOrderingComposer,
-      $$CachedContentTableAnnotationComposer,
-      $$CachedContentTableCreateCompanionBuilder,
-      $$CachedContentTableUpdateCompanionBuilder,
-      (CachedContentData, $$CachedContentTableReferences),
-      CachedContentData,
-      PrefetchHooks Function({bool ruleId})
+      $SessionsV1Table,
+      SessionsV1Data,
+      $$SessionsV1TableFilterComposer,
+      $$SessionsV1TableOrderingComposer,
+      $$SessionsV1TableAnnotationComposer,
+      $$SessionsV1TableCreateCompanionBuilder,
+      $$SessionsV1TableUpdateCompanionBuilder,
+      (
+        SessionsV1Data,
+        BaseReferences<_$AppDatabase, $SessionsV1Table, SessionsV1Data>,
+      ),
+      SessionsV1Data,
+      PrefetchHooks Function()
     >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
-  $$CrawlRulesTableTableManager get crawlRules =>
-      $$CrawlRulesTableTableManager(_db, _db.crawlRules);
-  $$CachedContentTableTableManager get cachedContent =>
-      $$CachedContentTableTableManager(_db, _db.cachedContent);
+  $$RulesV1TableTableManager get rulesV1 =>
+      $$RulesV1TableTableManager(_db, _db.rulesV1);
+  $$SessionsV1TableTableManager get sessionsV1 =>
+      $$SessionsV1TableTableManager(_db, _db.sessionsV1);
 }
