@@ -67,35 +67,6 @@ sealed class NodePayload with _$NodePayload {
       _$NodePayloadFromJson(json);
 }
 
-/// Pipeline 执行请求
-///
-/// 包含执行 Pipeline 所需的所有输入数据
-@freezed
-sealed class PipelineExecuteRequest with _$PipelineExecuteRequest {
-  const factory PipelineExecuteRequest({
-    required String content,
-    String? baseUrl,
-    String? vars,
-    required List<PipelineOperation> operations,
-  }) = _PipelineExecuteRequest;
-
-  factory PipelineExecuteRequest.fromJson(Map<String, dynamic> json) =>
-      _$PipelineExecuteRequestFromJson(json);
-}
-
-/// Pipeline 执行结果
-@freezed
-sealed class PipelineExecuteResult with _$PipelineExecuteResult {
-  const factory PipelineExecuteResult({
-    required bool success,
-    required List<String> data,
-    String? error,
-  }) = _PipelineExecuteResult;
-
-  factory PipelineExecuteResult.fromJson(Map<String, dynamic> json) =>
-      _$PipelineExecuteResultFromJson(json);
-}
-
 @freezed
 sealed class PipelineGraph with _$PipelineGraph {
   const factory PipelineGraph({
@@ -105,19 +76,6 @@ sealed class PipelineGraph with _$PipelineGraph {
 
   factory PipelineGraph.fromJson(Map<String, dynamic> json) =>
       _$PipelineGraphFromJson(json);
-}
-
-/// Pipeline 操作定义 (简化格式，用于 FFI 传输)
-@freezed
-sealed class PipelineOperation with _$PipelineOperation {
-  const factory PipelineOperation({
-    required String opType,
-    String? param,
-    String? param2,
-  }) = _PipelineOperation;
-
-  factory PipelineOperation.fromJson(Map<String, dynamic> json) =>
-      _$PipelineOperationFromJson(json);
 }
 
 @freezed

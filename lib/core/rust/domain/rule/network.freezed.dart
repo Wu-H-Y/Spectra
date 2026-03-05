@@ -281,7 +281,7 @@ as bool?,
 /// @nodoc
 mixin _$FallbackConfig {
 
- Int32List get triggerStatus; List<String> get triggerKeywords; String get action;
+ List<String> get triggerStatus; List<String> get triggerKeywords; String get action;
 /// Create a copy of FallbackConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -314,7 +314,7 @@ abstract mixin class $FallbackConfigCopyWith<$Res>  {
   factory $FallbackConfigCopyWith(FallbackConfig value, $Res Function(FallbackConfig) _then) = _$FallbackConfigCopyWithImpl;
 @useResult
 $Res call({
- Int32List triggerStatus, List<String> triggerKeywords, String action
+ List<String> triggerStatus, List<String> triggerKeywords, String action
 });
 
 
@@ -334,7 +334,7 @@ class _$FallbackConfigCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? triggerStatus = null,Object? triggerKeywords = null,Object? action = null,}) {
   return _then(_self.copyWith(
 triggerStatus: null == triggerStatus ? _self.triggerStatus : triggerStatus // ignore: cast_nullable_to_non_nullable
-as Int32List,triggerKeywords: null == triggerKeywords ? _self.triggerKeywords : triggerKeywords // ignore: cast_nullable_to_non_nullable
+as List<String>,triggerKeywords: null == triggerKeywords ? _self.triggerKeywords : triggerKeywords // ignore: cast_nullable_to_non_nullable
 as List<String>,action: null == action ? _self.action : action // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -418,7 +418,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Int32List triggerStatus,  List<String> triggerKeywords,  String action)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<String> triggerStatus,  List<String> triggerKeywords,  String action)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FallbackConfig() when $default != null:
 return $default(_that.triggerStatus,_that.triggerKeywords,_that.action);case _:
@@ -439,7 +439,7 @@ return $default(_that.triggerStatus,_that.triggerKeywords,_that.action);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Int32List triggerStatus,  List<String> triggerKeywords,  String action)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<String> triggerStatus,  List<String> triggerKeywords,  String action)  $default,) {final _that = this;
 switch (_that) {
 case _FallbackConfig():
 return $default(_that.triggerStatus,_that.triggerKeywords,_that.action);}
@@ -456,7 +456,7 @@ return $default(_that.triggerStatus,_that.triggerKeywords,_that.action);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Int32List triggerStatus,  List<String> triggerKeywords,  String action)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<String> triggerStatus,  List<String> triggerKeywords,  String action)?  $default,) {final _that = this;
 switch (_that) {
 case _FallbackConfig() when $default != null:
 return $default(_that.triggerStatus,_that.triggerKeywords,_that.action);case _:
@@ -471,10 +471,16 @@ return $default(_that.triggerStatus,_that.triggerKeywords,_that.action);case _:
 @JsonSerializable()
 
 class _FallbackConfig implements FallbackConfig {
-  const _FallbackConfig({required this.triggerStatus, required final  List<String> triggerKeywords, required this.action}): _triggerKeywords = triggerKeywords;
+  const _FallbackConfig({required final  List<String> triggerStatus, required final  List<String> triggerKeywords, required this.action}): _triggerStatus = triggerStatus,_triggerKeywords = triggerKeywords;
   factory _FallbackConfig.fromJson(Map<String, dynamic> json) => _$FallbackConfigFromJson(json);
 
-@override final  Int32List triggerStatus;
+ final  List<String> _triggerStatus;
+@override List<String> get triggerStatus {
+  if (_triggerStatus is EqualUnmodifiableListView) return _triggerStatus;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_triggerStatus);
+}
+
  final  List<String> _triggerKeywords;
 @override List<String> get triggerKeywords {
   if (_triggerKeywords is EqualUnmodifiableListView) return _triggerKeywords;
@@ -497,12 +503,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FallbackConfig&&const DeepCollectionEquality().equals(other.triggerStatus, triggerStatus)&&const DeepCollectionEquality().equals(other._triggerKeywords, _triggerKeywords)&&(identical(other.action, action) || other.action == action));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FallbackConfig&&const DeepCollectionEquality().equals(other._triggerStatus, _triggerStatus)&&const DeepCollectionEquality().equals(other._triggerKeywords, _triggerKeywords)&&(identical(other.action, action) || other.action == action));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(triggerStatus),const DeepCollectionEquality().hash(_triggerKeywords),action);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_triggerStatus),const DeepCollectionEquality().hash(_triggerKeywords),action);
 
 @override
 String toString() {
@@ -517,7 +523,7 @@ abstract mixin class _$FallbackConfigCopyWith<$Res> implements $FallbackConfigCo
   factory _$FallbackConfigCopyWith(_FallbackConfig value, $Res Function(_FallbackConfig) _then) = __$FallbackConfigCopyWithImpl;
 @override @useResult
 $Res call({
- Int32List triggerStatus, List<String> triggerKeywords, String action
+ List<String> triggerStatus, List<String> triggerKeywords, String action
 });
 
 
@@ -536,8 +542,8 @@ class __$FallbackConfigCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? triggerStatus = null,Object? triggerKeywords = null,Object? action = null,}) {
   return _then(_FallbackConfig(
-triggerStatus: null == triggerStatus ? _self.triggerStatus : triggerStatus // ignore: cast_nullable_to_non_nullable
-as Int32List,triggerKeywords: null == triggerKeywords ? _self._triggerKeywords : triggerKeywords // ignore: cast_nullable_to_non_nullable
+triggerStatus: null == triggerStatus ? _self._triggerStatus : triggerStatus // ignore: cast_nullable_to_non_nullable
+as List<String>,triggerKeywords: null == triggerKeywords ? _self._triggerKeywords : triggerKeywords // ignore: cast_nullable_to_non_nullable
 as List<String>,action: null == action ? _self.action : action // ignore: cast_nullable_to_non_nullable
 as String,
   ));

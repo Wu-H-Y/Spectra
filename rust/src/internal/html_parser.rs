@@ -1,8 +1,8 @@
+#![allow(dead_code)]
+
 //! HTML 解析器 API
 //!
 //! 提供统一的 HTML 解析和数据提取入口点，通过 FFI 暴露给 Dart。
-
-use flutter_rust_bridge::frb;
 
 use crate::{
     domain::rule::pipeline::{PipelineExecuteRequest, PipelineExecuteResult, PipelineOperation},
@@ -19,8 +19,7 @@ use crate::{
 ///
 /// # 返回
 /// 匹配结果的字符串数组
-#[frb(sync)]
-pub fn parse_html(html: String, selector_type: String, query: String) -> Vec<String> {
+pub(crate) fn parse_html(html: String, selector_type: String, query: String) -> Vec<String> {
     match parse_html_internal(&html, &selector_type, &query) {
         Ok(results) => results,
         Err(e) => {
@@ -54,8 +53,7 @@ fn parse_html_internal(
 ///
 /// # 返回
 /// Pipeline 执行结果
-#[frb(sync)]
-pub fn execute_pipeline(request: PipelineExecuteRequest) -> PipelineExecuteResult {
+pub(crate) fn execute_pipeline(request: PipelineExecuteRequest) -> PipelineExecuteResult {
     match execute_pipeline_internal(&request) {
         Ok(data) => PipelineExecuteResult {
             success: true,
@@ -198,6 +196,13 @@ fn execute_operation(
             }
             Ok(results)
         }
+        "first" => Ok(input.first().cloned().into_iter().collect()),
+        "last" => Ok(input.last().cloned().into_iter().collect()),
+        "join" => {
+            let separator = op.param.as_deref().unwrap_or("");
+            Ok(vec![input.join(separator)])
+        }
+        "array" => Ok(input.to_vec()),
         _ => Err(CrawlerError::InvalidInput(format!(
             "不支持的操作类型: {}",
             op.op_type
@@ -214,8 +219,7 @@ fn execute_operation(
 ///
 /// # 返回
 /// 匹配元素的属性值数组
-#[frb(sync)]
-pub fn css_select_attr(html: String, selector: String, attr: String) -> Vec<String> {
+pub(crate) fn css_select_attr(html: String, selector: String, attr: String) -> Vec<String> {
     match CssExecutor::execute_attr(&html, &selector, &attr) {
         Ok(results) => results,
         Err(e) => {
@@ -234,8 +238,7 @@ pub fn css_select_attr(html: String, selector: String, attr: String) -> Vec<Stri
 ///
 /// # 返回
 /// 执行结果
-#[frb(sync)]
-pub fn execute_js(script: String, val: String, vars_json: Option<String>) -> String {
+pub(crate) fn execute_js(script: String, val: String, vars_json: Option<String>) -> String {
     let vars = vars_json
         .as_ref()
         .and_then(|v| serde_json::from_str(v).ok());

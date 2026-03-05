@@ -110,42 +110,6 @@ Map<String, dynamic> _$NodePayload_AggregationToJson(
   'runtimeType': instance.$type,
 };
 
-_PipelineExecuteRequest _$PipelineExecuteRequestFromJson(
-  Map<String, dynamic> json,
-) => _PipelineExecuteRequest(
-  content: json['content'] as String,
-  baseUrl: json['base_url'] as String?,
-  vars: json['vars'] as String?,
-  operations: (json['operations'] as List<dynamic>)
-      .map((e) => PipelineOperation.fromJson(e as Map<String, dynamic>))
-      .toList(),
-);
-
-Map<String, dynamic> _$PipelineExecuteRequestToJson(
-  _PipelineExecuteRequest instance,
-) => <String, dynamic>{
-  'content': instance.content,
-  'base_url': ?instance.baseUrl,
-  'vars': ?instance.vars,
-  'operations': instance.operations.map((e) => e.toJson()).toList(),
-};
-
-_PipelineExecuteResult _$PipelineExecuteResultFromJson(
-  Map<String, dynamic> json,
-) => _PipelineExecuteResult(
-  success: json['success'] as bool,
-  data: (json['data'] as List<dynamic>).map((e) => e as String).toList(),
-  error: json['error'] as String?,
-);
-
-Map<String, dynamic> _$PipelineExecuteResultToJson(
-  _PipelineExecuteResult instance,
-) => <String, dynamic>{
-  'success': instance.success,
-  'data': instance.data,
-  'error': ?instance.error,
-};
-
 _PipelineGraph _$PipelineGraphFromJson(Map<String, dynamic> json) =>
     _PipelineGraph(
       nodes: (json['nodes'] as List<dynamic>)
@@ -160,20 +124,6 @@ Map<String, dynamic> _$PipelineGraphToJson(_PipelineGraph instance) =>
     <String, dynamic>{
       'nodes': instance.nodes.map((e) => e.toJson()).toList(),
       'edges': instance.edges.map((e) => e.toJson()).toList(),
-    };
-
-_PipelineOperation _$PipelineOperationFromJson(Map<String, dynamic> json) =>
-    _PipelineOperation(
-      opType: json['op_type'] as String,
-      param: json['param'] as String?,
-      param2: json['param2'] as String?,
-    );
-
-Map<String, dynamic> _$PipelineOperationToJson(_PipelineOperation instance) =>
-    <String, dynamic>{
-      'op_type': instance.opType,
-      'param': ?instance.param,
-      'param2': ?instance.param2,
     };
 
 SelectorDef_Css _$SelectorDef_CssFromJson(Map<String, dynamic> json) =>

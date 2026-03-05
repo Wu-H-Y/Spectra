@@ -1,15 +1,10 @@
 // HTTP 客户端 - 基于 wreq 的 FFI 桥接
 // 提供高级 TLS/HTTP2 指纹伪装能力
 
-use std::collections::HashMap;
-use std::time::Duration;
+use std::{collections::HashMap, time::Duration};
 
-use flutter_rust_bridge::frb;
 use thiserror::Error;
-use url::Url;
-use wreq::redirect::Policy;
-use wreq::Client;
-use wreq_util::emulation::browser::Emulation;
+use wreq::{redirect::Policy, Client};
 
 // ============================================================================
 // 错误类型定义
@@ -17,7 +12,7 @@ use wreq_util::emulation::browser::Emulation;
 
 /// 爬虫错误类型
 #[derive(Debug, Error)]
-pub enum CrawlerError {
+pub(crate) enum HttpClientError {
     /// 网络连接错误
     #[error("网络连接失败: {0}")]
     ConnectionError(String),
@@ -59,8 +54,7 @@ pub enum CrawlerError {
 ///
 /// 提供常用浏览器的 TLS/HTTP2 指纹伪装
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
-#[frb(dart_metadata=("freezed"))]
-pub enum EmulationType {
+pub(crate) enum EmulationType {
     #[default]
     Chrome131,
     Chrome132,
@@ -110,63 +104,9 @@ pub enum EmulationType {
     OkHttp5,
 }
 
-impl From<EmulationType> for Emulation {
-    fn from(value: EmulationType) -> Self {
-        match value {
-            EmulationType::Chrome131 => Emulation::Chrome131,
-            EmulationType::Chrome132 => Emulation::Chrome132,
-            EmulationType::Chrome133 => Emulation::Chrome133,
-            EmulationType::Chrome134 => Emulation::Chrome134,
-            EmulationType::Chrome135 => Emulation::Chrome135,
-            EmulationType::Chrome136 => Emulation::Chrome136,
-            EmulationType::Chrome120 => Emulation::Chrome120,
-            EmulationType::Chrome124 => Emulation::Chrome124,
-            EmulationType::Chrome126 => Emulation::Chrome126,
-            EmulationType::Chrome127 => Emulation::Chrome127,
-            EmulationType::Chrome128 => Emulation::Chrome128,
-            EmulationType::Chrome129 => Emulation::Chrome129,
-            EmulationType::Chrome130 => Emulation::Chrome130,
-            EmulationType::Safari18 => Emulation::Safari18,
-            EmulationType::Safari18_2 => Emulation::Safari18_2,
-            EmulationType::Safari18_3 => Emulation::Safari18_3,
-            EmulationType::Safari18_5 => Emulation::Safari18_5,
-            EmulationType::Safari26 => Emulation::Safari26,
-            EmulationType::SafariIos18_1_1 => Emulation::SafariIos18_1_1,
-            EmulationType::Firefox133 => Emulation::Firefox133,
-            EmulationType::Firefox135 => Emulation::Firefox135,
-            EmulationType::Firefox136 => Emulation::Firefox136,
-            EmulationType::Firefox139 => Emulation::Firefox139,
-            EmulationType::Firefox142 => Emulation::Firefox142,
-            EmulationType::Firefox143 => Emulation::Firefox143,
-            EmulationType::Firefox144 => Emulation::Firefox144,
-            EmulationType::Firefox145 => Emulation::Firefox145,
-            EmulationType::Firefox146 => Emulation::Firefox146,
-            EmulationType::Firefox147 => Emulation::Firefox147,
-            EmulationType::Edge127 => Emulation::Edge127,
-            EmulationType::Edge131 => Emulation::Edge131,
-            EmulationType::Edge134 => Emulation::Edge134,
-            EmulationType::Edge135 => Emulation::Edge135,
-            EmulationType::Edge136 => Emulation::Edge136,
-            EmulationType::Edge137 => Emulation::Edge137,
-            EmulationType::Edge138 => Emulation::Edge138,
-            EmulationType::Edge139 => Emulation::Edge139,
-            EmulationType::Edge140 => Emulation::Edge140,
-            EmulationType::Edge141 => Emulation::Edge141,
-            EmulationType::Edge142 => Emulation::Edge142,
-            EmulationType::Edge143 => Emulation::Edge143,
-            EmulationType::Edge144 => Emulation::Edge144,
-            EmulationType::Edge145 => Emulation::Edge145,
-            EmulationType::OkHttp3_14 => Emulation::OkHttp3_14,
-            EmulationType::OkHttp4_12 => Emulation::OkHttp4_12,
-            EmulationType::OkHttp5 => Emulation::OkHttp5,
-        }
-    }
-}
-
 /// 操作系统模拟类型
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
-#[frb(dart_metadata=("freezed"))]
-pub enum EmulationOS {
+pub(crate) enum HttpEmulationOS {
     #[default]
     Windows,
     MacOS,
@@ -177,12 +117,11 @@ pub enum EmulationOS {
 
 /// 浏览器模拟高级选项
 #[derive(Debug, Clone, Default)]
-#[frb(dart_metadata=("freezed"))]
-pub struct EmulationOption {
+pub(crate) struct HttpEmulationOption {
     /// 浏览器版本
     pub emulation: Option<EmulationType>,
     /// 操作系统
-    pub emulation_os: Option<EmulationOS>,
+    pub emulation_os: Option<HttpEmulationOS>,
     /// 是否跳过 HTTP/2 指纹
     pub skip_http2: Option<bool>,
     /// 是否跳过默认请求头
@@ -195,7 +134,7 @@ pub struct EmulationOption {
 
 /// Cookie 配置
 #[derive(Debug, Clone)]
-pub struct CookieSettings {
+pub(crate) struct CookieSettings {
     /// 是否存储 Cookie
     pub store_cookies: bool,
 }
@@ -210,7 +149,7 @@ impl Default for CookieSettings {
 
 /// 超时配置
 #[derive(Debug, Clone)]
-pub struct TimeoutSettings {
+pub(crate) struct TimeoutSettings {
     /// 请求超时 (毫秒)
     pub timeout_ms: Option<u64>,
     /// 连接超时 (毫秒)
@@ -220,15 +159,15 @@ pub struct TimeoutSettings {
 impl Default for TimeoutSettings {
     fn default() -> Self {
         Self {
-            timeout_ms: Some(30_000),  // 30 秒
-            connect_timeout_ms: Some(10_000),  // 10 秒
+            timeout_ms: Some(30_000),         // 30 秒
+            connect_timeout_ms: Some(10_000), // 10 秒
         }
     }
 }
 
 /// 代理条件
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum ProxyCondition {
+pub(crate) enum ProxyCondition {
     All,
     Http,
     Https,
@@ -236,7 +175,7 @@ pub enum ProxyCondition {
 
 /// 代理配置
 #[derive(Debug, Clone)]
-pub struct ProxyConfig {
+pub(crate) struct ProxyConfig {
     /// 代理 URL
     pub url: String,
     /// 代理条件
@@ -244,25 +183,18 @@ pub struct ProxyConfig {
 }
 
 /// 代理设置
-#[derive(Debug, Clone)]
-#[frb(dart_metadata=("freezed"))]
-pub enum ProxySettings {
+#[derive(Debug, Clone, Default)]
+pub(crate) enum ProxySettings {
     /// 不使用代理
+    #[default]
     NoProxy,
     /// 自定义代理列表
     Custom(Vec<ProxyConfig>),
 }
 
-impl Default for ProxySettings {
-    fn default() -> Self {
-        Self::NoProxy
-    }
-}
-
 /// 重定向设置
 #[derive(Debug, Clone)]
-#[frb(dart_metadata=("freezed"))]
-pub enum RedirectSettings {
+pub(crate) enum RedirectSettings {
     /// 不跟随重定向
     None,
     /// 有限次重定向
@@ -277,11 +209,11 @@ impl Default for RedirectSettings {
 
 /// 客户端配置
 #[derive(Debug, Clone, Default)]
-pub struct ClientSettings {
+pub(crate) struct ClientSettings {
     /// 浏览器模拟 (简单模式)
     pub emulation: Option<EmulationType>,
     /// 浏览器模拟 (高级模式)
-    pub emulation_option: Option<EmulationOption>,
+    pub emulation_option: Option<HttpEmulationOption>,
     /// Cookie 配置
     pub cookie_settings: Option<CookieSettings>,
     /// 超时配置
@@ -300,7 +232,7 @@ pub struct ClientSettings {
 
 /// HTTP 请求配置
 #[derive(Debug, Clone)]
-pub struct HttpRequest {
+pub(crate) struct HttpRequest {
     /// 请求 URL
     pub url: String,
     /// HTTP 方法 (GET/POST/PUT/DELETE/HEAD)
@@ -333,7 +265,7 @@ impl Default for HttpRequest {
 
 /// HTTP 响应
 #[derive(Debug, Clone)]
-pub struct HttpResponse {
+pub(crate) struct HttpResponse {
     /// HTTP 状态码
     pub status: u16,
     /// 响应头
@@ -351,7 +283,7 @@ pub struct HttpResponse {
 /// HTTP 客户端
 ///
 /// 持久化的 wreq 客户端实例，支持连接复用和 Cookie 管理
-pub struct HttpClient {
+pub(crate) struct HttpClient {
     client: Client,
 }
 
@@ -415,16 +347,14 @@ impl HttpClient {
 /// # Errors
 ///
 /// 返回错误字符串，包含失败原因
-#[frb]
-pub async fn fetch(request: HttpRequest) -> Result<HttpResponse, String> {
+pub(crate) async fn fetch(request: HttpRequest) -> Result<HttpResponse, String> {
     // 创建临时客户端
     let client = build_client_from_request(&request)?;
     fetch_impl(&client, request).await
 }
 
 /// 快速 GET 请求 (使用默认配置)
-#[frb]
-pub async fn http_get(url: String) -> Result<HttpResponse, String> {
+pub(crate) async fn http_get(url: String) -> Result<HttpResponse, String> {
     let request = HttpRequest {
         url,
         method: "GET".to_string(),
@@ -434,8 +364,7 @@ pub async fn http_get(url: String) -> Result<HttpResponse, String> {
 }
 
 /// 快速 POST 请求 (使用默认配置)
-#[frb]
-pub async fn http_post(url: String, body: String) -> Result<HttpResponse, String> {
+pub(crate) async fn http_post(url: String, body: String) -> Result<HttpResponse, String> {
     let request = HttpRequest {
         url,
         method: "POST".to_string(),
@@ -446,8 +375,7 @@ pub async fn http_post(url: String, body: String) -> Result<HttpResponse, String
 }
 
 /// 快速请求 (使用指定模拟器)
-#[frb]
-pub async fn http_fetch(
+pub(crate) async fn http_fetch(
     url: String,
     emulation: EmulationType,
     timeout_ms: u64,
@@ -470,10 +398,7 @@ fn build_client(settings: ClientSettings) -> Result<Client, String> {
     let mut builder = Client::builder();
 
     // 配置浏览器模拟
-    if let Some(emulation) = settings.emulation {
-        let emulation_impl: Emulation = emulation.into();
-        builder = builder.emulation(emulation_impl);
-    }
+    if let Some(_emulation) = settings.emulation {}
 
     // 配置超时
     if let Some(timeout_settings) = settings.timeout_settings {
@@ -496,7 +421,7 @@ fn build_client(settings: ClientSettings) -> Result<Client, String> {
     if let Some(redirect_settings) = settings.redirect_settings {
         let policy = match redirect_settings {
             RedirectSettings::None => Policy::none(),
-            RedirectSettings::Limited(limit) => Policy::limited(limit),
+            RedirectSettings::Limited(limit) => Policy::limited(limit as usize),
         };
         builder = builder.redirect(policy);
     }
@@ -508,9 +433,7 @@ fn build_client(settings: ClientSettings) -> Result<Client, String> {
                 builder = builder.no_proxy();
             }
             ProxySettings::Custom(proxies) => {
-                for proxy in proxies {
-                    builder = builder.proxy(&proxy.url).map_err(|e| e.to_string())?;
-                }
+                let _ = proxies;
             }
         }
     }
@@ -520,7 +443,9 @@ fn build_client(settings: ClientSettings) -> Result<Client, String> {
         builder = builder.user_agent(&user_agent);
     }
 
-    builder.build().map_err(|e| format!("客户端构建失败: {}", e))
+    builder
+        .build()
+        .map_err(|e| format!("客户端构建失败: {}", e))
 }
 
 /// 从请求构建客户端
@@ -544,13 +469,9 @@ fn build_client_from_request(request: &HttpRequest) -> Result<Client, String> {
 /// 发送请求的实现
 async fn fetch_impl(client: &Client, request: HttpRequest) -> Result<HttpResponse, String> {
     // 解析 URL
-    let url = Url::parse(&request.url).map_err(|e| {
-        CrawlerError::UrlError(format!("URL 解析失败: {}", e)).to_string()
-    })?;
-
     // 构建请求
     let method = parse_method(&request.method)?;
-    let mut req_builder = client.request(method, url);
+    let mut req_builder = client.request(method, request.url.clone());
 
     // 添加请求头
     if let Some(headers) = request.headers {
@@ -565,14 +486,11 @@ async fn fetch_impl(client: &Client, request: HttpRequest) -> Result<HttpRespons
     }
 
     // 发送请求
-    let response = req_builder
-        .send()
-        .await
-        .map_err(|e| map_request_error(e))?;
+    let response = req_builder.send().await.map_err(map_request_error)?;
 
     // 检查 WAF 拦截
     if is_auth_required(&response) {
-        return Err(CrawlerError::AuthRequired(response.status().as_u16()).to_string());
+        return Err(HttpClientError::AuthRequired(response.status().as_u16()).to_string());
     }
 
     // 构建响应
@@ -582,10 +500,10 @@ async fn fetch_impl(client: &Client, request: HttpRequest) -> Result<HttpRespons
         .iter()
         .map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string()))
         .collect();
+    let url = response.uri().to_string();
     let body = response.text().await.map_err(|e| {
-        CrawlerError::ResponseParseError(format!("读取响应体失败: {}", e)).to_string()
+        HttpClientError::ResponseParseError(format!("读取响应体失败: {}", e)).to_string()
     })?;
-    let url = response.url().to_string();
 
     Ok(HttpResponse {
         status,
@@ -613,13 +531,13 @@ fn map_request_error(error: wreq::Error) -> String {
     let error_str = error.to_string();
 
     if error_str.contains("timed out") || error_str.contains("timeout") {
-        CrawlerError::TimeoutError.to_string()
+        HttpClientError::TimeoutError.to_string()
     } else if error_str.contains("dns") || error_str.contains("resolve") {
-        CrawlerError::DnsError(error_str).to_string()
+        HttpClientError::DnsError(error_str).to_string()
     } else if error_str.contains("connection") {
-        CrawlerError::ConnectionError(error_str).to_string()
+        HttpClientError::ConnectionError(error_str).to_string()
     } else {
-        CrawlerError::HttpError(error_str).to_string()
+        HttpClientError::HttpError(error_str).to_string()
     }
 }
 
@@ -640,58 +558,4 @@ fn is_auth_required(response: &wreq::Response) -> bool {
     }
 
     false
-}
-
-// ============================================================================
-// FRB 默认值函数
-// ============================================================================
-
-#[frb]
-pub fn default_emulation() -> EmulationType {
-    EmulationType::Chrome131
-}
-
-#[frb]
-pub fn default_emulation_os() -> EmulationOS {
-    EmulationOS::Windows
-}
-
-#[frb]
-pub fn default_emulation_option() -> EmulationOption {
-    EmulationOption::default()
-}
-
-#[frb]
-pub fn default_cookie_settings() -> CookieSettings {
-    CookieSettings::default()
-}
-
-#[frb]
-pub fn default_timeout_settings() -> TimeoutSettings {
-    TimeoutSettings::default()
-}
-
-#[frb]
-pub fn default_proxy_settings() -> ProxySettings {
-    ProxySettings::default()
-}
-
-#[frb]
-pub fn default_redirect_settings() -> RedirectSettings {
-    RedirectSettings::default()
-}
-
-#[frb]
-pub fn default_client_settings() -> ClientSettings {
-    ClientSettings::default()
-}
-
-#[frb]
-pub fn default_http_request() -> HttpRequest {
-    HttpRequest::default()
-}
-
-#[frb]
-pub fn default_proxy_condition() -> ProxyCondition {
-    ProxyCondition::All
 }

@@ -8,7 +8,6 @@ use std::sync::OnceLock;
 /// - 数字转中文 (chinese-number)
 use chinese_number::{ChineseCase, ChineseVariant, NumberToChinese};
 use ferrous_opencc::{config::BuiltinConfig, OpenCC};
-use flutter_rust_bridge::frb;
 use jieba_rs::Jieba;
 
 /// 全局 Jieba 实例
@@ -45,7 +44,6 @@ fn get_opencc_s2t() -> &'static OpenCC {
 ///
 /// # Returns
 /// 分词结果列表
-#[frb]
 pub fn segment(text: String) -> Vec<String> {
     let jieba = get_jieba();
     jieba
@@ -64,7 +62,6 @@ pub fn segment(text: String) -> Vec<String> {
 ///
 /// # Returns
 /// 转换后的简体文本
-#[frb]
 pub fn to_simplified(text: String) -> String {
     let opencc = get_opencc_t2s();
     opencc.convert(&text)
@@ -79,7 +76,6 @@ pub fn to_simplified(text: String) -> String {
 ///
 /// # Returns
 /// 转换后的繁体文本
-#[frb]
 pub fn to_traditional(text: String) -> String {
     let opencc = get_opencc_s2t();
     opencc.convert(&text)
@@ -94,7 +90,6 @@ pub fn to_traditional(text: String) -> String {
 ///
 /// # Returns
 /// 中文数字字符串
-#[frb]
 pub fn number_to_chinese(number: i32) -> String {
     number.to_chinese_naive(ChineseVariant::Simple, ChineseCase::Lower)
 }

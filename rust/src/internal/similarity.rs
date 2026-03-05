@@ -1,13 +1,5 @@
 use std::{collections::HashSet, sync::OnceLock};
 
-/// 相似度计算 API
-///
-/// 提供：
-/// - Jaccard 相似度 (基于分词)
-/// - Levenshtein 距离/相似度
-/// - 标题标准化
-/// - 模糊搜索评分
-use flutter_rust_bridge::frb;
 use regex::Regex;
 use textdistance::{Algorithm, Levenshtein, SorensenDice};
 
@@ -53,7 +45,6 @@ fn get_whitespace_regex() -> &'static Regex {
 ///
 /// # Returns
 /// 相似度值 (0.0 ~ 1.0)
-#[frb]
 pub fn jaccard(a: String, b: String) -> f64 {
     let jieba = get_jieba();
 
@@ -87,7 +78,6 @@ pub fn jaccard(a: String, b: String) -> f64 {
 ///
 /// # Returns
 /// 相似度值 (0.0 ~ 1.0)
-#[frb]
 pub fn levenshtein(a: String, b: String) -> f64 {
     if a == b {
         return 1.0;
@@ -114,7 +104,6 @@ pub fn levenshtein(a: String, b: String) -> f64 {
 ///
 /// # Returns
 /// 相似度值 (0.0 ~ 1.0)
-#[frb]
 pub fn sorensen_dice(a: String, b: String) -> f64 {
     let jieba = get_jieba();
 
@@ -145,7 +134,6 @@ pub fn sorensen_dice(a: String, b: String) -> f64 {
 ///
 /// # Returns
 /// 相似度值 (0.0 ~ 1.0)
-#[frb]
 pub fn levenshtein_tokens(a: String, b: String) -> f64 {
     let jieba = get_jieba();
 
@@ -178,7 +166,6 @@ pub fn levenshtein_tokens(a: String, b: String) -> f64 {
 ///
 /// # Returns
 /// 标准化后的标题
-#[frb]
 pub fn normalize_title(title: String) -> String {
     use super::text_processor::to_simplified;
 
@@ -213,7 +200,6 @@ pub fn normalize_title(title: String) -> String {
 ///
 /// # Returns
 /// 综合相似度分数 (0.0 ~ 1.0)
-#[frb]
 pub fn fuzzy_search_score(query: String, target: String) -> f64 {
     // 标准化
     let query_norm = normalize_title(query);

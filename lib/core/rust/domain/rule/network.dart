@@ -88,7 +88,7 @@ enum EmulationOS {
 @freezed
 sealed class FallbackConfig with _$FallbackConfig {
   const factory FallbackConfig({
-    required Int32List triggerStatus,
+    required List<String> triggerStatus,
     required List<String> triggerKeywords,
     required String action,
   }) = _FallbackConfig;

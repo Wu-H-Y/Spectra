@@ -7,15 +7,15 @@
 // ignore_for_file: argument_type_not_assignable
 
 import 'api/crawler_models.dart';
-import 'api/html_parser.dart';
-import 'api/similarity.dart';
-import 'api/text_processor.dart';
+import 'api/lifecycle_executor.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'domain/phase.dart';
 import 'domain/rule/crawler_rule.dart';
 import 'domain/rule/lifecycle.dart';
 import 'domain/rule/network.dart';
 import 'domain/rule/pipeline.dart';
+import 'error.dart';
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
 
@@ -52,13 +52,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool dco_decode_box_autoadd_bool(dynamic raw);
 
   @protected
+  BuildError dco_decode_box_autoadd_build_error(dynamic raw);
+
+  @protected
   ContentConfig dco_decode_box_autoadd_content_config(dynamic raw);
+
+  @protected
+  ContentData dco_decode_box_autoadd_content_data(dynamic raw);
+
+  @protected
+  CrawlerError dco_decode_box_autoadd_crawler_error(dynamic raw);
 
   @protected
   CrawlerRule dco_decode_box_autoadd_crawler_rule(dynamic raw);
 
   @protected
   DetailConfig dco_decode_box_autoadd_detail_config(dynamic raw);
+
+  @protected
+  DetailData dco_decode_box_autoadd_detail_data(dynamic raw);
 
   @protected
   Emulation dco_decode_box_autoadd_emulation(dynamic raw);
@@ -73,15 +85,22 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ExploreConfig dco_decode_box_autoadd_explore_config(dynamic raw);
 
   @protected
+  ExploreData dco_decode_box_autoadd_explore_data(dynamic raw);
+
+  @protected
   FallbackConfig dco_decode_box_autoadd_fallback_config(dynamic raw);
 
   @protected
   NetworkConfig dco_decode_box_autoadd_network_config(dynamic raw);
 
   @protected
-  PipelineExecuteRequest dco_decode_box_autoadd_pipeline_execute_request(
-    dynamic raw,
-  );
+  ParseError dco_decode_box_autoadd_parse_error(dynamic raw);
+
+  @protected
+  PhaseContext dco_decode_box_autoadd_phase_context(dynamic raw);
+
+  @protected
+  PhaseData dco_decode_box_autoadd_phase_data(dynamic raw);
 
   @protected
   RuleProxyConfig dco_decode_box_autoadd_rule_proxy_config(dynamic raw);
@@ -90,25 +109,52 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   SearchConfig dco_decode_box_autoadd_search_config(dynamic raw);
 
   @protected
+  SearchData dco_decode_box_autoadd_search_data(dynamic raw);
+
+  @protected
   SelectorDef dco_decode_box_autoadd_selector_def(dynamic raw);
 
   @protected
   TocConfig dco_decode_box_autoadd_toc_config(dynamic raw);
 
   @protected
+  TocData dco_decode_box_autoadd_toc_data(dynamic raw);
+
+  @protected
   TransformDef dco_decode_box_autoadd_transform_def(dynamic raw);
+
+  @protected
+  int dco_decode_box_autoadd_u_32(dynamic raw);
 
   @protected
   BigInt dco_decode_box_autoadd_u_64(dynamic raw);
 
   @protected
+  BuildError dco_decode_build_error(dynamic raw);
+
+  @protected
+  ChapterItem dco_decode_chapter_item(dynamic raw);
+
+  @protected
   ContentConfig dco_decode_content_config(dynamic raw);
+
+  @protected
+  ContentData dco_decode_content_data(dynamic raw);
+
+  @protected
+  ContentType dco_decode_content_type(dynamic raw);
+
+  @protected
+  CrawlerError dco_decode_crawler_error(dynamic raw);
 
   @protected
   CrawlerRule dco_decode_crawler_rule(dynamic raw);
 
   @protected
   DetailConfig dco_decode_detail_config(dynamic raw);
+
+  @protected
+  DetailData dco_decode_detail_data(dynamic raw);
 
   @protected
   Emulation dco_decode_emulation(dynamic raw);
@@ -121,6 +167,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ExploreConfig dco_decode_explore_config(dynamic raw);
+
+  @protected
+  ExploreData dco_decode_explore_data(dynamic raw);
 
   @protected
   double dco_decode_f_64(dynamic raw);
@@ -141,7 +190,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Lifecycle dco_decode_lifecycle(dynamic raw);
 
   @protected
+  LifecyclePhase dco_decode_lifecycle_phase(dynamic raw);
+
+  @protected
   List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  List<ChapterItem> dco_decode_list_chapter_item(dynamic raw);
 
   @protected
   List<FlowEdge> dco_decode_list_flow_edge(dynamic raw);
@@ -153,16 +208,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<MatchingDimension> dco_decode_list_matching_dimension(dynamic raw);
 
   @protected
-  List<PipelineOperation> dco_decode_list_pipeline_operation(dynamic raw);
-
-  @protected
-  Int32List dco_decode_list_prim_i_32_strict(dynamic raw);
-
-  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
   List<(String, String)> dco_decode_list_record_string_string(dynamic raw);
+
+  @protected
+  List<SearchItem> dco_decode_list_search_item(dynamic raw);
 
   @protected
   MatchingConfig dco_decode_matching_config(dynamic raw);
@@ -192,6 +244,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ContentConfig? dco_decode_opt_box_autoadd_content_config(dynamic raw);
 
   @protected
+  CrawlerError? dco_decode_opt_box_autoadd_crawler_error(dynamic raw);
+
+  @protected
   DetailConfig? dco_decode_opt_box_autoadd_detail_config(dynamic raw);
 
   @protected
@@ -213,6 +268,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   NetworkConfig? dco_decode_opt_box_autoadd_network_config(dynamic raw);
 
   @protected
+  PhaseData? dco_decode_opt_box_autoadd_phase_data(dynamic raw);
+
+  @protected
   RuleProxyConfig? dco_decode_opt_box_autoadd_rule_proxy_config(dynamic raw);
 
   @protected
@@ -222,19 +280,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   TocConfig? dco_decode_opt_box_autoadd_toc_config(dynamic raw);
 
   @protected
+  int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
+
+  @protected
   BigInt? dco_decode_opt_box_autoadd_u_64(dynamic raw);
 
   @protected
-  PipelineExecuteRequest dco_decode_pipeline_execute_request(dynamic raw);
+  ParseError dco_decode_parse_error(dynamic raw);
 
   @protected
-  PipelineExecuteResult dco_decode_pipeline_execute_result(dynamic raw);
+  PhaseContext dco_decode_phase_context(dynamic raw);
+
+  @protected
+  PhaseData dco_decode_phase_data(dynamic raw);
+
+  @protected
+  PhaseResult dco_decode_phase_result(dynamic raw);
 
   @protected
   PipelineGraph dco_decode_pipeline_graph(dynamic raw);
-
-  @protected
-  PipelineOperation dco_decode_pipeline_operation(dynamic raw);
 
   @protected
   (String, String) dco_decode_record_string_string(dynamic raw);
@@ -246,13 +310,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   SearchConfig dco_decode_search_config(dynamic raw);
 
   @protected
+  SearchData dco_decode_search_data(dynamic raw);
+
+  @protected
+  SearchItem dco_decode_search_item(dynamic raw);
+
+  @protected
   SelectorDef dco_decode_selector_def(dynamic raw);
 
   @protected
   TocConfig dco_decode_toc_config(dynamic raw);
 
   @protected
+  TocData dco_decode_toc_data(dynamic raw);
+
+  @protected
   TransformDef dco_decode_transform_def(dynamic raw);
+
+  @protected
+  int dco_decode_u_32(dynamic raw);
 
   @protected
   BigInt dco_decode_u_64(dynamic raw);
@@ -294,7 +370,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool sse_decode_box_autoadd_bool(SseDeserializer deserializer);
 
   @protected
+  BuildError sse_decode_box_autoadd_build_error(SseDeserializer deserializer);
+
+  @protected
   ContentConfig sse_decode_box_autoadd_content_config(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ContentData sse_decode_box_autoadd_content_data(SseDeserializer deserializer);
+
+  @protected
+  CrawlerError sse_decode_box_autoadd_crawler_error(
     SseDeserializer deserializer,
   );
 
@@ -305,6 +392,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   DetailConfig sse_decode_box_autoadd_detail_config(
     SseDeserializer deserializer,
   );
+
+  @protected
+  DetailData sse_decode_box_autoadd_detail_data(SseDeserializer deserializer);
 
   @protected
   Emulation sse_decode_box_autoadd_emulation(SseDeserializer deserializer);
@@ -323,6 +413,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  ExploreData sse_decode_box_autoadd_explore_data(SseDeserializer deserializer);
+
+  @protected
   FallbackConfig sse_decode_box_autoadd_fallback_config(
     SseDeserializer deserializer,
   );
@@ -333,9 +426,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  PipelineExecuteRequest sse_decode_box_autoadd_pipeline_execute_request(
+  ParseError sse_decode_box_autoadd_parse_error(SseDeserializer deserializer);
+
+  @protected
+  PhaseContext sse_decode_box_autoadd_phase_context(
     SseDeserializer deserializer,
   );
+
+  @protected
+  PhaseData sse_decode_box_autoadd_phase_data(SseDeserializer deserializer);
 
   @protected
   RuleProxyConfig sse_decode_box_autoadd_rule_proxy_config(
@@ -348,10 +447,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  SearchData sse_decode_box_autoadd_search_data(SseDeserializer deserializer);
+
+  @protected
   SelectorDef sse_decode_box_autoadd_selector_def(SseDeserializer deserializer);
 
   @protected
   TocConfig sse_decode_box_autoadd_toc_config(SseDeserializer deserializer);
+
+  @protected
+  TocData sse_decode_box_autoadd_toc_data(SseDeserializer deserializer);
 
   @protected
   TransformDef sse_decode_box_autoadd_transform_def(
@@ -359,16 +464,37 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
+
+  @protected
   BigInt sse_decode_box_autoadd_u_64(SseDeserializer deserializer);
 
   @protected
+  BuildError sse_decode_build_error(SseDeserializer deserializer);
+
+  @protected
+  ChapterItem sse_decode_chapter_item(SseDeserializer deserializer);
+
+  @protected
   ContentConfig sse_decode_content_config(SseDeserializer deserializer);
+
+  @protected
+  ContentData sse_decode_content_data(SseDeserializer deserializer);
+
+  @protected
+  ContentType sse_decode_content_type(SseDeserializer deserializer);
+
+  @protected
+  CrawlerError sse_decode_crawler_error(SseDeserializer deserializer);
 
   @protected
   CrawlerRule sse_decode_crawler_rule(SseDeserializer deserializer);
 
   @protected
   DetailConfig sse_decode_detail_config(SseDeserializer deserializer);
+
+  @protected
+  DetailData sse_decode_detail_data(SseDeserializer deserializer);
 
   @protected
   Emulation sse_decode_emulation(SseDeserializer deserializer);
@@ -381,6 +507,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ExploreConfig sse_decode_explore_config(SseDeserializer deserializer);
+
+  @protected
+  ExploreData sse_decode_explore_data(SseDeserializer deserializer);
 
   @protected
   double sse_decode_f_64(SseDeserializer deserializer);
@@ -401,7 +530,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Lifecycle sse_decode_lifecycle(SseDeserializer deserializer);
 
   @protected
+  LifecyclePhase sse_decode_lifecycle_phase(SseDeserializer deserializer);
+
+  @protected
   List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  List<ChapterItem> sse_decode_list_chapter_item(SseDeserializer deserializer);
 
   @protected
   List<FlowEdge> sse_decode_list_flow_edge(SseDeserializer deserializer);
@@ -415,20 +550,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  List<PipelineOperation> sse_decode_list_pipeline_operation(
-    SseDeserializer deserializer,
-  );
-
-  @protected
-  Int32List sse_decode_list_prim_i_32_strict(SseDeserializer deserializer);
-
-  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
   List<(String, String)> sse_decode_list_record_string_string(
     SseDeserializer deserializer,
   );
+
+  @protected
+  List<SearchItem> sse_decode_list_search_item(SseDeserializer deserializer);
 
   @protected
   MatchingConfig sse_decode_matching_config(SseDeserializer deserializer);
@@ -460,6 +590,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ContentConfig? sse_decode_opt_box_autoadd_content_config(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  CrawlerError? sse_decode_opt_box_autoadd_crawler_error(
     SseDeserializer deserializer,
   );
 
@@ -497,6 +632,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  PhaseData? sse_decode_opt_box_autoadd_phase_data(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   RuleProxyConfig? sse_decode_opt_box_autoadd_rule_proxy_config(
     SseDeserializer deserializer,
   );
@@ -512,23 +652,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
+
+  @protected
   BigInt? sse_decode_opt_box_autoadd_u_64(SseDeserializer deserializer);
 
   @protected
-  PipelineExecuteRequest sse_decode_pipeline_execute_request(
-    SseDeserializer deserializer,
-  );
+  ParseError sse_decode_parse_error(SseDeserializer deserializer);
 
   @protected
-  PipelineExecuteResult sse_decode_pipeline_execute_result(
-    SseDeserializer deserializer,
-  );
+  PhaseContext sse_decode_phase_context(SseDeserializer deserializer);
+
+  @protected
+  PhaseData sse_decode_phase_data(SseDeserializer deserializer);
+
+  @protected
+  PhaseResult sse_decode_phase_result(SseDeserializer deserializer);
 
   @protected
   PipelineGraph sse_decode_pipeline_graph(SseDeserializer deserializer);
-
-  @protected
-  PipelineOperation sse_decode_pipeline_operation(SseDeserializer deserializer);
 
   @protected
   (String, String) sse_decode_record_string_string(
@@ -542,13 +684,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   SearchConfig sse_decode_search_config(SseDeserializer deserializer);
 
   @protected
+  SearchData sse_decode_search_data(SseDeserializer deserializer);
+
+  @protected
+  SearchItem sse_decode_search_item(SseDeserializer deserializer);
+
+  @protected
   SelectorDef sse_decode_selector_def(SseDeserializer deserializer);
 
   @protected
   TocConfig sse_decode_toc_config(SseDeserializer deserializer);
 
   @protected
+  TocData sse_decode_toc_data(SseDeserializer deserializer);
+
+  @protected
   TransformDef sse_decode_transform_def(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_u_32(SseDeserializer deserializer);
 
   @protected
   BigInt sse_decode_u_64(SseDeserializer deserializer);
@@ -599,8 +753,26 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_build_error(
+    BuildError self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_content_config(
     ContentConfig self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_content_data(
+    ContentData self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_crawler_error(
+    CrawlerError self,
     SseSerializer serializer,
   );
 
@@ -613,6 +785,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_detail_config(
     DetailConfig self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_detail_data(
+    DetailData self,
     SseSerializer serializer,
   );
 
@@ -641,6 +819,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_box_autoadd_explore_data(
+    ExploreData self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_fallback_config(
     FallbackConfig self,
     SseSerializer serializer,
@@ -653,8 +837,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  void sse_encode_box_autoadd_pipeline_execute_request(
-    PipelineExecuteRequest self,
+  void sse_encode_box_autoadd_parse_error(
+    ParseError self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_phase_context(
+    PhaseContext self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_phase_data(
+    PhaseData self,
     SseSerializer serializer,
   );
 
@@ -671,6 +867,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_box_autoadd_search_data(
+    SearchData self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_selector_def(
     SelectorDef self,
     SseSerializer serializer,
@@ -683,22 +885,46 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_box_autoadd_toc_data(TocData self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_transform_def(
     TransformDef self,
     SseSerializer serializer,
   );
 
   @protected
+  void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_u_64(BigInt self, SseSerializer serializer);
 
   @protected
+  void sse_encode_build_error(BuildError self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_chapter_item(ChapterItem self, SseSerializer serializer);
+
+  @protected
   void sse_encode_content_config(ContentConfig self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_content_data(ContentData self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_content_type(ContentType self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_crawler_error(CrawlerError self, SseSerializer serializer);
 
   @protected
   void sse_encode_crawler_rule(CrawlerRule self, SseSerializer serializer);
 
   @protected
   void sse_encode_detail_config(DetailConfig self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_detail_data(DetailData self, SseSerializer serializer);
 
   @protected
   void sse_encode_emulation(Emulation self, SseSerializer serializer);
@@ -714,6 +940,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_explore_config(ExploreConfig self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_explore_data(ExploreData self, SseSerializer serializer);
 
   @protected
   void sse_encode_f_64(double self, SseSerializer serializer);
@@ -737,7 +966,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_lifecycle(Lifecycle self, SseSerializer serializer);
 
   @protected
+  void sse_encode_lifecycle_phase(
+    LifecyclePhase self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_chapter_item(
+    List<ChapterItem> self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_list_flow_edge(List<FlowEdge> self, SseSerializer serializer);
@@ -752,18 +993,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  void sse_encode_list_pipeline_operation(
-    List<PipelineOperation> self,
-    SseSerializer serializer,
-  );
-
-  @protected
-  void sse_encode_list_prim_i_32_strict(
-    Int32List self,
-    SseSerializer serializer,
-  );
-
-  @protected
   void sse_encode_list_prim_u_8_strict(
     Uint8List self,
     SseSerializer serializer,
@@ -772,6 +1001,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_record_string_string(
     List<(String, String)> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_search_item(
+    List<SearchItem> self,
     SseSerializer serializer,
   );
 
@@ -818,6 +1053,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_opt_box_autoadd_crawler_error(
+    CrawlerError? self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_opt_box_autoadd_detail_config(
     DetailConfig? self,
     SseSerializer serializer,
@@ -860,6 +1101,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_opt_box_autoadd_phase_data(
+    PhaseData? self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_opt_box_autoadd_rule_proxy_config(
     RuleProxyConfig? self,
     SseSerializer serializer,
@@ -878,28 +1125,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_u_64(BigInt? self, SseSerializer serializer);
 
   @protected
-  void sse_encode_pipeline_execute_request(
-    PipelineExecuteRequest self,
-    SseSerializer serializer,
-  );
+  void sse_encode_parse_error(ParseError self, SseSerializer serializer);
 
   @protected
-  void sse_encode_pipeline_execute_result(
-    PipelineExecuteResult self,
-    SseSerializer serializer,
-  );
+  void sse_encode_phase_context(PhaseContext self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_phase_data(PhaseData self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_phase_result(PhaseResult self, SseSerializer serializer);
 
   @protected
   void sse_encode_pipeline_graph(PipelineGraph self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_pipeline_operation(
-    PipelineOperation self,
-    SseSerializer serializer,
-  );
 
   @protected
   void sse_encode_record_string_string(
@@ -917,13 +1161,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_search_config(SearchConfig self, SseSerializer serializer);
 
   @protected
+  void sse_encode_search_data(SearchData self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_search_item(SearchItem self, SseSerializer serializer);
+
+  @protected
   void sse_encode_selector_def(SelectorDef self, SseSerializer serializer);
 
   @protected
   void sse_encode_toc_config(TocConfig self, SseSerializer serializer);
 
   @protected
+  void sse_encode_toc_data(TocData self, SseSerializer serializer);
+
+  @protected
   void sse_encode_transform_def(TransformDef self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_u_32(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_64(BigInt self, SseSerializer serializer);

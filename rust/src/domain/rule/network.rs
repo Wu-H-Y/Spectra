@@ -178,9 +178,9 @@ pub struct RuleProxyConfig {
 #[frb(dart_metadata=("freezed"))]
 #[frb(json_serializable)]
 pub struct FallbackConfig {
-    /// 触发回退的 HTTP 状态码 (如 [403, 503])
-    /// 使用 Vec<i32> 避免 Dart Uint16List 的 JSON 序列化问题
-    pub trigger_status: Vec<i32>,
+    /// 触发回退的 HTTP 状态码 (如 ["403", "503"])
+    /// 使用字符串数组避免 Dart TypedData 在 JSON 序列化中的兼容问题
+    pub trigger_status: Vec<String>,
     /// 触发回退的关键词 (如 ["cloudflare", "cf-ray"])
     pub trigger_keywords: Vec<String>,
     /// 回退动作: "webview_interactive" 或 "abort"
