@@ -1,0 +1,6 @@
+[package]
+name = "io_http"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]

@@ -1,46 +1,32 @@
-[package]
-name = "spectra_native"
+[workspace]
+members = [
+    ".",
+    "crates/rules_ir",
+    "crates/rules_validate",
+    "crates/rules_engine",
+    "crates/io_http",
+    "crates/ffi",
+]
+default-members = [
+    ".",
+    "crates/rules_ir",
+    "crates/rules_validate",
+    "crates/rules_engine",
+    "crates/io_http",
+    "crates/ffi",
+]
+resolver = "2"
+
+[workspace.package]
 version = "0.1.0"
 edition = "2021"
+
+[package]
+name = "spectra_native"
+version.workspace = true
+edition.workspace = true
 
 [lib]
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = "=2.11.1"
-# 中文处理
-jieba-rs = { version = "0.8.1", features = ["default-dict", "tfidf"] }
-chinese-number = "0.7.8"
-ferrous-opencc = "0.3.1"
-# HTTP 客户端 (TLS 指纹)
-# 启用 prefix-symbols 避免 Linux/Android 上与 openssl-sys 的符号冲突
-wreq = { version = "6.0.0-rc.28", features = ["cookies", "prefix-symbols"] }
-wreq-util = "3.0.0-rc.10"
-# 正则表达式
-regex = "1.12.3"
-# 日志
-log = "0.4.29"
-# 异步运行时
-tokio = { version = "1", features = ["full"] }
-# 相似度计算
-textdistance = "1.1.1"
-serde = { version = "1.0.228", features = ["derive"] }
-serde_json = "1.0.149"
-ts-rs = { version = "12.0.1", features = ["chrono"], optional = true }
-# HTML/XML 解析与选择器
-rlibxml2 = { git = "https://github.com/Wu-H-Y/rlibxml2.git", branch = "main" }
-scraper = "0.24"
-# JSONPath 查询
-jsonpath-rust = "0.5"
-# URL 处理
-url = "2.5"
-# JavaScript 执行引擎
-rquickjs = { version = "0.8", default-features = false, features = ["full-async", "parallel"] }
-# 错误处理
-thiserror = "2.0"
-
-[features]
-default = ["ts-rs"]
-
-[lints.rust]
-unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }
