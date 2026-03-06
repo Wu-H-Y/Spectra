@@ -63,6 +63,7 @@ app.*.map.json
 .claude/settings.local.json
 .playwright-mcp
 .omc
+skills-lock.json
 
 # Web editor build outputs
 assets/editor/

@@ -1,0 +1,87 @@
+{
+  "irVersion": "1.0.0",
+  "metadata": {
+    "ruleId": "demo.type-mismatch",
+    "name": "类型不匹配规则",
+    "description": "该示例用于触发边类型不兼容校验"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "search_input",
+        "kind": { "type": "input" },
+        "phase": "search",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "query",
+            "dataType": { "type": "text" },
+            "optional": false
+          }
+        ]
+      },
+      {
+        "id": "detail_extract",
+        "kind": { "type": "extract" },
+        "phase": "detail",
+        "inputs": [
+          {
+            "name": "url",
+            "dataType": { "type": "url" },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "content",
+            "dataType": { "type": "html" },
+            "optional": false
+          }
+        ]
+      },
+      {
+        "id": "content_output",
+        "kind": { "type": "output" },
+        "phase": "content",
+        "inputs": [
+          {
+            "name": "normalizedIn",
+            "dataType": { "type": "normalizedModel" },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "normalized",
+            "dataType": { "type": "normalizedModel" },
+            "optional": false
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "from": { "nodeId": "search_input", "portName": "query" },
+        "to": { "nodeId": "detail_extract", "portName": "url" }
+      },
+      {
+        "from": { "nodeId": "detail_extract", "portName": "content" },
+        "to": { "nodeId": "content_output", "portName": "normalizedIn" }
+      }
+    ],
+    "phaseEntrypoints": {
+      "search": { "nodeId": "search_input", "portName": "query" },
+      "detail": { "nodeId": "detail_extract", "portName": "content" },
+      "content": { "nodeId": "content_output", "portName": "normalized" }
+    }
+  },
+  "normalizedOutputs": {
+    "search": { "nodeId": "search_input", "portName": "query" },
+    "content": { "nodeId": "content_output", "portName": "normalized" }
+  },
+  "capabilities": {
+    "supportsPagination": false,
+    "supportsConcurrency": false,
+    "requiresAuth": false
+  }
+}

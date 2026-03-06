@@ -4,3 +4,7 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
+rules_ir = { path = "../rules_ir" }
+
+[dev-dependencies]
+serde_json = "1"

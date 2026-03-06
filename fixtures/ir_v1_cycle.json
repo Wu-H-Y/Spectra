@@ -1,0 +1,71 @@
+{
+  "irVersion": "1.0.0",
+  "metadata": {
+    "ruleId": "demo.cycle",
+    "name": "环路规则",
+    "description": "该示例用于触发图环路校验"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "node_a",
+        "kind": { "type": "transform" },
+        "phase": "search",
+        "inputs": [
+          {
+            "name": "in",
+            "dataType": { "type": "text" },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "out",
+            "dataType": { "type": "text" },
+            "optional": false
+          }
+        ]
+      },
+      {
+        "id": "node_b",
+        "kind": { "type": "transform" },
+        "phase": "search",
+        "inputs": [
+          {
+            "name": "in",
+            "dataType": { "type": "text" },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "out",
+            "dataType": { "type": "text" },
+            "optional": false
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "from": { "nodeId": "node_a", "portName": "out" },
+        "to": { "nodeId": "node_b", "portName": "in" }
+      },
+      {
+        "from": { "nodeId": "node_b", "portName": "out" },
+        "to": { "nodeId": "node_a", "portName": "in" }
+      }
+    ],
+    "phaseEntrypoints": {
+      "search": { "nodeId": "node_a", "portName": "out" }
+    }
+  },
+  "normalizedOutputs": {
+    "search": { "nodeId": "node_b", "portName": "out" }
+  },
+  "capabilities": {
+    "supportsPagination": false,
+    "supportsConcurrency": false,
+    "requiresAuth": false
+  }
+}

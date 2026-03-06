@@ -27,10 +27,7 @@
         "inputs": [
           {
             "name": "items",
-            "dataType": {
-              "type": "list",
-              "item": { "type": "normalizedModel" }
-            },
+            "dataType": { "type": "text" },
             "optional": false
           }
         ],

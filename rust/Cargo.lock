@@ -56,6 +56,10 @@ dependencies = [
 [[package]]
 name = "rules_validate"
 version = "0.1.0"
+dependencies = [
+ "rules_ir",
+ "serde_json",
+]
 
 [[package]]
 name = "serde"
