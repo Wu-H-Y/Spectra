@@ -1,21 +1,34 @@
 /**
  * lint-staged 配置
  *
- * 注意: cargo clippy 和 dart fix 不支持对单个文件进行操作，
- * 因此这里忽略 lint-staged 传入的文件列表，改为在整个项目上运行。
+ * 注意：
+ * 1. cargo clippy、dart fix 与格式化命令都会作用于整个项目，不能安全地按文件分块并发执行。
+ * 2. 这里改为基于全部暂存文件一次性决定要运行的任务，避免 lint-staged 分块后重复跑整仓命令。
+ * 3. Dart 触发范围覆盖测试目录，避免 `test/` 或 `integration_test/` 改动漏掉格式化。
  */
 
-export default {
-  "lib/**/*.dart": [
-    () => "bun run lint:fix:dart .",
-    () => "bun run format:dart .",
-  ],
-  "rust/**/*.rs": [
-    () => "bun run lint:fix:rust",
-    () => "bun run format:rust",
-  ],
-  "web-editor/**/*.{ts,tsx,json,css,scss,md}": [
-    () => "bun run lint:fix:web",
-    () => "bun run format:web",
-  ],
+const normalizePath = (filePath) => filePath.replaceAll('\\', '/');
+
+const hasMatch = (files, pattern) => files.some((file) => pattern.test(file));
+
+export default (allStagedFiles) => {
+  const files = allStagedFiles.map(normalizePath);
+  const commands = [];
+
+  if (hasMatch(files, /\.dart$/)) {
+    commands.push('bun run lint:fix:dart .');
+    commands.push('bun run format:dart .');
+  }
+
+  if (hasMatch(files, /^rust\/.*\.rs$/)) {
+    commands.push('bun run lint:fix:rust');
+    commands.push('bun run format:rust');
+  }
+
+  if (hasMatch(files, /^web-editor\/.*\.(ts|tsx|json|css|scss|md)$/)) {
+    commands.push('bun run lint:fix:web');
+    commands.push('bun run format:web');
+  }
+
+  return commands;
 };

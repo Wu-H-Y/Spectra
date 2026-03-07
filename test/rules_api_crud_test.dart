@@ -212,9 +212,11 @@ void main() {
     addTearDown(client.close);
 
     final baseUri = Uri.parse('http://127.0.0.1:${server.port}');
-    final ruleEnvelope = jsonDecode(
-      await File('fixtures/ir_v1_invalid_edge.json').readAsString(),
-    ) as Map<String, dynamic>;
+    final ruleEnvelope =
+        jsonDecode(
+              await File('fixtures/ir_v1_invalid_edge.json').readAsString(),
+            )
+            as Map<String, dynamic>;
 
     final validationResponse = await _sendJsonRequest(
       client: client,
