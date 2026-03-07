@@ -1,5 +1,6 @@
 ---
 name: core-agent-browser
+description: "内部支持技能：提供底层浏览器自动化操作说明，供其他技能在缺少预计算选择器时兜底使用，不应根据普通用户请求自动触发。"
 # Internal tool - no description to prevent auto-triggering
 # Used by: rust-learner, docs-researcher, crate-researcher agents
 ---

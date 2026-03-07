@@ -1,5 +1,6 @@
 ---
 name: core-dynamic-skills
+description: "命令专用内部技能：用于 `/sync-crate-skills`、`/clean-crate-skills` 与 `/update-crate-skill`，负责管理动态生成的 crate 技能，不应在普通对话中自动触发。"
 # Command-based tool - no description to prevent auto-triggering
 # Triggered by: /sync-crate-skills, /clean-crate-skills, /update-crate-skill
 argument-hint: "[--force] | <crate_name>"

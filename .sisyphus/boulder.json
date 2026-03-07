@@ -5,7 +5,10 @@
   "session_ids": [
     "ses_342890cbfffeGkYN9Lmsur96dw",
     "ses_34280323effe4mDEZ5IPufIHuX",
-    "ses_34219220effeIJGHV4HfKWm97t"
+    "ses_34219220effeIJGHV4HfKWm97t",
+    "ses_33dbd5763ffemnbKXrg580CXhe",
+    "ses_33a0ae668ffeMv2DDvKkF503h1",
+    "ses_339b15cf2ffeZ95Zx3QdFwcJKN"
   ],
   "plan_name": "rust-rules-architecture-refactor",
   "agent": "atlas"

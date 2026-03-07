@@ -1,5 +1,6 @@
 ---
 name: core-actionbook
+description: "内部支持技能：提供预计算的网站操作手册与选择器，仅供其他技能或代理调用，不应根据普通用户请求自动触发。"
 # Internal tool - no description to prevent auto-triggering
 # Used by: rust-learner agents for pre-computed selectors
 ---

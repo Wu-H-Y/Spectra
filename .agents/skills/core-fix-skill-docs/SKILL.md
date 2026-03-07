@@ -1,5 +1,6 @@
 ---
 name: core-fix-skill-docs
+description: "命令专用内部维护技能：用于 `/fix-skill-docs` 检查并修复动态技能的参考文档问题，不应在普通对话中自动触发。"
 # Internal maintenance tool - no description to prevent auto-triggering
 # Triggered by: /fix-skill-docs command
 argument-hint: "[crate_name] [--check-only]"
