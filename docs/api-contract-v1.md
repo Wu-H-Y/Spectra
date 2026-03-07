@@ -471,10 +471,17 @@ curl -X DELETE "http://localhost:15421/api/sessions/sess_01HZY" \
 
 ```json
 {
+  "opened": true,
   "previewSessionId": "preview_01HZY...",
-  "opened": true
+  "debugUrl": "https://example.com/list",
+  "wsChannel": {
+    "previewSessionId": "preview_01HZY..."
+  }
 }
 ```
+
+- `debugUrl`：当前最小实现下返回目标页面 URL，用于桌面调试场景。
+- `wsChannel.previewSessionId`：WebSocket 订阅过滤器，当前编辑器预览流据此订阅并关联选择器回调。
 
 curl：
 

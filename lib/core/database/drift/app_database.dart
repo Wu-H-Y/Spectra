@@ -38,4 +38,95 @@ class AppDatabase extends _$AppDatabase {
   static QueryExecutor _openConnection() {
     return driftDatabase(name: 'spectra_db');
   }
+
+  /// 按更新时间倒序读取全部规则。
+  Future<List<RulesV1Data>> listRules() {
+    return (select(rulesV1)..orderBy([
+          (table) => OrderingTerm(
+            expression: table.updatedAt,
+            mode: OrderingMode.desc,
+          ),
+        ]))
+        .get();
+  }
+
+  /// 按主键读取单条规则。
+  Future<RulesV1Data?> getRuleById(int id) {
+    return (select(
+      rulesV1,
+    )..where((table) => table.id.equals(id))).getSingleOrNull();
+  }
+
+  /// 创建规则并返回持久化后的记录。
+  Future<RulesV1Data> createRule({
+    required String ruleId,
+    required String name,
+    required String irVersion,
+    required String ruleEnvelopeJson,
+    required bool enabled,
+    String? description,
+    String? displayConfigJson,
+  }) async {
+    final now = DateTime.now().toUtc();
+    final id = await into(rulesV1).insert(
+      RulesV1Companion.insert(
+        ruleId: ruleId,
+        name: name,
+        description: Value(description),
+        irVersion: irVersion,
+        ruleEnvelopeJson: ruleEnvelopeJson,
+        displayConfigJson: displayConfigJson == null
+            ? const Value.absent()
+            : Value(displayConfigJson),
+        enabled: Value(enabled),
+        createdAt: Value(now),
+        updatedAt: Value(now),
+      ),
+    );
+
+    return (await getRuleById(id))!;
+  }
+
+  /// 更新规则并返回最新记录。
+  Future<RulesV1Data?> updateRule({
+    required int id,
+    required String ruleId,
+    required String name,
+    required String irVersion,
+    required String ruleEnvelopeJson,
+    required bool enabled,
+    String? description,
+    String? displayConfigJson,
+  }) async {
+    final now = DateTime.now().toUtc();
+    final updatedRows =
+        await (update(rulesV1)..where((table) => table.id.equals(id))).write(
+          RulesV1Companion(
+            ruleId: Value(ruleId),
+            name: Value(name),
+            description: Value(description),
+            irVersion: Value(irVersion),
+            ruleEnvelopeJson: Value(ruleEnvelopeJson),
+            displayConfigJson: displayConfigJson == null
+                ? const Value.absent()
+                : Value(displayConfigJson),
+            enabled: Value(enabled),
+            updatedAt: Value(now),
+          ),
+        );
+
+    if (updatedRows == 0) {
+      return null;
+    }
+
+    return getRuleById(id);
+  }
+
+  /// 删除规则。
+  Future<bool> deleteRuleById(int id) async {
+    final deletedRows = await (delete(
+      rulesV1,
+    )..where((table) => table.id.equals(id))).go();
+    return deletedRows > 0;
+  }
 }

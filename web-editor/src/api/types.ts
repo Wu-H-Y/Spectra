@@ -190,6 +190,7 @@ export interface ServerStatus {
   isRunning: boolean;
   port: number;
   url: string;
+  serverToken: string;
 }
 
 export interface ValidationResult {

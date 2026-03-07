@@ -11,7 +11,7 @@ _Author _$AuthorFromJson(Map<String, dynamic> json) => _Author(
   id: json['id'] as String?,
   avatar: json['avatar'] as String?,
   description: json['description'] as String?,
-  followerCount: (json['follower_count'] as num?)?.toInt(),
+  followerCount: (json['followerCount'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$AuthorToJson(_Author instance) => <String, dynamic>{
@@ -19,5 +19,5 @@ Map<String, dynamic> _$AuthorToJson(_Author instance) => <String, dynamic>{
   'id': ?instance.id,
   'avatar': ?instance.avatar,
   'description': ?instance.description,
-  'follower_count': ?instance.followerCount,
+  'followerCount': ?instance.followerCount,
 };

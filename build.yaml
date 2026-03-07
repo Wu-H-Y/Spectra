@@ -34,7 +34,7 @@ targets:
           # 包含 null 值
           include_if_null: false
           # 字段重命名
-          field_rename: snake
+          field_rename: none
 
       # Drift database generator
       drift_dev:
@@ -46,6 +46,7 @@ targets:
             options:
               version: "3.38"
               modules: [fts5]
+
       # Squadron worker generator
       squadron_builder:worker_builder:
         generate_for:

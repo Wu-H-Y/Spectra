@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import type { CrawlerRule, Selector } from '@/api/types';
+import type { RuleGraphEdge, RuleGraphNode } from '@/lib/ruleGraph';
 
 interface RuleState {
   rules: CrawlerRule[];
@@ -49,12 +50,15 @@ type ActiveFieldPath =
 interface EditorState {
   isJsonMode: boolean;
   jsonValue: string;
+  graphNodes: RuleGraphNode[];
+  graphEdges: RuleGraphEdge[];
   previewUrl: string;
   isPreviewVisible: boolean;
   activeFieldPath: ActiveFieldPath | null;
 
   toggleJsonMode: () => void;
   setJsonValue: (value: string) => void;
+  setGraphState: (nodes: RuleGraphNode[], edges: RuleGraphEdge[]) => void;
   setPreviewUrl: (url: string) => void;
   setPreviewVisible: (visible: boolean) => void;
   setActiveFieldPath: (path: ActiveFieldPath | null) => void;
@@ -63,12 +67,15 @@ interface EditorState {
 export const useEditorStore = create<EditorState>((set) => ({
   isJsonMode: false,
   jsonValue: '',
+  graphNodes: [],
+  graphEdges: [],
   previewUrl: '',
   isPreviewVisible: false,
   activeFieldPath: null,
 
   toggleJsonMode: () => set((state) => ({ isJsonMode: !state.isJsonMode })),
   setJsonValue: (jsonValue) => set({ jsonValue }),
+  setGraphState: (graphNodes, graphEdges) => set({ graphNodes, graphEdges }),
   setPreviewUrl: (previewUrl) => set({ previewUrl }),
   setPreviewVisible: (isPreviewVisible) => set({ isPreviewVisible }),
   setActiveFieldPath: (activeFieldPath) => set({ activeFieldPath }),

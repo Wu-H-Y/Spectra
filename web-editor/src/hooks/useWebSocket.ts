@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import type { ServerStatus } from '@/api/types';
+
 export interface WebSocketMessage {
   type: string;
   data?: unknown;
@@ -85,9 +87,6 @@ export function useWebSocket(
         setIsConnecting(false);
         setError(null);
         reconnectAttemptsRef.current = 0;
-
-        // Send connection message
-        ws.send(JSON.stringify({ type: 'connect' }));
 
         onOpen?.();
       };
@@ -202,6 +201,7 @@ export function useWebSocket(
 export interface ElementSelectedMessage {
   type: 'element_selected';
   data: {
+    previewSessionId?: string;
     selector: string;
     selectorType: 'css' | 'xpath';
     outerHtml: string;
@@ -222,6 +222,7 @@ export interface PreviewRequestMessage {
   type: 'preview_request';
   data: {
     url: string;
+    previewSessionId?: string;
   };
 }
 
@@ -230,57 +231,151 @@ export interface PreviewRequestMessage {
  *
  * 专门用于处理元素选择功能的 WebSocket 连接。
  */
-export function useElementSelection(serverUrl: string | null) {
+export function useElementSelection(
+  server: Pick<ServerStatus, 'url' | 'serverToken'> | null,
+) {
   const [selectedElement, setSelectedElement] = useState<
     ElementSelectedMessage['data'] | null
   >(null);
   const [isSelecting, setIsSelecting] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [previewSessionId, setPreviewSessionId] = useState<string | null>(null);
+  const subscribedPreviewSessionIdRef = useRef<string | null>(null);
 
-  const handleMessage = useCallback((message: WebSocketMessage) => {
-    switch (message.type) {
-      case 'element_selected':
-        setSelectedElement(message.data as ElementSelectedMessage['data']);
-        setIsSelecting(false);
-        break;
+  const matchesPreviewSession = useCallback(
+    (data: unknown) => {
+      if (!previewSessionId || !data || typeof data !== 'object') {
+        return true;
+      }
 
-      case 'selection_started':
-        setIsSelecting(true);
-        break;
+      const scopedPreviewSessionId =
+        'previewSessionId' in data && typeof data.previewSessionId === 'string'
+          ? data.previewSessionId
+          : null;
 
-      case 'selection_cancelled':
-        setIsSelecting(false);
-        break;
-    }
-  }, []);
+      return (
+        scopedPreviewSessionId == null ||
+        scopedPreviewSessionId === previewSessionId
+      );
+    },
+    [previewSessionId],
+  );
 
-  const wsUrl = serverUrl
-    ? serverUrl.replace('http://', 'ws://').replace('https://', 'wss://') +
+  const handleMessage = useCallback(
+    (message: WebSocketMessage) => {
+      switch (message.type) {
+        case 'auth_ok':
+          setIsAuthenticated(true);
+          break;
+
+        case 'element_selected':
+          {
+            const data = message.data as ElementSelectedMessage['data'];
+            if (!matchesPreviewSession(data)) {
+              break;
+            }
+            setSelectedElement(data);
+          }
+          setIsSelecting(false);
+          break;
+
+        case 'selection_started':
+          if (!matchesPreviewSession(message.data)) {
+            break;
+          }
+          setIsSelecting(true);
+          break;
+
+        case 'selection_cancelled':
+          if (!matchesPreviewSession(message.data)) {
+            break;
+          }
+          setIsSelecting(false);
+          break;
+      }
+    },
+    [matchesPreviewSession],
+  );
+
+  const wsUrl = server?.url
+    ? server.url.replace('http://', 'ws://').replace('https://', 'wss://') +
       '/ws'
     : '';
 
   const { isConnected, send, connect, disconnect } = useWebSocket({
     url: wsUrl,
     onMessage: handleMessage,
+    onClose: () => {
+      setIsAuthenticated(false);
+      subscribedPreviewSessionIdRef.current = null;
+    },
     autoReconnect: true,
   });
 
+  useEffect(() => {
+    if (!isConnected || isAuthenticated || !server?.serverToken) {
+      return;
+    }
+
+    send({
+      type: 'auth',
+      data: { token: server.serverToken },
+    });
+  }, [isAuthenticated, isConnected, send, server?.serverToken]);
+
+  useEffect(() => {
+    if (!isConnected || !isAuthenticated) {
+      return;
+    }
+
+    const previousPreviewSessionId = subscribedPreviewSessionIdRef.current;
+    if (
+      previousPreviewSessionId &&
+      previousPreviewSessionId !== previewSessionId
+    ) {
+      send({
+        type: 'unsubscribe',
+        data: { previewSessionId: previousPreviewSessionId },
+      });
+      subscribedPreviewSessionIdRef.current = null;
+    }
+
+    if (
+      previewSessionId &&
+      previewSessionId !== subscribedPreviewSessionIdRef.current
+    ) {
+      send({
+        type: 'subscribe',
+        data: { previewSessionId },
+      });
+      subscribedPreviewSessionIdRef.current = previewSessionId;
+    }
+  }, [isAuthenticated, isConnected, previewSessionId, send]);
+
   const startSelection = useCallback(() => {
-    if (isConnected) {
-      send({ type: 'start_selection' });
+    if (isConnected && isAuthenticated && previewSessionId) {
       setIsSelecting(true);
     }
-  }, [isConnected, send]);
+  }, [isAuthenticated, isConnected, previewSessionId]);
 
   const cancelSelection = useCallback(() => {
-    if (isConnected) {
-      send({ type: 'cancel_selection' });
+    if (isConnected && isAuthenticated) {
       setIsSelecting(false);
     }
-  }, [isConnected, send]);
+  }, [isAuthenticated, isConnected]);
 
   const clearSelection = useCallback(() => {
     setSelectedElement(null);
   }, []);
+
+  const openPreviewSession = useCallback(
+    (nextPreviewSessionId: string | null) => {
+      setPreviewSessionId(nextPreviewSessionId);
+      setSelectedElement(null);
+      setIsSelecting(false);
+    },
+    [],
+  );
 
   const sendSelectedElement = useCallback(() => {
     if (isConnected && selectedElement) {
@@ -293,8 +388,10 @@ export function useElementSelection(serverUrl: string | null) {
 
   return {
     isConnected,
+    previewSessionId,
     isSelecting,
     selectedElement,
+    openPreviewSession,
     startSelection,
     cancelSelection,
     clearSelection,

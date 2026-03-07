@@ -1,6 +1,0 @@
-[package]
-name = "rules_engine"
-version.workspace = true
-edition.workspace = true
-
-[dependencies]

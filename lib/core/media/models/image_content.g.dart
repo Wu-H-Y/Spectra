@@ -11,7 +11,7 @@ _ImageInfo _$ImageInfoFromJson(Map<String, dynamic> json) => _ImageInfo(
   thumbnail: json['thumbnail'] as String?,
   width: (json['width'] as num?)?.toInt(),
   height: (json['height'] as num?)?.toInt(),
-  fileSize: (json['file_size'] as num?)?.toInt(),
+  fileSize: (json['fileSize'] as num?)?.toInt(),
   format: json['format'] as String?,
   caption: json['caption'] as String?,
 );
@@ -22,7 +22,7 @@ Map<String, dynamic> _$ImageInfoToJson(_ImageInfo instance) =>
       'thumbnail': ?instance.thumbnail,
       'width': ?instance.width,
       'height': ?instance.height,
-      'file_size': ?instance.fileSize,
+      'fileSize': ?instance.fileSize,
       'format': ?instance.format,
       'caption': ?instance.caption,
     };
@@ -35,7 +35,7 @@ _ImageContent _$ImageContentFromJson(Map<String, dynamic> json) =>
       images: (json['images'] as List<dynamic>)
           .map((e) => ImageInfo.fromJson(e as Map<String, dynamic>))
           .toList(),
-      isAlbum: json['is_album'] as bool,
+      isAlbum: json['isAlbum'] as bool,
       cover: json['cover'] as String?,
       description: json['description'] as String?,
       author: json['author'] == null
@@ -46,15 +46,15 @@ _ImageContent _$ImageContentFromJson(Map<String, dynamic> json) =>
       stats: json['stats'] == null
           ? null
           : ContentStats.fromJson(json['stats'] as Map<String, dynamic>),
-      createdAt: json['created_at'] == null
+      createdAt: json['createdAt'] == null
           ? null
-          : DateTime.parse(json['created_at'] as String),
-      updatedAt: json['updated_at'] == null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
           ? null
-          : DateTime.parse(json['updated_at'] as String),
+          : DateTime.parse(json['updatedAt'] as String),
       resolution: json['resolution'] as String?,
-      isAIGenerated: json['is_a_i_generated'] as bool?,
-      aiModel: json['ai_model'] as String?,
+      isAIGenerated: json['isAIGenerated'] as bool?,
+      aiModel: json['aiModel'] as String?,
     );
 
 Map<String, dynamic> _$ImageContentToJson(_ImageContent instance) =>
@@ -63,16 +63,16 @@ Map<String, dynamic> _$ImageContentToJson(_ImageContent instance) =>
       'title': instance.title,
       'source': instance.source.toJson(),
       'images': instance.images.map((e) => e.toJson()).toList(),
-      'is_album': instance.isAlbum,
+      'isAlbum': instance.isAlbum,
       'cover': ?instance.cover,
       'description': ?instance.description,
       'author': ?instance.author?.toJson(),
       'tags': ?instance.tags,
       'category': ?instance.category,
       'stats': ?instance.stats?.toJson(),
-      'created_at': ?instance.createdAt?.toIso8601String(),
-      'updated_at': ?instance.updatedAt?.toIso8601String(),
+      'createdAt': ?instance.createdAt?.toIso8601String(),
+      'updatedAt': ?instance.updatedAt?.toIso8601String(),
       'resolution': ?instance.resolution,
-      'is_a_i_generated': ?instance.isAIGenerated,
-      'ai_model': ?instance.aiModel,
+      'isAIGenerated': ?instance.isAIGenerated,
+      'aiModel': ?instance.aiModel,
     };

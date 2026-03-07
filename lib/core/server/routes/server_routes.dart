@@ -8,6 +8,7 @@ class ServerRoutes {
   ServerRoutes({
     required this.isRunning,
     required this.port,
+    required this.serverToken,
     required this.onStart,
     required this.onStop,
   });
@@ -17,6 +18,9 @@ class ServerRoutes {
 
   /// 服务器运行的端口。
   final int Function() port;
+
+  /// 当前服务端鉴权令牌。
+  final String Function() serverToken;
 
   /// 服务器启动时的回调。
   final Future<void> Function() onStart;
@@ -45,6 +49,7 @@ class ServerRoutes {
           'isRunning': isRunning(),
           'port': currentPort,
           'url': 'http://localhost:$currentPort',
+          'serverToken': serverToken(),
         }),
         mimeType: MimeType.json,
       ),

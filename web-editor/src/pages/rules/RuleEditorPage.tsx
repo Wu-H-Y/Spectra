@@ -1,20 +1,26 @@
 import Editor from '@monaco-editor/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import {
+  Background,
+  Controls,
+  ReactFlow,
+  applyEdgeChanges,
+  applyNodeChanges,
+  type Connection,
+  type EdgeChange,
+  type NodeChange,
+} from '@xyflow/react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
+import '@xyflow/react/dist/style.css';
 import { rulesApi, serverApi } from '@/api/client';
-import type { CrawlerRule } from '@/api/types';
 import type { Selector } from '@/api/types';
 import { PreviewPanel } from '@/components/preview/PreviewPanel';
-import { ActionSequenceEditor } from '@/components/rules/ActionSequenceEditor';
-import { FieldMappingEditor } from '@/components/rules/FieldMappingEditor';
-import { PaginationConfigForm } from '@/components/rules/PaginationConfigForm';
-import { RequestConfigForm } from '@/components/rules/RequestConfigForm';
-import { RuleMetadataForm } from '@/components/rules/RuleMetadataForm';
-import { UrlMatchingForm } from '@/components/rules/UrlMatchingForm';
+import RuleGraphNode from '@/components/rules/RuleGraphNode';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -23,10 +29,44 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useElementSelection } from '@/hooks/useWebSocket';
+import {
+  appendGraphNode,
+  createConnectedGraphEdge,
+  createMinimalRuleGraph,
+  deriveNormalizedOutputs,
+  graphToFlow,
+  syncRuleGraph,
+} from '@/lib/ruleGraph';
 import { useEditorStore, useSelectorApplyStore } from '@/stores';
+import type { RuleEnvelope } from '@/types/rule';
+
+const nodeTypes = {
+  ruleNode: RuleGraphNode,
+};
+
+const createEmptyRuleEnvelope = (): RuleEnvelope => ({
+  irVersion: '1.0.0',
+  metadata: {
+    ruleId: crypto.randomUUID(),
+    name: '',
+    description: null,
+  },
+  graph: createMinimalRuleGraph(),
+  normalizedOutputs: deriveNormalizedOutputs(createMinimalRuleGraph()),
+  capabilities: {
+    supportsPagination: false,
+    supportsConcurrency: false,
+    requiresAuth: false,
+  },
+});
+
+const formatRuleEnvelope = (rule: RuleEnvelope) =>
+  JSON.stringify(rule, null, 2);
+
+const parseRuleEnvelope = (jsonValue: string): RuleEnvelope =>
+  JSON.parse(jsonValue) as RuleEnvelope;
 
 /**
  * 规则编辑器页面。
@@ -38,70 +78,83 @@ export function RuleEditorPage() {
   const queryClient = useQueryClient();
   const isNew = id === 'new';
 
-  const { isJsonMode, jsonValue, toggleJsonMode, setJsonValue } =
+  const initialRule = useMemo(() => createEmptyRuleEnvelope(), []);
+
+  const { jsonValue, setJsonValue, graphNodes, graphEdges, setGraphState } =
     useEditorStore();
+  const parsedRule = useMemo(() => {
+    try {
+      return parseRuleEnvelope(jsonValue);
+    } catch {
+      return null;
+    }
+  }, [jsonValue]);
 
-  const [rule, setRule] = useState<Partial<CrawlerRule>>({
-    name: '',
-    description: '',
-    mediaType: 'generic',
-    match: { pattern: '', type: 'regex' },
-    request: {},
-    extract: {},
-    beforeActions: [],
-    afterActions: [],
-    tags: [],
-    enabled: true,
-  });
-
-  // 获取服务器状态
   const { data: serverStatus } = useQuery({
     queryKey: ['server', 'status'],
     queryFn: serverApi.status,
-    refetchInterval: 5000, // 每5秒刷新一次
+    refetchInterval: 5000,
   });
 
-  // 元素选择 WebSocket 连接
   const {
     isConnected: isWsConnected,
+    previewSessionId,
     isSelecting,
     selectedElement,
+    openPreviewSession,
     startSelection,
     cancelSelection,
     clearSelection,
     connect,
-  } = useElementSelection(serverStatus?.url || null);
+  } = useElementSelection(
+    serverStatus
+      ? {
+          url: serverStatus.url,
+          serverToken: serverStatus.serverToken,
+        }
+      : null,
+  );
 
-  // 连接 WebSocket
   useEffect(() => {
     if (serverStatus?.isRunning) {
       connect();
     }
   }, [serverStatus?.isRunning, connect]);
 
-  // 选择器应用回调
   const { setApplyCallback } = useSelectorApplyStore();
 
-  // Fetch existing rule if editing
   const { data: existingRule, isLoading } = useQuery({
     queryKey: ['rules', id],
-    queryFn: () => rulesApi.get(id!),
+    queryFn: () => rulesApi.getEnvelope(id!),
     enabled: !isNew && !!id,
   });
 
-  // Update rule state when existing rule is loaded
-  if (existingRule && !rule.id) {
-    setRule(existingRule);
-    setJsonValue(JSON.stringify(existingRule, null, 2));
-  }
+  useEffect(() => {
+    if (isNew) {
+      setJsonValue(formatRuleEnvelope(initialRule));
+      return;
+    }
 
-  // Create/Update mutation
+    if (existingRule?.rule) {
+      setJsonValue(formatRuleEnvelope(existingRule.rule));
+    }
+  }, [existingRule, initialRule, isNew, setJsonValue]);
+
+  useEffect(() => {
+    if (!parsedRule) {
+      return;
+    }
+
+    const flowGraph = graphToFlow(parsedRule.graph);
+    setGraphState(flowGraph.nodes, flowGraph.edges);
+  }, [parsedRule, setGraphState]);
+
   const saveMutation = useMutation({
-    mutationFn: (ruleData: CrawlerRule) => {
+    mutationFn: async (ruleData: RuleEnvelope) => {
       if (isNew) {
-        return rulesApi.create(ruleData);
+        return rulesApi.createEnvelope(ruleData);
       }
-      return rulesApi.update(id!, ruleData);
+      return rulesApi.updateEnvelope(id!, ruleData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['rules'] });
@@ -109,54 +162,117 @@ export function RuleEditorPage() {
     },
   });
 
-  // Validate mutation
   const validateMutation = useMutation({
-    mutationFn: (ruleData: CrawlerRule) => rulesApi.validate(ruleData),
+    mutationFn: (ruleData: RuleEnvelope) => rulesApi.validateEnvelope(ruleData),
   });
 
-  const handleSave = () => {
-    const ruleToSave = isJsonMode ? JSON.parse(jsonValue) : rule;
-    saveMutation.mutate(ruleToSave as CrawlerRule);
-  };
-
-  const handleValidate = () => {
-    const ruleToValidate = isJsonMode ? JSON.parse(jsonValue) : rule;
-    validateMutation.mutate(ruleToValidate as CrawlerRule);
-  };
-
-  const handleJsonChange = (value: string | undefined) => {
-    if (value !== undefined) {
-      setJsonValue(value);
-      try {
-        const parsed = JSON.parse(value);
-        setRule(parsed);
-      } catch {
-        // Invalid JSON, ignore
-      }
+  const withParsedRuleEnvelope = (
+    callback: (ruleEnvelope: RuleEnvelope) => void,
+  ) => {
+    try {
+      const ruleEnvelope = parseRuleEnvelope(jsonValue);
+      callback(ruleEnvelope);
+    } catch {
+      toast.error(t('errors.error'));
     }
   };
 
-  const updateRule = (updates: Partial<CrawlerRule>) => {
-    const newRule = { ...rule, ...updates };
-    setRule(newRule);
-    setJsonValue(JSON.stringify(newRule, null, 2));
+  const handleSave = () => {
+    withParsedRuleEnvelope((ruleEnvelope) => {
+      saveMutation.mutate(ruleEnvelope);
+    });
   };
 
-  // 应用选择器到当前规则
+  const handleValidate = () => {
+    withParsedRuleEnvelope((ruleEnvelope) => {
+      validateMutation.mutate(ruleEnvelope);
+    });
+  };
+
+  const handleJsonChange = (value: string | undefined) => {
+    if (value === undefined) {
+      return;
+    }
+
+    setJsonValue(value);
+
+    try {
+      parseRuleEnvelope(value);
+    } catch {
+      // Ignore invalid JSON while editing.
+    }
+  };
+
+  const syncGraphToJson = useCallback(
+    (nextNodes = graphNodes, nextEdges = graphEdges) => {
+      if (!parsedRule) {
+        toast.error(t('rules.graphJsonSyncError'));
+        return;
+      }
+
+      setGraphState(nextNodes, nextEdges);
+      setJsonValue(
+        formatRuleEnvelope(syncRuleGraph(parsedRule, nextNodes, nextEdges)),
+      );
+    },
+    [graphEdges, graphNodes, parsedRule, setGraphState, setJsonValue, t],
+  );
+
+  const handleAddNode = useCallback(
+    (kindType: 'input' | 'transform' | 'output') => {
+      syncGraphToJson(appendGraphNode(graphNodes, kindType), graphEdges);
+    },
+    [graphEdges, graphNodes, syncGraphToJson],
+  );
+
+  const handleNodesChange = useCallback(
+    (changes: NodeChange[]) => {
+      const nextNodes = applyNodeChanges(
+        changes,
+        graphNodes,
+      ) as typeof graphNodes;
+      const nodeIds = new Set(nextNodes.map((node) => node.id));
+      const nextEdges = graphEdges.filter(
+        (edge) => nodeIds.has(edge.source) && nodeIds.has(edge.target),
+      );
+
+      syncGraphToJson(nextNodes, nextEdges);
+    },
+    [graphEdges, graphNodes, syncGraphToJson],
+  );
+
+  const handleEdgesChange = useCallback(
+    (changes: EdgeChange[]) => {
+      syncGraphToJson(graphNodes, applyEdgeChanges(changes, graphEdges));
+    },
+    [graphEdges, graphNodes, syncGraphToJson],
+  );
+
+  const handleConnect = useCallback(
+    (connection: Connection) => {
+      const nextEdge = createConnectedGraphEdge(connection);
+
+      if (!nextEdge) {
+        return;
+      }
+
+      syncGraphToJson(graphNodes, [...graphEdges, nextEdge]);
+    },
+    [graphEdges, graphNodes, syncGraphToJson],
+  );
+
   const handleApplySelector = (selector: string, type: 'css' | 'xpath') => {
     const newSelector: Selector = {
       type,
       expression: selector,
     };
 
-    // 使用回调来应用选择器
     const { applyCallback } = useSelectorApplyStore.getState();
     if (applyCallback) {
       applyCallback(newSelector);
-      setApplyCallback(null); // 清除回调
+      setApplyCallback(null);
       toast.success(t('preview.selectorApplied'));
     } else {
-      // 没有活动的字段，显示选择器供用户复制
       toast.success(t('preview.selectorCopied'));
     }
   };
@@ -171,7 +287,6 @@ export function RuleEditorPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">
@@ -194,192 +309,118 @@ export function RuleEditorPage() {
         </div>
       </div>
 
-      {/* Mode Toggle */}
-      <div className="flex items-center gap-2">
-        <Button
-          variant={!isJsonMode ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => toggleJsonMode()}
-        >
-          {t('rules.formMode')}
-        </Button>
-        <Button
-          variant={isJsonMode ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => toggleJsonMode()}
-        >
-          JSON
-        </Button>
-      </div>
+      <Tabs defaultValue="graph" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="graph">{t('rules.graph')}</TabsTrigger>
+          <TabsTrigger value="json">{t('rules.json')}</TabsTrigger>
+        </TabsList>
 
-      {/* Editor Content */}
-      {isJsonMode ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>JSON Editor</CardTitle>
-            <CardDescription>
-              {t('rules.jsonEditorDescription')}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Editor
-              height="600px"
-              defaultLanguage="json"
-              value={jsonValue}
-              onChange={handleJsonChange}
-              options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-                lineNumbers: 'on',
-                scrollBeyondLastLine: false,
-                automaticLayout: true,
-              }}
-            />
-          </CardContent>
-        </Card>
-      ) : (
-        <Tabs defaultValue="metadata" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-8">
-            <TabsTrigger value="metadata">{t('rules.metadata')}</TabsTrigger>
-            <TabsTrigger value="url">{t('rules.urlMatching')}</TabsTrigger>
-            <TabsTrigger value="request">{t('rules.request')}</TabsTrigger>
-            <TabsTrigger value="fields">{t('rules.fields')}</TabsTrigger>
-            <TabsTrigger value="pagination">
-              {t('rules.pagination')}
-            </TabsTrigger>
-            <TabsTrigger value="actions">{t('rules.actions')}</TabsTrigger>
-            <TabsTrigger value="detection">{t('rules.detection')}</TabsTrigger>
-            <TabsTrigger value="preview">{t('preview.preview')}</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="metadata">
-            <RuleMetadataForm
-              rule={rule}
-              onChange={(updates) => updateRule(updates)}
-            />
-          </TabsContent>
-
-          <TabsContent value="url">
-            <UrlMatchingForm
-              match={rule.match!}
-              onChange={(match) => updateRule({ match })}
-            />
-          </TabsContent>
-
-          <TabsContent value="request">
-            <RequestConfigForm
-              request={rule.request}
-              onChange={(request) => updateRule({ request })}
-            />
-          </TabsContent>
-
-          <TabsContent value="fields">
-            <FieldMappingEditor
-              extract={rule.extract}
-              onChange={(extract) => updateRule({ extract })}
-            />
-          </TabsContent>
-
-          <TabsContent value="pagination">
-            <PaginationConfigForm
-              pagination={rule.extract?.list?.pagination}
-              onChange={(pagination) =>
-                updateRule({
-                  extract: {
-                    ...rule.extract,
-                    list: {
-                      ...rule.extract?.list,
-                      container: rule.extract?.list?.container || {
-                        type: 'css',
-                        expression: '',
-                      },
-                      items: rule.extract?.list?.items || [],
-                      pagination,
-                    },
-                  },
-                })
-              }
-            />
-          </TabsContent>
-
-          <TabsContent value="actions">
-            <ActionSequenceEditor
-              beforeActions={rule.beforeActions || []}
-              afterActions={rule.afterActions || []}
-              onBeforeActionsChange={(beforeActions) =>
-                updateRule({ beforeActions })
-              }
-              onAfterActionsChange={(afterActions) =>
-                updateRule({ afterActions })
-              }
-            />
-          </TabsContent>
-
-          <TabsContent value="detection">
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('rules.detectionConfig')}</CardTitle>
+        <TabsContent value="graph">
+          <Card>
+            <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <CardTitle>{t('rules.graph')}</CardTitle>
                 <CardDescription>
-                  {t('rules.detectionConfigDescription')}
+                  {parsedRule
+                    ? t('rules.graphReady')
+                    : t('rules.graphJsonInvalid')}
                 </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="detectCloudflare"
-                    checked={rule.detection?.detectCloudflare ?? true}
-                    onChange={(e) =>
-                      updateRule({
-                        detection: {
-                          ...rule.detection,
-                          detectCloudflare: e.target.checked,
-                        },
-                      })
-                    }
-                    className="h-4 w-4"
-                  />
-                  <Label htmlFor="detectCloudflare">
-                    {t('rules.detectCloudflare')}
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="autoRetry"
-                    checked={rule.detection?.autoRetry ?? true}
-                    onChange={(e) =>
-                      updateRule({
-                        detection: {
-                          ...rule.detection,
-                          autoRetry: e.target.checked,
-                        },
-                      })
-                    }
-                    className="h-4 w-4"
-                  />
-                  <Label htmlFor="autoRetry">{t('rules.autoRetry')}</Label>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+              </div>
 
-          <TabsContent value="preview">
-            <PreviewPanel
-              serverUrl={serverStatus?.url || null}
-              isConnected={isWsConnected}
-              isSelecting={isSelecting}
-              selectedElement={selectedElement}
-              onStartSelection={startSelection}
-              onCancelSelection={cancelSelection}
-              onClearSelection={clearSelection}
-              onApplySelector={handleApplySelector}
-            />
-          </TabsContent>
-        </Tabs>
-      )}
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant={parsedRule ? 'secondary' : 'destructive'}>
+                  {t('rules.graphSummary', {
+                    nodes: graphNodes.length,
+                    edges: graphEdges.length,
+                  })}
+                </Badge>
+                <Button
+                  variant="outline"
+                  onClick={() => handleAddNode('input')}
+                  disabled={!parsedRule}
+                >
+                  {t('rules.addInputNode')}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => handleAddNode('transform')}
+                  disabled={!parsedRule}
+                >
+                  {t('rules.addTransformNode')}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => handleAddNode('output')}
+                  disabled={!parsedRule}
+                >
+                  {t('rules.addOutputNode')}
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[560px] overflow-hidden rounded-lg border bg-muted/20">
+                <ReactFlow
+                  nodes={graphNodes}
+                  edges={graphEdges}
+                  nodeTypes={nodeTypes}
+                  onNodesChange={handleNodesChange}
+                  onEdgesChange={handleEdgesChange}
+                  onConnect={handleConnect}
+                  fitView
+                  deleteKeyCode={['Backspace', 'Delete']}
+                  nodesDraggable={parsedRule !== null}
+                  nodesConnectable={parsedRule !== null}
+                  elementsSelectable={parsedRule !== null}
+                >
+                  <Background />
+                  <Controls />
+                </ReactFlow>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      {/* Validation Results */}
+        <TabsContent value="json">
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('rules.json')}</CardTitle>
+              <CardDescription>
+                {t('rules.jsonEditorDescription')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Editor
+                height="600px"
+                defaultLanguage="json"
+                value={jsonValue}
+                onChange={handleJsonChange}
+                options={{
+                  minimap: { enabled: false },
+                  fontSize: 14,
+                  lineNumbers: 'on',
+                  scrollBeyondLastLine: false,
+                  automaticLayout: true,
+                }}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      <PreviewPanel
+        serverUrl={serverStatus?.url || null}
+        serverToken={serverStatus?.serverToken || null}
+        isConnected={isWsConnected}
+        previewSessionId={previewSessionId}
+        isSelecting={isSelecting}
+        selectedElement={selectedElement}
+        onStartSelection={startSelection}
+        onCancelSelection={cancelSelection}
+        onClearSelection={clearSelection}
+        onPreviewOpened={openPreviewSession}
+        onApplySelector={handleApplySelector}
+      />
+
       {validateMutation.data && (
         <Card
           className={

@@ -83,48 +83,51 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
 ### Dependency Matrix (high level)
 - 旧代码清理（0）→ IR/协议（1）→ Rust 引擎（2）→ Flutter API（3）→ Web-editor UI（4）→ Flutter 模板页面（5）→ 加固（6）
 
+### Architecture Baseline（2026-03-07 更新）
+- `rust/Cargo.toml` 仅包含 `spectra_native` 单 crate 配置，`[workspace]` 与 `members = ["crates/*"]` 全部移除，`rust/crates/*` 仅作为迁移源，迁移完成即删除。
+- 所有手写 Rust 模块都位于 `rust/src/**`。允许建立 `rules_ir`、`rules_validate`、`rules_engine`、`io_http`、`ffi` 等子目录，再由 `lib.rs` 统一 `pub mod xxx` 暴露，不再限制只有 `lib.rs` 可手写。
+- FRB (`flutter_rust_bridge.yaml`) 可以声明多个 `rust_input: crate::xxx`。每个入口都指向 `rust/src/**` 内的根模块，例如 `crate::validate`、`crate::execute`、`crate::preview`。
+- `rust/src/api` 不再是必备门面。只要 `lib.rs` 对外 `pub use` 所需函数即可，模块命名可以按功能拆分。
+- 任何任务不得重新创建 `rust/crates/*` 目录或 workspace 配置，除非用户之后明确推翻此决策。
 
 
 ## TODOs
 > 说明：每个任务“实现+测试/验证”必须同一个任务完成。
 
-- [x] 0. 旧代码清理（第一步）：直接删除旧 Rust 实现与现有生成物（Flutter/Web）并搭建新 workspace 骨架
+- [x] 0. 旧代码清理（第一步）：直接删除旧 Rust 实现与现有生成物（Flutter/Web）并重置单 crate 骨架
 
   **What to do**:
   - 决策（已确认）：项目初建阶段不需要旧规则数据兼容；旧 Rust 代码不保留，直接删除，全部按新架构重写。
   - 目标（强约束）：
-    - 最终 `rust/src/` 目录只允许存在手写 `lib.rs`；`frb_generated.rs` 作为生成文件允许存在或删除后重生。
+    - 最终 `rust/src/**` 允许包含 `lib.rs` 与按职责划分的实现模块（`rules_ir`、`rules_validate`、`rules_engine`、`io_http`、`ffi` 等）。所有手写代码都放在根 crate 内部目录，`frb_generated.rs` 仍被视为生成文件。
     - 最终 Flutter 侧不再保留旧 FRB 生成物：删除 `lib/core/rust/**`（后续在新 IR/新 FFI 完成后再重新生成）。
     - 最终 Web-editor 侧不再保留旧 Rust 生成 TS 类型：删除 `web-editor/src/types/rule.ts`（后续由新 IR 重新生成）。
+    - `rust/crates/*` 自此仅作为待迁移的历史目录，任何新增实现只能写入 `rust/src/**`。
   - 具体步骤（必须按顺序，且每步都要保证 Flutter/Rust 编译链路不被卡死）：
-    1) 删除旧 Rust 源码（一次性清空）：删除 `rust/src/` 下除 `lib.rs` 外的所有手写源码与目录（`api/ domain/ executor/ internal/ error.rs` 等）。
+    1) 删除旧 Rust 源码（一次性清空）：删除 `rust/src/` 下除 `lib.rs` 与未来需要的 FRB 模块入口外的所有手写源码与目录（既有 `domain/ executor/ internal/ error.rs` 等）。
        - `rust/src/frb_generated.rs` 直接删除（生成文件），后续需要 FRB 时再生成。
-    1.1) 将 `rust/src/lib.rs` 改为“最小可编译门面”（决策已定）：
-       - 仅保留一个空的内联模块以占位 FRB 入口：`pub mod api {}`
-       - 不再 `pub mod domain;` / `pub mod executor;` 等引用已删除的模块
-    2) 将 `rust/` 调整为 workspace（crate + workspace 同文件）：保留根 crate `[package]`（`spectra_native` 仍是 cdylib/staticlib），新增 `[workspace]` 并注册新 crates（先建空骨架即可）。
-    3) 立即创建并注册新架构 crates（空实现但可编译）：
-       - `rust/crates/rules_ir`
-       - `rust/crates/rules_validate`
-       - `rust/crates/rules_engine`
-       - `rust/crates/io_http`
-       - `rust/crates/ffi`
+    1.1) 将 `rust/src/lib.rs` 改为“可扩展门面”：
+        - 为 `rules_ir`、`rules_validate`、`rules_engine`、`io_http`、`ffi` 等模块创建空的 `mod.rs`/`lib.rs` 并放在 `rust/src/<module>/`。
+        - 在 `lib.rs` 中 `pub mod <module>;`，保留 `crate::validate`、`crate::execute` 等入口，后续任务直接在这些模块下实现。
+    2) 将 `rust/Cargo.toml` 固定为单 crate 配置：只保留 `[package]`、`[lib]`、`[dependencies]`，删除 `[workspace]`、`[workspace.dependencies]` 与所有 `members` 声明。
+    3) 如果仓库中仍有 `rust/crates/*` 空目录或模板，保留其源码供 Task 5 迁移，但在 README/plan 中明确其 legacy 身份，并阻断任何新的依赖/构建逻辑指向这些目录。
     4) 删除 Flutter 侧旧 FRB 生成物与其唯一引用点：
        - 删除整个目录：`lib/core/rust/**`（含 `frb_generated.dart`、`api/*`、`domain/*` 等）。
        - 删除 `lib/core/crawler/phase_executor.dart`（当前唯一直接 import 旧 FRB 生成物的文件）。
     5) 删除 Web-editor 侧旧 Rust 生成 TS 类型：删除 `web-editor/src/types/rule.ts`（当前未被引用，但会误导后续重构）。
     6) FRB 配置文件处理（决策已定）：
-       - 保留 `flutter_rust_bridge.yaml` 但不再运行生成；后续在 Task 10（新 `crates/ffi` API 明确后）再恢复生成 `lib/core/rust/**`。
-       - `pubspec.yaml` 中的 `flutter_rust_bridge` 与 `spectra_native` 依赖先保留（不影响编译），避免后续版本漂移；如要彻底移除依赖，必须同步更新 `rust_builder` 与构建脚本（不在 Task 0 范围）。
+        - 保留 `flutter_rust_bridge.yaml` 但不再运行生成；后续在 Task 10（根 crate 想要暴露的 `crate::xxx` 模块明确后）再恢复生成 `lib/core/rust/**`。
+        - 允许 `rust_input` 配置一次声明多个 `crate::xxx` 入口（全部来自 `rust/src/`），不再强制单一 `crate::api`，并允许直接指向具体模块，例如 `crate::engine::execute_rule`。
+        - `pubspec.yaml` 中的 `flutter_rust_bridge` 与 `spectra_native` 依赖先保留（不影响编译），避免后续版本漂移；如要彻底移除依赖，必须同步更新 `rust_builder` 与构建脚本（不在 Task 0 范围）。
 
-  - 重要说明：本任务是“硬重置基线”。从此开始，旧实现彻底消失；任何需要的能力都由后续任务在新 crates 中重写。
+   - 重要说明：本任务是“硬重置基线”。从此开始，旧实现彻底消失；任何需要的能力都由后续任务直接在 `rust/src/**` 内的新模块中重写，`rust/crates/*` 仅存留为迁移素材，完成迁移立即删除，不再引入额外 `crates/ffi` 门面。
 
-  **Must NOT do**:
-  - 不尝试从旧代码中“迁移/复用”实现（决策已定：全部重写）。
-  - 不把任何手写实现留在 `rust/src/**`（`lib.rs` 例外；`frb_generated.rs` 为生成文件例外）。
+   **Must NOT do**:
+   - 不尝试从旧代码中“迁移/复用”实现（决策已定：全部重写）。
+   - 不在 `rust/crates/*` 或 workspace 配置里新增任何实现、依赖或脚本。
 
   **Recommended Agent Profile**:
-  - Category: `unspecified-high` — Reason: workspace/FRB/Flutter 编译链路改动面大，需一次性梳理到可编译。
+  - Category: `unspecified-high`：单 crate 基线重建涉及 FRB/Flutter 编译链路，需一次性梳理到可编译。
   - Skills: `[]`
 
   **Parallelization**: Can Parallel: NO | Wave 1 | Blocks: 1-33 | Blocked By: -
@@ -134,28 +137,28 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
   - 根 crate：`rust/Cargo.toml`
   - `rust/src/lib.rs`（Task 0 后仅保留此手写文件）：`rust/src/lib.rs`
 
-  **Acceptance Criteria** (agent-executable):
-  - [ ] `cargo test`（在 `rust/`）通过。
-  - [ ] `cargo clippy --all-targets --all-features -- -D warnings`（在 `rust/`）通过。
-  - [ ] `rust/src/` 下除 `lib.rs` 外不再存在任何手写 `.rs` 文件（`frb_generated.rs` 例外）。
-  - [ ] `flutter analyze --fatal-infos` 通过（避免 Dart 侧因 FRB 生成物变化导致编译失败）。
-  - [ ] `rg "core/rust" lib` 0 命中（确保旧生成物引用彻底清除）。
+   **Acceptance Criteria** (agent-executable):
+   - [ ] `cargo test`（在 `rust/`）通过。
+   - [ ] `cargo clippy --all-targets --all-features -- -D warnings`（在 `rust/`）通过。
+   - [ ] `rust/src/**` 仅包含 `lib.rs`、`frb_generated.rs`（可选）与空占位/新建模块目录，且这些模块会在后续任务中补充实现。
+   - [ ] `flutter analyze --fatal-infos` 通过（避免 Dart 侧因 FRB 生成物变化导致编译失败）。
+   - [ ] `rg "core/rust" lib` 0 命中（确保旧生成物引用彻底清除）。
 
   **QA Scenarios**:
   ```
-  Scenario: Rust workspace 与 FRB 入口可编译
+   Scenario: 单 crate 与 FRB 入口可编译
     Tool: Bash
     Steps:
       - 在 rust/ 运行 cargo test
-      - 在 rust/ 运行 cargo clippy --all-targets --all-features -- -D warnings
-      - 检查 rust/src 目录仅剩 lib.rs（以及可能的 frb_generated.rs）
+       - 在 rust/ 运行 cargo clippy --all-targets --all-features -- -D warnings
+        - 检查 rust/src 目录仅剩 `lib.rs`（以及可能的 FRB 暴露模块与 `frb_generated.rs`）
       - 在 repo 根运行 flutter analyze --fatal-infos
       - rg "core/rust" lib
     Expected: 命令退出码 0；目录结构符合约束
     Evidence: .sisyphus/evidence/task-0-rust-hard-reset.md
   ```
 
-  **Commit**: YES | Message: `refactor(rust): delete legacy rust code and scaffold new workspace` | Files: `rust/**`, `flutter_rust_bridge.yaml`（如需）
+   **Commit**: YES | Message: `refactor(rust): delete legacy rust code and reset single crate baseline` | Files: `rust/**`, `flutter_rust_bridge.yaml`（如需）
 
 - [x] 1. 定稿 IR v1（RuleIR + 版本封套）与 schemaVersion 策略
 
@@ -337,52 +340,48 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
 
   **Commit**: YES | Message: `feat(db): add rule ir storage fields` | Files: `lib/core/database/drift/tables/crawl_rules.dart`, `lib/core/database/drift/app_database.dart`
 
-- [x] 5. Rust crate 重组（workspace + 清晰模块边界）
+- [x] 5. Rust 模块迁移（单 crate + 清晰模块边界）
 
   **What to do**:
-  - 前置说明：Task 0 已完成“旧实现删除 + workspace 骨架”；本任务负责把 crate 边界与依赖关系做实，并把根 crate 的 FRB 入口稳定为“薄门面”。
-  - 在 workspace 中新增并注册以下 crates（仅建骨架 + Cargo 依赖边界，不引入业务功能）：
-    - `crates/rules_ir`（RuleEnvelope/Graph/Node/Port/Diagnostics/NormalizedModel）
-    - `crates/rules_validate`（validator/plan compiler）
-    - `crates/rules_engine`（runtime + NodeEvent + provenance）
-    - `crates/io_http`（wreq 封装、rate limit、缓存键）
-    - `crates/ffi`（FRB 暴露面，尽量薄）
-    - 顶层 `spectra_native` 作为 cdylib/staticlib facade
-  - 约束（决策已定）：
-    - 只有 `crates/ffi` 暴露 Flutter 侧会调用的 Rust API；其他 crates 不依赖 Flutter。
-    - `rust/src` 仍只允许 `lib.rs`（手写）+ `frb_generated.rs`（生成）。
-  - FRB 入口策略（决策已定，避免生成规则变化太大）：
-    - 保持 `flutter_rust_bridge.yaml` 的 `rust_input: crate::api`。
-    - 根 crate 的 `crate::api` 模块在 `rust/src/lib.rs` 内联定义，仅做薄转发：`pub fn/async fn` 调用 `crates/ffi` 中的实现。
-    - 禁止引入任何 `legacy_*` 过渡 crate；旧实现已在 Task 0 删除，新代码一律写入 `crates/*`。
+  - 前置说明：Task 0 已完成“旧实现删除 + 单 crate 骨架”。本任务负责把 `rust/crates/*` 内的实现迁移到 `rust/src/**` 模块，并删除 workspace 残留。
+  - 迁移步骤：
+     1) 将 `rust/crates/rules_ir/src/**` 内容移动到 `rust/src/rules_ir/**`，在 `lib.rs` 中 `pub mod rules_ir;` 并更新所有 `use`、`mod` 路径。
+     2) 依次迁移 `rules_validate`、`rules_engine`、`io_http` 以及其他自定义 crate，统一落位 `rust/src/<module>/`。
+     3) 调整 `Cargo.toml`：删除 crate 依赖、`[workspace]` 与 patch 配置，只保留单 crate 设置；将共享依赖直接写入根 `[dependencies]`。
+     4) 更新 `flutter_rust_bridge.yaml`：`rust_input` 直接指向新的根模块函数（如 `crate::validate::validate_rule`），无需任何 `crate::api` 门面。
+     5) 删除 `rust/crates/*` 目录与相关脚本，确保仓库中不再引用这些路径。
+  - 约束：
+     - 所有单测、基准、fixtures 需更新到新的模块路径。
+     - 如需子模块拆分，可在 `rust/src/<module>/` 下继续分层，但必须保持单 crate。
+     - Flutter 侧只通过 FRB 访问 `crate::xxx` 函数，禁止额外 FFI crate。
 
   **Must NOT do**:
   - 不在重组阶段引入新功能；先保证编译/测试绿。
 
   **Recommended Agent Profile**:
-  - Category: `unspecified-high` — Reason: 需要细致搬迁与依赖梳理。
-  - Skills: [`rust-ffi-guide`] — Reason: 确保 FRB 生成与 crate 边界不破。
+  - Category: `unspecified-high`：需要细致搬迁与依赖梳理。
+  - Skills: [`rust-ffi-guide`]：确保 FRB 生成与模块暴露不破。
 
   **Parallelization**: Can Parallel: NO | Wave 2 | Blocks: 6-10 | Blocked By: 0
 
   **References**:
-  - Current root crate: `rust/Cargo.toml`
-  - Current modules: `rust/src/lib.rs`
+  - 根 crate：`rust/Cargo.toml`
+  - 模块入口：`rust/src/lib.rs`、`rust/src/rules_ir/**`、`rust/src/rules_validate/**`、`rust/src/rules_engine/**`、`rust/src/io_http/**`
 
   **Acceptance Criteria**:
-  - [ ] `cargo test` 通过（以新 crates 的最小单测/编译测试为准）。
-  - [ ] `rust/src/` 仍符合“仅 `lib.rs`（手写）+ 生成文件”约束。
+  - [ ] `cargo test`（在 `rust/`）通过，所有迁移模块编译并跑通单测。
+  - [ ] `rust/crates/*` 被删除，模块全部落在 `rust/src/**`。
 
   **QA Scenarios**:
   ```
-  Scenario: workspace 编译与测试
+  Scenario: 单 crate 模块编译与测试
     Tool: Bash
     Steps: 在 rust/ 运行 cargo test
     Expected: 退出码 0
-    Evidence: .sisyphus/evidence/task-5-rust-workspace.md
+    Evidence: .sisyphus/evidence/task-5-single-crate.md
   ```
 
-  **Commit**: YES | Message: `refactor(rust): scaffold new workspace crates and ffi facade` | Files: `rust/Cargo.toml`, `rust/crates/**`, `rust/src/lib.rs`, `flutter_rust_bridge.yaml`（如需）
+  **Commit**: YES | Message: `refactor(rust): migrate modules into single crate` | Files: `rust/Cargo.toml`, `rust/src/**`, `flutter_rust_bridge.yaml`（如需）
 
 - [x] 6. 实现 RuleEnvelope/Graph/Port/Type 系统（Rust）并导出 TS/Dart
 
@@ -432,7 +431,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
 
   **Commit**: YES | Message: `feat(rules-ir): add typed graph ir and exports` | Files: `rust/`（rules_ir）, `web-editor/src/types/rule.ts`, `lib/core/rust/domain/rule/*`
 
-- [ ] 7. Validator v1：结构校验 + 类型校验 + 拓扑/环检测 + capability 校验
+- [x] 7. Validator v1：结构校验 + 类型校验 + 拓扑/环检测 + capability 校验
 
   **What to do**:
   - 实现：
@@ -452,7 +451,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
   **Parallelization**: Can Parallel: YES | Wave 2 | Blocks: 8-22 | Blocked By: 6
 
   **References**:
-  - Diagnostic 类型（Task 6 产出）：`rust/crates/rules_ir/src/diagnostic.rs`
+  - Diagnostic 类型（Task 6 产出）：`rust/src/rules_ir/diagnostic.rs`
 
   **Acceptance Criteria**:
   - [ ] fixtures 中至少覆盖：断边、类型不匹配、未知节点、环。
@@ -461,14 +460,14 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
   ```
   Scenario: validator fixtures
     Tool: Bash
-    Steps: cargo test -p rules_validate
+    Steps: cargo test rules_validate
     Expected: 通过
     Evidence: .sisyphus/evidence/task-7-validator.md
   ```
 
   **Commit**: YES | Message: `feat(rules-validate): add v1 validator diagnostics` | Files: `rust/`（rules_validate）, `fixtures/`
 
-- [ ] 8. Graph Engine v1：单机执行 + bounded channels + NodeEvent 产出
+- [x] 8. Graph Engine v1：单机执行 + bounded channels + NodeEvent 产出
 
   **What to do**:
   - 以 `tokio` 实现 runtime：每个 node 一个 task，边用有界队列传递。
@@ -488,7 +487,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
   **Parallelization**: Can Parallel: NO | Wave 2 | Blocks: 9-22 | Blocked By: 6-7
 
   **References**:
-  - Engine 与事件类型（Task 6/7 之后的新代码）：`rust/crates/rules_engine/src/**`
+  - Engine 与事件类型（Task 6/7 之后的新代码）：`rust/src/rules_engine/**`
 
   **Acceptance Criteria**:
   - [ ] 对“链式图”执行结果与 fixtures 中的期望输出一致（同输入 HTML/JSON）。
@@ -498,7 +497,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
   ```
   Scenario: 链式图 fixtures 一致性
     Tool: Bash
-    Steps: cargo test -p rules_engine（用 fixtures 驱动测试并断言输出）
+    Steps: cargo test rules_engine（用 fixtures 驱动测试并断言输出）
     Expected: 输出与 fixtures 期望一致
     Evidence: .sisyphus/evidence/task-8-engine-parity.md
   ```
@@ -526,7 +525,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
   **Parallelization**: Can Parallel: YES | Wave 2 | Blocks: 20-22 | Blocked By: 1,6
 
   **References**:
-  - NormalizedModel 定义位置（Task 6/9 新代码）：`rust/crates/rules_ir/src/normalized_model.rs`
+  - NormalizedModel 定义位置（Task 6/9 新代码）：`rust/src/rules_ir/normalized_model.rs`
 
   **Acceptance Criteria**:
   - [ ] Rust/TS/Dart 三端类型一致并能序列化。
@@ -535,19 +534,19 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
   ```
   Scenario: NormalizedModel JSON roundtrip
     Tool: Bash
-    Steps: cargo test -p rules_ir
+    Steps: cargo test rules_ir
     Expected: 通过
     Evidence: .sisyphus/evidence/task-9-normalizedmodel.md
   ```
 
   **Commit**: YES | Message: `feat(model): add normalized content models for templates` | Files: `rust/`（rules_ir）, `web-editor/src/types/rule.ts`, `lib/core/rust/domain/**`
 
-- [ ] 10. Rust FFI/API：暴露 validate/execute（返回 runId + 可选结果）
+- [ ] 10. Rust FFI/API：在根 crate 模块（例如 `crate::validate`、`crate::execute`）暴露 validate/execute（返回 runId + 可选结果）
 
   **What to do**:
-  - 在 `ffi` crate 暴露：
-    - `validate_rule(envelope_json) -> ValidationResult(diagnostics)`
-    - `execute_rule(envelope_json, context) -> ExecuteResponse(runId, initialResult?)`
+  - 在根 crate `rust/src/` 下直接实现并暴露这些模块：
+      - `validate_rule(envelope_json) -> ValidationResult(diagnostics)`
+      - `execute_rule(envelope_json, context) -> ExecuteResponse(runId, initialResult?)`
   - NodeEvent 通过独立流通道推送（WS 由 Flutter server 转发，不直接走 FRB stream）。
 
   **Must NOT do**:
@@ -560,7 +559,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
   **Parallelization**: Can Parallel: NO | Wave 2 | Blocks: 11-15 | Blocked By: 6-9
 
   **References**:
-  - FRB 配置：`flutter_rust_bridge.yaml`（在本任务内恢复生成 `lib/core/rust/**`）
+  - FRB 配置：`flutter_rust_bridge.yaml`（在本任务内恢复生成 `lib/core/rust/**` 对各 `crate::xxx` 模块的扫描）
 
   **Acceptance Criteria**:
   - [ ] Flutter 侧可调用 validate/execute 并拿到 structured errors。
@@ -574,7 +573,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
     Evidence: .sisyphus/evidence/task-10-ffi-validate.md
   ```
 
-  **Commit**: YES | Message: `feat(ffi): expose rule validate and execute` | Files: `rust/`（ffi crate）, `lib/core/rust/**`
+  **Commit**: YES | Message: `feat(api): expose rule validate and execute` | Files: `rust/src/**`, `lib/core/rust/**`
 
 - [ ] 11. Flutter server：新增 `/api/rules*` 路由与 CRUD（读写 DB）
 
@@ -833,10 +832,10 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
 
   **What to do**:
   - 从零实现 selector/transform 节点执行（不复用已删除的旧实现），并把实现落在新 crate 路径：
-    - `rust/crates/rules_engine/src/nodes/fetch.rs`
-    - `rust/crates/rules_engine/src/nodes/parse.rs`
-    - `rust/crates/rules_engine/src/nodes/select.rs`（CSS/XPath/JSONPath/Regex）
-    - `rust/crates/rules_engine/src/nodes/transform.rs`（Trim/Lower/Upper/Text/Url/JS 等）
+  - `rust/src/rules_engine/nodes/fetch.rs`
+  - `rust/src/rules_engine/nodes/parse.rs`
+  - `rust/src/rules_engine/nodes/select.rs`（CSS/XPath/JSONPath/Regex）
+  - `rust/src/rules_engine/nodes/transform.rs`（Trim/Lower/Upper/Text/Url/JS 等）
   - 修正 attr 提取语义：不再用 `"*"` hack；Selector 节点或 AttrTransform 节点应明确输入是 DOM selection。
 
   **Recommended Agent Profile**:
@@ -852,12 +851,12 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
   ```
   Scenario: selector nodes tests
     Tool: Bash
-    Steps: cargo test -p rules_engine
+    Steps: cargo test rules_engine
     Expected: 通过
     Evidence: .sisyphus/evidence/task-19-selector-nodes.md
   ```
 
-  **Commit**: YES | Message: `feat(rules-engine): implement fetch/parse/select/transform nodes` | Files: `rust/crates/rules_engine/**`, `fixtures/`
+  **Commit**: YES | Message: `feat(rules-engine): implement fetch/parse/select/transform nodes` | Files: `rust/src/rules_engine/**`, `fixtures/`
 
 - [ ] 20. Rust：实现阶段输出到 NormalizedModel 的 MapToModel 节点
 
@@ -878,7 +877,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
   ```
   Scenario: map to model
     Tool: Bash
-    Steps: cargo test -p rules_engine（fixture html → execute → model）
+    Steps: cargo test rules_engine（fixture html → execute → model）
     Expected: model 字段符合预期
     Evidence: .sisyphus/evidence/task-20-map-to-model.md
   ```
@@ -957,8 +956,8 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
   **Parallelization**: Can Parallel: YES | Wave 6 | Blocks: F* | Blocked By: 7-8
 
   **References**:
-  - JS 节点实现位置（新代码）：`rust/crates/rules_engine/src/nodes/transform.rs`
-  - QuickJS 封装建议位置：`rust/crates/rules_engine/src/runtime/js_runtime.rs`
+  - JS 节点实现位置（新代码）：`rust/src/rules_engine/nodes/transform.rs`
+  - QuickJS 封装建议位置：`rust/src/rules_engine/runtime/js_runtime.rs`
 
   **Acceptance Criteria**:
   - [ ] 恶意/死循环脚本被超时终止并返回 NodeError。
@@ -997,8 +996,8 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
   **Parallelization**: Can Parallel: YES | Wave 6 | Blocks: F* | Blocked By: 13,19
 
   **References**:
-  - WAF/挑战检测建议实现位置：`rust/crates/io_http/src/antibot.rs`
-  - 结构化错误码（与 NodeEvent 对齐）：`rust/crates/rules_ir/src/diagnostic.rs`
+  - WAF/挑战检测建议实现位置：`rust/src/io_http/antibot.rs`
+  - 结构化错误码（与 NodeEvent 对齐）：`rust/src/rules_ir/diagnostic.rs`
 
   **Acceptance Criteria**:
   - [ ] WAF/挑战触发时返回 `ChallengeRequired` 并在 UI 有提示。
@@ -1239,7 +1238,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
 
   **References**:
   - wreq cookies 已启用：`rust/Cargo.toml`
-  - HTTP client（新代码）：`rust/crates/io_http/src/client.rs`
+  - HTTP client（新代码）：`rust/src/io_http/client.rs`
 
   **Acceptance Criteria**:
   - [ ] CookiePut 后的请求能自动携带 cookie（同域）。
@@ -1299,7 +1298,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
   ```
   Scenario: codec nodes
     Tool: Bash
-    Steps: cargo test -p rules_engine
+    Steps: cargo test rules_engine
     Expected: 通过
     Evidence: .sisyphus/evidence/task-33-codec-crypto.md
   ```
@@ -1379,7 +1378,7 @@ Wave 6（加固与收尾）: 性能/资源配额/安全（JS）+ 文档 + 回归
 
   **References**:
   - Rust HTTP cookies：`rust/Cargo.toml`（wreq cookies feature）
-  - HTTP client（新代码）：`rust/crates/io_http/src/client.rs`
+  - HTTP client（新代码）：`rust/src/io_http/client.rs`
   - CookieJar 持久化：任务 4、任务 32
   - Desktop 会话 runner：任务 24、任务 34
 

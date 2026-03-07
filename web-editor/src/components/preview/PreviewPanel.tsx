@@ -28,15 +28,25 @@ import { SelectorTestingPanel } from './SelectorTestingPanel';
 
 interface PreviewPanelProps {
   serverUrl: string | null;
+  serverToken: string | null;
   isConnected: boolean;
   isSelecting: boolean;
+  previewSessionId: string | null;
   selectedElement: ElementSelectedMessage['data'] | null;
   screenshot?: string | null; // Base64 图片数据
   onStartSelection: () => void;
   onCancelSelection: () => void;
   onClearSelection: () => void;
+  onPreviewOpened: (previewSessionId: string) => void;
   onApplySelector: (selector: string, type: 'css' | 'xpath') => void;
   onRequestScreenshot?: () => void;
+}
+
+interface PreviewOpenResponse {
+  previewSessionId?: string;
+  wsChannel?: {
+    previewSessionId?: string;
+  };
 }
 
 /**
@@ -46,13 +56,16 @@ interface PreviewPanelProps {
  */
 export function PreviewPanel({
   serverUrl,
+  serverToken,
   isConnected,
   isSelecting,
+  previewSessionId,
   selectedElement,
   screenshot,
   onStartSelection,
   onCancelSelection,
   onClearSelection,
+  onPreviewOpened,
   onApplySelector,
   onRequestScreenshot,
 }: PreviewPanelProps) {
@@ -67,7 +80,7 @@ export function PreviewPanel({
       return;
     }
 
-    if (!serverUrl) {
+    if (!serverUrl || !serverToken) {
       toast.error(t('preview.serverNotRunning'));
       return;
     }
@@ -76,13 +89,36 @@ export function PreviewPanel({
     try {
       const response = await fetch(`${serverUrl}/api/preview/open`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${serverToken}`,
+        },
         body: JSON.stringify({ url: previewUrl }),
       });
 
       if (!response.ok) {
         throw new Error('Failed to open preview');
       }
+
+      const data = (await response.json()) as PreviewOpenResponse;
+      const responsePreviewSessionId = data.previewSessionId;
+      const wsPreviewSessionId = data.wsChannel?.previewSessionId;
+      if (
+        responsePreviewSessionId &&
+        wsPreviewSessionId &&
+        responsePreviewSessionId !== wsPreviewSessionId
+      ) {
+        throw new Error('Mismatched preview session ids');
+      }
+
+      const resolvedPreviewSessionId =
+        wsPreviewSessionId ?? responsePreviewSessionId;
+      if (!resolvedPreviewSessionId) {
+        throw new Error('Missing previewSessionId');
+      }
+
+      onPreviewOpened(resolvedPreviewSessionId);
+      onClearSelection();
 
       toast.success(t('preview.previewOpened'));
     } catch {
@@ -174,7 +210,7 @@ export function PreviewPanel({
                 size="sm"
                 onClick={onStartSelection}
                 className="flex-1"
-                disabled={!previewUrl.trim()}
+                disabled={!previewSessionId}
               >
                 <Crosshair className="h-4 w-4 mr-1" />
                 {t('preview.selectElement')}

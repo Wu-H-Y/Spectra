@@ -69,6 +69,14 @@
 
 服务端通过 `type="node_event"` 下发节点事件流。
 
+对于预览选择器相关的轻量消息，服务端也可直接下发：
+
+- `element_selected`
+- `selection_started`
+- `selection_cancelled`
+
+这类消息的 `data.previewSessionId` 应与订阅过滤维度保持一致，便于当前 web-editor 预览流按 `previewSessionId` 关联具体预览会话。
+
 ### 3.1 `NodeEvent` 事件类型
 
 `NodeEvent` 枚举值：

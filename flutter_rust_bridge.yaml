@@ -1,3 +1,4 @@
-rust_input: crate::api
+# 按照第三方包的形式生成
+rust_input: crate::ffi, crate::rules_ir::normalized_model
 rust_root: rust/
 dart_output: lib/core/rust
