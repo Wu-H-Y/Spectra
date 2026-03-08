@@ -13,6 +13,9 @@ part 'talker_provider.g.dart';
 /// - 与 Riverpod、Dio 集成
 Talker createTalker() {
   return TalkerFlutter.init(
+    logger: TalkerLogger(
+      formatter: ColoredLoggerFormatter(),
+    ),
     settings: TalkerSettings(
       /// 最大历史记录数量
       maxHistoryItems: 500,
@@ -26,4 +29,18 @@ Talker createTalker() {
 @riverpod
 Talker talker(Ref ref) {
   return createTalker();
+}
+
+/// 只带颜色的日志格式
+class ColoredLoggerFormatter implements LoggerFormatter {
+  @override
+  String fmt(LogDetails details, TalkerLoggerSettings settings) {
+    final msg = details.message?.toString() ?? '';
+    final coloredMsg = msg
+        .split('\n')
+        .map((e) => details.pen.write(e))
+        .toList()
+        .join('\n');
+    return coloredMsg;
+  }
 }
