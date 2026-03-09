@@ -1,5 +1,0 @@
-issue-prefix: "Spectra"
-sync.branch: "beads-metadata"
-sync.mode: "dolt-native"
-repos:
-  primary: "."
