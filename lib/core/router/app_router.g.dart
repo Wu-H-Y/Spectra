@@ -6,7 +6,11 @@ part of 'app_router.dart';
 // GoRouterGenerator
 // **************************************************************************
 
-List<RouteBase> get $appRoutes => [$homeRoute, $settingsRoute];
+List<RouteBase> get $appRoutes => [
+  $homeRoute,
+  $settingsRoute,
+  $rulesExecuteRoute,
+];
 
 RouteBase get $homeRoute =>
     GoRouteData.$route(path: '/', factory: $HomeRoute._fromState);
@@ -39,6 +43,32 @@ mixin $SettingsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $rulesExecuteRoute => GoRouteData.$route(
+  path: '/rules-execute',
+  factory: $RulesExecuteRoute._fromState,
+);
+
+mixin $RulesExecuteRoute on GoRouteData {
+  static RulesExecuteRoute _fromState(GoRouterState state) =>
+      const RulesExecuteRoute();
+
+  @override
+  String get location => GoRouteData.$location('/rules-execute');
 
   @override
   void go(BuildContext context) => context.go(location);

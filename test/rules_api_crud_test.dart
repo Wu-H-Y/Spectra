@@ -11,6 +11,10 @@ import 'package:spectra/core/server/routes/rules_routes.dart';
 import 'package:spectra/core/server/routes/server_routes.dart';
 
 void main() {
+  setUpAll(() {
+    RustLib.initMock(api: _MockRustApi());
+  });
+
   group('Rules API CRUD', () {
     test('supports status auth and full CRUD flow', () async {
       final database = AppDatabase(NativeDatabase.memory());
@@ -180,8 +184,6 @@ void main() {
     const serverToken = 'st_validate_token';
     late RelicServer server;
 
-    RustLib.initMock(api: _MockValidationRustApi());
-
     final serverRoutes = ServerRoutes(
       isRunning: () => true,
       port: () => server.port,
@@ -236,6 +238,95 @@ void main() {
     expect(details.first['path'], 'graph.edges[1].from.nodeId');
     expect(details.first['nodeId'], 'ghost_node');
   });
+
+  test('execute route reloads persisted rule kv across restart', () async {
+    final database = AppDatabase(NativeDatabase.memory());
+    const serverToken = 'st_cache_token';
+    _MockRustApi.observedContexts.clear();
+
+    Future<RelicServer> startServer() async {
+      final serverRoutes = ServerRoutes(
+        isRunning: () => true,
+        port: () => 0,
+        serverToken: () => serverToken,
+        onStart: () async {},
+        onStop: () async {},
+      );
+      final rulesRoutes = RulesRoutes(
+        database: database,
+        serverToken: () => serverToken,
+      );
+      final app = RelicApp()
+        ..attach('/api/server', serverRoutes.router)
+        ..attach('/api/rules', rulesRoutes.router);
+      return app.serve(address: InternetAddress.loopbackIPv4, port: 0);
+    }
+
+    final client = HttpClient();
+    addTearDown(client.close);
+    addTearDown(database.close);
+
+    final firstServer = await startServer();
+    final firstBase = Uri.parse('http://127.0.0.1:${firstServer.port}');
+
+    await _sendJsonRequest(
+      client: client,
+      method: 'POST',
+      uri: firstBase.resolve('/api/rules'),
+      token: serverToken,
+      body: {
+        'rule': _ruleEnvelope(
+          ruleId: 'demo.cache.rule',
+          name: '缓存规则',
+          description: '用于规则级缓存重启测试',
+        ),
+        'enabled': true,
+      },
+    );
+
+    final executeBody = {
+      'rule': _ruleEnvelope(
+        ruleId: 'demo.cache.rule',
+        name: '缓存规则',
+        description: '用于规则级缓存重启测试',
+      ),
+      'context': {'runId': 'cache-run-1'},
+    };
+    final firstExecute = await _sendJsonRequest(
+      client: client,
+      method: 'POST',
+      uri: firstBase.resolve('/api/rules/execute'),
+      token: serverToken,
+      body: executeBody,
+    );
+    expect(firstExecute.statusCode, 202);
+    await Future<void>.delayed(const Duration(milliseconds: 60));
+
+    await firstServer.close(force: true);
+
+    final secondServer = await startServer();
+    addTearDown(() => secondServer.close(force: true));
+    final secondBase = Uri.parse('http://127.0.0.1:${secondServer.port}');
+    final secondExecute = await _sendJsonRequest(
+      client: client,
+      method: 'POST',
+      uri: secondBase.resolve('/api/rules/execute'),
+      token: serverToken,
+      body: {
+        ...executeBody,
+        'context': {'runId': 'cache-run-2'},
+      },
+    );
+    expect(secondExecute.statusCode, 202);
+    await Future<void>.delayed(const Duration(milliseconds: 60));
+
+    expect(_MockRustApi.observedContexts.length, 2);
+    expect(_MockRustApi.observedContexts.first.ruleKvJson, isNull);
+    expect(_MockRustApi.observedContexts.first.cookieJarJson, isNull);
+    expect(_MockRustApi.observedContexts.last.ruleKvJson, isNotNull);
+    expect(_MockRustApi.observedContexts.last.cookieJarJson, isNotNull);
+    expect(_MockRustApi.observedContexts.last.ruleId, 'demo.cache.rule');
+  });
 }
 
 Map<String, dynamic> _ruleEnvelope({
@@ -286,7 +377,9 @@ Future<({int statusCode, Map<String, dynamic> json})> _sendJsonRequest({
   return (statusCode: response.statusCode, json: jsonBody);
 }
 
-class _MockValidationRustApi extends RustLibApi {
+class _MockRustApi extends RustLibApi {
+  static final List<FfiExecuteContext> observedContexts = <FfiExecuteContext>[];
+
   @override
   FfiValidationResult crateFfiValidateRule({required String envelopeJson}) {
     if (envelopeJson.contains('ghost_node')) {
@@ -318,6 +411,28 @@ class _MockValidationRustApi extends RustLibApi {
     required String envelopeJson,
     FfiExecuteContext? context,
   }) async {
-    return FfiExecuteResponse(runId: context?.runId ?? 'mock-run');
+    observedContexts.add(context ?? const FfiExecuteContext());
+    final nextKv =
+        context?.ruleKvJson ??
+        jsonEncode({
+          'persisted_key': {'type': 'text', 'value': 'persisted_value'},
+        });
+    final nextCookieJar =
+        context?.cookieJarJson ??
+        jsonEncode([
+          {
+            'name': 'session',
+            'value': 'persisted_cookie',
+            'domain': 'example.com',
+            'path': '/',
+            'secure': false,
+            'httpOnly': true,
+          },
+        ]);
+    return FfiExecuteResponse(
+      runId: context?.runId ?? 'mock-run',
+      ruleKvJson: nextKv,
+      cookieJarJson: nextCookieJar,
+    );
   }
 }

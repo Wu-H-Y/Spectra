@@ -90,6 +90,12 @@ class HomePage extends HookConsumerWidget {
 
     final features = [
       _FeatureItem(
+        icon: Icons.view_quilt_outlined,
+        title: l10n.rulesExecutePageTitle,
+        color: colorScheme.primary,
+        route: '/rules-execute',
+      ),
+      _FeatureItem(
         icon: Icons.settings,
         title: l10n.settingsTitle,
         color: colorScheme.outline,

@@ -209,6 +209,106 @@ class S {
     );
   }
 
+  /// `固定模板渲染`
+  String get rulesExecutePageTitle {
+    return Intl.message(
+      '固定模板渲染',
+      name: 'rulesExecutePageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `执行现有规则接口，并从真实的 initialResultJson 渲染 Search、Detail、Toc、Content 四个固定模板分区。`
+  String get rulesExecutePageDescription {
+    return Intl.message(
+      '执行现有规则接口，并从真实的 initialResultJson 渲染 Search、Detail、Toc、Content 四个固定模板分区。',
+      name: 'rulesExecutePageDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `执行规则`
+  String get rulesExecuteRunButton {
+    return Intl.message(
+      '执行规则',
+      name: 'rulesExecuteRunButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `执行响应 JSON`
+  String get rulesExecuteResponseSection {
+    return Intl.message(
+      '执行响应 JSON',
+      name: 'rulesExecuteResponseSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `规范化结果 JSON`
+  String get rulesExecuteNormalizedSection {
+    return Intl.message(
+      '规范化结果 JSON',
+      name: 'rulesExecuteNormalizedSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search`
+  String get rulesExecuteSearchSection {
+    return Intl.message(
+      'Search',
+      name: 'rulesExecuteSearchSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Detail`
+  String get rulesExecuteDetailSection {
+    return Intl.message(
+      'Detail',
+      name: 'rulesExecuteDetailSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Toc`
+  String get rulesExecuteTocSection {
+    return Intl.message(
+      'Toc',
+      name: 'rulesExecuteTocSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Content`
+  String get rulesExecuteContentSection {
+    return Intl.message(
+      'Content',
+      name: 'rulesExecuteContentSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前分区暂无内容`
+  String get rulesExecuteEmptyState {
+    return Intl.message(
+      '当前分区暂无内容',
+      name: 'rulesExecuteEmptyState',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `服务器状态`
   String get serverStatus {
     return Intl.message('服务器状态', name: 'serverStatus', desc: '', args: []);

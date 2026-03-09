@@ -21,28 +21,104 @@ class PreviewOpenResult {
   final Map<String, dynamic> wsChannel;
 }
 
+/// 预览匹配元素样本。
+class PreviewSelectorMatchedElement {
+  /// 创建预览匹配元素样本。
+  const PreviewSelectorMatchedElement({
+    required this.text,
+    required this.html,
+  });
+
+  /// 元素文本。
+  final String text;
+
+  /// 元素 HTML。
+  final String html;
+
+  /// 转为 JSON。
+  Map<String, String> toJson() {
+    return {'text': text, 'html': html};
+  }
+}
+
+/// 预览选择器测试结果。
+class PreviewSelectorTestResult {
+  /// 创建预览选择器测试结果。
+  const PreviewSelectorTestResult({
+    required this.success,
+    required this.count,
+    required this.elements,
+    this.error,
+  });
+
+  /// 是否成功。
+  final bool success;
+
+  /// 匹配数量。
+  final int count;
+
+  /// 匹配样本。
+  final List<PreviewSelectorMatchedElement> elements;
+
+  /// 错误信息。
+  final String? error;
+}
+
+/// 预览路由异常。
+class PreviewRouteException implements Exception {
+  /// 创建预览路由异常。
+  const PreviewRouteException({
+    required this.statusCode,
+    required this.type,
+    required this.message,
+    this.details = const [],
+  });
+
+  /// HTTP 状态码。
+  final int statusCode;
+
+  /// 错误类型。
+  final String type;
+
+  /// 错误消息。
+  final String message;
+
+  /// 错误详情。
+  final List<Map<String, dynamic>> details;
+}
+
 /// 预览相关路由。
 class PreviewRoutes {
   /// 创建预览路由。
   const PreviewRoutes({
     required this.serverToken,
     required this.openPreview,
+    required this.testSelector,
   });
 
   /// 当前服务端鉴权令牌。
   final String Function() serverToken;
 
   /// 打开预览会话。
-  final PreviewOpenResult Function({
+  final Future<PreviewOpenResult> Function({
     required String url,
     String? sessionId,
   })
   openPreview;
 
+  /// 测试预览选择器。
+  final Future<PreviewSelectorTestResult> Function({
+    required String previewSessionId,
+    required String selectorType,
+    required String expression,
+  })
+  testSelector;
+
   /// 创建包含预览接口的路由器。
   Router<Handler> get router => Router<Handler>()
     ..use('/', _authorizationMiddleware)
-    ..post('/open', _openPreview);
+    ..post('/open', _openPreview)
+    ..post('/test-selector', _testSelector);
 
   Handler _authorizationMiddleware(Handler innerHandler) {
     return (request) async {
@@ -62,22 +138,13 @@ class PreviewRoutes {
 
   Future<Response> _openPreview(Request request) async {
     try {
-      final rawBody = await request.readAsString(maxLength: 1024 * 1024);
-      final decoded = jsonDecode(rawBody);
-      if (decoded is! Map<String, dynamic>) {
-        return _errorResponse(
-          statusCode: 400,
-          type: 'bad_request',
-          message: '请求体必须是 JSON 对象',
-        );
-      }
-
+      final decoded = await _readJsonBody(request);
       final parsed = _parseOpenPreviewRequest(decoded);
       if (parsed.error != null) {
         return parsed.error!;
       }
 
-      final result = openPreview(
+      final result = await openPreview(
         url: parsed.url!,
         sessionId: parsed.sessionId,
       );
@@ -94,7 +161,63 @@ class PreviewRoutes {
         type: 'bad_request',
         message: '请求体不是合法 JSON',
       );
+    } on PreviewRouteException catch (error) {
+      return _errorResponse(
+        statusCode: error.statusCode,
+        type: error.type,
+        message: error.message,
+        details: error.details,
+      );
     }
+  }
+
+  Future<Response> _testSelector(Request request) async {
+    try {
+      final decoded = await _readJsonBody(request);
+      final parsed = _parseTestSelectorRequest(decoded);
+      if (parsed.error != null) {
+        return parsed.error!;
+      }
+
+      final result = await testSelector(
+        previewSessionId: parsed.previewSessionId!,
+        selectorType: parsed.selectorType!,
+        expression: parsed.expression!,
+      );
+
+      return _jsonResponse({
+        'success': result.success,
+        'count': result.count,
+        'elements': result.elements.map((item) => item.toJson()).toList(),
+        if (result.error != null) 'error': result.error,
+        'matched': result.count,
+        'samples': result.elements
+            .map((item) => item.text.isNotEmpty ? item.text : item.html)
+            .toList(),
+      });
+    } on FormatException {
+      return _errorResponse(
+        statusCode: 400,
+        type: 'bad_request',
+        message: '请求体不是合法 JSON',
+      );
+    } on PreviewRouteException catch (error) {
+      return _errorResponse(
+        statusCode: error.statusCode,
+        type: error.type,
+        message: error.message,
+        details: error.details,
+      );
+    }
+  }
+
+  Future<Map<String, dynamic>> _readJsonBody(Request request) async {
+    final rawBody = await request.readAsString(maxLength: 1024 * 1024);
+    final decoded = jsonDecode(rawBody);
+    if (decoded is! Map<String, dynamic>) {
+      throw const FormatException('请求体必须是 JSON 对象');
+    }
+    return decoded;
   }
 
   _ParsedOpenPreviewRequest _parseOpenPreviewRequest(
@@ -121,6 +244,61 @@ class PreviewRoutes {
     return _ParsedOpenPreviewRequest(
       url: url.trim(),
       sessionId: sessionId is String ? sessionId.trim() : null,
+    );
+  }
+
+  _ParsedTestSelectorRequest _parseTestSelectorRequest(
+    Map<String, dynamic> body,
+  ) {
+    final previewSessionId = body['previewSessionId'];
+    if (previewSessionId is! String || previewSessionId.trim().isEmpty) {
+      return _ParsedTestSelectorRequest(
+        error: _validationError(
+          path: 'previewSessionId',
+          message: 'previewSessionId 不能为空',
+        ),
+      );
+    }
+
+    final selector = body['selector'];
+    String? selectorType;
+    String? expression;
+    if (selector is String) {
+      selectorType = 'css';
+      expression = selector.trim();
+    } else if (selector is Map<String, dynamic>) {
+      final rawType = selector['type'];
+      final rawExpression = selector['expression'];
+      if (rawType is String) {
+        selectorType = rawType.trim();
+      }
+      if (rawExpression is String) {
+        expression = rawExpression.trim();
+      }
+    }
+
+    if (selectorType == null || selectorType.isEmpty) {
+      return _ParsedTestSelectorRequest(
+        error: _validationError(
+          path: 'selector.type',
+          message: 'selector.type 不能为空',
+        ),
+      );
+    }
+
+    if (expression == null || expression.isEmpty) {
+      return _ParsedTestSelectorRequest(
+        error: _validationError(
+          path: 'selector.expression',
+          message: 'selector.expression 不能为空',
+        ),
+      );
+    }
+
+    return _ParsedTestSelectorRequest(
+      previewSessionId: previewSessionId.trim(),
+      selectorType: selectorType,
+      expression: expression,
     );
   }
 
@@ -189,5 +367,19 @@ class _ParsedOpenPreviewRequest {
 
   final String? url;
   final String? sessionId;
+  final Response? error;
+}
+
+class _ParsedTestSelectorRequest {
+  const _ParsedTestSelectorRequest({
+    this.previewSessionId,
+    this.selectorType,
+    this.expression,
+    this.error,
+  });
+
+  final String? previewSessionId;
+  final String? selectorType;
+  final String? expression;
   final Response? error;
 }

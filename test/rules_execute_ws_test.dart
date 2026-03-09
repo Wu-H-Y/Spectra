@@ -274,6 +274,38 @@ class _MockExecuteRustApi extends RustLibApi {
     FfiExecuteContext? context,
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 20));
-    return FfiExecuteResponse(runId: context?.runId ?? 'mock-run');
+    return FfiExecuteResponse(
+      runId: context?.runId ?? 'mock-run',
+      initialResultJson: jsonEncode({
+        'search': {
+          'items': [
+            {
+              'title': '测试搜索结果 1',
+              'url': 'https://example.com/test-1',
+              'cover': 'https://example.com/cover-1.jpg',
+              'author': '测试作者 A',
+            },
+          ],
+        },
+        'detail': {
+          'title': '测试详情标题',
+          'cover': 'https://example.com/detail-cover.jpg',
+          'author': '测试作者 A',
+          'description': '这是用于测试的详情内容。',
+          'tags': ['测试', 'Task21'],
+        },
+        'toc': {
+          'chapters': [
+            {'title': '第一章', 'url': 'https://example.com/chapter-1'},
+          ],
+        },
+        'content': {
+          'contentTextHtml': '<p>测试 HTML 内容</p>',
+          'contentTextPlain': '测试纯文本内容',
+          'mediaAssets': <Map<String, dynamic>>[],
+        },
+        'media': <String, dynamic>{},
+      }),
+    );
   }
 }

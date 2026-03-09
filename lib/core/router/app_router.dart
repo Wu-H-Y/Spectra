@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spectra/features/home/presentation/pages/home_page.dart';
+import 'package:spectra/features/rules_execute/presentation/pages/rules_execute_page.dart';
 import 'package:spectra/features/settings/presentation/pages/settings_page.dart';
 import 'package:spectra/l10n/generated/l10n.dart';
 import 'package:spectra/shared/providers/talker_provider.dart';
@@ -54,6 +55,20 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const SettingsPage();
+  }
+}
+
+/// 规则执行固定模板渲染路由。
+///
+/// 导航到最小闭环渲染页面。
+@TypedGoRoute<RulesExecuteRoute>(path: '/rules-execute')
+class RulesExecuteRoute extends GoRouteData with $RulesExecuteRoute {
+  /// 创建规则执行固定模板渲染路由实例。
+  const RulesExecuteRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return RulesExecutePage();
   }
 }
 

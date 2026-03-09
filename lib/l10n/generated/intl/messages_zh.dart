@@ -95,6 +95,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "ruleEditorDescription": MessageLookupByLibrary.simpleMessage(
       "打开网页端爬虫规则编辑器",
     ),
+    "rulesExecuteContentSection": MessageLookupByLibrary.simpleMessage(
+      "Content",
+    ),
+    "rulesExecuteDetailSection": MessageLookupByLibrary.simpleMessage("Detail"),
+    "rulesExecuteEmptyState": MessageLookupByLibrary.simpleMessage("当前分区暂无内容"),
+    "rulesExecuteNormalizedSection": MessageLookupByLibrary.simpleMessage(
+      "规范化结果 JSON",
+    ),
+    "rulesExecutePageDescription": MessageLookupByLibrary.simpleMessage(
+      "执行现有规则接口，并从真实的 initialResultJson 渲染 Search、Detail、Toc、Content 四个固定模板分区。",
+    ),
+    "rulesExecutePageTitle": MessageLookupByLibrary.simpleMessage("固定模板渲染"),
+    "rulesExecuteResponseSection": MessageLookupByLibrary.simpleMessage(
+      "执行响应 JSON",
+    ),
+    "rulesExecuteRunButton": MessageLookupByLibrary.simpleMessage("执行规则"),
+    "rulesExecuteSearchSection": MessageLookupByLibrary.simpleMessage("Search"),
+    "rulesExecuteTocSection": MessageLookupByLibrary.simpleMessage("Toc"),
     "selectElement": MessageLookupByLibrary.simpleMessage("选择元素"),
     "selectedElement": MessageLookupByLibrary.simpleMessage("已选元素"),
     "sendToEditor": MessageLookupByLibrary.simpleMessage("发送到编辑器"),

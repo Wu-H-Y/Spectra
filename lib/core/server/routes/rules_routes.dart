@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:relic/relic.dart';
 import 'package:spectra/core/database/drift/app_database.dart';
+import 'package:spectra/core/database/drift/rule_storage_cipher.dart';
 import 'package:spectra/core/rust/api.dart';
 
 /// 规则 CRUD 路由。
@@ -11,13 +12,57 @@ class RulesRoutes {
   RulesRoutes({
     required this.database,
     required this.serverToken,
+    RuleStorageCipher? storageCipher,
     this.publishWsMessage = _noopPublishWsMessage,
-  });
+  }) : storageCipher =
+           storageCipher ??
+           RuleStorageCipher(
+             keyProvider: InMemoryRuleMasterKeyProvider(
+               _ruleStorageMasterKey,
+             ).loadMasterKey,
+           );
 
   static const _idParam = IntPathParam(#id);
+  static const _ruleStorageMasterKey = <int>[
+    115,
+    112,
+    101,
+    99,
+    116,
+    114,
+    97,
+    46,
+    114,
+    117,
+    108,
+    101,
+    46,
+    115,
+    116,
+    111,
+    114,
+    97,
+    103,
+    101,
+    46,
+    109,
+    97,
+    115,
+    116,
+    101,
+    114,
+    46,
+    118,
+    49,
+    33,
+    33,
+  ];
 
   /// Drift 数据库实例。
   final AppDatabase database;
+
+  /// 规则级加密存储器。
+  final RuleStorageCipher storageCipher;
 
   /// 当前 server token。
   final String Function() serverToken;
@@ -243,6 +288,7 @@ class RulesRoutes {
     unawaited(
       _runExecuteRule(
         envelopeJson: envelopeJson,
+        ruleId: parsed.ruleId!,
         runId: runId,
         traceId: traceId,
         channelCapacity: parsed.channelCapacity,
@@ -262,20 +308,68 @@ class RulesRoutes {
 
   Future<void> _runExecuteRule({
     required String envelopeJson,
+    required String ruleId,
     required String runId,
     required String? traceId,
     required int? channelCapacity,
     required String? sessionId,
     required String? previewSessionId,
   }) async {
+    final persistedKvEncrypted = await database.getRuleKvStoreEncryptedByRuleId(
+      ruleId,
+    );
+    final persistedCookieEncrypted = await database
+        .getRuleCookieJarEncryptedByRuleId(ruleId);
+    String? persistedKvJson;
+    String? persistedCookieJarJson;
+    if (persistedKvEncrypted != null) {
+      persistedKvJson = await storageCipher.decrypt(
+        ruleId: ruleId,
+        encryptedPayload: persistedKvEncrypted,
+      );
+    }
+    if (persistedCookieEncrypted != null) {
+      persistedCookieJarJson = await storageCipher.decrypt(
+        ruleId: ruleId,
+        encryptedPayload: persistedCookieEncrypted,
+      );
+    }
+
     final response = await executeRule(
       envelopeJson: envelopeJson,
       context: FfiExecuteContext(
         runId: runId,
         traceId: traceId,
         channelCapacity: channelCapacity,
+        ruleId: ruleId,
+        ruleKvJson: persistedKvJson,
+        cookieJarJson: persistedCookieJarJson,
       ),
     );
+
+    if (response.error == null) {
+      final nextKvEncrypted = response.ruleKvJson == null
+          ? null
+          : await storageCipher.encrypt(
+              ruleId: ruleId,
+              plaintext: response.ruleKvJson!,
+            );
+      await database.updateRuleKvStoreEncryptedByRuleId(
+        ruleId: ruleId,
+        kvStoreEncrypted: nextKvEncrypted,
+      );
+
+      final nextCookieEncrypted = response.cookieJarJson == null
+          ? null
+          : await storageCipher.encrypt(
+              ruleId: ruleId,
+              plaintext: response.cookieJarJson!,
+            );
+      await database.updateRuleCookieJarEncryptedByRuleId(
+        ruleId: ruleId,
+        cookieJarEncrypted: nextCookieEncrypted,
+      );
+    }
 
     publishWsMessage(
       _nodeEventEnvelope(
@@ -422,6 +516,25 @@ class RulesRoutes {
         );
       }
 
+      final metadata = rule['metadata'];
+      if (metadata is! Map<String, dynamic>) {
+        return _ParsedExecuteRequest(
+          error: _validationError(
+            path: 'rule.metadata',
+            message: '缺少规则元数据',
+          ),
+        );
+      }
+
+      final ruleId = _requireString(
+        metadata,
+        key: 'ruleId',
+        path: 'rule.metadata.ruleId',
+      );
+      if (ruleId.error != null) {
+        return _ParsedExecuteRequest(error: ruleId.error);
+      }
+
       final context = decoded['context'];
       if (context != null && context is! Map<String, dynamic>) {
         return _ParsedExecuteRequest(
@@ -480,6 +593,7 @@ class RulesRoutes {
 
       return _ParsedExecuteRequest(
         rule: rule,
+        ruleId: ruleId.value,
         runId: runId.value,
         traceId: traceId.value,
         sessionId: sessionId.value,
@@ -719,6 +833,7 @@ class _OptionalIntResult {
 class _ParsedExecuteRequest {
   const _ParsedExecuteRequest({
     this.rule,
+    this.ruleId,
     this.runId,
     this.traceId,
     this.sessionId,
@@ -728,6 +843,7 @@ class _ParsedExecuteRequest {
   });
 
   final Map<String, dynamic>? rule;
+  final String? ruleId;
   final String? runId;
   final String? traceId;
   final String? sessionId;

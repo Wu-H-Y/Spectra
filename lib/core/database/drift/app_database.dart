@@ -129,4 +129,52 @@ class AppDatabase extends _$AppDatabase {
     )..where((table) => table.id.equals(id))).go();
     return deletedRows > 0;
   }
+
+  /// 按 ruleId 读取规则级 KV 密文。
+  Future<String?> getRuleKvStoreEncryptedByRuleId(String ruleId) async {
+    final rule = await (select(
+      rulesV1,
+    )..where((table) => table.ruleId.equals(ruleId))).getSingleOrNull();
+    return rule?.kvStoreEncrypted;
+  }
+
+  /// 按 ruleId 读取规则级 CookieJar 密文。
+  Future<String?> getRuleCookieJarEncryptedByRuleId(String ruleId) async {
+    final rule = await (select(
+      rulesV1,
+    )..where((table) => table.ruleId.equals(ruleId))).getSingleOrNull();
+    return rule?.cookieJarEncrypted;
+  }
+
+  /// 按 ruleId 更新规则级 KV 密文。
+  Future<void> updateRuleKvStoreEncryptedByRuleId({
+    required String ruleId,
+    required String? kvStoreEncrypted,
+  }) async {
+    final now = DateTime.now().toUtc();
+    await (update(
+      rulesV1,
+    )..where((table) => table.ruleId.equals(ruleId))).write(
+      RulesV1Companion(
+        kvStoreEncrypted: Value(kvStoreEncrypted),
+        updatedAt: Value(now),
+      ),
+    );
+  }
+
+  /// 按 ruleId 更新规则级 CookieJar 密文。
+  Future<void> updateRuleCookieJarEncryptedByRuleId({
+    required String ruleId,
+    required String? cookieJarEncrypted,
+  }) async {
+    final now = DateTime.now().toUtc();
+    await (update(
+      rulesV1,
+    )..where((table) => table.ruleId.equals(ruleId))).write(
+      RulesV1Companion(
+        cookieJarEncrypted: Value(cookieJarEncrypted),
+        updatedAt: Value(now),
+      ),
+    );
+  }
 }

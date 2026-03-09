@@ -124,6 +124,30 @@ class MessageLookup extends MessageLookupByLibrary {
     "ruleEditorDescription": MessageLookupByLibrary.simpleMessage(
       "Open web-based rule editor for crawler rules",
     ),
+    "rulesExecuteContentSection": MessageLookupByLibrary.simpleMessage(
+      "Content",
+    ),
+    "rulesExecuteDetailSection": MessageLookupByLibrary.simpleMessage("Detail"),
+    "rulesExecuteEmptyState": MessageLookupByLibrary.simpleMessage(
+      "No content is available for this section yet",
+    ),
+    "rulesExecuteNormalizedSection": MessageLookupByLibrary.simpleMessage(
+      "Normalized Result JSON",
+    ),
+    "rulesExecutePageDescription": MessageLookupByLibrary.simpleMessage(
+      "Execute the existing rules API and render the Search, Detail, Toc, and Content sections from the real initialResultJson payload.",
+    ),
+    "rulesExecutePageTitle": MessageLookupByLibrary.simpleMessage(
+      "Fixed Template Render",
+    ),
+    "rulesExecuteResponseSection": MessageLookupByLibrary.simpleMessage(
+      "Execute Response JSON",
+    ),
+    "rulesExecuteRunButton": MessageLookupByLibrary.simpleMessage(
+      "Execute Rule",
+    ),
+    "rulesExecuteSearchSection": MessageLookupByLibrary.simpleMessage("Search"),
+    "rulesExecuteTocSection": MessageLookupByLibrary.simpleMessage("Toc"),
     "selectElement": MessageLookupByLibrary.simpleMessage("Select Element"),
     "selectedElement": MessageLookupByLibrary.simpleMessage("Selected Element"),
     "sendToEditor": MessageLookupByLibrary.simpleMessage("Send to Editor"),
