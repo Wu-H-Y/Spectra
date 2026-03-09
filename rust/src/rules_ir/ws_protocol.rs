@@ -127,6 +127,8 @@ pub enum NodeEvent {
         #[serde(default, skip_serializing_if = "Option::is_none")]
         payload_preview: Option<String>,
         payload_truncated: bool,
+        #[serde(default, skip_serializing_if = "is_false")]
+        cache_hit: bool,
     },
     /// 节点日志事件。
     NodeLog {
@@ -178,6 +180,10 @@ pub enum NodeEvent {
     },
 }
 
+fn is_false(value: &bool) -> bool {
+    !*value
+}
+
 #[cfg(test)]
 mod tests {
     use super::{ClientMessageEnvelopeV1, ClientMessageV1, NodeEvent, WsMessageV1};
@@ -207,9 +213,48 @@ mod tests {
 
         assert_eq!(message.message_type, "node_event");
         match message.data {
-            Some(NodeEvent::PortEmit { seq, node_id, .. }) => {
+            Some(NodeEvent::PortEmit {
+                seq,
+                node_id,
+                cache_hit,
+                ..
+            }) => {
                 assert_eq!(seq, 7);
                 assert_eq!(node_id, "node-a");
+                assert!(!cache_hit);
+            }
+            _ => panic!("应解析为 PortEmit 事件"),
+        }
+    }
+
+    #[test]
+    fn deserialize_port_emit_event_with_cache_hit_success() {
+        let json = r#"
+        {
+          "event": "port_emit",
+          "runId": "run-1",
+          "seq": 11,
+          "nodeId": "node-cache",
+          "port": "result",
+          "payloadPreview": "\"cached\"",
+          "payloadTruncated": false,
+          "cacheHit": true
+        }
+        "#;
+
+        let event: NodeEvent =
+            serde_json::from_str(json).expect("带 cacheHit 的 PortEmit 事件应可成功反序列化");
+
+        match event {
+            NodeEvent::PortEmit {
+                seq,
+                node_id,
+                cache_hit,
+                ..
+            } => {
+                assert_eq!(seq, 11);
+                assert_eq!(node_id, "node-cache");
+                assert!(cache_hit);
             }
             _ => panic!("应解析为 PortEmit 事件"),
         }

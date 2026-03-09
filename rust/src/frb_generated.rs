@@ -25,14 +25,9 @@
 
 // Section: imports
 
-use flutter_rust_bridge::{
-    Handler, IntoIntoDart,
-    for_generated::{
-        Lifetimeable, Lockable,
-        byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt},
-        transform_result_dco,
-    },
-};
+use flutter_rust_bridge::for_generated::byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
+use flutter_rust_bridge::for_generated::{transform_result_dco, Lifetimeable, Lockable};
+use flutter_rust_bridge::{Handler, IntoIntoDart};
 
 // Section: boilerplate
 
@@ -274,10 +269,16 @@ impl SseDecode for crate::ffi::FfiExecuteContext {
         let mut var_runId = <Option<String>>::sse_decode(deserializer);
         let mut var_traceId = <Option<String>>::sse_decode(deserializer);
         let mut var_channelCapacity = <Option<i32>>::sse_decode(deserializer);
+        let mut var_ruleId = <Option<String>>::sse_decode(deserializer);
+        let mut var_ruleKvJson = <Option<String>>::sse_decode(deserializer);
+        let mut var_cookieJarJson = <Option<String>>::sse_decode(deserializer);
         return crate::ffi::FfiExecuteContext {
             run_id: var_runId,
             trace_id: var_traceId,
             channel_capacity: var_channelCapacity,
+            rule_id: var_ruleId,
+            rule_kv_json: var_ruleKvJson,
+            cookie_jar_json: var_cookieJarJson,
         };
     }
 }
@@ -302,10 +303,14 @@ impl SseDecode for crate::ffi::FfiExecuteResponse {
         let mut var_runId = <Option<String>>::sse_decode(deserializer);
         let mut var_initialResultJson = <Option<String>>::sse_decode(deserializer);
         let mut var_error = <Option<crate::ffi::FfiExecuteError>>::sse_decode(deserializer);
+        let mut var_ruleKvJson = <Option<String>>::sse_decode(deserializer);
+        let mut var_cookieJarJson = <Option<String>>::sse_decode(deserializer);
         return crate::ffi::FfiExecuteResponse {
             run_id: var_runId,
             initial_result_json: var_initialResultJson,
             error: var_error,
+            rule_kv_json: var_ruleKvJson,
+            cookie_jar_json: var_cookieJarJson,
         };
     }
 }
@@ -805,6 +810,9 @@ impl flutter_rust_bridge::IntoDart for crate::ffi::FfiExecuteContext {
             self.run_id.into_into_dart().into_dart(),
             self.trace_id.into_into_dart().into_dart(),
             self.channel_capacity.into_into_dart().into_dart(),
+            self.rule_id.into_into_dart().into_dart(),
+            self.rule_kv_json.into_into_dart().into_dart(),
+            self.cookie_jar_json.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -843,6 +851,8 @@ impl flutter_rust_bridge::IntoDart for crate::ffi::FfiExecuteResponse {
             self.run_id.into_into_dart().into_dart(),
             self.initial_result_json.into_into_dart().into_dart(),
             self.error.into_into_dart().into_dart(),
+            self.rule_kv_json.into_into_dart().into_dart(),
+            self.cookie_jar_json.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -1117,6 +1127,9 @@ impl SseEncode for crate::ffi::FfiExecuteContext {
         <Option<String>>::sse_encode(self.run_id, serializer);
         <Option<String>>::sse_encode(self.trace_id, serializer);
         <Option<i32>>::sse_encode(self.channel_capacity, serializer);
+        <Option<String>>::sse_encode(self.rule_id, serializer);
+        <Option<String>>::sse_encode(self.rule_kv_json, serializer);
+        <Option<String>>::sse_encode(self.cookie_jar_json, serializer);
     }
 }
 
@@ -1135,6 +1148,8 @@ impl SseEncode for crate::ffi::FfiExecuteResponse {
         <Option<String>>::sse_encode(self.run_id, serializer);
         <Option<String>>::sse_encode(self.initial_result_json, serializer);
         <Option<crate::ffi::FfiExecuteError>>::sse_encode(self.error, serializer);
+        <Option<String>>::sse_encode(self.rule_kv_json, serializer);
+        <Option<String>>::sse_encode(self.cookie_jar_json, serializer);
     }
 }
 
@@ -1446,16 +1461,12 @@ mod io {
 
     // Section: imports
 
-    use flutter_rust_bridge::{
-        Handler, IntoIntoDart,
-        for_generated::{
-            Lifetimeable, Lockable,
-            byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt},
-            transform_result_dco,
-        },
-    };
-
     use super::*;
+    use flutter_rust_bridge::for_generated::byteorder::{
+        NativeEndian, ReadBytesExt, WriteBytesExt,
+    };
+    use flutter_rust_bridge::for_generated::{transform_result_dco, Lifetimeable, Lockable};
+    use flutter_rust_bridge::{Handler, IntoIntoDart};
 
     // Section: boilerplate
 
@@ -1472,17 +1483,14 @@ mod web {
 
     // Section: imports
 
-    use flutter_rust_bridge::{
-        Handler, IntoIntoDart,
-        for_generated::{
-            Lifetimeable, Lockable,
-            byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt},
-            transform_result_dco, wasm_bindgen,
-            wasm_bindgen::prelude::*,
-        },
-    };
-
     use super::*;
+    use flutter_rust_bridge::for_generated::byteorder::{
+        NativeEndian, ReadBytesExt, WriteBytesExt,
+    };
+    use flutter_rust_bridge::for_generated::wasm_bindgen;
+    use flutter_rust_bridge::for_generated::wasm_bindgen::prelude::*;
+    use flutter_rust_bridge::for_generated::{transform_result_dco, Lifetimeable, Lockable};
+    use flutter_rust_bridge::{Handler, IntoIntoDart};
 
     // Section: boilerplate
 

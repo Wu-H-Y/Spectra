@@ -1,7 +1,8 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap, VecDeque};
 
 use crate::rules_ir::{
-    DataType, Diagnostic, DiagnosticSeverity, LifecyclePhase, Node, Port, PortRef, RuleEnvelope,
+    DataType, Diagnostic, DiagnosticSeverity, KeyRef, KeyRefProvider, LifecyclePhase, Node,
+    NodeKind, Port, PortRef, RuleEnvelope,
 };
 
 const CODE_DUPLICATE_NODE_ID: &str = "DUPLICATE_NODE_ID";
@@ -16,6 +17,21 @@ const CODE_INVALID_PHASE_ENTRYPOINT: &str = "INVALID_PHASE_ENTRYPOINT";
 const CODE_INVALID_NORMALIZED_OUTPUT: &str = "INVALID_NORMALIZED_OUTPUT";
 const CODE_CAPABILITY_PAGINATION_REQUIRES_SEARCH_OUTPUT: &str =
     "CAPABILITY_PAGINATION_REQUIRES_SEARCH_OUTPUT";
+const CODE_CAPABILITY_JS_REQUIRED: &str = "CAPABILITY_JS_REQUIRED";
+const CODE_CAPABILITY_CODEC_REQUIRED: &str = "CAPABILITY_CODEC_REQUIRED";
+const CODE_CAPABILITY_CRYPTO_AES_REQUIRED: &str = "CAPABILITY_CRYPTO_AES_REQUIRED";
+const CODE_INLINE_SECRET_NOT_ALLOWED: &str = "INLINE_SECRET_NOT_ALLOWED";
+const CODE_INVALID_KEY_REF: &str = "INVALID_KEY_REF";
+const CODE_CRYPTO_PARAM_REQUIRED: &str = "CRYPTO_PARAM_REQUIRED";
+const CODE_CACHE_KEY_REQUIRED: &str = "CACHE_KEY_REQUIRED";
+const CODE_CACHE_SCOPE_INVALID: &str = "CACHE_SCOPE_INVALID";
+const CODE_CACHE_VALUE_LIMIT_INVALID: &str = "CACHE_VALUE_LIMIT_INVALID";
+const CODE_COOKIE_NAME_REQUIRED: &str = "COOKIE_NAME_REQUIRED";
+const CODE_COOKIE_DOMAIN_INVALID: &str = "COOKIE_DOMAIN_INVALID";
+const CODE_COOKIE_DOMAIN_NOT_ALLOWED: &str = "COOKIE_DOMAIN_NOT_ALLOWED";
+const CODE_COOKIE_EXPIRES_INVALID: &str = "COOKIE_EXPIRES_INVALID";
+
+const MAX_CACHE_VALUE_BYTES_LIMIT: usize = 262_144;
 
 #[derive(Clone, Copy)]
 enum PortDirection {
@@ -41,6 +57,8 @@ pub fn validate_rule(rule: &RuleEnvelope) -> Vec<Diagnostic> {
     validate_normalized_outputs(rule, &graph_index, &mut diagnostics);
     let valid_edges = validate_edges(rule, &graph_index, &mut diagnostics);
     validate_topology(&graph_index, &valid_edges, &mut diagnostics);
+    validate_cache_nodes(rule, &mut diagnostics);
+    validate_cookie_nodes(rule, &mut diagnostics);
     validate_capabilities(rule, &graph_index, &mut diagnostics);
 
     diagnostics
@@ -375,6 +393,394 @@ fn validate_capabilities(
     if capabilities.supports_pagination {
         validate_pagination_capability(rule, graph_index, diagnostics);
     }
+
+    validate_js_capability(rule, diagnostics);
+    validate_transform_capabilities(rule, diagnostics);
+}
+
+fn validate_transform_capabilities(rule: &RuleEnvelope, diagnostics: &mut Vec<Diagnostic>) {
+    for (node_index, node) in rule.graph.nodes.iter().enumerate() {
+        if node.kind != NodeKind::Transform {
+            continue;
+        }
+
+        let Some(family) = node.params.get("family") else {
+            continue;
+        };
+        let family = normalize_param_value(family);
+
+        match family.as_str() {
+            "codec" => {
+                if !rule.capabilities.codec {
+                    diagnostics.push(diagnostic(
+                        CODE_CAPABILITY_CODEC_REQUIRED,
+                        format!("graph.nodes[{node_index}].params.family"),
+                        Some(node.id.clone()),
+                        "使用 transform family=codec 时，必须声明 capabilities.codec=true"
+                            .to_string(),
+                    ));
+                }
+            }
+            "crypto" => {
+                if !rule.capabilities.crypto.aes {
+                    diagnostics.push(diagnostic(
+                        CODE_CAPABILITY_CRYPTO_AES_REQUIRED,
+                        format!("graph.nodes[{node_index}].params.family"),
+                        Some(node.id.clone()),
+                        "使用 transform family=crypto（AES）时，必须声明 capabilities.crypto.aes=true"
+                            .to_string(),
+                    ));
+                }
+
+                if rule.capabilities.allow_inline_secrets {
+                    validate_crypto_key_refs(node, node_index, diagnostics);
+                    validate_crypto_required_params(node, node_index, diagnostics);
+                    continue;
+                }
+
+                if has_inline_secret_param(node, "key") {
+                    diagnostics.push(diagnostic(
+                        CODE_INLINE_SECRET_NOT_ALLOWED,
+                        format!("graph.nodes[{node_index}].params.key"),
+                        Some(node.id.clone()),
+                        "默认禁止内联密钥；如确需内联，请显式声明 capabilities.allowInlineSecrets=true"
+                            .to_string(),
+                    ));
+                }
+
+                if has_inline_secret_key_ref(node, "keyRef") {
+                    diagnostics.push(diagnostic(
+                        CODE_INLINE_SECRET_NOT_ALLOWED,
+                        format!("graph.nodes[{node_index}].params.keyRef"),
+                        Some(node.id.clone()),
+                        "默认禁止内联密钥引用（provider=inline）；如确需内联，请显式声明 capabilities.allowInlineSecrets=true"
+                            .to_string(),
+                    ));
+                }
+
+                if has_inline_secret_param(node, "iv") {
+                    diagnostics.push(diagnostic(
+                        CODE_INLINE_SECRET_NOT_ALLOWED,
+                        format!("graph.nodes[{node_index}].params.iv"),
+                        Some(node.id.clone()),
+                        "默认禁止内联 IV；如确需内联，请显式声明 capabilities.allowInlineSecrets=true"
+                            .to_string(),
+                    ));
+                }
+
+                if has_inline_secret_key_ref(node, "ivRef") {
+                    diagnostics.push(diagnostic(
+                        CODE_INLINE_SECRET_NOT_ALLOWED,
+                        format!("graph.nodes[{node_index}].params.ivRef"),
+                        Some(node.id.clone()),
+                        "默认禁止内联 IV 引用（provider=inline）；如确需内联，请显式声明 capabilities.allowInlineSecrets=true"
+                            .to_string(),
+                    ));
+                }
+
+                validate_crypto_key_refs(node, node_index, diagnostics);
+                validate_crypto_required_params(node, node_index, diagnostics);
+            }
+            _ => {}
+        }
+    }
+}
+
+fn validate_crypto_required_params(node: &Node, node_index: usize, diagnostics: &mut Vec<Diagnostic>) {
+    let op = node
+        .params
+        .get("op")
+        .map(|value| normalize_param_value(value))
+        .unwrap_or_default();
+    let transformation = node
+        .params
+        .get("transformation")
+        .map(|value| normalize_param_value(value).replace([' ', '_'], ""));
+
+    if !has_inline_secret_param(node, "key") && !has_inline_secret_param(node, "keyRef") {
+        diagnostics.push(diagnostic(
+            CODE_CRYPTO_PARAM_REQUIRED,
+            format!("graph.nodes[{node_index}].params.key"),
+            Some(node.id.clone()),
+            "crypto 节点必须提供 key 或 keyRef".to_string(),
+        ));
+    }
+
+    let requires_iv = matches!(op.as_str(), "aescbcencode" | "aescbcdecode")
+        || matches!(
+            transformation.as_deref(),
+            Some("aes/cbc/pkcs7padding") | Some("aes/cbc/pkcs7")
+        );
+
+    if requires_iv && !has_inline_secret_param(node, "iv") && !has_inline_secret_param(node, "ivRef") {
+        diagnostics.push(diagnostic(
+            CODE_CRYPTO_PARAM_REQUIRED,
+            format!("graph.nodes[{node_index}].params.iv"),
+            Some(node.id.clone()),
+            "CBC 模式必须提供 iv 或 ivRef".to_string(),
+        ));
+    }
+}
+
+fn validate_crypto_key_refs(node: &Node, node_index: usize, diagnostics: &mut Vec<Diagnostic>) {
+    for (param_name, path_key) in [("keyRef", "keyRef"), ("ivRef", "ivRef")] {
+        let Some(raw_value) = node.params.get(param_name) else {
+            continue;
+        };
+        let trimmed = raw_value.trim();
+        if trimmed.is_empty() {
+            continue;
+        }
+
+        let parsed = serde_json::from_str::<KeyRef>(trimmed);
+        let key_ref = match parsed {
+            Ok(value) => value,
+            Err(error) => {
+                diagnostics.push(diagnostic(
+                    CODE_INVALID_KEY_REF,
+                    format!("graph.nodes[{node_index}].params.{path_key}"),
+                    Some(node.id.clone()),
+                    format!("{param_name} 必须是合法 KeyRef JSON：{error}"),
+                ));
+                continue;
+            }
+        };
+
+        match key_ref.provider {
+            KeyRefProvider::Inline => {
+                if key_ref.value.as_deref().unwrap_or_default().trim().is_empty() {
+                    diagnostics.push(diagnostic(
+                        CODE_INVALID_KEY_REF,
+                        format!("graph.nodes[{node_index}].params.{path_key}"),
+                        Some(node.id.clone()),
+                        format!("{param_name} provider=inline 时必须提供非空 value"),
+                    ));
+                }
+            }
+            KeyRefProvider::Variable => {
+                if key_ref.name.as_deref().unwrap_or_default().trim().is_empty() {
+                    diagnostics.push(diagnostic(
+                        CODE_INVALID_KEY_REF,
+                        format!("graph.nodes[{node_index}].params.{path_key}"),
+                        Some(node.id.clone()),
+                        format!("{param_name} provider=variable 时必须提供非空 name"),
+                    ));
+                }
+            }
+            KeyRefProvider::SecureStore => {
+                if key_ref.name.as_deref().unwrap_or_default().trim().is_empty() {
+                    diagnostics.push(diagnostic(
+                        CODE_INVALID_KEY_REF,
+                        format!("graph.nodes[{node_index}].params.{path_key}"),
+                        Some(node.id.clone()),
+                        format!("{param_name} provider=secureStore 时必须提供非空 name"),
+                    ));
+                }
+            }
+        }
+    }
+}
+
+fn has_inline_secret_param(node: &Node, key: &str) -> bool {
+    node.params
+        .get(key)
+        .map(|value| !value.trim().is_empty())
+        .unwrap_or(false)
+}
+
+fn has_inline_secret_key_ref(node: &Node, key: &str) -> bool {
+    let Some(raw_ref) = node.params.get(key) else {
+        return false;
+    };
+
+    serde_json::from_str::<KeyRef>(raw_ref)
+        .map(|value| {
+            matches!(value.provider, KeyRefProvider::Inline)
+                && !value.value.as_deref().unwrap_or_default().trim().is_empty()
+        })
+        .unwrap_or(false)
+}
+
+fn validate_cache_nodes(rule: &RuleEnvelope, diagnostics: &mut Vec<Diagnostic>) {
+    for (node_index, node) in rule.graph.nodes.iter().enumerate() {
+        if !matches!(node.kind, NodeKind::CacheGet | NodeKind::CachePut) {
+            continue;
+        }
+
+        let key = node
+            .params
+            .get("key")
+            .map(|value| value.trim())
+            .unwrap_or_default();
+        if key.is_empty() {
+            diagnostics.push(diagnostic(
+                CODE_CACHE_KEY_REQUIRED,
+                format!("graph.nodes[{node_index}].params.key"),
+                Some(node.id.clone()),
+                "Cache 节点参数 key 不能为空".to_string(),
+            ));
+        }
+
+        let scope = node
+            .params
+            .get("scope")
+            .map(|value| normalize_param_value(value))
+            .unwrap_or_else(|| "run".to_string());
+        if scope != "run" && scope != "rule" {
+            diagnostics.push(diagnostic(
+                CODE_CACHE_SCOPE_INVALID,
+                format!("graph.nodes[{node_index}].params.scope"),
+                Some(node.id.clone()),
+                "Cache 节点参数 scope 仅支持 run 或 rule".to_string(),
+            ));
+        }
+
+        if matches!(node.kind, NodeKind::CachePut)
+            && let Some(limit) = node.params.get("maxValueBytes")
+        {
+            match limit.trim().parse::<usize>() {
+                Ok(parsed) if parsed > 0 && parsed <= MAX_CACHE_VALUE_BYTES_LIMIT => {}
+                _ => diagnostics.push(diagnostic(
+                    CODE_CACHE_VALUE_LIMIT_INVALID,
+                    format!("graph.nodes[{node_index}].params.maxValueBytes"),
+                    Some(node.id.clone()),
+                    format!(
+                        "CachePut 参数 maxValueBytes 必须为 1..={MAX_CACHE_VALUE_BYTES_LIMIT} 的整数"
+                    ),
+                )),
+            }
+        }
+    }
+}
+
+fn validate_cookie_nodes(rule: &RuleEnvelope, diagnostics: &mut Vec<Diagnostic>) {
+    for (node_index, node) in rule.graph.nodes.iter().enumerate() {
+        if !matches!(node.kind, NodeKind::CookiePut | NodeKind::CookieGet) {
+            continue;
+        }
+
+        let key = node
+            .params
+            .get("name")
+            .map(|value| value.trim())
+            .unwrap_or_default();
+        if key.is_empty() {
+            diagnostics.push(diagnostic(
+                CODE_COOKIE_NAME_REQUIRED,
+                format!("graph.nodes[{node_index}].params.name"),
+                Some(node.id.clone()),
+                "Cookie 节点参数 name 不能为空".to_string(),
+            ));
+        }
+
+        if matches!(node.kind, NodeKind::CookiePut)
+            && let Some(expires) = node.params.get("expires")
+        {
+            match expires.trim().parse::<i64>() {
+                Ok(value) if value > 0 => {}
+                _ => diagnostics.push(diagnostic(
+                    CODE_COOKIE_EXPIRES_INVALID,
+                    format!("graph.nodes[{node_index}].params.expires"),
+                    Some(node.id.clone()),
+                    "CookiePut 参数 expires 必须是 Unix 秒级时间戳（整数，> 0）".to_string(),
+                )),
+            }
+        }
+
+        let Some(raw_domain) = node.params.get("domain") else {
+            continue;
+        };
+        let normalized_domain = normalize_cookie_domain(raw_domain);
+        if normalized_domain.is_empty() || normalized_domain == "$current" {
+            continue;
+        }
+
+        if !is_valid_cookie_domain(&normalized_domain) {
+            diagnostics.push(diagnostic(
+                CODE_COOKIE_DOMAIN_INVALID,
+                format!("graph.nodes[{node_index}].params.domain"),
+                Some(node.id.clone()),
+                format!("Cookie 域名 `{normalized_domain}` 非法"),
+            ));
+            continue;
+        }
+
+        let allowlist = parse_domain_allowlist(node.params.get("allowDomains"));
+        if !allowlist.contains(normalized_domain.as_str()) {
+            diagnostics.push(diagnostic(
+                CODE_COOKIE_DOMAIN_NOT_ALLOWED,
+                format!("graph.nodes[{node_index}].params.domain"),
+                Some(node.id.clone()),
+                "Cookie 跨域写入默认禁止；仅允许当前请求域（domain 省略或 $current）或 allowDomains 白名单"
+                    .to_string(),
+            ));
+        }
+
+    }
+}
+
+fn parse_domain_allowlist(value: Option<&String>) -> BTreeSet<String> {
+    let mut allowlist = BTreeSet::new();
+    if let Some(value) = value {
+        for item in value.split(',') {
+            let domain = normalize_cookie_domain(item);
+            if !domain.is_empty() {
+                allowlist.insert(domain);
+            }
+        }
+    }
+
+    allowlist
+}
+
+fn normalize_cookie_domain(value: &str) -> String {
+    value
+        .trim()
+        .to_ascii_lowercase()
+        .trim_start_matches('.')
+        .to_string()
+}
+
+fn is_valid_cookie_domain(domain: &str) -> bool {
+    if domain.is_empty() || domain.len() > 253 {
+        return false;
+    }
+    if domain.contains(['/', ':', ' ']) {
+        return false;
+    }
+
+    domain.split('.').all(|label| {
+        !label.is_empty()
+            && label.len() <= 63
+            && !label.starts_with('-')
+            && !label.ends_with('-')
+            && label.chars().all(|char| char.is_ascii_alphanumeric() || char == '-')
+    })
+}
+
+fn validate_js_capability(rule: &RuleEnvelope, diagnostics: &mut Vec<Diagnostic>) {
+    if rule.capabilities.supports_js {
+        return;
+    }
+
+    for (node_index, node) in rule.graph.nodes.iter().enumerate() {
+        if node.kind != NodeKind::Transform {
+            continue;
+        }
+        let Some(family) = node.params.get("family") else {
+            continue;
+        };
+        if normalize_param_value(family) != "js" {
+            continue;
+        }
+
+        diagnostics.push(diagnostic(
+            CODE_CAPABILITY_JS_REQUIRED,
+            format!("graph.nodes[{node_index}].params.family"),
+            Some(node.id.clone()),
+            "使用 transform family=js 时，必须声明 capabilities.supportsJs=true".to_string(),
+        ));
+    }
 }
 
 fn validate_pagination_capability(
@@ -510,6 +916,10 @@ fn phase_key(phase: LifecyclePhase) -> &'static str {
     }
 }
 
+fn normalize_param_value(value: &str) -> String {
+    value.trim().to_ascii_lowercase()
+}
+
 fn diagnostic(code: &str, path: String, node_id: Option<String>, message: String) -> Diagnostic {
     Diagnostic {
         code: code.to_string(),
@@ -523,10 +933,107 @@ fn diagnostic(code: &str, path: String, node_id: Option<String>, message: String
 #[cfg(test)]
 mod tests {
     use super::{
-        CODE_CAPABILITY_PAGINATION_REQUIRES_SEARCH_OUTPUT, CODE_DUPLICATE_NODE_ID,
-        CODE_GRAPH_CYCLE, CODE_TYPE_MISMATCH, CODE_UNKNOWN_NODE, validate_rule,
+        CODE_CACHE_KEY_REQUIRED, CODE_CACHE_SCOPE_INVALID, CODE_CACHE_VALUE_LIMIT_INVALID,
+        CODE_CAPABILITY_CODEC_REQUIRED, CODE_CAPABILITY_CRYPTO_AES_REQUIRED,
+        CODE_CAPABILITY_JS_REQUIRED, CODE_CAPABILITY_PAGINATION_REQUIRES_SEARCH_OUTPUT,
+        CODE_COOKIE_DOMAIN_NOT_ALLOWED, CODE_COOKIE_EXPIRES_INVALID, CODE_DUPLICATE_NODE_ID,
+        CODE_GRAPH_CYCLE, CODE_INLINE_SECRET_NOT_ALLOWED, CODE_INVALID_KEY_REF,
+        CODE_TYPE_MISMATCH, CODE_UNKNOWN_NODE, MAX_CACHE_VALUE_BYTES_LIMIT, validate_rule,
     };
-    use crate::rules_ir::RuleEnvelope;
+    use crate::rules_ir::{DataType, LifecyclePhase, Node, NodeKind, Port, RuleEnvelope};
+
+    fn text_port(name: &str) -> Port {
+        Port {
+            name: name.to_string(),
+            data_type: DataType::Text,
+            optional: false,
+        }
+    }
+
+    fn append_js_transform_node(rule: &mut RuleEnvelope) {
+        rule.graph.nodes.push(Node {
+            id: "js_transform".to_string(),
+            kind: NodeKind::Transform,
+            phase: LifecyclePhase::Search,
+            inputs: vec![text_port("in")],
+            outputs: vec![text_port("out")],
+            params: [
+                ("family".to_string(), "js".to_string()),
+                (
+                    "script".to_string(),
+                    "return input.toLowerCase();".to_string(),
+                ),
+            ]
+            .into_iter()
+            .collect(),
+        });
+    }
+
+    fn append_codec_transform_node(rule: &mut RuleEnvelope) {
+        rule.graph.nodes.push(Node {
+            id: "codec_transform".to_string(),
+            kind: NodeKind::Transform,
+            phase: LifecyclePhase::Search,
+            inputs: vec![text_port("in")],
+            outputs: vec![text_port("out")],
+            params: [
+                ("family".to_string(), "codec".to_string()),
+                ("op".to_string(), "base64Encode".to_string()),
+            ]
+            .into_iter()
+            .collect(),
+        });
+    }
+
+    fn append_crypto_transform_with_inline_secret_node(rule: &mut RuleEnvelope) {
+        rule.graph.nodes.push(Node {
+            id: "crypto_transform".to_string(),
+            kind: NodeKind::Transform,
+            phase: LifecyclePhase::Search,
+            inputs: vec![text_port("in")],
+            outputs: vec![text_port("out")],
+            params: [
+                ("family".to_string(), "crypto".to_string()),
+                ("op".to_string(), "aesEncode".to_string()),
+                (
+                    "transformation".to_string(),
+                    "AES/CBC/PKCS7Padding".to_string(),
+                ),
+                ("key".to_string(), "1234567890abcdef".to_string()),
+                ("iv".to_string(), "fedcba0987654321".to_string()),
+            ]
+            .into_iter()
+            .collect(),
+        });
+    }
+
+    fn append_crypto_transform_with_key_ref_node(rule: &mut RuleEnvelope) {
+        rule.graph.nodes.push(Node {
+            id: "crypto_ref_transform".to_string(),
+            kind: NodeKind::Transform,
+            phase: LifecyclePhase::Search,
+            inputs: vec![text_port("in")],
+            outputs: vec![text_port("out")],
+            params: [
+                ("family".to_string(), "crypto".to_string()),
+                ("op".to_string(), "aesEncode".to_string()),
+                (
+                    "transformation".to_string(),
+                    "AES/CBC/PKCS7Padding".to_string(),
+                ),
+                (
+                    "keyRef".to_string(),
+                    r#"{"provider":"variable","name":"SPECTRA_AES_KEY"}"#.to_string(),
+                ),
+                (
+                    "ivRef".to_string(),
+                    r#"{"provider":"variable","name":"SPECTRA_AES_IV"}"#.to_string(),
+                ),
+            ]
+            .into_iter()
+            .collect(),
+        });
+    }
 
     fn load_fixture(path: &str) -> RuleEnvelope {
         serde_json::from_str(path).expect("fixture 应该可成功反序列化")
@@ -589,6 +1096,32 @@ mod tests {
     }
 
     #[test]
+    fn validate_html_story_fixture_success() {
+        let rule = load_fixture(include_str!(
+            "../../../fixtures/ir_v1_html_story_bundle.json"
+        ));
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics.is_empty(),
+            "HTML 示例 fixture 不应产生诊断: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_json_api_fixture_success() {
+        let rule = load_fixture(include_str!("../../../fixtures/ir_v1_json_api_bundle.json"));
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics.is_empty(),
+            "JSON API 示例 fixture 不应产生诊断: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
     fn validate_pagination_capability_requires_search_output() {
         let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
         rule.normalized_outputs.clear();
@@ -623,6 +1156,349 @@ mod tests {
                 .iter()
                 .all(|diagnostic| diagnostic.code != CODE_GRAPH_CYCLE),
             "重复节点但无环时不应误报 GRAPH_CYCLE: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_js_transform_requires_js_capability() {
+        let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
+        append_js_transform_node(&mut rule);
+        rule.capabilities.supports_js = false;
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics.iter().any(|diagnostic| {
+                diagnostic.code == CODE_CAPABILITY_JS_REQUIRED
+                    && diagnostic.path.as_deref() == Some("graph.nodes[2].params.family")
+                    && diagnostic.node_id.as_deref() == Some("js_transform")
+            }),
+            "未声明 JS 能力时应拒绝 js transform: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_js_transform_passes_when_js_capability_enabled() {
+        let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
+        append_js_transform_node(&mut rule);
+        rule.capabilities.supports_js = true;
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != CODE_CAPABILITY_JS_REQUIRED),
+            "声明 supportsJs=true 后不应再报 JS capability 诊断: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_codec_transform_requires_codec_capability() {
+        let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
+        append_codec_transform_node(&mut rule);
+        rule.capabilities.codec = false;
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics.iter().any(|diagnostic| {
+                diagnostic.code == CODE_CAPABILITY_CODEC_REQUIRED
+                    && diagnostic.path.as_deref() == Some("graph.nodes[2].params.family")
+                    && diagnostic.node_id.as_deref() == Some("codec_transform")
+            }),
+            "未声明 codec 能力时应拒绝 codec transform: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_crypto_transform_requires_aes_capability_and_rejects_inline_secret_by_default() {
+        let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
+        append_crypto_transform_with_inline_secret_node(&mut rule);
+        rule.capabilities.crypto.aes = false;
+        rule.capabilities.allow_inline_secrets = false;
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics.iter().any(|diagnostic| {
+                diagnostic.code == CODE_CAPABILITY_CRYPTO_AES_REQUIRED
+                    && diagnostic.path.as_deref() == Some("graph.nodes[2].params.family")
+                    && diagnostic.node_id.as_deref() == Some("crypto_transform")
+            }),
+            "未声明 crypto.aes 能力时应拒绝 crypto transform: {diagnostics:#?}"
+        );
+        assert!(
+            diagnostics.iter().any(|diagnostic| {
+                diagnostic.code == CODE_INLINE_SECRET_NOT_ALLOWED
+                    && diagnostic.path.as_deref() == Some("graph.nodes[2].params.key")
+                    && diagnostic.node_id.as_deref() == Some("crypto_transform")
+            }),
+            "默认不允许内联 key，应产生拒绝诊断: {diagnostics:#?}"
+        );
+        assert!(
+            diagnostics.iter().any(|diagnostic| {
+                diagnostic.code == CODE_INLINE_SECRET_NOT_ALLOWED
+                    && diagnostic.path.as_deref() == Some("graph.nodes[2].params.iv")
+                    && diagnostic.node_id.as_deref() == Some("crypto_transform")
+            }),
+            "默认不允许内联 iv，应产生拒绝诊断: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_crypto_transform_allows_inline_secret_when_capability_enabled() {
+        let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
+        append_crypto_transform_with_inline_secret_node(&mut rule);
+        rule.capabilities.crypto.aes = true;
+        rule.capabilities.allow_inline_secrets = true;
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != CODE_INLINE_SECRET_NOT_ALLOWED),
+            "声明 allowInlineSecrets=true 后不应再报内联密钥诊断: {diagnostics:#?}"
+        );
+        assert!(
+            diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != CODE_CAPABILITY_CRYPTO_AES_REQUIRED),
+            "声明 capabilities.crypto.aes=true 后不应再报 AES 能力诊断: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_crypto_transform_key_ref_is_accepted_when_inline_secret_disabled() {
+        let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
+        append_crypto_transform_with_key_ref_node(&mut rule);
+        rule.capabilities.crypto.aes = true;
+        rule.capabilities.allow_inline_secrets = false;
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != CODE_INLINE_SECRET_NOT_ALLOWED),
+            "仅使用 KeyRef 时不应触发 inline secret 拒绝: {diagnostics:#?}"
+        );
+        assert!(
+            diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != CODE_INVALID_KEY_REF),
+            "合法 env KeyRef 不应触发 INVALID_KEY_REF: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_crypto_transform_rejects_invalid_or_unsupported_key_ref() {
+        let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
+        append_crypto_transform_with_key_ref_node(&mut rule);
+        rule.capabilities.crypto.aes = true;
+        rule.capabilities.allow_inline_secrets = false;
+        let target = rule
+            .graph
+            .nodes
+            .iter_mut()
+            .find(|node| node.id == "crypto_ref_transform")
+            .expect("应存在 crypto_ref_transform");
+        target.params.insert(
+            "keyRef".to_string(),
+            r#"{"provider":"secureStore","name":""}"#.to_string(),
+        );
+        target
+            .params
+            .insert("ivRef".to_string(), "{not-json".to_string());
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics
+                .iter()
+                .any(|diagnostic| diagnostic.code == CODE_INVALID_KEY_REF),
+            "无效/不支持的 KeyRef 应触发 INVALID_KEY_REF: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_crypto_transform_rejects_inline_key_ref_when_inline_secret_disabled() {
+        let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
+        append_crypto_transform_with_key_ref_node(&mut rule);
+        rule.capabilities.crypto.aes = true;
+        rule.capabilities.allow_inline_secrets = false;
+        let target = rule
+            .graph
+            .nodes
+            .iter_mut()
+            .find(|node| node.id == "crypto_ref_transform")
+            .expect("应存在 crypto_ref_transform");
+        target.params.insert(
+            "keyRef".to_string(),
+            r#"{"provider":"inline","value":"1234567890abcdef"}"#.to_string(),
+        );
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics.iter().any(|diagnostic| {
+                diagnostic.code == CODE_INLINE_SECRET_NOT_ALLOWED
+                    && diagnostic.path.as_deref() == Some("graph.nodes[2].params.keyRef")
+            }),
+            "allowInlineSecrets=false 时应拒绝 provider=inline 的 KeyRef: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_crypto_transform_accepts_secure_store_key_ref_shape() {
+        let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
+        append_crypto_transform_with_key_ref_node(&mut rule);
+        rule.capabilities.crypto.aes = true;
+        rule.capabilities.allow_inline_secrets = false;
+        let target = rule
+            .graph
+            .nodes
+            .iter_mut()
+            .find(|node| node.id == "crypto_ref_transform")
+            .expect("应存在 crypto_ref_transform");
+        target.params.insert(
+            "keyRef".to_string(),
+            r#"{"provider":"secureStore","name":"vault/aes/key"}"#.to_string(),
+        );
+        target.params.insert(
+            "ivRef".to_string(),
+            r#"{"provider":"secureStore","name":"vault/aes/iv"}"#.to_string(),
+        );
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != CODE_INVALID_KEY_REF),
+            "secureStore KeyRef 的结构在 validator 应被接受（运行时适配另行处理）: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_cache_put_rejects_empty_key_invalid_scope_and_bad_value_limit() {
+        let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
+        rule.graph.nodes.push(Node {
+            id: "cache_put".to_string(),
+            kind: NodeKind::CachePut,
+            phase: LifecyclePhase::Search,
+            inputs: vec![text_port("in")],
+            outputs: vec![text_port("out")],
+            params: [
+                ("key".to_string(), "   ".to_string()),
+                ("scope".to_string(), "global".to_string()),
+                (
+                    "maxValueBytes".to_string(),
+                    (MAX_CACHE_VALUE_BYTES_LIMIT + 1).to_string(),
+                ),
+            ]
+            .into_iter()
+            .collect(),
+        });
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics
+                .iter()
+                .any(|diagnostic| diagnostic.code == CODE_CACHE_KEY_REQUIRED),
+            "CachePut key 为空应产生 CACHE_KEY_REQUIRED 诊断: {diagnostics:#?}"
+        );
+        assert!(
+            diagnostics
+                .iter()
+                .any(|diagnostic| diagnostic.code == CODE_CACHE_SCOPE_INVALID),
+            "CachePut scope 非法应产生 CACHE_SCOPE_INVALID 诊断: {diagnostics:#?}"
+        );
+        assert!(
+            diagnostics
+                .iter()
+                .any(|diagnostic| diagnostic.code == CODE_CACHE_VALUE_LIMIT_INVALID),
+            "CachePut maxValueBytes 超限应产生 CACHE_VALUE_LIMIT_INVALID 诊断: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_cache_get_rejects_empty_key() {
+        let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
+        rule.graph.nodes.push(Node {
+            id: "cache_get".to_string(),
+            kind: NodeKind::CacheGet,
+            phase: LifecyclePhase::Search,
+            inputs: vec![],
+            outputs: vec![text_port("out")],
+            params: [("scope".to_string(), "run".to_string())]
+                .into_iter()
+                .collect(),
+        });
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics
+                .iter()
+                .any(|diagnostic| diagnostic.code == CODE_CACHE_KEY_REQUIRED),
+            "CacheGet 缺失 key 应产生 CACHE_KEY_REQUIRED 诊断: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_cookie_put_rejects_domain_outside_allowlist() {
+        let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
+        rule.graph.nodes.push(Node {
+            id: "cookie_put".to_string(),
+            kind: NodeKind::CookiePut,
+            phase: LifecyclePhase::Search,
+            inputs: vec![text_port("in")],
+            outputs: vec![text_port("out")],
+            params: [
+                ("name".to_string(), "session".to_string()),
+                ("domain".to_string(), "cross-domain.example".to_string()),
+            ]
+            .into_iter()
+            .collect(),
+        });
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics
+                .iter()
+                .any(|diagnostic| diagnostic.code == CODE_COOKIE_DOMAIN_NOT_ALLOWED),
+            "CookiePut 跨域且不在 allowDomains 时应产生拒绝诊断: {diagnostics:#?}"
+        );
+    }
+
+    #[test]
+    fn validate_cookie_put_rejects_invalid_expires() {
+        let mut rule = load_fixture(include_str!("../../../fixtures/ir_v1_min.json"));
+        rule.graph.nodes.push(Node {
+            id: "cookie_put".to_string(),
+            kind: NodeKind::CookiePut,
+            phase: LifecyclePhase::Search,
+            inputs: vec![text_port("in")],
+            outputs: vec![text_port("out")],
+            params: [
+                ("name".to_string(), "session".to_string()),
+                ("expires".to_string(), "not-a-timestamp".to_string()),
+            ]
+            .into_iter()
+            .collect(),
+        });
+
+        let diagnostics = validate_rule(&rule);
+
+        assert!(
+            diagnostics
+                .iter()
+                .any(|diagnostic| diagnostic.code == CODE_COOKIE_EXPIRES_INVALID),
+            "CookiePut 非法 expires 应产生拒绝诊断: {diagnostics:#?}"
         );
     }
 }

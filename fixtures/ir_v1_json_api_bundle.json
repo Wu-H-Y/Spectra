@@ -1,0 +1,143 @@
+{
+  "irVersion": "1.0.0",
+  "metadata": {
+    "ruleId": "demo.json-api-bundle",
+    "name": "JSON API 规则示例",
+    "description": "用于演示 JSON API 搜索、详情与正文阶段的 IR v1 示例"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "search_input",
+        "kind": { "type": "input" },
+        "phase": "search",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "searchResponse",
+            "dataType": { "type": "json" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      },
+      {
+        "id": "search_output",
+        "kind": { "type": "output" },
+        "phase": "search",
+        "inputs": [
+          {
+            "name": "searchResponse",
+            "dataType": { "type": "json" },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "normalized",
+            "dataType": { "type": "normalizedModel" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      },
+      {
+        "id": "detail_input",
+        "kind": { "type": "input" },
+        "phase": "detail",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "detailResponse",
+            "dataType": { "type": "json" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      },
+      {
+        "id": "detail_output",
+        "kind": { "type": "output" },
+        "phase": "detail",
+        "inputs": [
+          {
+            "name": "detailResponse",
+            "dataType": { "type": "json" },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "normalized",
+            "dataType": { "type": "normalizedModel" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      },
+      {
+        "id": "content_input",
+        "kind": { "type": "input" },
+        "phase": "content",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "contentResponse",
+            "dataType": { "type": "json" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      },
+      {
+        "id": "content_output",
+        "kind": { "type": "output" },
+        "phase": "content",
+        "inputs": [
+          {
+            "name": "contentResponse",
+            "dataType": { "type": "json" },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "normalized",
+            "dataType": { "type": "normalizedModel" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      }
+    ],
+    "edges": [
+      {
+        "from": { "nodeId": "search_input", "portName": "searchResponse" },
+        "to": { "nodeId": "search_output", "portName": "searchResponse" }
+      },
+      {
+        "from": { "nodeId": "detail_input", "portName": "detailResponse" },
+        "to": { "nodeId": "detail_output", "portName": "detailResponse" }
+      },
+      {
+        "from": { "nodeId": "content_input", "portName": "contentResponse" },
+        "to": { "nodeId": "content_output", "portName": "contentResponse" }
+      }
+    ],
+    "phaseEntrypoints": {
+      "search": { "nodeId": "search_input", "portName": "searchResponse" },
+      "detail": { "nodeId": "detail_input", "portName": "detailResponse" },
+      "content": { "nodeId": "content_input", "portName": "contentResponse" }
+    }
+  },
+  "normalizedOutputs": {
+    "search": { "nodeId": "search_output", "portName": "normalized" },
+    "detail": { "nodeId": "detail_output", "portName": "normalized" },
+    "content": { "nodeId": "content_output", "portName": "normalized" }
+  },
+  "capabilities": {
+    "supportsPagination": false,
+    "supportsConcurrency": true,
+    "requiresAuth": true
+  }
+}

@@ -3,9 +3,8 @@
 /**
  * 通用媒体扩展配置。
  */
-export type MediaSpec = {
-  /**
-   * 附加元数据。
-   */
-  extra: { [key in string]: string };
-};
+export type MediaSpec = { 
+/**
+ * 附加元数据。
+ */
+extra: { [key in string]: string }, };

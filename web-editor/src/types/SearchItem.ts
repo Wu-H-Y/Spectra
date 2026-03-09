@@ -3,21 +3,20 @@
 /**
  * 搜索项模型。
  */
-export type SearchItem = {
-  /**
-   * 标题。
-   */
-  title: string;
-  /**
-   * 链接。
-   */
-  url: string;
-  /**
-   * 封面。
-   */
-  cover?: string | null;
-  /**
-   * 作者。
-   */
-  author?: string | null;
-};
+export type SearchItem = { 
+/**
+ * 标题。
+ */
+title: string, 
+/**
+ * 链接。
+ */
+url: string, 
+/**
+ * 封面。
+ */
+cover?: string | null, 
+/**
+ * 作者。
+ */
+author?: string | null, };

@@ -1,0 +1,183 @@
+{
+  "irVersion": "1.0.0",
+  "metadata": {
+    "ruleId": "demo.html-story-bundle",
+    "name": "HTML 文章规则示例",
+    "description": "用于演示 HTML 搜索、详情、目录与正文阶段的 IR v1 示例"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "search_input",
+        "kind": { "type": "input" },
+        "phase": "search",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "searchHtml",
+            "dataType": { "type": "html" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      },
+      {
+        "id": "search_output",
+        "kind": { "type": "output" },
+        "phase": "search",
+        "inputs": [
+          {
+            "name": "searchHtml",
+            "dataType": { "type": "html" },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "normalized",
+            "dataType": { "type": "normalizedModel" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      },
+      {
+        "id": "detail_input",
+        "kind": { "type": "input" },
+        "phase": "detail",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "detailHtml",
+            "dataType": { "type": "html" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      },
+      {
+        "id": "detail_output",
+        "kind": { "type": "output" },
+        "phase": "detail",
+        "inputs": [
+          {
+            "name": "detailHtml",
+            "dataType": { "type": "html" },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "normalized",
+            "dataType": { "type": "normalizedModel" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      },
+      {
+        "id": "toc_input",
+        "kind": { "type": "input" },
+        "phase": "toc",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "tocHtml",
+            "dataType": { "type": "html" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      },
+      {
+        "id": "toc_output",
+        "kind": { "type": "output" },
+        "phase": "toc",
+        "inputs": [
+          {
+            "name": "tocHtml",
+            "dataType": { "type": "html" },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "normalized",
+            "dataType": { "type": "normalizedModel" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      },
+      {
+        "id": "content_input",
+        "kind": { "type": "input" },
+        "phase": "content",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "contentHtml",
+            "dataType": { "type": "html" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      },
+      {
+        "id": "content_output",
+        "kind": { "type": "output" },
+        "phase": "content",
+        "inputs": [
+          {
+            "name": "contentHtml",
+            "dataType": { "type": "html" },
+            "optional": false
+          }
+        ],
+        "outputs": [
+          {
+            "name": "normalized",
+            "dataType": { "type": "normalizedModel" },
+            "optional": false
+          }
+        ],
+        "params": {}
+      }
+    ],
+    "edges": [
+      {
+        "from": { "nodeId": "search_input", "portName": "searchHtml" },
+        "to": { "nodeId": "search_output", "portName": "searchHtml" }
+      },
+      {
+        "from": { "nodeId": "detail_input", "portName": "detailHtml" },
+        "to": { "nodeId": "detail_output", "portName": "detailHtml" }
+      },
+      {
+        "from": { "nodeId": "toc_input", "portName": "tocHtml" },
+        "to": { "nodeId": "toc_output", "portName": "tocHtml" }
+      },
+      {
+        "from": { "nodeId": "content_input", "portName": "contentHtml" },
+        "to": { "nodeId": "content_output", "portName": "contentHtml" }
+      }
+    ],
+    "phaseEntrypoints": {
+      "search": { "nodeId": "search_input", "portName": "searchHtml" },
+      "detail": { "nodeId": "detail_input", "portName": "detailHtml" },
+      "toc": { "nodeId": "toc_input", "portName": "tocHtml" },
+      "content": { "nodeId": "content_input", "portName": "contentHtml" }
+    }
+  },
+  "normalizedOutputs": {
+    "search": { "nodeId": "search_output", "portName": "normalized" },
+    "detail": { "nodeId": "detail_output", "portName": "normalized" },
+    "toc": { "nodeId": "toc_output", "portName": "normalized" },
+    "content": { "nodeId": "content_output", "portName": "normalized" }
+  },
+  "capabilities": {
+    "supportsPagination": false,
+    "supportsConcurrency": false,
+    "requiresAuth": false
+  }
+}

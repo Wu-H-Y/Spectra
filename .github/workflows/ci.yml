@@ -5,9 +5,32 @@ on:
     branches: [main]
 
 jobs:
+  web-editor:
+    name: Web Editor
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install web-editor dependencies
+        working-directory: web-editor
+        run: bun install
+
+      - name: Lint web-editor
+        run: bun run lint:web
+
+      - name: Build web-editor assets
+        run: bun run build:web
+
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    needs: web-editor
     steps:
       - name: Checkout
         uses: actions/checkout@v4

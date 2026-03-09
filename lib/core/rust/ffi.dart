@@ -6,7 +6,7 @@
 import 'frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `build_engine_context`, `default_run_id`, `engine_error_code`, `error`, `from_error`, `from_rules_diagnostic`, `invalid`, `map_engine_error`, `new`, `parse_rule`
+// These functions are ignored because they are not marked as `pub`: `build_engine_context`, `default_run_id`, `engine_error_code`, `engine_error_diagnostics`, `error`, `from_error`, `from_rules_diagnostic`, `invalid`, `map_engine_error`, `new`, `parse_rule`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
 
 /// 提供最小 FRB 连通性探针。
@@ -72,10 +72,22 @@ class FfiExecuteContext {
   /// 可选边通道容量。
   final int? channelCapacity;
 
+  /// 规则标识，用于 rule 级缓存隔离。
+  final String? ruleId;
+
+  /// 规则级缓存快照（JSON）。
+  final String? ruleKvJson;
+
+  /// 规则级 CookieJar 快照（JSON）。
+  final String? cookieJarJson;
+
   const FfiExecuteContext({
     this.runId,
     this.traceId,
     this.channelCapacity,
+    this.ruleId,
+    this.ruleKvJson,
+    this.cookieJarJson,
   });
 
   static Future<FfiExecuteContext> default_() =>
@@ -83,7 +95,12 @@ class FfiExecuteContext {
 
   @override
   int get hashCode =>
-      runId.hashCode ^ traceId.hashCode ^ channelCapacity.hashCode;
+      runId.hashCode ^
+      traceId.hashCode ^
+      channelCapacity.hashCode ^
+      ruleId.hashCode ^
+      ruleKvJson.hashCode ^
+      cookieJarJson.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -92,7 +109,10 @@ class FfiExecuteContext {
           runtimeType == other.runtimeType &&
           runId == other.runId &&
           traceId == other.traceId &&
-          channelCapacity == other.channelCapacity;
+          channelCapacity == other.channelCapacity &&
+          ruleId == other.ruleId &&
+          ruleKvJson == other.ruleKvJson &&
+          cookieJarJson == other.cookieJarJson;
 }
 
 /// 结构化执行错误。
@@ -136,15 +156,27 @@ class FfiExecuteResponse {
   /// 结构化错误。
   final FfiExecuteError? error;
 
+  /// 规则级缓存快照（JSON）。
+  final String? ruleKvJson;
+
+  /// 规则级 CookieJar 快照（JSON）。
+  final String? cookieJarJson;
+
   const FfiExecuteResponse({
     this.runId,
     this.initialResultJson,
     this.error,
+    this.ruleKvJson,
+    this.cookieJarJson,
   });
 
   @override
   int get hashCode =>
-      runId.hashCode ^ initialResultJson.hashCode ^ error.hashCode;
+      runId.hashCode ^
+      initialResultJson.hashCode ^
+      error.hashCode ^
+      ruleKvJson.hashCode ^
+      cookieJarJson.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -153,7 +185,9 @@ class FfiExecuteResponse {
           runtimeType == other.runtimeType &&
           runId == other.runId &&
           initialResultJson == other.initialResultJson &&
-          error == other.error;
+          error == other.error &&
+          ruleKvJson == other.ruleKvJson &&
+          cookieJarJson == other.cookieJarJson;
 }
 
 /// 校验结果。

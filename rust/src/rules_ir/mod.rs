@@ -34,6 +34,19 @@ pub struct RuleEnvelope {
     pub normalized_outputs: BTreeMap<LifecyclePhase, PortRef>,
     /// 规则能力声明。
     pub capabilities: Capabilities,
+    /// 可选规则级限速配置。
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub rate_limit: Option<RuleRateLimit>,
+}
+
+/// 规则级限速配置。
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct RuleRateLimit {
+    /// 时间窗口内允许的请求数。
+    pub count: u32,
+    /// 时间窗口（毫秒）。
+    pub period_ms: u64,
 }
 
 /// 规则元信息。
@@ -120,6 +133,9 @@ pub struct Node {
     /// 输出端口定义。
     #[serde(default)]
     pub outputs: Vec<Port>,
+    /// 节点参数（供运行时节点语义读取）。
+    #[serde(default)]
+    pub params: BTreeMap<String, String>,
 }
 
 /// 节点类别。
@@ -130,6 +146,10 @@ pub enum NodeKind {
     Parse,
     Select,
     Transform,
+    CachePut,
+    CacheGet,
+    CookiePut,
+    CookieGet,
     Join,
     Branch,
     MapToModel,
@@ -220,6 +240,53 @@ pub struct Capabilities {
     pub supports_concurrency: bool,
     /// 是否需要认证。
     pub requires_auth: bool,
+    /// 是否允许使用 JS transform。
+    #[serde(default)]
+    pub supports_js: bool,
+    /// 是否允许使用 codec 族 transform。
+    #[serde(default)]
+    pub codec: bool,
+    /// 是否允许使用加密能力。
+    #[serde(default)]
+    pub crypto: CryptoCapabilities,
+    /// 是否允许在规则内联密钥/密文参数。
+    #[serde(default)]
+    pub allow_inline_secrets: bool,
+}
+
+/// 规则加密能力声明。
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, TS, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct CryptoCapabilities {
+    /// 是否允许使用 AES 变换。
+    #[serde(default)]
+    pub aes: bool,
+}
+
+/// 密钥引用（用于避免在规则内直接内联敏感值）。
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+pub struct KeyRef {
+    /// 密钥来源。
+    pub provider: KeyRefProvider,
+    /// 提供方内的键名（variable / secureStore 使用）。
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    /// 内联密钥值（inline 使用）。
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub value: Option<String>,
+}
+
+/// 密钥来源类型。
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, TS)]
+#[serde(rename_all = "camelCase")]
+pub enum KeyRefProvider {
+    /// 直接内联值（受 allowInlineSecrets 限制）。
+    Inline,
+    /// 变量引用（当前通过环境变量适配）。
+    Variable,
+    /// 安全存储引用（本阶段仅占位，运行时适配器未接入）。
+    SecureStore,
 }
 
 #[cfg(test)]
@@ -246,5 +313,63 @@ mod tests {
         assert_eq!(envelope.ir_version, "1.0.0");
         assert!(envelope.graph.metadata.is_none());
         assert!(envelope.graph.layout.is_none());
+    }
+
+    #[test]
+    fn deserialize_html_story_fixture_success() {
+        let fixture = include_str!("../../../fixtures/ir_v1_html_story_bundle.json");
+        let envelope: RuleEnvelope =
+            serde_json::from_str(fixture).expect("HTML 示例 fixture 应可成功反序列化");
+
+        assert_eq!(envelope.ir_version, "1.0.0");
+        assert_eq!(envelope.metadata.rule_id, "demo.html-story-bundle");
+        assert_eq!(envelope.graph.nodes.len(), 8);
+    }
+
+    #[test]
+    fn deserialize_json_api_fixture_success() {
+        let fixture = include_str!("../../../fixtures/ir_v1_json_api_bundle.json");
+        let envelope: RuleEnvelope =
+            serde_json::from_str(fixture).expect("JSON API 示例 fixture 应可成功反序列化");
+
+        assert_eq!(envelope.ir_version, "1.0.0");
+        assert_eq!(envelope.metadata.rule_id, "demo.json-api-bundle");
+        assert_eq!(envelope.graph.nodes.len(), 6);
+    }
+
+    #[test]
+    fn deserialize_rate_limit_rule_success() {
+        let json = r#"
+        {
+          "irVersion": "1.0.0",
+          "metadata": {
+            "ruleId": "demo.rate-limit",
+            "name": "限速规则"
+          },
+          "graph": {
+            "nodes": [],
+            "edges": [],
+            "phaseEntrypoints": {}
+          },
+          "normalizedOutputs": {},
+          "capabilities": {
+            "supportsPagination": false,
+            "supportsConcurrency": false,
+            "requiresAuth": false,
+            "supportsJs": false
+          },
+          "rateLimit": {
+            "count": 2,
+            "periodMs": 300
+          }
+        }
+        "#;
+
+        let envelope: RuleEnvelope =
+            serde_json::from_str(json).expect("带限速配置的规则应可反序列化");
+
+        let rate_limit = envelope.rate_limit.expect("应解析出 rateLimit");
+        assert_eq!(rate_limit.count, 2);
+        assert_eq!(rate_limit.period_ms, 300);
     }
 }

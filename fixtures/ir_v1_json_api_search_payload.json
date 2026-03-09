@@ -1,0 +1,16 @@
+{
+  "data": {
+    "items": [
+      {
+        "id": "bk-100",
+        "title": "接口之城",
+        "author": "苏未",
+        "url": "https://api.example.com/books/bk-100"
+      }
+    ]
+  },
+  "meta": {
+    "page": 1,
+    "total": 1
+  }
+}

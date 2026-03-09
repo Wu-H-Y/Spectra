@@ -51,6 +51,12 @@ pub struct FfiExecuteContext {
     pub trace_id: Option<String>,
     /// 可选边通道容量。
     pub channel_capacity: Option<i32>,
+    /// 规则标识，用于 rule 级缓存隔离。
+    pub rule_id: Option<String>,
+    /// 规则级缓存快照（JSON）。
+    pub rule_kv_json: Option<String>,
+    /// 规则级 CookieJar 快照（JSON）。
+    pub cookie_jar_json: Option<String>,
 }
 
 /// 结构化执行错误。
@@ -73,6 +79,10 @@ pub struct FfiExecuteResponse {
     pub initial_result_json: Option<String>,
     /// 结构化错误。
     pub error: Option<FfiExecuteError>,
+    /// 规则级缓存快照（JSON）。
+    pub rule_kv_json: Option<String>,
+    /// 规则级 CookieJar 快照（JSON）。
+    pub cookie_jar_json: Option<String>,
 }
 
 /// 对规则 JSON 做结构校验。
@@ -143,6 +153,8 @@ pub async fn execute_rule(
                 .as_ref()
                 .and_then(|value| serde_json::to_string(value).ok()),
             error: None,
+            rule_kv_json: result.rule_kv_json,
+            cookie_jar_json: result.cookie_jar_json,
         },
         Err(error) => FfiExecuteResponse::from_error(Some(run_id), map_engine_error(error)),
     }
@@ -192,6 +204,8 @@ impl FfiExecuteResponse {
                 message,
                 diagnostics,
             }),
+            rule_kv_json: None,
+            cookie_jar_json: None,
         }
     }
 
@@ -200,6 +214,8 @@ impl FfiExecuteResponse {
             run_id,
             initial_result_json: None,
             error: Some(error),
+            rule_kv_json: None,
+            cookie_jar_json: None,
         }
     }
 }
@@ -225,6 +241,9 @@ fn build_engine_context(
 
     if let Some(context) = context {
         engine_context.trace_id = context.trace_id;
+        engine_context.rule_id = context.rule_id;
+        engine_context.persisted_rule_kv_json = context.rule_kv_json;
+        engine_context.persisted_cookie_jar_json = context.cookie_jar_json;
 
         if let Some(channel_capacity) = context.channel_capacity {
             if channel_capacity <= 0 {
@@ -247,22 +266,34 @@ fn build_engine_context(
 }
 
 fn map_engine_error(error: EngineError) -> FfiExecuteError {
+    let code = engine_error_code(&error);
     FfiExecuteError {
-        code: engine_error_code(&error).to_string(),
+        code: code.clone(),
         message: error.to_string(),
-        diagnostics: Vec::new(),
+        diagnostics: engine_error_diagnostics(&error, &code),
     }
 }
 
-fn engine_error_code(error: &EngineError) -> &'static str {
-    match error {
-        EngineError::MissingInput { .. } => "MISSING_INPUT",
-        EngineError::TypeMismatch { .. } => "TYPE_MISMATCH",
-        EngineError::JoinWithoutInputs { .. } => "JOIN_WITHOUT_INPUTS",
-        EngineError::MissingFinalResult => "MISSING_FINAL_RESULT",
-        EngineError::NodeFailed { .. } => "NODE_FAILED",
-        EngineError::TaskJoin(_) => "TASK_JOIN",
-    }
+fn engine_error_code(error: &EngineError) -> String {
+    error.code().to_string()
+}
+
+fn engine_error_diagnostics(error: &EngineError, code: &str) -> Vec<FfiDiagnostic> {
+    let node_id = match error {
+        EngineError::MissingInput { node_id, .. }
+        | EngineError::TypeMismatch { node_id, .. }
+        | EngineError::JoinWithoutInputs { node_id }
+        | EngineError::NodeFailed { node_id, .. }
+        | EngineError::JsTimeout { node_id, .. } => Some(node_id.clone()),
+        EngineError::MissingFinalResult | EngineError::TaskJoin(_) => None,
+    };
+
+    vec![FfiDiagnostic {
+        code: code.to_string(),
+        path: String::new(),
+        message: error.to_string(),
+        node_id,
+    }]
 }
 
 fn default_run_id() -> String {
@@ -276,10 +307,13 @@ fn default_run_id() -> String {
 #[cfg(test)]
 mod tests {
     use super::{
-        CODE_INVALID_RULE_JSON, CODE_VALIDATION_FAILED, FfiExecuteContext, execute_rule,
-        validate_rule,
+        CODE_INVALID_RULE_JSON, CODE_VALIDATION_FAILED, FfiExecuteContext,
+        engine_error_diagnostics, execute_rule, map_engine_error, validate_rule,
     };
-    use crate::rules_ir::{Capabilities, Graph, Metadata, RuleEnvelope};
+    use crate::{
+        rules_engine::EngineError,
+        rules_ir::{Capabilities, Graph, Metadata, RuleEnvelope},
+    };
 
     fn empty_rule_json() -> String {
         serde_json::to_string(&RuleEnvelope {
@@ -301,7 +335,12 @@ mod tests {
                 supports_pagination: false,
                 supports_concurrency: false,
                 requires_auth: false,
+                supports_js: false,
+                codec: false,
+                crypto: Default::default(),
+                allow_inline_secrets: false,
             },
+            rate_limit: None,
         })
         .expect("空规则应可序列化")
     }
@@ -343,6 +382,8 @@ mod tests {
         assert_eq!(response.run_id.as_deref(), Some("ffi-run-empty"));
         assert!(response.error.is_none());
         assert!(response.initial_result_json.is_none());
+        assert!(response.rule_kv_json.is_none());
+        assert!(response.cookie_jar_json.is_none());
     }
 
     #[tokio::test]
@@ -359,5 +400,35 @@ mod tests {
         assert!(error.diagnostics.iter().any(|diagnostic| {
             diagnostic.code == "UNKNOWN_NODE" && diagnostic.path == "graph.edges[1].from.nodeId"
         }));
+    }
+
+    #[test]
+    fn map_engine_error_preserves_custom_node_code_and_diagnostic() {
+        let error = map_engine_error(EngineError::NodeFailed {
+            node_id: "fetch".to_string(),
+            message: "检测到目标站点返回验证/挑战页面，已中止当前请求。".to_string(),
+            code: Some("CHALLENGE_REQUIRED".to_string()),
+        });
+
+        assert_eq!(error.code, "CHALLENGE_REQUIRED");
+        assert!(error.message.contains("节点 `fetch` 执行失败"));
+        assert_eq!(error.diagnostics.len(), 1);
+        assert_eq!(error.diagnostics[0].code, "CHALLENGE_REQUIRED");
+        assert_eq!(error.diagnostics[0].node_id.as_deref(), Some("fetch"));
+    }
+
+    #[test]
+    fn engine_error_diagnostics_include_node_id_when_available() {
+        let diagnostics = engine_error_diagnostics(
+            &EngineError::JsTimeout {
+                node_id: "js".to_string(),
+                message: "timeout".to_string(),
+            },
+            "JS_TIMEOUT",
+        );
+
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].code, "JS_TIMEOUT");
+        assert_eq!(diagnostics[0].node_id.as_deref(), Some("js"));
     }
 }

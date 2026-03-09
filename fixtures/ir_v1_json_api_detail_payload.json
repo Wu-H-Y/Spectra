@@ -1,0 +1,9 @@
+{
+  "data": {
+    "id": "bk-100",
+    "title": "接口之城",
+    "author": "苏未",
+    "description": "用于验证 JSON API 示例规则的详情负载。",
+    "tags": ["API", "测试"]
+  }
+}

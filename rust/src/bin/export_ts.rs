@@ -1,6 +1,6 @@
 use std::{error::Error, path::PathBuf};
 
-use spectra_native::rules_ir::{NormalizedModel, RuleEnvelope};
+use spectra_native::rules_ir::{KeyRef, KeyRefProvider, NormalizedModel, RuleEnvelope};
 use ts_rs::{Config, TS};
 
 /// 将 Rust IR 类型导出为 TypeScript 类型定义。
@@ -15,6 +15,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let cfg = Config::new().with_out_dir(export_dir);
     RuleEnvelope::export_all(&cfg)?;
     NormalizedModel::export_all(&cfg)?;
+    KeyRef::export_all(&cfg)?;
+    KeyRefProvider::export_all(&cfg)?;
 
     Ok(())
 }

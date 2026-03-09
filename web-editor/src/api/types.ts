@@ -25,79 +25,6 @@ export interface Transform {
   params?: unknown;
 }
 
-export interface FieldMapping {
-  field: string;
-  selector: Selector;
-  defaultValue?: string;
-  transforms?: Transform[];
-  required?: boolean;
-}
-
-export interface PaginationConfig {
-  type: 'url' | 'click' | 'infiniteScroll';
-  nextSelector?: Selector;
-  urlTemplate?: string;
-  clickSelector?: Selector;
-  scrollContainer?: Selector;
-  maxPages?: number;
-  delayMs?: number;
-  waitAfterLoadMs?: number;
-}
-
-export interface ListExtract {
-  container: Selector;
-  items: FieldMapping[];
-  pagination?: PaginationConfig;
-  url?: string;
-}
-
-export interface DetailExtract {
-  urlFromList?: Selector;
-  items: FieldMapping[];
-  chapters?: ChapterExtract;
-}
-
-export interface ChapterExtract {
-  container: Selector;
-  items: FieldMapping[];
-  reverseOrder?: boolean;
-}
-
-export interface ContentExtract {
-  video?: VideoExtract;
-  comic?: ComicExtract;
-  novel?: NovelExtract;
-  music?: MusicExtract;
-}
-
-export interface VideoExtract {
-  playUrl?: Selector;
-  qualities?: Selector;
-  jsExtract?: string;
-}
-
-export interface ComicExtract {
-  images: Selector;
-  jsExtract?: string;
-}
-
-export interface NovelExtract {
-  content: Selector;
-  jsExtract?: string;
-}
-
-export interface MusicExtract {
-  audioUrl?: Selector;
-  lyrics?: Selector;
-  jsExtract?: string;
-}
-
-export interface ExtractConfig {
-  list?: ListExtract;
-  detail?: DetailExtract;
-  content?: ContentExtract;
-}
-
 export interface MatchConfig {
   pattern: string;
   type: 'regex' | 'glob';
@@ -173,7 +100,6 @@ export interface CrawlerRule {
   version?: string;
   match: MatchConfig;
   request?: RequestConfig;
-  extract: ExtractConfig;
   beforeActions?: CrawlerAction[];
   afterActions?: CrawlerAction[];
   detection?: DetectionConfig;

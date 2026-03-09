@@ -25,27 +25,9 @@ void main() {
   });
 
   test('executeRule returns runId for valid rule', () async {
-    const envelopeJson = '''
-    {
-      "irVersion": "1.0.0",
-      "metadata": {
-        "ruleId": "ffi.empty",
-        "name": "空规则",
-        "description": "用于验证 Dart API"
-      },
-      "graph": {
-        "nodes": [],
-        "edges": [],
-        "phaseEntrypoints": {}
-      },
-      "normalizedOutputs": {},
-      "capabilities": {
-        "supportsPagination": false,
-        "supportsConcurrency": false,
-        "requiresAuth": false
-      }
-    }
-    ''';
+    final envelopeJson = await File(
+      'fixtures/ir_v1_json_api_bundle.json',
+    ).readAsString();
 
     final result = await executeRule(
       envelopeJson: envelopeJson,

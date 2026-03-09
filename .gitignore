@@ -47,6 +47,7 @@ migrate_working_dir/
 /build/
 /coverage/
 .cache
+.tmp
 
 # Symbolication related
 app.*.symbols
@@ -64,6 +65,11 @@ app.*.map.json
 .playwright-mcp
 .omc
 skills-lock.json
+.sisyphus/
 
 # Web editor build outputs
 assets/editor/
+
+# Dolt database files (added by bd init)
+.dolt/
+*.db

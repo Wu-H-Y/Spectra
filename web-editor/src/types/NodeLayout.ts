@@ -3,13 +3,12 @@
 /**
  * 节点布局信息。
  */
-export type NodeLayout = {
-  /**
-   * X 轴坐标。
-   */
-  x: number;
-  /**
-   * Y 轴坐标。
-   */
-  y: number;
-};
+export type NodeLayout = { 
+/**
+ * X 轴坐标。
+ */
+x: number, 
+/**
+ * Y 轴坐标。
+ */
+y: number, };

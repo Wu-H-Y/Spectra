@@ -1,0 +1,23 @@
+{
+  "search": {
+    "items": [
+      {
+        "title": "接口之城",
+        "url": "https://api.example.com/books/bk-100",
+        "author": "苏未"
+      }
+    ]
+  },
+  "detail": {
+    "title": "接口之城",
+    "author": "苏未",
+    "description": "用于验证 JSON API 示例规则的详情负载。",
+    "tags": ["API", "测试"]
+  },
+  "content": {
+    "contentTextHtml": "<p>这是接口返回的正文片段。</p>",
+    "contentTextPlain": "这是接口返回的正文片段。",
+    "mediaAssets": []
+  },
+  "media": {}
+}

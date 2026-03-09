@@ -1,0 +1,35 @@
+{
+  "search": {
+    "items": [
+      {
+        "title": "星港纪事",
+        "url": "https://example.com/stories/42",
+        "author": "林潮声"
+      }
+    ]
+  },
+  "detail": {
+    "title": "星港纪事",
+    "author": "林潮声",
+    "description": "一篇用于验证 HTML 规则示例的文章详情。",
+    "tags": ["科幻", "连载"]
+  },
+  "toc": {
+    "chapters": [
+      {
+        "title": "第一章, 起航",
+        "url": "https://example.com/stories/42/chapter-1"
+      },
+      {
+        "title": "第二章, 靠岸",
+        "url": "https://example.com/stories/42/chapter-2"
+      }
+    ]
+  },
+  "content": {
+    "contentTextHtml": "<p>欢迎来到星港。</p><p>这里记录一次用于测试的正文抓取。</p>",
+    "contentTextPlain": "欢迎来到星港。\n这里记录一次用于测试的正文抓取。",
+    "mediaAssets": []
+  },
+  "media": {}
+}

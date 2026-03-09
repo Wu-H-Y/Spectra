@@ -347,12 +347,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   FfiExecuteContext dco_decode_ffi_execute_context(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 3)
-      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
     return FfiExecuteContext(
       runId: dco_decode_opt_String(arr[0]),
       traceId: dco_decode_opt_String(arr[1]),
       channelCapacity: dco_decode_opt_box_autoadd_i_32(arr[2]),
+      ruleId: dco_decode_opt_String(arr[3]),
+      ruleKvJson: dco_decode_opt_String(arr[4]),
+      cookieJarJson: dco_decode_opt_String(arr[5]),
     );
   }
 
@@ -373,12 +376,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   FfiExecuteResponse dco_decode_ffi_execute_response(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 3)
-      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
     return FfiExecuteResponse(
       runId: dco_decode_opt_String(arr[0]),
       initialResultJson: dco_decode_opt_String(arr[1]),
       error: dco_decode_opt_box_autoadd_ffi_execute_error(arr[2]),
+      ruleKvJson: dco_decode_opt_String(arr[3]),
+      cookieJarJson: dco_decode_opt_String(arr[4]),
     );
   }
 
@@ -775,10 +780,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_runId = sse_decode_opt_String(deserializer);
     var var_traceId = sse_decode_opt_String(deserializer);
     var var_channelCapacity = sse_decode_opt_box_autoadd_i_32(deserializer);
+    var var_ruleId = sse_decode_opt_String(deserializer);
+    var var_ruleKvJson = sse_decode_opt_String(deserializer);
+    var var_cookieJarJson = sse_decode_opt_String(deserializer);
     return FfiExecuteContext(
       runId: var_runId,
       traceId: var_traceId,
       channelCapacity: var_channelCapacity,
+      ruleId: var_ruleId,
+      ruleKvJson: var_ruleKvJson,
+      cookieJarJson: var_cookieJarJson,
     );
   }
 
@@ -803,10 +814,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_runId = sse_decode_opt_String(deserializer);
     var var_initialResultJson = sse_decode_opt_String(deserializer);
     var var_error = sse_decode_opt_box_autoadd_ffi_execute_error(deserializer);
+    var var_ruleKvJson = sse_decode_opt_String(deserializer);
+    var var_cookieJarJson = sse_decode_opt_String(deserializer);
     return FfiExecuteResponse(
       runId: var_runId,
       initialResultJson: var_initialResultJson,
       error: var_error,
+      ruleKvJson: var_ruleKvJson,
+      cookieJarJson: var_cookieJarJson,
     );
   }
 
@@ -1291,6 +1306,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_String(self.runId, serializer);
     sse_encode_opt_String(self.traceId, serializer);
     sse_encode_opt_box_autoadd_i_32(self.channelCapacity, serializer);
+    sse_encode_opt_String(self.ruleId, serializer);
+    sse_encode_opt_String(self.ruleKvJson, serializer);
+    sse_encode_opt_String(self.cookieJarJson, serializer);
   }
 
   @protected
@@ -1313,6 +1331,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_String(self.runId, serializer);
     sse_encode_opt_String(self.initialResultJson, serializer);
     sse_encode_opt_box_autoadd_ffi_execute_error(self.error, serializer);
+    sse_encode_opt_String(self.ruleKvJson, serializer);
+    sse_encode_opt_String(self.cookieJarJson, serializer);
   }
 
   @protected
