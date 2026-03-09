@@ -1,0 +1,4 @@
+repos:
+  primary: "."
+  additional:
+    - "C:\\Users\\13690\\.beads-planning"
