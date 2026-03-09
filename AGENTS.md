@@ -86,6 +86,21 @@ bun run build:web
 
 ### Quick Start
 
+**Agent / Skill 约定：**
+
+- 进入 beads 工作流前，优先使用 plugin skill：`beads:beads`。
+- 对于需要跨会话、带依赖、或需要持久化上下文的工作，优先使用 beads，而不是会话内临时 todo。
+- 当前仓库的 beads 配置以仓库内 `.beads/config.yaml` 为准，不允许把用户目录（如 `C:\Users\...`）写入 repo 配置。
+- 当前仓库推荐的 repo-local beads 配置为：
+
+```yaml
+issue-prefix: "Spectra"
+sync.branch: "beads-metadata"
+sync.mode: "dolt-native"
+repos:
+  primary: "."
+```
+
 **Check for ready work:**
 
 ```bash
@@ -104,12 +119,13 @@ bd create "Issue title" --description="What this issue is about" -p 1 --deps dis
 ```bash
 bd update <id> --claim --json
 bd update bd-42 --priority 1 --json
+bd update <id> --status closed --json
 ```
 
 **Complete work:**
 
 ```bash
-bd close bd-42 --reason "Completed" --json
+bd update <id> --status closed --json
 ```
 
 ### Issue Types
@@ -135,7 +151,13 @@ bd close bd-42 --reason "Completed" --json
 3. **Work on it**: Implement, test, document
 4. **Discover new work?** Create linked issue:
    - `bd create "Found bug" --description="Details about what was found" -p 1 --deps discovered-from:<parent-id>`
-5. **Complete**: `bd close <id> --reason "Done"`
+5. **Complete**: `bd update <id> --status closed --json`
+
+### Repo-specific Notes
+
+- 当前仓库已验证：`bd create`、`bd show`、`bd list`、`bd update --claim`、`bd update --status closed` 可正常使用。
+- 当前仓库中 `bd close <id>` 存在 ID 解析异常；在修复前，统一使用 `bd update <id> --status closed --json` 作为关闭 issue 的替代命令。
+- 若 beads 行为异常，优先检查是否误用了 contributor/planning 路由，或是否把用户本地路径写入了 `.beads/config.yaml`。
 
 ### Auto-Sync
 
