@@ -25,6 +25,12 @@ const createEnvelope = (): RuleEnvelope => ({
     supportsPagination: false,
     supportsConcurrency: false,
     requiresAuth: false,
+    supportsJs: false,
+    codec: false,
+    crypto: {
+      aes: false,
+    },
+    allowInlineSecrets: false,
   },
 });
 

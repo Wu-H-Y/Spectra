@@ -35,7 +35,8 @@ interface TestResult {
 
 interface SelectorTestingPanelProps {
   serverUrl: string | null;
-  previewUrl: string;
+  serverToken: string | null;
+  previewSessionId: string | null;
 }
 
 /**
@@ -45,7 +46,8 @@ interface SelectorTestingPanelProps {
  */
 export function SelectorTestingPanel({
   serverUrl,
-  previewUrl,
+  serverToken,
+  previewSessionId,
 }: SelectorTestingPanelProps) {
   const { t } = useTranslation();
   const [selectorType, setSelectorType] = useState<SelectorType>('css');
@@ -59,12 +61,12 @@ export function SelectorTestingPanel({
       return;
     }
 
-    if (!serverUrl) {
+    if (!serverUrl || !serverToken) {
       toast.error(t('preview.serverNotRunning'));
       return;
     }
 
-    if (!previewUrl.trim()) {
+    if (!previewSessionId) {
       toast.warning(t('preview.openPreviewFirst'));
       return;
     }
@@ -75,9 +77,12 @@ export function SelectorTestingPanel({
     try {
       const response = await fetch(`${serverUrl}/api/preview/test-selector`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${serverToken}`,
+        },
         body: JSON.stringify({
-          url: previewUrl,
+          previewSessionId,
           selector: {
             type: selectorType,
             expression,

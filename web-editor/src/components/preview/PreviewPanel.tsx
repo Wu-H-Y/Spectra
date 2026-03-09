@@ -298,7 +298,11 @@ export function PreviewPanel({
         )}
 
         {/* Selector Testing */}
-        <SelectorTestingPanel serverUrl={serverUrl} previewUrl={previewUrl} />
+        <SelectorTestingPanel
+          serverUrl={serverUrl}
+          serverToken={serverToken}
+          previewSessionId={previewSessionId}
+        />
       </CardContent>
     </Card>
   );

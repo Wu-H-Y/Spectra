@@ -354,15 +354,21 @@ export function useElementSelection(
 
   const startSelection = useCallback(() => {
     if (isConnected && isAuthenticated && previewSessionId) {
-      setIsSelecting(true);
+      send({
+        type: 'start_selection',
+        data: { previewSessionId },
+      });
     }
-  }, [isAuthenticated, isConnected, previewSessionId]);
+  }, [isAuthenticated, isConnected, previewSessionId, send]);
 
   const cancelSelection = useCallback(() => {
-    if (isConnected && isAuthenticated) {
-      setIsSelecting(false);
+    if (isConnected && isAuthenticated && previewSessionId) {
+      send({
+        type: 'cancel_selection',
+        data: { previewSessionId },
+      });
     }
-  }, [isAuthenticated, isConnected]);
+  }, [isAuthenticated, isConnected, previewSessionId, send]);
 
   const clearSelection = useCallback(() => {
     setSelectedElement(null);

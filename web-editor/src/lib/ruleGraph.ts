@@ -31,6 +31,7 @@ export interface RuleGraphNodeData extends Record<string, unknown> {
   phase: LifecyclePhase;
   inputs: Port[];
   outputs: Port[];
+  params: Record<string, string>;
 }
 
 export type RuleGraphNode = FlowNode<RuleGraphNodeData, 'ruleNode'>;
@@ -116,6 +117,7 @@ const createRuleNode = (
     phase,
     inputs,
     outputs,
+    params: {},
   };
 };
 
@@ -233,6 +235,7 @@ export const graphToFlow = (
         phase: node.phase,
         inputs: node.inputs,
         outputs: node.outputs,
+        params: node.params,
       },
     } satisfies RuleGraphNode;
   });
@@ -268,6 +271,7 @@ export const syncRuleGraph = (
     phase: node.data.phase,
     inputs: node.data.inputs,
     outputs: node.data.outputs,
+    params: node.data.params,
   }));
   const edges = flowEdges
     .filter(
@@ -346,6 +350,7 @@ export const appendGraphNode = (
         phase: DEFAULT_PHASE,
         inputs: ruleNode.inputs,
         outputs: ruleNode.outputs,
+        params: ruleNode.params,
       },
     },
   ];

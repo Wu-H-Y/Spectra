@@ -10,7 +10,7 @@ import {
   type EdgeChange,
   type NodeChange,
 } from '@xyflow/react';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -29,6 +29,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useElementSelection } from '@/hooks/useWebSocket';
 import {
@@ -46,6 +55,79 @@ const nodeTypes = {
   ruleNode: RuleGraphNode,
 };
 
+const AES_TRANSFORMATION_OPTIONS = [
+  'AES/CBC/PKCS7Padding',
+  'AES/ECB/PKCS7Padding',
+] as const;
+
+const TRANSFORM_FAMILY_OPTIONS = [
+  'text',
+  'list',
+  'json',
+  'convert',
+  'url',
+  'js',
+  'codec',
+  'crypto',
+] as const;
+
+const TRANSFORM_OP_OPTIONS: Partial<Record<string, readonly string[]>> = {
+  codec: [
+    'base64Encode',
+    'base64Decode',
+    'md532',
+    'md516',
+    'encodeURI',
+    'utf8ToGbk',
+    'htmlFormat',
+    'timeFormat',
+  ],
+  crypto: [
+    'aesEncode',
+    'aesDecode',
+    'aesCbcEncode',
+    'aesCbcDecode',
+    'aesEcbEncode',
+    'aesEcbDecode',
+  ],
+};
+
+type SecretSource = 'inline' | 'variableRef' | 'secureStoreRef';
+
+interface ParsedKeyRef {
+  provider: 'inline' | 'variable' | 'secureStore';
+  name?: string;
+  value?: string;
+}
+
+const parseKeyRef = (value?: string): ParsedKeyRef | null => {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(value) as ParsedKeyRef;
+    if (
+      parsed.provider === 'inline' ||
+      parsed.provider === 'variable' ||
+      parsed.provider === 'secureStore'
+    ) {
+      return parsed;
+    }
+  } catch {
+    // ignore
+  }
+
+  return null;
+};
+
+const buildKeyRef = (ref: ParsedKeyRef) =>
+  JSON.stringify({
+    provider: ref.provider,
+    ...(ref.name ? { name: ref.name } : {}),
+    ...(ref.value ? { value: ref.value } : {}),
+  });
+
 const createEmptyRuleEnvelope = (): RuleEnvelope => ({
   irVersion: '1.0.0',
   metadata: {
@@ -59,6 +141,12 @@ const createEmptyRuleEnvelope = (): RuleEnvelope => ({
     supportsPagination: false,
     supportsConcurrency: false,
     requiresAuth: false,
+    supportsJs: false,
+    codec: false,
+    crypto: {
+      aes: false,
+    },
+    allowInlineSecrets: false,
   },
 });
 
@@ -76,9 +164,12 @@ export function RuleEditorPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const queryClient = useQueryClient();
-  const isNew = id === 'new';
+  const isNew = !id;
 
   const initialRule = useMemo(() => createEmptyRuleEnvelope(), []);
+  const [selectedGraphNodeId, setSelectedGraphNodeId] = useState<string | null>(
+    null,
+  );
 
   const { jsonValue, setJsonValue, graphNodes, graphEdges, setGraphState } =
     useEditorStore();
@@ -148,6 +239,15 @@ export function RuleEditorPage() {
     const flowGraph = graphToFlow(parsedRule.graph);
     setGraphState(flowGraph.nodes, flowGraph.edges);
   }, [parsedRule, setGraphState]);
+
+  useEffect(() => {
+    if (
+      selectedGraphNodeId &&
+      !graphNodes.some((node) => node.id === selectedGraphNodeId)
+    ) {
+      setSelectedGraphNodeId(null);
+    }
+  }, [graphNodes, selectedGraphNodeId]);
 
   const saveMutation = useMutation({
     mutationFn: async (ruleData: RuleEnvelope) => {
@@ -261,6 +361,114 @@ export function RuleEditorPage() {
     [graphEdges, graphNodes, syncGraphToJson],
   );
 
+  const selectedTransformNode = useMemo(() => {
+    if (!selectedGraphNodeId) {
+      return null;
+    }
+
+    const targetNode = graphNodes.find((node) => node.id === selectedGraphNodeId);
+    if (!targetNode || targetNode.data.kindType !== 'transform') {
+      return null;
+    }
+
+    return targetNode;
+  }, [graphNodes, selectedGraphNodeId]);
+
+  const handleTransformParamChange = useCallback(
+    (key: string, value: string) => {
+      if (!selectedTransformNode) {
+        return;
+      }
+
+      const nextNodes = graphNodes.map((node) => {
+        if (node.id !== selectedTransformNode.id) {
+          return node;
+        }
+
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            params: {
+              ...node.data.params,
+              [key]: value,
+            },
+          },
+        };
+      });
+
+      syncGraphToJson(nextNodes, graphEdges);
+    },
+    [graphEdges, graphNodes, selectedTransformNode, syncGraphToJson],
+  );
+
+  const selectedTransformFamily =
+    selectedTransformNode?.data.params.family?.trim().toLowerCase() ?? '';
+  const selectedTransformOpOptions =
+    TRANSFORM_OP_OPTIONS[selectedTransformFamily] || null;
+  const selectedTransformOp =
+    selectedTransformNode?.data.params.op?.trim().toLowerCase() ?? '';
+  const selectedKeyRef = parseKeyRef(selectedTransformNode?.data.params.keyRef);
+  const selectedIvRef = parseKeyRef(selectedTransformNode?.data.params.ivRef);
+
+  const keySource: SecretSource = selectedKeyRef
+    ? selectedKeyRef.provider === 'secureStore'
+      ? 'secureStoreRef'
+      : selectedKeyRef.provider === 'variable'
+        ? 'variableRef'
+        : 'inline'
+    : 'inline';
+  const ivSource: SecretSource = selectedIvRef
+    ? selectedIvRef.provider === 'secureStore'
+      ? 'secureStoreRef'
+      : selectedIvRef.provider === 'variable'
+        ? 'variableRef'
+        : 'inline'
+    : 'inline';
+
+  const handleSecretSourceChange = useCallback(
+    (target: 'key' | 'iv', source: SecretSource) => {
+      if (source === 'inline') {
+        handleTransformParamChange(`${target}Ref`, '');
+        return;
+      }
+
+      handleTransformParamChange(target, '');
+
+      const provider = source === 'variableRef' ? 'variable' : 'secureStore';
+      handleTransformParamChange(
+        `${target}Ref`,
+        buildKeyRef({
+          provider,
+          name: '',
+        }),
+      );
+    },
+    [handleTransformParamChange],
+  );
+
+  const handleSecretRefNameChange = useCallback(
+    (target: 'key' | 'iv', name: string) => {
+      const parsed = parseKeyRef(
+        target === 'key'
+          ? selectedTransformNode?.data.params.keyRef
+          : selectedTransformNode?.data.params.ivRef,
+      );
+      const provider = parsed?.provider === 'secureStore' ? 'secureStore' : 'variable';
+      handleTransformParamChange(
+        `${target}Ref`,
+        buildKeyRef({
+          provider,
+          name,
+        }),
+      );
+    },
+    [handleTransformParamChange, selectedTransformNode?.data.params.ivRef, selectedTransformNode?.data.params.keyRef],
+  );
+
+  const showIvEditor =
+    selectedTransformOp !== 'aesecbencode' && selectedTransformOp !== 'aesecbdecode';
+
   const handleApplySelector = (selector: string, type: 'css' | 'xpath') => {
     const newSelector: Selector = {
       type,
@@ -371,11 +579,209 @@ export function RuleEditorPage() {
                   nodesDraggable={parsedRule !== null}
                   nodesConnectable={parsedRule !== null}
                   elementsSelectable={parsedRule !== null}
+                  onNodeClick={(_, node) => {
+                    setSelectedGraphNodeId(node.id);
+                  }}
+                  onPaneClick={() => {
+                    setSelectedGraphNodeId(null);
+                  }}
                 >
                   <Background />
                   <Controls />
                 </ReactFlow>
               </div>
+
+              {selectedTransformNode && (
+                <div className="mt-4 rounded-lg border bg-muted/20 p-4">
+                  <div className="mb-3 text-sm font-medium">
+                    {t('rules.transformParamEditorTitle', {
+                      nodeId: selectedTransformNode.id,
+                    })}
+                  </div>
+
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label>{t('rules.transformParamFamily')}</Label>
+                      <Select
+                        value={selectedTransformNode.data.params.family || ''}
+                        onValueChange={(value) => {
+                          handleTransformParamChange('family', value);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={t('rules.transformParamFamilyPlaceholder')}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {TRANSFORM_FAMILY_OPTIONS.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>{t('rules.transformParamOp')}</Label>
+                      {selectedTransformOpOptions ? (
+                        <Select
+                          value={selectedTransformNode.data.params.op || ''}
+                          onValueChange={(value) => {
+                            handleTransformParamChange('op', value);
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue
+                              placeholder={t('rules.transformParamOpPlaceholder')}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {selectedTransformOpOptions.map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <Input
+                          value={selectedTransformNode.data.params.op || ''}
+                          onChange={(event) => {
+                            handleTransformParamChange('op', event.target.value);
+                          }}
+                          placeholder={t('rules.transformParamOpPlaceholder')}
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {selectedTransformFamily === 'crypto' && (
+                    <div className="mt-3 grid gap-3 md:grid-cols-2">
+                      <div className="space-y-2 md:col-span-2">
+                        <Label>{t('rules.transformParamTransformation')}</Label>
+                        <Select
+                          value={
+                            selectedTransformNode.data.params.transformation ||
+                            AES_TRANSFORMATION_OPTIONS[0]
+                          }
+                          onValueChange={(value) => {
+                            handleTransformParamChange('transformation', value);
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {AES_TRANSFORMATION_OPTIONS.map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>{t('rules.transformParamKey')}</Label>
+                        <Select
+                          value={keySource}
+                          onValueChange={(value) => {
+                            handleSecretSourceChange('key', value as SecretSource);
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="inline">
+                              {t('rules.transformSecretSourceInline')}
+                            </SelectItem>
+                            <SelectItem value="variableRef">
+                              {t('rules.transformSecretSourceVariable')}
+                            </SelectItem>
+                            <SelectItem value="secureStoreRef">
+                              {t('rules.transformSecretSourceSecureStore')}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        {keySource === 'inline' ? (
+                          <Input
+                            value={selectedTransformNode.data.params.key || ''}
+                            onChange={(event) => {
+                              handleTransformParamChange('key', event.target.value);
+                            }}
+                            placeholder={t('rules.transformParamKeyPlaceholder')}
+                          />
+                        ) : (
+                          <Input
+                            value={selectedKeyRef?.name || ''}
+                            onChange={(event) => {
+                              handleSecretRefNameChange('key', event.target.value);
+                            }}
+                            placeholder={t('rules.transformParamKeyRefNamePlaceholder')}
+                          />
+                        )}
+
+                        <p className="text-xs text-muted-foreground">
+                          {t('rules.transformParamKeyHint')}
+                        </p>
+                      </div>
+
+                      {showIvEditor && (
+                        <div className="space-y-2">
+                          <Label>{t('rules.transformParamIv')}</Label>
+                          <Select
+                            value={ivSource}
+                            onValueChange={(value) => {
+                              handleSecretSourceChange('iv', value as SecretSource);
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="inline">
+                                {t('rules.transformSecretSourceInline')}
+                              </SelectItem>
+                              <SelectItem value="variableRef">
+                                {t('rules.transformSecretSourceVariable')}
+                              </SelectItem>
+                              <SelectItem value="secureStoreRef">
+                                {t('rules.transformSecretSourceSecureStore')}
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+
+                          {ivSource === 'inline' ? (
+                            <Input
+                              value={selectedTransformNode.data.params.iv || ''}
+                              onChange={(event) => {
+                                handleTransformParamChange('iv', event.target.value);
+                              }}
+                              placeholder={t('rules.transformParamIvPlaceholder')}
+                            />
+                          ) : (
+                            <Input
+                              value={selectedIvRef?.name || ''}
+                              onChange={(event) => {
+                                handleSecretRefNameChange('iv', event.target.value);
+                              }}
+                              placeholder={t('rules.transformParamIvRefNamePlaceholder')}
+                            />
+                          )}
+
+                          <p className="text-xs text-muted-foreground">
+                            {t('rules.transformParamIvHint')}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
