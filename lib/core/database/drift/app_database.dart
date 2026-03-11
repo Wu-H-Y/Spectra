@@ -2,13 +2,14 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
 import 'package:spectra/core/database/drift/tables/rules_v1.dart';
+import 'package:spectra/core/database/drift/tables/user_data_v1.dart';
 
 part 'app_database.g.dart';
 
 /// Spectra 应用数据库
 ///
 /// 使用 Drift (SQLite) 管理关系型数据
-@DriftDatabase(tables: [RulesV1, SessionsV1])
+@DriftDatabase(tables: [RulesV1, SessionsV1, FavoritesV1, SearchHistoryV1, DiscoverCacheV1, UserSettingsV1])
 class AppDatabase extends _$AppDatabase {
   /// 创建数据库实例
   ///

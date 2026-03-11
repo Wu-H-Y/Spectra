@@ -60,11 +60,10 @@ app.*.map.json
 /android/app/release
 
 # AI
-.claude/settings.local.json
+.claude
+_bmad
+_bmad-output
 .playwright-mcp
-.omc
-skills-lock.json
-.sisyphus/
 .tmp
 tmp
 **tmp
