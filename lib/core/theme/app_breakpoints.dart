@@ -18,15 +18,20 @@ class AppBreakpoints {
   /// 用于：手机横屏、小平板
   static const double tablet = 600;
 
-  /// 桌面断点 - 900dp
+  /// 大平板断点 - 840dp
+  ///
+  /// 用于：大平板、小桌面
+  static const double tabletLarge = 840;
+
+  /// 桌面断点 - 1024dp
   ///
   /// 用于：平板横屏、小桌面
-  static const double desktop = 900;
+  static const double desktop = 1024;
 
-  /// 大桌面断点 - 1200dp
+  /// 大桌面断点 - 1440dp
   ///
   /// 用于：大屏幕桌面
-  static const double desktopLarge = 1200;
+  static const double desktopLarge = 1440;
 
   // ============ 布局列数 ============
 
@@ -56,13 +61,27 @@ extension ResponsiveContext on BuildContext {
   /// 是否为移动端布局
   bool get isMobile => screenWidth < AppBreakpoints.tablet;
 
-  /// 是否为平板布局
-  bool get isTablet =>
+  /// 是否为小平板布局
+  bool get isTabletSmall =>
       screenWidth >= AppBreakpoints.tablet &&
+      screenWidth < AppBreakpoints.tabletLarge;
+
+  /// 是否为大平板布局
+  bool get isTabletLarge =>
+      screenWidth >= AppBreakpoints.tabletLarge &&
       screenWidth < AppBreakpoints.desktop;
+
+  /// 是否为平板布局（包含大小平板）
+  bool get isTablet => isTabletSmall || isTabletLarge;
 
   /// 是否为桌面布局
   bool get isDesktop => screenWidth >= AppBreakpoints.desktop;
+
+  /// 是否使用侧边栏（桌面/大平板）
+  bool get useSidebar => screenWidth >= AppBreakpoints.tabletLarge;
+
+  /// 是否使用底部导航（移动端/小平板）
+  bool get useBottomNav => screenWidth < AppBreakpoints.tabletLarge;
 
   /// 屏幕宽度
   double get screenWidth => MediaQuery.of(this).size.width;
@@ -79,5 +98,57 @@ extension ResponsiveContext on BuildContext {
     if (isDesktop && desktop != null) return desktop;
     if (isTablet && tablet != null) return tablet;
     return mobile;
+  }
+
+  /// 获取响应式网格列数
+  ///
+  /// 使用示例:
+  /// ```dart
+  /// final columns = context.gridColumns(mobile: 2, tablet: 3, desktop: 4);
+  /// ```
+  int gridColumns({
+    required int mobile,
+    int? tablet,
+    int? desktop,
+  }) {
+    return responsive(
+      mobile: mobile,
+      tablet: tablet ?? mobile + 1,
+      desktop: desktop ?? tablet ?? mobile + 2,
+    );
+  }
+
+  /// 获取响应式内边距
+  ///
+  /// 使用示例:
+  /// ```dart
+  /// Padding(padding: context.responsivePadding(mobile: 16))
+  /// ```
+  EdgeInsets responsivePadding({
+    required double mobile,
+    double? tablet,
+    double? desktop,
+  }) {
+    final value = responsive(
+      mobile: mobile,
+      tablet: tablet,
+      desktop: desktop,
+    );
+    return EdgeInsets.all(value);
+  }
+
+  /// 获取响应式水平内边距（垂直固定）
+  EdgeInsets responsiveHorizontalPadding({
+    required double mobile,
+    double? tablet,
+    double? desktop,
+    double vertical = 0,
+  }) {
+    final horizontal = responsive(
+      mobile: mobile,
+      tablet: tablet,
+      desktop: desktop,
+    );
+    return EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical);
   }
 }
