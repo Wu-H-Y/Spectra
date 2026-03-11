@@ -7,19 +7,71 @@ part of 'app_router.dart';
 // **************************************************************************
 
 List<RouteBase> get $appRoutes => [
-  $homeRoute,
+  $favoritesRoute,
+  $discoverRoute,
+  $searchRoute,
   $settingsRoute,
+  $settingsAppearanceRoute,
+  $settingsDataRoute,
+  $settingsPlaybackRoute,
   $rulesExecuteRoute,
 ];
 
-RouteBase get $homeRoute =>
-    GoRouteData.$route(path: '/', factory: $HomeRoute._fromState);
+RouteBase get $favoritesRoute =>
+    GoRouteData.$route(path: '/', factory: $FavoritesRoute._fromState);
 
-mixin $HomeRoute on GoRouteData {
-  static HomeRoute _fromState(GoRouterState state) => const HomeRoute();
+mixin $FavoritesRoute on GoRouteData {
+  static FavoritesRoute _fromState(GoRouterState state) =>
+      const FavoritesRoute();
 
   @override
   String get location => GoRouteData.$location('/');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $discoverRoute =>
+    GoRouteData.$route(path: '/discover', factory: $DiscoverRoute._fromState);
+
+mixin $DiscoverRoute on GoRouteData {
+  static DiscoverRoute _fromState(GoRouterState state) => const DiscoverRoute();
+
+  @override
+  String get location => GoRouteData.$location('/discover');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $searchRoute =>
+    GoRouteData.$route(path: '/search', factory: $SearchRoute._fromState);
+
+mixin $SearchRoute on GoRouteData {
+  static SearchRoute _fromState(GoRouterState state) => const SearchRoute();
+
+  @override
+  String get location => GoRouteData.$location('/search');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -43,6 +95,84 @@ mixin $SettingsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/settings');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $settingsAppearanceRoute => GoRouteData.$route(
+  path: '/settings/appearance',
+  factory: $SettingsAppearanceRoute._fromState,
+);
+
+mixin $SettingsAppearanceRoute on GoRouteData {
+  static SettingsAppearanceRoute _fromState(GoRouterState state) =>
+      const SettingsAppearanceRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/appearance');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $settingsDataRoute => GoRouteData.$route(
+  path: '/settings/data',
+  factory: $SettingsDataRoute._fromState,
+);
+
+mixin $SettingsDataRoute on GoRouteData {
+  static SettingsDataRoute _fromState(GoRouterState state) =>
+      const SettingsDataRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/data');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $settingsPlaybackRoute => GoRouteData.$route(
+  path: '/settings/playback',
+  factory: $SettingsPlaybackRoute._fromState,
+);
+
+mixin $SettingsPlaybackRoute on GoRouteData {
+  static SettingsPlaybackRoute _fromState(GoRouterState state) =>
+      const SettingsPlaybackRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/playback');
 
   @override
   void go(BuildContext context) => context.go(location);
