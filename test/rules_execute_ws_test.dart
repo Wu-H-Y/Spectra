@@ -72,6 +72,7 @@ void main() {
         method: 'POST',
         uri: baseUri.resolve('/api/rules/execute'),
         token: serverToken,
+        hostOnly: true,
         body: {
           'rule': _ruleEnvelope(
             ruleId: 'demo.execute',
@@ -173,10 +174,14 @@ Future<({int statusCode, Map<String, dynamic> json})> _sendJsonRequest({
   required Uri uri,
   String? token,
   Map<String, dynamic>? body,
+  bool hostOnly = false,
 }) async {
   final request = await client.openUrl(method, uri);
   if (token != null) {
     request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $token');
+  }
+  if (hostOnly) {
+    request.headers.set('x-host-only', 'true');
   }
   if (body != null) {
     request.headers.contentType = ContentType.json;

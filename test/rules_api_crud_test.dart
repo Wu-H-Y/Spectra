@@ -298,6 +298,7 @@ void main() {
       uri: firstBase.resolve('/api/rules/execute'),
       token: serverToken,
       body: executeBody,
+      isHostOnly: true,
     );
     expect(firstExecute.statusCode, 202);
     await Future<void>.delayed(const Duration(milliseconds: 60));
@@ -316,6 +317,7 @@ void main() {
         ...executeBody,
         'context': {'runId': 'cache-run-2'},
       },
+      isHostOnly: true,
     );
     expect(secondExecute.statusCode, 202);
     await Future<void>.delayed(const Duration(milliseconds: 60));
@@ -361,10 +363,14 @@ Future<({int statusCode, Map<String, dynamic> json})> _sendJsonRequest({
   required Uri uri,
   String? token,
   Map<String, dynamic>? body,
+  bool isHostOnly = false,
 }) async {
   final request = await client.openUrl(method, uri);
   if (token != null) {
     request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $token');
+  }
+  if (isHostOnly) {
+    request.headers.set('X-Host-Only', 'true');
   }
   if (body != null) {
     request.headers.contentType = ContentType.json;
