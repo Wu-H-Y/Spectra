@@ -2,6 +2,13 @@
 
 本文定义 Spectra 内置 server 的 HTTP API 契约 v1，覆盖规则管理与执行相关接口。
 
+## 0. 运行时归属（Flutter-owned runtime）
+
+本契约默认遵循 `docs/runtime-ownership-v1.md`：
+
+- Flutter 是唯一的 `runtime operator`，负责发起会改变运行时状态的动作。
+- Web Editor 仅允许作为 `attach/read-only diagnostics`，用于附着式诊断与只读观察，不得作为运行时控制面。
+
 ## 1. 范围与挂载关系
 
 - 当前已存在状态接口：`GET /api/server/status`。
@@ -14,7 +21,8 @@
 
 - 该接口用于发现服务状态与鉴权令牌。
 - 响应在现有字段 `isRunning`、`port`、`url` 基础上新增 `serverToken`。
-- `serverToken` 为后续 HTTP 与 WebSocket 鉴权凭据。
+- `serverToken` 为 Flutter host 完整权限鉴权凭据，用于发起 preview/execute 等运行时操作。
+- 新增 `attachToken` 为 Web editor 只读附着鉴权凭据，仅用于 WebSocket 连接的只读诊断附着。
 - 本条为契约扩展描述，本任务不实现。
 
 示例响应：
@@ -24,9 +32,14 @@
   "isRunning": true,
   "port": 15421,
   "url": "http://localhost:15421",
-  "serverToken": "st_8f2a0f6f..."
+  "serverToken": "st_8f2a0f6f...",
+  "attachToken": "attach_st_8f2a0f6f..."
 }
 ```
+
+**权限说明：**
+- `serverToken`：Flutter host 专用，可调用所有 API（包括 preview/open、execute 等）
+- `attachToken`：Web editor 专用，仅用于 WebSocket 连接的只读诊断附着，不能发起任何运行时操作
 
 ### 2.2 `/api/*` 访问控制
 
@@ -372,24 +385,92 @@ curl -X POST "http://localhost:15421/api/rules/execute" \
 
 ## 5. Sessions API
 
+### 5.0 SessionCookies v1（交互式会话 cookie 包）
+
+`SessionCookies` 用于承载交互式会话（agent-browser / WebView / Tauri）的 cookie 提交载荷，仅用于 API 内部传递，不提供文件导出能力。
+
+字段定义：
+
+- `v`：协议版本，当前固定为 `1`。
+- `createdAt`：载荷创建时间，ISO 8601（UTC）。
+- `platform`：来源平台，枚举：`windows | macos | linux | android | ios`。
+- `sourceUrl`：会话来源 URL，用于校验与诊断；仅允许 `http` 或 `https` scheme。
+- `allowlistDomains`：允许导入的域名白名单（必填，至少 1 项）。
+- `cookies`：cookie 列表（可为空数组）。
+
+`cookies[]` 子项定义：
+
+- 必填：`domain`、`path`、`name`、`value`。
+- 可选：`expiresDateMs`、`httpOnly`、`secure`、`sameSite`。
+
+示例（最小可用）：
+
+```json
+{
+  "v": 1,
+  "createdAt": "2026-03-09T10:30:00Z",
+  "platform": "windows",
+  "sourceUrl": "https://accounts.example.com/login",
+  "allowlistDomains": [
+    ".example.com"
+  ],
+  "cookies": [
+    {
+      "domain": ".example.com",
+      "path": "/",
+      "name": "session_id",
+      "value": "masked-example-value",
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    }
+  ]
+}
+```
+
+配套 fixtures：
+
+- `fixtures/session_cookies_v1_min.json`
+- `fixtures/session_cookies_v1_invalid.json`
+
+安全约束（强制）：
+
+- 仅允许导入 `allowlistDomains` 内的 cookies，禁止跨域注入。
+- `sourceUrl` 仅允许 `http/https`；其他 scheme 一律拒绝。
+- 日志、NodeEvent、WS 消息与 HTTP API 响应均不得输出 cookie 明文（`value`）。
+- `POST /api/sessions/{sessionId}/commit-cookies` 仅返回 summary，不返回 cookie 明文。
+
 ### 5.1 `POST /api/sessions`
 
-用途：创建会话（浏览上下文/执行上下文）。
+用途：创建“交互式登录会话”，用于后续提交 `SessionCookies v1` 到规则级 CookieJar。
 
 请求体：
 
 ```json
 {
-  "name": "默认会话",
-  "persistCookies": true
+  "ruleId": "rule_demo_001",
+  "url": "https://accounts.example.com/login",
+  "allowlistDomains": [
+    ".example.com"
+  ],
+  "purpose": "login"
 }
 ```
+
+字段说明：
+
+- `ruleId`：目标规则 ID。
+- `url`：交互式会话入口 URL。
+- `allowlistDomains`：本会话允许写入 CookieJar 的域名白名单。
+- `purpose`：会话用途；v1 仅允许 `login`。
 
 响应 `201`：
 
 ```json
 {
   "sessionId": "sess_01HZY...",
+  "ruleId": "rule_demo_001",
+  "purpose": "login",
   "createdAt": "2026-03-05T10:00:00Z"
 }
 ```
@@ -400,16 +481,48 @@ curl：
 curl -X POST "http://localhost:15421/api/sessions" \
   -H "Authorization: Bearer <serverToken>" \
   -H "Content-Type: application/json" \
-  -d '{"name":"默认会话","persistCookies":true}'
+  -d '{"ruleId":"rule_demo_001","url":"https://accounts.example.com/login","allowlistDomains":[".example.com"],"purpose":"login"}'
 ```
 
 ### 5.2 `POST /api/sessions/{sessionId}/commit-cookies`
 
-用途：提交当前会话 cookies 到持久层。
+用途：提交 `SessionCookies v1` 到规则级 CookieJar，并返回导入摘要（不含明文）。
 
 路径参数：
 
 - `sessionId`：会话 ID。
+
+请求体：
+
+```json
+{
+  "sessionCookies": {
+    "v": 1,
+    "createdAt": "2026-03-09T10:30:00Z",
+    "platform": "windows",
+    "sourceUrl": "https://accounts.example.com/login",
+    "allowlistDomains": [
+      ".example.com"
+    ],
+    "cookies": [
+      {
+        "domain": ".example.com",
+        "path": "/",
+        "name": "session_id",
+        "value": "masked-example-value",
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "Lax"
+      }
+    ]
+  }
+}
+```
+
+说明：
+
+- 请求体中的 `sessionCookies` 必须符合本节 `SessionCookies v1`。
+- 即使请求体携带 cookie 明文，服务端日志与返回体也必须脱敏，不得回传明文。
 
 响应 `200`：
 
@@ -417,15 +530,30 @@ curl -X POST "http://localhost:15421/api/sessions" \
 {
   "sessionId": "sess_01HZY...",
   "committed": true,
-  "committedAt": "2026-03-05T10:20:00Z"
+  "committedAt": "2026-03-05T10:20:00Z",
+  "summary": {
+    "cookieCount": 2,
+    "domains": [
+      ".example.com"
+    ],
+    "droppedCookieCount": 1
+  }
 }
 ```
+
+`summary` 字段说明：
+
+- `cookieCount`：实际写入 CookieJar 的 cookie 数。
+- `domains`：实际写入涉及的域名列表。
+- `droppedCookieCount`：被过滤/拒绝的 cookie 数（例如越权域名、过期等）。
 
 curl：
 
 ```bash
 curl -X POST "http://localhost:15421/api/sessions/sess_01HZY/commit-cookies" \
-  -H "Authorization: Bearer <serverToken>"
+  -H "Authorization: Bearer <serverToken>" \
+  -H "Content-Type: application/json" \
+  -d '{"sessionCookies":{"v":1,"createdAt":"2026-03-09T10:30:00Z","platform":"windows","sourceUrl":"https://accounts.example.com/login","allowlistDomains":[".example.com"],"cookies":[{"domain":".example.com","path":"/","name":"session_id","value":"masked-example-value","httpOnly":true,"secure":true,"sameSite":"Lax"}]}}'
 ```
 
 ### 5.3 `DELETE /api/sessions/{sessionId}`
@@ -456,7 +584,7 @@ curl -X DELETE "http://localhost:15421/api/sessions/sess_01HZY" \
 
 ### 6.1 `POST /api/preview/open`
 
-用途：打开预览会话页面。
+用途：创建并打开预览会话。
 
 请求体：
 
@@ -481,7 +609,7 @@ curl -X DELETE "http://localhost:15421/api/sessions/sess_01HZY" \
 ```
 
 - `debugUrl`：当前最小实现下返回目标页面 URL，用于桌面调试场景。
-- `wsChannel.previewSessionId`：WebSocket 订阅过滤器，当前编辑器预览流据此订阅并关联选择器回调。
+- `wsChannel.previewSessionId`：WebSocket 订阅过滤器。附着式诊断客户端可以据此订阅并关联只读展示（例如在调试面板中展示选中元素信息），但不得把自身描述为运行时操作者。
 
 curl：
 

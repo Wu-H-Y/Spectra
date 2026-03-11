@@ -2,6 +2,13 @@
 
 本文对应当前代码中的 `rust/src/rules_ir/ws_protocol.rs`。重点覆盖规则执行期的事件流、字段语义与调试时应关注的关键字段。
 
+## 0. 运行时归属（Flutter-owned runtime）
+
+本协议只定义事件词汇与消息封套，不改变现有 `type`、`NodeEvent` 事件值与 `SubscriptionFilter` 字段。
+
+- Flutter 是唯一的 `runtime operator`，负责发起会改变运行时状态的动作。
+- Web Editor 仅允许作为 `attach/read-only diagnostics`，用于附着式诊断与只读观察。它可以订阅事件流用于展示与定位问题，但不得被描述为运行时控制面。
+
 ## 1. 外层封套
 
 所有服务端消息统一使用 `WsMessageV1<T>`：
