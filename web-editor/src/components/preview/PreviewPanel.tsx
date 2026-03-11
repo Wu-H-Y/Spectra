@@ -1,13 +1,5 @@
-import {
-  Eye,
-  Loader2,
-  X,
-  Crosshair,
-  Check,
-  RefreshCw,
-  ZoomIn,
-} from 'lucide-react';
-import { useState } from 'react';
+import { Activity, Link2, Unplug } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
@@ -22,118 +14,79 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type { ElementSelectedMessage } from '@/hooks/useWebSocket';
+import type {
+  ElementSelectedMessage,
+  RuntimeDiagnosticsEvent,
+  RuntimeSubscriptionFilter,
+} from '@/hooks/useWebSocket';
 
 import { SelectorTestingPanel } from './SelectorTestingPanel';
 
 interface PreviewPanelProps {
   serverUrl: string | null;
-  serverToken: string | null;
   isConnected: boolean;
+  attachment: RuntimeSubscriptionFilter | null;
   isSelecting: boolean;
-  previewSessionId: string | null;
   selectedElement: ElementSelectedMessage['data'] | null;
-  screenshot?: string | null; // Base64 图片数据
-  onStartSelection: () => void;
-  onCancelSelection: () => void;
-  onClearSelection: () => void;
-  onPreviewOpened: (previewSessionId: string) => void;
-  onApplySelector: (selector: string, type: 'css' | 'xpath') => void;
-  onRequestScreenshot?: () => void;
+  events: RuntimeDiagnosticsEvent[];
+  onAttach: (filter: RuntimeSubscriptionFilter) => void;
+  onDetach: () => void;
+  onClearEvents: () => void;
 }
 
-interface PreviewOpenResponse {
-  previewSessionId?: string;
-  wsChannel?: {
-    previewSessionId?: string;
-  };
+interface AttachmentFormState {
+  sessionId: string;
+  previewSessionId: string;
+  runId: string;
 }
+
+const createFormState = (
+  attachment: RuntimeSubscriptionFilter | null,
+): AttachmentFormState => ({
+  sessionId: attachment?.sessionId ?? '',
+  previewSessionId: attachment?.previewSessionId ?? '',
+  runId: attachment?.runId ?? '',
+});
 
 /**
- * 预览面板组件。
+ * 运行时调试附着面板。
  *
- * 用于触发页面预览和元素选择功能。
+ * web-editor 仅附着到 Flutter 已创建的运行态，做只读诊断展示。
  */
 export function PreviewPanel({
   serverUrl,
-  serverToken,
   isConnected,
+  attachment,
   isSelecting,
-  previewSessionId,
   selectedElement,
-  screenshot,
-  onStartSelection,
-  onCancelSelection,
-  onClearSelection,
-  onPreviewOpened,
-  onApplySelector,
-  onRequestScreenshot,
+  events,
+  onAttach,
+  onDetach,
+  onClearEvents,
 }: PreviewPanelProps) {
   const { t } = useTranslation();
-  const [previewUrl, setPreviewUrl] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [showFullScreenshot, setShowFullScreenshot] = useState(false);
+  const [formState, setFormState] = useState<AttachmentFormState>(() =>
+    createFormState(attachment),
+  );
 
-  const handleStartPreview = async () => {
-    if (!previewUrl.trim()) {
-      toast.warning(t('preview.enterPreviewUrl'));
+  useEffect(() => {
+    setFormState(createFormState(attachment));
+  }, [attachment]);
+
+  const hasAttachment = attachment !== null;
+
+  const handleAttach = () => {
+    if (
+      !formState.sessionId.trim() &&
+      !formState.previewSessionId.trim() &&
+      !formState.runId.trim()
+    ) {
+      toast.warning(t('preview.enterAttachFilter'));
       return;
     }
 
-    if (!serverUrl || !serverToken) {
-      toast.error(t('preview.serverNotRunning'));
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${serverUrl}/api/preview/open`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${serverToken}`,
-        },
-        body: JSON.stringify({ url: previewUrl }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to open preview');
-      }
-
-      const data = (await response.json()) as PreviewOpenResponse;
-      const responsePreviewSessionId = data.previewSessionId;
-      const wsPreviewSessionId = data.wsChannel?.previewSessionId;
-      if (
-        responsePreviewSessionId &&
-        wsPreviewSessionId &&
-        responsePreviewSessionId !== wsPreviewSessionId
-      ) {
-        throw new Error('Mismatched preview session ids');
-      }
-
-      const resolvedPreviewSessionId =
-        wsPreviewSessionId ?? responsePreviewSessionId;
-      if (!resolvedPreviewSessionId) {
-        throw new Error('Missing previewSessionId');
-      }
-
-      onPreviewOpened(resolvedPreviewSessionId);
-      onClearSelection();
-
-      toast.success(t('preview.previewOpened'));
-    } catch {
-      toast.error(t('preview.previewError'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleApplySelector = () => {
-    if (selectedElement) {
-      onApplySelector(selectedElement.selector, selectedElement.selectorType);
-      onClearSelection();
-      toast.success(t('preview.selectorApplied'));
-    }
+    onAttach(formState);
+    toast.success(t('preview.attachSuccess'));
   };
 
   if (!isConnected) {
@@ -141,7 +94,7 @@ export function PreviewPanel({
       <Card className="border-yellow-500">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Eye className="h-5 w-5" />
+            <Activity className="h-5 w-5" />
             {t('preview.preview')}
           </CardTitle>
           <CardDescription>{t('preview.previewNotConnected')}</CardDescription>
@@ -157,151 +110,107 @@ export function PreviewPanel({
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Eye className="h-5 w-5" />
+          <Activity className="h-5 w-5" />
           {t('preview.preview')}
         </CardTitle>
         <CardDescription>{t('preview.previewDescription')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* URL Input */}
-        <div className="space-y-2">
-          <Label htmlFor="preview-url">{t('preview.previewUrl')}</Label>
-          <div className="flex gap-2">
-            <Input
-              id="preview-url"
-              placeholder="https://example.com"
-              value={previewUrl}
-              onChange={(e) => setPreviewUrl(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleStartPreview()}
-            />
-            <Button
-              onClick={handleStartPreview}
-              disabled={isLoading || !previewUrl.trim()}
-              size="icon"
-            >
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-            </Button>
-          </div>
-        </div>
-
-        {/* Element Selection */}
-        <div className="space-y-2">
-          <Label>{t('preview.elementSelection')}</Label>
-          <div className="flex gap-2">
-            {isSelecting ? (
-              <>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={onCancelSelection}
-                  className="flex-1"
-                >
-                  <X className="h-4 w-4 mr-1" />
-                  {t('preview.cancelSelection')}
-                </Button>
-              </>
-            ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onStartSelection}
-                className="flex-1"
-                disabled={!previewSessionId}
-              >
-                <Crosshair className="h-4 w-4 mr-1" />
-                {t('preview.selectElement')}
-              </Button>
-            )}
-          </div>
-          {isSelecting && (
-            <p className="text-xs text-muted-foreground">
-              {t('preview.selectingHint')}
-            </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="secondary">{t('preview.connected')}</Badge>
+          <Badge variant={hasAttachment ? 'default' : 'outline'}>
+            {hasAttachment ? t('preview.attached') : t('preview.notAttached')}
+          </Badge>
+          <Badge variant={isSelecting ? 'secondary' : 'outline'}>
+            {isSelecting
+              ? t('preview.selectionStatusActive')
+              : t('preview.selectionStatusIdle')}
+          </Badge>
+          {serverUrl && (
+            <Badge variant="outline" className="font-mono text-xs">
+              {serverUrl}
+            </Badge>
           )}
         </div>
 
-        {/* Selected Element */}
-        {selectedElement && (
-          <div className="space-y-2 p-3 bg-muted rounded-lg">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">
-                {t('preview.selectedElement')}
-              </span>
-              <Button variant="ghost" size="sm" onClick={onClearSelection}>
-                <X className="h-3 w-3" />
-              </Button>
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <Badge variant="outline">
-                  {selectedElement.selectorType.toUpperCase()}
-                </Badge>
-                <code className="text-xs bg-background px-2 py-1 rounded flex-1 break-all">
-                  {selectedElement.selector}
-                </code>
-              </div>
-              {selectedElement.textContent && (
-                <p className="text-xs text-muted-foreground line-clamp-2">
-                  "{selectedElement.textContent}"
-                </p>
-              )}
-            </div>
-            <Button size="sm" onClick={handleApplySelector} className="w-full">
-              <Check className="h-4 w-4 mr-1" />
-              {t('preview.applySelector')}
-            </Button>
+        <div className="rounded-lg border bg-muted/20 p-4">
+          <div className="mb-3 flex items-center gap-2 text-sm font-medium">
+            <Link2 className="h-4 w-4" />
+            {t('preview.attachSectionTitle')}
           </div>
-        )}
-
-        {/* Screenshot */}
-        {screenshot && (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label>{t('preview.pageScreenshot')}</Label>
-              <div className="flex gap-1">
-                {onRequestScreenshot && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={onRequestScreenshot}
-                    title={t('preview.refreshScreenshot')}
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
-                )}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowFullScreenshot(!showFullScreenshot)}
-                  title={t('preview.toggleSize')}
-                >
-                  <ZoomIn className="h-4 w-4" />
-                </Button>
-              </div>
+          <div className="grid gap-3 md:grid-cols-3">
+            <div className="space-y-2">
+              <Label htmlFor="attach-session-id">
+                {t('preview.sessionIdLabel')}
+              </Label>
+              <Input
+                id="attach-session-id"
+                value={formState.sessionId}
+                onChange={(event) => {
+                  setFormState((currentState) => ({
+                    ...currentState,
+                    sessionId: event.target.value,
+                  }));
+                }}
+                placeholder={t('preview.sessionIdPlaceholder')}
+              />
             </div>
-            <div
-              className={`border rounded-lg overflow-hidden bg-muted ${
-                showFullScreenshot ? '' : 'max-h-64'
-              }`}
-            >
-              <img
-                src={`data:image/png;base64,${screenshot}`}
-                alt={t('preview.pageScreenshot')}
-                className="w-full h-auto"
+
+            <div className="space-y-2">
+              <Label htmlFor="attach-preview-session-id">
+                {t('preview.previewSessionIdLabel')}
+              </Label>
+              <Input
+                id="attach-preview-session-id"
+                value={formState.previewSessionId}
+                onChange={(event) => {
+                  setFormState((currentState) => ({
+                    ...currentState,
+                    previewSessionId: event.target.value,
+                  }));
+                }}
+                placeholder={t('preview.previewSessionIdPlaceholder')}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="attach-run-id">{t('preview.runIdLabel')}</Label>
+              <Input
+                id="attach-run-id"
+                value={formState.runId}
+                onChange={(event) => {
+                  setFormState((currentState) => ({
+                    ...currentState,
+                    runId: event.target.value,
+                  }));
+                }}
+                placeholder={t('preview.runIdPlaceholder')}
               />
             </div>
           </div>
-        )}
 
-        {/* Selector Testing */}
+          <p className="mt-3 text-xs text-muted-foreground">
+            {t('preview.attachHint')}
+          </p>
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button onClick={handleAttach}>{t('preview.attachAction')}</Button>
+            <Button
+              variant="outline"
+              onClick={onDetach}
+              disabled={!hasAttachment}
+            >
+              <Unplug className="mr-1 h-4 w-4" />
+              {t('preview.detachAction')}
+            </Button>
+          </div>
+        </div>
+
         <SelectorTestingPanel
-          serverUrl={serverUrl}
-          serverToken={serverToken}
-          previewSessionId={previewSessionId}
+          isSelecting={isSelecting}
+          selectedElement={selectedElement}
+          events={events}
+          onClearEvents={onClearEvents}
         />
       </CardContent>
     </Card>

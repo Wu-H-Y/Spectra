@@ -116,7 +116,10 @@ export interface ServerStatus {
   isRunning: boolean;
   port: number;
   url: string;
+  /// Flutter host 完整权限 token
   serverToken: string;
+  /// Web editor 只读附着 token（仅用于 WS attach）
+  attachToken?: string;
 }
 
 export interface ValidationResult {

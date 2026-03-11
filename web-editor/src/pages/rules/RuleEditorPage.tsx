@@ -17,7 +17,6 @@ import { toast } from 'sonner';
 
 import '@xyflow/react/dist/style.css';
 import { rulesApi, serverApi } from '@/api/client';
-import type { Selector } from '@/api/types';
 import { PreviewPanel } from '@/components/preview/PreviewPanel';
 import RuleGraphNode from '@/components/rules/RuleGraphNode';
 import { Badge } from '@/components/ui/badge';
@@ -39,7 +38,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useElementSelection } from '@/hooks/useWebSocket';
+import { useRuntimeDiagnostics } from '@/hooks/useWebSocket';
 import {
   appendGraphNode,
   createConnectedGraphEdge,
@@ -48,7 +47,7 @@ import {
   graphToFlow,
   syncRuleGraph,
 } from '@/lib/ruleGraph';
-import { useEditorStore, useSelectorApplyStore } from '@/stores';
+import { useEditorStore } from '@/stores';
 import type { RuleEnvelope } from '@/types/rule';
 
 const nodeTypes = {
@@ -189,15 +188,15 @@ export function RuleEditorPage() {
 
   const {
     isConnected: isWsConnected,
-    previewSessionId,
+    attachment,
     isSelecting,
     selectedElement,
-    openPreviewSession,
-    startSelection,
-    cancelSelection,
-    clearSelection,
+    events,
+    attach,
+    detach,
+    clearEvents,
     connect,
-  } = useElementSelection(
+  } = useRuntimeDiagnostics(
     serverStatus
       ? {
           url: serverStatus.url,
@@ -211,8 +210,6 @@ export function RuleEditorPage() {
       connect();
     }
   }, [serverStatus?.isRunning, connect]);
-
-  const { setApplyCallback } = useSelectorApplyStore();
 
   const { data: existingRule, isLoading } = useQuery({
     queryKey: ['rules', id],
@@ -468,22 +465,6 @@ export function RuleEditorPage() {
 
   const showIvEditor =
     selectedTransformOp !== 'aesecbencode' && selectedTransformOp !== 'aesecbdecode';
-
-  const handleApplySelector = (selector: string, type: 'css' | 'xpath') => {
-    const newSelector: Selector = {
-      type,
-      expression: selector,
-    };
-
-    const { applyCallback } = useSelectorApplyStore.getState();
-    if (applyCallback) {
-      applyCallback(newSelector);
-      setApplyCallback(null);
-      toast.success(t('preview.selectorApplied'));
-    } else {
-      toast.success(t('preview.selectorCopied'));
-    }
-  };
 
   if (isLoading) {
     return (
@@ -815,16 +796,14 @@ export function RuleEditorPage() {
 
       <PreviewPanel
         serverUrl={serverStatus?.url || null}
-        serverToken={serverStatus?.serverToken || null}
         isConnected={isWsConnected}
-        previewSessionId={previewSessionId}
+        attachment={attachment}
         isSelecting={isSelecting}
         selectedElement={selectedElement}
-        onStartSelection={startSelection}
-        onCancelSelection={cancelSelection}
-        onClearSelection={clearSelection}
-        onPreviewOpened={openPreviewSession}
-        onApplySelector={handleApplySelector}
+        events={events}
+        onAttach={attach}
+        onDetach={detach}
+        onClearEvents={clearEvents}
       />
 
       {validateMutation.data && (

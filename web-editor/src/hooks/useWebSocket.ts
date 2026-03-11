@@ -226,12 +226,105 @@ export interface PreviewRequestMessage {
   };
 }
 
+export interface RuntimeSubscriptionFilter {
+  runId?: string;
+  sessionId?: string;
+  previewSessionId?: string;
+}
+
+export interface RuntimeDiagnosticsEvent {
+  id: string;
+  type: string;
+  receivedAt: string;
+  data: Record<string, unknown> | null;
+  runId: string | null;
+  sessionId: string | null;
+  previewSessionId: string | null;
+  seq: number | null;
+  nodeEvent: string | null;
+}
+
+const MAX_RUNTIME_EVENTS = 200;
+
+const toMessageRecord = (
+  value: unknown,
+): Record<string, unknown> | null => {
+  if (!value || typeof value !== 'object') {
+    return null;
+  }
+
+  return value as Record<string, unknown>;
+};
+
+const readStringField = (
+  data: Record<string, unknown> | null,
+  field: string,
+) => {
+  const value = data?.[field];
+  return typeof value === 'string' ? value : null;
+};
+
+const readNumberField = (
+  data: Record<string, unknown> | null,
+  field: string,
+) => {
+  const value = data?.[field];
+  return typeof value === 'number' ? value : null;
+};
+
+const normalizeSubscriptionFilter = (
+  filter: RuntimeSubscriptionFilter | null,
+): RuntimeSubscriptionFilter | null => {
+  if (!filter) {
+    return null;
+  }
+
+  const normalized = {
+    runId: filter.runId?.trim() || undefined,
+    sessionId: filter.sessionId?.trim() || undefined,
+    previewSessionId: filter.previewSessionId?.trim() || undefined,
+  } satisfies RuntimeSubscriptionFilter;
+
+  return normalized.runId ||
+    normalized.sessionId ||
+    normalized.previewSessionId
+    ? normalized
+    : null;
+};
+
+const serializeSubscriptionFilter = (
+  filter: RuntimeSubscriptionFilter | null,
+) =>
+  JSON.stringify({
+    runId: filter?.runId ?? null,
+    sessionId: filter?.sessionId ?? null,
+    previewSessionId: filter?.previewSessionId ?? null,
+  });
+
+const toDiagnosticsEvent = (
+  message: WebSocketMessage,
+): RuntimeDiagnosticsEvent => {
+  const data = toMessageRecord(message.data);
+
+  return {
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
+    type: message.type,
+    receivedAt: new Date().toISOString(),
+    data,
+    runId: readStringField(data, 'runId'),
+    sessionId: readStringField(data, 'sessionId'),
+    previewSessionId: readStringField(data, 'previewSessionId'),
+    seq: readNumberField(data, 'seq'),
+    nodeEvent: readStringField(data, 'event'),
+  };
+};
+
 /**
- * 使用元素选择 WebSocket Hook。
+ * 使用运行态诊断 WebSocket Hook。
  *
- * 专门用于处理元素选择功能的 WebSocket 连接。
+ * 仅用于附着到 Flutter 已创建的运行态并只读查看事件流。
  */
-export function useElementSelection(
+export function useRuntimeDiagnostics(
   server: Pick<ServerStatus, 'url' | 'serverToken'> | null,
 ) {
   const [selectedElement, setSelectedElement] = useState<
@@ -239,27 +332,11 @@ export function useElementSelection(
   >(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [previewSessionId, setPreviewSessionId] = useState<string | null>(null);
-  const subscribedPreviewSessionIdRef = useRef<string | null>(null);
-
-  const matchesPreviewSession = useCallback(
-    (data: unknown) => {
-      if (!previewSessionId || !data || typeof data !== 'object') {
-        return true;
-      }
-
-      const scopedPreviewSessionId =
-        'previewSessionId' in data && typeof data.previewSessionId === 'string'
-          ? data.previewSessionId
-          : null;
-
-      return (
-        scopedPreviewSessionId == null ||
-        scopedPreviewSessionId === previewSessionId
-      );
-    },
-    [previewSessionId],
+  const [attachment, setAttachment] = useState<RuntimeSubscriptionFilter | null>(
+    null,
   );
+  const [events, setEvents] = useState<RuntimeDiagnosticsEvent[]>([]);
+  const subscribedFilterRef = useRef<RuntimeSubscriptionFilter | null>(null);
 
   const handleMessage = useCallback(
     (message: WebSocketMessage) => {
@@ -268,33 +345,32 @@ export function useElementSelection(
           setIsAuthenticated(true);
           break;
 
-        case 'element_selected':
-          {
-            const data = message.data as ElementSelectedMessage['data'];
-            if (!matchesPreviewSession(data)) {
-              break;
-            }
-            setSelectedElement(data);
-          }
+        case 'element_selected': {
+          const data = message.data as ElementSelectedMessage['data'];
+          setSelectedElement(data);
           setIsSelecting(false);
           break;
+        }
 
         case 'selection_started':
-          if (!matchesPreviewSession(message.data)) {
-            break;
-          }
           setIsSelecting(true);
           break;
 
         case 'selection_cancelled':
-          if (!matchesPreviewSession(message.data)) {
-            break;
-          }
           setIsSelecting(false);
           break;
       }
+
+      if (message.type === 'auth_ok') {
+        return;
+      }
+
+      setEvents((currentEvents) => {
+        const nextEvents = [...currentEvents, toDiagnosticsEvent(message)];
+        return nextEvents.slice(-MAX_RUNTIME_EVENTS);
+      });
     },
-    [matchesPreviewSession],
+    [],
   );
 
   const wsUrl = server?.url
@@ -307,7 +383,7 @@ export function useElementSelection(
     onMessage: handleMessage,
     onClose: () => {
       setIsAuthenticated(false);
-      subscribedPreviewSessionIdRef.current = null;
+      subscribedFilterRef.current = null;
     },
     autoReconnect: true,
   });
@@ -328,80 +404,59 @@ export function useElementSelection(
       return;
     }
 
-    const previousPreviewSessionId = subscribedPreviewSessionIdRef.current;
+    const previousFilter = subscribedFilterRef.current;
     if (
-      previousPreviewSessionId &&
-      previousPreviewSessionId !== previewSessionId
+      previousFilter &&
+      serializeSubscriptionFilter(previousFilter) !==
+        serializeSubscriptionFilter(attachment)
     ) {
       send({
         type: 'unsubscribe',
-        data: { previewSessionId: previousPreviewSessionId },
+        data: previousFilter,
       });
-      subscribedPreviewSessionIdRef.current = null;
+      subscribedFilterRef.current = null;
     }
 
     if (
-      previewSessionId &&
-      previewSessionId !== subscribedPreviewSessionIdRef.current
+      attachment &&
+      serializeSubscriptionFilter(attachment) !==
+        serializeSubscriptionFilter(subscribedFilterRef.current)
     ) {
       send({
         type: 'subscribe',
-        data: { previewSessionId },
+        data: attachment,
       });
-      subscribedPreviewSessionIdRef.current = previewSessionId;
+      subscribedFilterRef.current = attachment;
     }
-  }, [isAuthenticated, isConnected, previewSessionId, send]);
+  }, [attachment, isAuthenticated, isConnected, send]);
 
-  const startSelection = useCallback(() => {
-    if (isConnected && isAuthenticated && previewSessionId) {
-      send({
-        type: 'start_selection',
-        data: { previewSessionId },
-      });
-    }
-  }, [isAuthenticated, isConnected, previewSessionId, send]);
-
-  const cancelSelection = useCallback(() => {
-    if (isConnected && isAuthenticated && previewSessionId) {
-      send({
-        type: 'cancel_selection',
-        data: { previewSessionId },
-      });
-    }
-  }, [isAuthenticated, isConnected, previewSessionId, send]);
-
-  const clearSelection = useCallback(() => {
+  const attach = useCallback((filter: RuntimeSubscriptionFilter | null) => {
+    setAttachment(normalizeSubscriptionFilter(filter));
     setSelectedElement(null);
+    setIsSelecting(false);
+    setEvents([]);
   }, []);
 
-  const openPreviewSession = useCallback(
-    (nextPreviewSessionId: string | null) => {
-      setPreviewSessionId(nextPreviewSessionId);
-      setSelectedElement(null);
-      setIsSelecting(false);
-    },
-    [],
-  );
+  const detach = useCallback(() => {
+    setAttachment(null);
+    setSelectedElement(null);
+    setIsSelecting(false);
+    setEvents([]);
+  }, []);
 
-  const sendSelectedElement = useCallback(() => {
-    if (isConnected && selectedElement) {
-      send({
-        type: 'element_selected',
-        data: selectedElement,
-      });
-    }
-  }, [isConnected, send, selectedElement]);
+  const clearEvents = useCallback(() => {
+    setEvents([]);
+  }, []);
 
   return {
     isConnected,
-    previewSessionId,
+    attachment,
     isSelecting,
     selectedElement,
-    openPreviewSession,
-    startSelection,
-    cancelSelection,
-    clearSelection,
-    sendSelectedElement,
+    events,
+    attach,
+    detach,
+    clearEvents,
     connect,
     disconnect,
   };
