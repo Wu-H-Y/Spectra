@@ -28,6 +28,7 @@ Middleware corsMiddleware({
     'Accept',
     'Authorization',
     'X-Requested-With',
+    'X-Host-Only',
   ],
   bool allowCredentials = true,
   int maxAge = 86400, // 24 小时
