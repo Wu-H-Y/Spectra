@@ -13,7 +13,9 @@ import 'package:spectra/features/rules_execute/presentation/pages/rules_execute_
 import 'package:spectra/l10n/generated/l10n.dart';
 
 void main() {
-  testWidgets('renders runtime workspace state and run results', (tester) async {
+  testWidgets(
+    'renders runtime workspace state and run results',
+    (tester) async {
     final client = _FakeRuntimeWorkspaceClient();
 
     await tester.pumpWidget(
@@ -98,7 +100,7 @@ void main() {
     client.emit(
       RuntimeTimelineMessage(
         type: 'node_event',
-        data: {
+        data: const {
           'event': 'run_started',
           'runId': 'run_runtime_page_test',
           'seq': 1,
@@ -111,7 +113,7 @@ void main() {
     client.emit(
       RuntimeTimelineMessage(
         type: 'node_event',
-        data: {
+        data: const {
           'event': 'run_finished',
           'runId': 'run_runtime_page_test',
           'seq': 2,

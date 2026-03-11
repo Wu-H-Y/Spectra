@@ -10,7 +10,9 @@ import 'package:spectra/features/rules_execute/application/rules_runtime_workspa
 import 'package:spectra/features/rules_execute/application/rules_runtime_workspace_state.dart';
 
 void main() {
-  test('controller maps session preview and runs into workspace state', () async {
+  test(
+    'controller maps session preview and runs into workspace state',
+    () async {
     final client = _FakeRuntimeWorkspaceClient();
     final container = ProviderContainer(
       overrides: [
@@ -73,7 +75,11 @@ void main() {
     client.emit(
       RuntimeTimelineMessage(
         type: 'node_event',
-        data: {'event': 'run_started', 'runId': 'run_runtime_001', 'seq': 1},
+        data: const {
+          'event': 'run_started',
+          'runId': 'run_runtime_001',
+          'seq': 1,
+        },
         receivedAt: _startedAt,
       ),
     );
@@ -88,7 +94,7 @@ void main() {
     client.emit(
       RuntimeTimelineMessage(
         type: 'node_event',
-        data: {
+        data: const {
           'event': 'run_finished',
           'runId': 'run_runtime_001',
           'seq': 2,
