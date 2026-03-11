@@ -928,6 +928,251 @@ class S {
       args: [],
     );
   }
+
+  /// `收藏`
+  String get navFavorites {
+    return Intl.message('收藏', name: 'navFavorites', desc: '', args: []);
+  }
+
+  /// `发现`
+  String get navDiscover {
+    return Intl.message('发现', name: 'navDiscover', desc: '', args: []);
+  }
+
+  /// `搜索`
+  String get navSearch {
+    return Intl.message('搜索', name: 'navSearch', desc: '', args: []);
+  }
+
+  /// `我的收藏`
+  String get favoritesPageTitle {
+    return Intl.message('我的收藏', name: 'favoritesPageTitle', desc: '', args: []);
+  }
+
+  /// `管理您收藏的多媒体内容`
+  String get favoritesPageSubtitle {
+    return Intl.message(
+      '管理您收藏的多媒体内容',
+      name: 'favoritesPageSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `还没有收藏`
+  String get favoritesEmptyTitle {
+    return Intl.message(
+      '还没有收藏',
+      name: 'favoritesEmptyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `去发现页浏览并收藏您喜欢的内容`
+  String get favoritesEmptySubtitle {
+    return Intl.message(
+      '去发现页浏览并收藏您喜欢的内容',
+      name: 'favoritesEmptySubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `最近观看`
+  String get favoritesRecent {
+    return Intl.message('最近观看', name: 'favoritesRecent', desc: '', args: []);
+  }
+
+  /// `全部收藏`
+  String get favoritesAll {
+    return Intl.message('全部收藏', name: 'favoritesAll', desc: '', args: []);
+  }
+
+  /// `全部`
+  String get mediaTypeAll {
+    return Intl.message('全部', name: 'mediaTypeAll', desc: '', args: []);
+  }
+
+  /// `视频`
+  String get mediaTypeVideo {
+    return Intl.message('视频', name: 'mediaTypeVideo', desc: '', args: []);
+  }
+
+  /// `音乐`
+  String get mediaTypeMusic {
+    return Intl.message('音乐', name: 'mediaTypeMusic', desc: '', args: []);
+  }
+
+  /// `小说`
+  String get mediaTypeNovel {
+    return Intl.message('小说', name: 'mediaTypeNovel', desc: '', args: []);
+  }
+
+  /// `漫画`
+  String get mediaTypeComic {
+    return Intl.message('漫画', name: 'mediaTypeComic', desc: '', args: []);
+  }
+
+  /// `图片`
+  String get mediaTypeImage {
+    return Intl.message('图片', name: 'mediaTypeImage', desc: '', args: []);
+  }
+
+  /// `暂无最近观看记录`
+  String get noRecentHistory {
+    return Intl.message(
+      '暂无最近观看记录',
+      name: 'noRecentHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `去发现`
+  String get goToDiscover {
+    return Intl.message('去发现', name: 'goToDiscover', desc: '', args: []);
+  }
+
+  /// `发现`
+  String get discoverPageTitle {
+    return Intl.message('发现', name: 'discoverPageTitle', desc: '', args: []);
+  }
+
+  /// `探索精彩内容`
+  String get discoverPageSubtitle {
+    return Intl.message(
+      '探索精彩内容',
+      name: 'discoverPageSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择规则`
+  String get discoverSelectRule {
+    return Intl.message('选择规则', name: 'discoverSelectRule', desc: '', args: []);
+  }
+
+  /// `选择一个规则开始探索`
+  String get discoverSelectRuleHint {
+    return Intl.message(
+      '选择一个规则开始探索',
+      name: 'discoverSelectRuleHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `从上方选择一个数据源规则，发现精彩内容`
+  String get discoverSelectRuleDescription {
+    return Intl.message(
+      '从上方选择一个数据源规则，发现精彩内容',
+      name: 'discoverSelectRuleDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `暂无可用规则`
+  String get discoverNoRules {
+    return Intl.message('暂无可用规则', name: 'discoverNoRules', desc: '', args: []);
+  }
+
+  /// `加载更多`
+  String get discoverLoadMore {
+    return Intl.message('加载更多', name: 'discoverLoadMore', desc: '', args: []);
+  }
+
+  /// `没有更多数据了`
+  String get discoverNoMoreData {
+    return Intl.message(
+      '没有更多数据了',
+      name: 'discoverNoMoreData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `搜索`
+  String get searchPageTitle {
+    return Intl.message('搜索', name: 'searchPageTitle', desc: '', args: []);
+  }
+
+  /// `搜索视频、音乐、小说、漫画、图片`
+  String get searchPageSubtitle {
+    return Intl.message(
+      '搜索视频、音乐、小说、漫画、图片',
+      name: 'searchPageSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `输入关键词搜索...`
+  String get searchHint {
+    return Intl.message('输入关键词搜索...', name: 'searchHint', desc: '', args: []);
+  }
+
+  /// `搜索历史`
+  String get searchHistory {
+    return Intl.message('搜索历史', name: 'searchHistory', desc: '', args: []);
+  }
+
+  /// `清除历史`
+  String get searchClearHistory {
+    return Intl.message('清除历史', name: 'searchClearHistory', desc: '', args: []);
+  }
+
+  /// `热门搜索`
+  String get searchHot {
+    return Intl.message('热门搜索', name: 'searchHot', desc: '', args: []);
+  }
+
+  /// `搜索结果`
+  String get searchResults {
+    return Intl.message('搜索结果', name: 'searchResults', desc: '', args: []);
+  }
+
+  /// `没有找到相关内容`
+  String get searchNoResults {
+    return Intl.message(
+      '没有找到相关内容',
+      name: 'searchNoResults',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `全部`
+  String get searchTabAll {
+    return Intl.message('全部', name: 'searchTabAll', desc: '', args: []);
+  }
+
+  /// `视频`
+  String get searchTabVideo {
+    return Intl.message('视频', name: 'searchTabVideo', desc: '', args: []);
+  }
+
+  /// `音乐`
+  String get searchTabMusic {
+    return Intl.message('音乐', name: 'searchTabMusic', desc: '', args: []);
+  }
+
+  /// `小说`
+  String get searchTabNovel {
+    return Intl.message('小说', name: 'searchTabNovel', desc: '', args: []);
+  }
+
+  /// `漫画`
+  String get searchTabComic {
+    return Intl.message('漫画', name: 'searchTabComic', desc: '', args: []);
+  }
+
+  /// `图片`
+  String get searchTabImage {
+    return Intl.message('图片', name: 'searchTabImage', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -54,6 +54,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "currentLanguage": MessageLookupByLibrary.simpleMessage("Current language"),
     "currentTheme": MessageLookupByLibrary.simpleMessage("Current theme"),
     "developerTools": MessageLookupByLibrary.simpleMessage("Developer Tools"),
+    "discoverLoadMore": MessageLookupByLibrary.simpleMessage("Load More"),
+    "discoverNoMoreData": MessageLookupByLibrary.simpleMessage("No more data"),
+    "discoverNoRules": MessageLookupByLibrary.simpleMessage(
+      "No rules available",
+    ),
+    "discoverPageSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Explore amazing content",
+    ),
+    "discoverPageTitle": MessageLookupByLibrary.simpleMessage("Discover"),
+    "discoverSelectRule": MessageLookupByLibrary.simpleMessage("Select Rule"),
+    "discoverSelectRuleDescription": MessageLookupByLibrary.simpleMessage(
+      "Choose a data source rule above to discover great content",
+    ),
+    "discoverSelectRuleHint": MessageLookupByLibrary.simpleMessage(
+      "Select a rule to start exploring",
+    ),
     "enterUrl": MessageLookupByLibrary.simpleMessage("Enter URL"),
     "enterUrlToPreview": MessageLookupByLibrary.simpleMessage(
       "Enter a URL to preview the page",
@@ -104,6 +120,18 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "errorUsernameExists": m4,
     "errorWeakPassword": m5,
+    "favoritesAll": MessageLookupByLibrary.simpleMessage("All Favorites"),
+    "favoritesEmptySubtitle": MessageLookupByLibrary.simpleMessage(
+      "Go to Discover to browse and save content you like",
+    ),
+    "favoritesEmptyTitle": MessageLookupByLibrary.simpleMessage(
+      "No favorites yet",
+    ),
+    "favoritesPageSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Manage your favorite multimedia content",
+    ),
+    "favoritesPageTitle": MessageLookupByLibrary.simpleMessage("My Favorites"),
+    "favoritesRecent": MessageLookupByLibrary.simpleMessage("Recently Viewed"),
     "featureComic": MessageLookupByLibrary.simpleMessage("Comic Collection"),
     "featureImage": MessageLookupByLibrary.simpleMessage("Image Collection"),
     "featureMusic": MessageLookupByLibrary.simpleMessage("Music Collection"),
@@ -112,6 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "generalSettings": MessageLookupByLibrary.simpleMessage("General"),
     "go": MessageLookupByLibrary.simpleMessage("Go"),
     "goHome": MessageLookupByLibrary.simpleMessage("Go Home"),
+    "goToDiscover": MessageLookupByLibrary.simpleMessage("Go to Discover"),
     "homeSubtitle": MessageLookupByLibrary.simpleMessage(
       "A modern multimedia data collection application",
     ),
@@ -119,6 +148,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "language": MessageLookupByLibrary.simpleMessage("Language"),
     "languageChinese": MessageLookupByLibrary.simpleMessage("Chinese"),
     "languageEnglish": MessageLookupByLibrary.simpleMessage("English"),
+    "mediaTypeAll": MessageLookupByLibrary.simpleMessage("All"),
+    "mediaTypeComic": MessageLookupByLibrary.simpleMessage("Comic"),
+    "mediaTypeImage": MessageLookupByLibrary.simpleMessage("Image"),
+    "mediaTypeMusic": MessageLookupByLibrary.simpleMessage("Music"),
+    "mediaTypeNovel": MessageLookupByLibrary.simpleMessage("Novel"),
+    "mediaTypeVideo": MessageLookupByLibrary.simpleMessage("Video"),
+    "navDiscover": MessageLookupByLibrary.simpleMessage("Discover"),
+    "navFavorites": MessageLookupByLibrary.simpleMessage("Favorites"),
+    "navSearch": MessageLookupByLibrary.simpleMessage("Search"),
+    "noRecentHistory": MessageLookupByLibrary.simpleMessage(
+      "No recent viewing history",
+    ),
     "openInBrowser": MessageLookupByLibrary.simpleMessage("Open in Browser"),
     "pageNotFound": MessageLookupByLibrary.simpleMessage(
       "404 - Page Not Found",
@@ -202,6 +243,26 @@ class MessageLookup extends MessageLookupByLibrary {
     "rulesExecuteWorkspaceSection": MessageLookupByLibrary.simpleMessage(
       "Workspace Context",
     ),
+    "searchClearHistory": MessageLookupByLibrary.simpleMessage("Clear History"),
+    "searchHint": MessageLookupByLibrary.simpleMessage(
+      "Enter keywords to search...",
+    ),
+    "searchHistory": MessageLookupByLibrary.simpleMessage("Search History"),
+    "searchHot": MessageLookupByLibrary.simpleMessage("Hot Searches"),
+    "searchNoResults": MessageLookupByLibrary.simpleMessage(
+      "No related content found",
+    ),
+    "searchPageSubtitle": MessageLookupByLibrary.simpleMessage(
+      "Search videos, music, novels, comics, images",
+    ),
+    "searchPageTitle": MessageLookupByLibrary.simpleMessage("Search"),
+    "searchResults": MessageLookupByLibrary.simpleMessage("Search Results"),
+    "searchTabAll": MessageLookupByLibrary.simpleMessage("All"),
+    "searchTabComic": MessageLookupByLibrary.simpleMessage("Comic"),
+    "searchTabImage": MessageLookupByLibrary.simpleMessage("Image"),
+    "searchTabMusic": MessageLookupByLibrary.simpleMessage("Music"),
+    "searchTabNovel": MessageLookupByLibrary.simpleMessage("Novel"),
+    "searchTabVideo": MessageLookupByLibrary.simpleMessage("Video"),
     "selectElement": MessageLookupByLibrary.simpleMessage("Select Element"),
     "selectedElement": MessageLookupByLibrary.simpleMessage("Selected Element"),
     "selectorClearResult": MessageLookupByLibrary.simpleMessage("Clear Result"),
