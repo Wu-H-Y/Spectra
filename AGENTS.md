@@ -1,9 +1,5 @@
 # SPECTRA 项目知识库
 
-**生成时间:** 2026-03-06 11:11:08 (Asia/Shanghai)
-**分支:** `feature/architecture`
-**基线提交:** `b40e4e2`
-
 ## OVERVIEW
 
 跨平台多媒体数据采集应用，主栈为 Flutter（`lib/`）+ Rust FFI（`rust/`）+ React Web 编辑器（`web-editor/`）。
@@ -15,7 +11,6 @@ Spectra/
 ├── lib/             # Flutter 主应用
 ├── rust/            # Rust workspace + FFI 逻辑
 ├── web-editor/      # React + TypeScript 规则编辑器
-├── .agents/         # 本地技能仓（SKILL.md 与规则）
 ├── docs/            # 协议与规范文档
 ├── test/            # Flutter 单测
 ├── integration_test/# Flutter 集成测试
@@ -72,3 +67,4 @@ bun run build:web
 - `rust_builder/` 是 Flutter-Rust 构建胶水层，默认只在桥接/构建问题时修改。
 - 协议约束以 `docs/api-contract-v1.md` 与 `docs/ws-protocol-v1.md` 为准。
 - 如果测试不了, 请让提示用户手动测试, flutter不支持构建web端具体支持什么平台查看README.md
+- 用户让提交代码时参考@docs/COMMIT_CONVENTION.md
