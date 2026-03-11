@@ -58,17 +58,22 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
   }
 }
 
-/// 规则执行固定模板渲染路由。
+/// 运行时工作区路由。
 ///
-/// 导航到最小闭环渲染页面。
+/// 导航到 Flutter 侧 runtime workspace 页面，用于统一查看：
+/// - 服务器状态
+/// - session 上下文
+/// - 活跃预览
+/// - 运行结果
+/// - 节点事件时间线
 @TypedGoRoute<RulesExecuteRoute>(path: '/rules-execute')
 class RulesExecuteRoute extends GoRouteData with $RulesExecuteRoute {
-  /// 创建规则执行固定模板渲染路由实例。
+  /// 创建运行时工作区路由实例。
   const RulesExecuteRoute();
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return RulesExecutePage();
+    return const RulesExecutePage();
   }
 }
 
