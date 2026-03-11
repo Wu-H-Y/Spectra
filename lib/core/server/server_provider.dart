@@ -9,12 +9,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spectra/core/database/drift/app_database.dart';
 import 'package:spectra/core/server/handlers/static_handler.dart';
 import 'package:spectra/core/server/middleware/cors_middleware.dart';
+import 'package:spectra/core/server/preview_runner_adapter.dart';
 import 'package:spectra/core/server/routes/preview_routes.dart';
 import 'package:spectra/core/server/routes/rules_routes.dart';
 import 'package:spectra/core/server/routes/server_routes.dart';
+import 'package:spectra/core/server/runtime_session_coordinator.dart';
 import 'package:spectra/shared/providers/talker_provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:web_socket/web_socket.dart';
+
+export 'preview_runner_adapter.dart';
 
 part 'server_provider.g.dart';
 
@@ -50,150 +54,25 @@ class ServerStatus {
   }
 }
 
-/// 预览选中元素矩形。
-class PreviewSelectedElementRect {
-  /// 创建矩形信息。
-  const PreviewSelectedElementRect({
-    required this.x,
-    required this.y,
-    required this.width,
-    required this.height,
-  });
-
-  /// 左上角 X。
-  final double x;
-
-  /// 左上角 Y。
-  final double y;
-
-  /// 宽度。
-  final double width;
-
-  /// 高度。
-  final double height;
-
-  /// 转为 JSON。
-  Map<String, double> toJson() {
-    return {
-      'x': x,
-      'y': y,
-      'width': width,
-      'height': height,
-    };
-  }
-}
-
-/// 预览 runner 启动结果。
-class PreviewSessionStartResult {
-  /// 创建启动结果。
-  const PreviewSessionStartResult({required this.debugUrl});
-
-  /// 调试 URL。
-  final String debugUrl;
-}
-
-/// 预览 runner 事件基类。
-abstract class PreviewRunnerEvent {
-  /// 创建 runner 事件。
-  const PreviewRunnerEvent({required this.previewSessionId});
-
-  /// 预览会话 ID。
-  final String previewSessionId;
-}
-
-/// 预览元素选中事件。
-class PreviewElementSelectedEvent extends PreviewRunnerEvent {
-  /// 创建元素选中事件。
-  const PreviewElementSelectedEvent({
-    required super.previewSessionId,
-    required this.selector,
-    required this.selectorType,
-    required this.outerHtml,
-    this.textContent,
-    this.rect,
-    this.xpath,
-  });
-
-  /// 首选选择器。
-  final String selector;
-
-  /// 选择器类型。
-  final String selectorType;
-
-  /// outerHTML。
-  final String outerHtml;
-
-  /// 文本内容。
-  final String? textContent;
-
-  /// 矩形信息。
-  final PreviewSelectedElementRect? rect;
-
-  /// XPath 回退。
-  final String? xpath;
-}
-
-/// 预览会话关闭事件。
-class PreviewSessionClosedEvent extends PreviewRunnerEvent {
-  /// 创建会话关闭事件。
-  const PreviewSessionClosedEvent({
-    required super.previewSessionId,
-    required this.reason,
-  });
-
-  /// 关闭原因。
-  final String reason;
-}
-
-/// 预览 runner 会话控制器。
-abstract class PreviewSessionController {
-  /// 预览 runner 事件流。
-  Stream<PreviewRunnerEvent> get events;
-
-  /// 启动会话。
-  Future<PreviewSessionStartResult> start();
-
-  /// 切换选择模式。
-  Future<void> setSelectionMode({required bool enabled});
-
-  /// 在当前页面测试选择器。
-  Future<PreviewSelectorTestResult> testSelector({
-    required String selectorType,
-    required String expression,
-  });
-
-  /// 关闭会话。
-  Future<void> close();
-}
-
-/// 预览 runner 控制器工厂。
-typedef PreviewSessionControllerFactory =
-    PreviewSessionController Function({
-      required String previewSessionId,
-      required String url,
-      required String projectRootPath,
-      Talker? talker,
-    });
-
 /// HTTP 服务器 Provider。
 @riverpod
 class Server extends _$Server {
   RelicServer? _server;
   final Map<RelicWebSocket, _WebSocketClientState> _webSocketConnections = {};
   final List<_BufferedWsMessage> _recentWsMessages = [];
-  final Map<String, _PreviewSession> _previewSessions = {};
   late final AppDatabase _database = _databaseFactory();
   final String _serverToken = _generateServerToken();
   int _port = 8080;
   Talker? _talker;
+  late RuntimeSessionCoordinator _runtimeSessionCoordinator;
 
   static const int _protocolVersion = 1;
   static const int _maxBufferedWsMessages = 128;
-  static const int _maxConcurrentPreviewSessions = 2;
-  static const Duration _previewSessionIdleTimeout = Duration(minutes: 5);
   static AppDatabase Function() _databaseFactory = AppDatabase.new;
   static PreviewSessionControllerFactory _previewSessionControllerFactory =
-      _defaultPreviewSessionControllerFactory;
+      defaultPreviewSessionControllerFactory;
+  static PreviewRunnerAdapter Function() _previewRunnerAdapterFactory =
+      _defaultPreviewRunnerAdapterFactory;
 
   /// 设置测试用数据库工厂。
   @visibleForTesting
@@ -218,9 +97,23 @@ class Server extends _$Server {
     _previewSessionControllerFactory = factory;
   }
 
+  /// 设置测试用预览 runner 适配器工厂。
+  @visibleForTesting
+  static PreviewRunnerAdapter Function() get debugPreviewRunnerAdapterFactory =>
+      _previewRunnerAdapterFactory;
+
+  /// 设置测试用预览 runner 适配器工厂。
+  @visibleForTesting
+  static set debugPreviewRunnerAdapterFactory(
+    PreviewRunnerAdapter Function() factory,
+  ) {
+    _previewRunnerAdapterFactory = factory;
+  }
+
   @override
   ServerStatus build() {
     _talker = ref.read(talkerProvider);
+    _runtimeSessionCoordinator = _createRuntimeSessionCoordinator();
     ref.onDispose(() {
       unawaited(stop());
       unawaited(_database.close());
@@ -262,7 +155,9 @@ class Server extends _$Server {
       return;
     }
 
-    await _closeAllPreviewSessions(reason: 'server_stop');
+    await _runtimeSessionCoordinator.closeAllPreviewSessions(
+      reason: 'server_stop',
+    );
 
     for (final ws in _webSocketConnections.keys.toList()) {
       await ws.close();
@@ -307,8 +202,8 @@ class Server extends _$Server {
     );
     final previewRoutes = PreviewRoutes(
       serverToken: () => _serverToken,
-      openPreview: _openPreviewSession,
-      testSelector: _testPreviewSelector,
+      openPreview: _runtimeSessionCoordinator.openPreview,
+      testSelector: _runtimeSessionCoordinator.testPreviewSelector,
     );
 
     final projectPath = Directory.current.path;
@@ -531,22 +426,9 @@ class Server extends _$Server {
     required String previewSessionId,
     required bool enabled,
   }) async {
-    final session = _previewSessions[previewSessionId];
-    if (session == null) {
-      throw const PreviewRouteException(
-        statusCode: 404,
-        type: 'preview_session_not_found',
-        message: '预览会话不存在或已关闭',
-      );
-    }
-
-    await session.controller.setSelectionMode(enabled: enabled);
-    session.isSelecting = enabled;
-    _touchPreviewSession(session);
-    _publishPreviewSelectionState(
+    await _runtimeSessionCoordinator.setPreviewSelectionMode(
       previewSessionId: previewSessionId,
-      sessionId: session.sessionId,
-      isSelecting: enabled,
+      enabled: enabled,
     );
   }
 
@@ -636,136 +518,6 @@ class Server extends _$Server {
     }
   }
 
-  Future<PreviewOpenResult> _openPreviewSession({
-    required String url,
-    String? sessionId,
-  }) async {
-    if (_previewSessions.length >= _maxConcurrentPreviewSessions) {
-      throw const PreviewRouteException(
-        statusCode: 429,
-        type: 'preview_session_limit_reached',
-        message: '已达到 Chromium 预览会话上限，请先关闭旧会话',
-      );
-    }
-
-    final previewSessionId = _previewSessionId();
-    final controller = _previewSessionControllerFactory(
-      previewSessionId: previewSessionId,
-      url: url,
-      projectRootPath: Directory.current.path,
-      talker: _talker,
-    );
-    final session =
-        _PreviewSession(
-            previewSessionId: previewSessionId,
-            url: url,
-            sessionId: sessionId,
-            createdAt: DateTime.now().toUtc(),
-            controller: controller,
-          )
-          ..eventSubscription = controller.events.listen(
-            _handlePreviewRunnerEvent,
-            onError: (Object error, StackTrace stackTrace) {
-              _talker?.error(
-                'Preview runner event stream failed',
-                error,
-                stackTrace,
-              );
-              unawaited(
-                _closePreviewSession(
-                  previewSessionId,
-                  reason: 'runner_event_error',
-                  notifyRunner: false,
-                  publishSelectionCancelled: true,
-                ),
-              );
-            },
-          );
-
-    try {
-      final startResult = await controller.start();
-      _previewSessions[previewSessionId] = session;
-      _touchPreviewSession(session);
-      _talker?.info('Preview session opened: $previewSessionId');
-
-      return PreviewOpenResult(
-        previewSessionId: previewSessionId,
-        debugUrl: startResult.debugUrl,
-        wsChannel: {'previewSessionId': previewSessionId},
-      );
-    } on PreviewRouteException {
-      await session.cancelEventSubscription();
-      await controller.close();
-      rethrow;
-    } on Exception catch (error, stackTrace) {
-      await session.cancelEventSubscription();
-      await controller.close();
-      _talker?.error('Preview session open failed', error, stackTrace);
-      throw const PreviewRouteException(
-        statusCode: 500,
-        type: 'preview_runner_error',
-        message: '启动 Chromium 预览失败',
-      );
-    }
-  }
-
-  Future<PreviewSelectorTestResult> _testPreviewSelector({
-    required String previewSessionId,
-    required String selectorType,
-    required String expression,
-  }) async {
-    final session = _previewSessions[previewSessionId];
-    if (session == null) {
-      throw const PreviewRouteException(
-        statusCode: 404,
-        type: 'preview_session_not_found',
-        message: '预览会话不存在或已关闭',
-      );
-    }
-
-    final normalizedType = selectorType.trim().toLowerCase();
-    if (normalizedType != 'css' && normalizedType != 'xpath') {
-      throw const PreviewRouteException(
-        statusCode: 400,
-        type: 'unsupported_selector_type',
-        message: '预览选择器测试仅支持 CSS 或 XPath',
-      );
-    }
-
-    final result = await session.controller.testSelector(
-      selectorType: normalizedType,
-      expression: expression,
-    );
-    _touchPreviewSession(session);
-    return result;
-  }
-
-  void _handlePreviewRunnerEvent(PreviewRunnerEvent event) {
-    final session = _previewSessions[event.previewSessionId];
-    if (session == null) {
-      return;
-    }
-    _touchPreviewSession(session);
-
-    switch (event) {
-      case PreviewElementSelectedEvent():
-        session.isSelecting = false;
-        _publishElementSelected(
-          event,
-          sessionId: session.sessionId,
-        );
-      case PreviewSessionClosedEvent():
-        unawaited(
-          _closePreviewSession(
-            event.previewSessionId,
-            reason: event.reason,
-            notifyRunner: false,
-            publishSelectionCancelled: true,
-          ),
-        );
-    }
-  }
-
   void _publishPreviewSelectionState({
     required String previewSessionId,
     required String? sessionId,
@@ -811,58 +563,6 @@ class Server extends _$Server {
     );
   }
 
-  void _touchPreviewSession(_PreviewSession session) {
-    session.lastActivityAt = DateTime.now().toUtc();
-    session.idleTimer?.cancel();
-    session.idleTimer = Timer(_previewSessionIdleTimeout, () {
-      unawaited(
-        _closePreviewSession(
-          session.previewSessionId,
-          reason: 'idle_timeout',
-          publishSelectionCancelled: true,
-        ),
-      );
-    });
-  }
-
-  Future<void> _closeAllPreviewSessions({required String reason}) async {
-    for (final previewSessionId in _previewSessions.keys.toList()) {
-      await _closePreviewSession(previewSessionId, reason: reason);
-    }
-  }
-
-  Future<void> _closePreviewSession(
-    String previewSessionId, {
-    required String reason,
-    bool notifyRunner = true,
-    bool publishSelectionCancelled = false,
-  }) async {
-    final session = _previewSessions.remove(previewSessionId);
-    if (session == null) {
-      return;
-    }
-
-    session.idleTimer?.cancel();
-    await session.eventSubscription?.cancel();
-    if (publishSelectionCancelled && session.isSelecting) {
-      _publishPreviewSelectionState(
-        previewSessionId: previewSessionId,
-        sessionId: session.sessionId,
-        isSelecting: false,
-      );
-    }
-
-    if (notifyRunner) {
-      try {
-        await session.controller.close();
-      } on Exception catch (error, stackTrace) {
-        _talker?.error('Failed to close preview runner', error, stackTrace);
-      }
-    }
-
-    _talker?.info('Preview session closed: $previewSessionId ($reason)');
-  }
-
   /// 发布测试用元素选择消息。
   @visibleForTesting
   void debugPublishElementSelected({
@@ -871,6 +571,8 @@ class Server extends _$Server {
     required String selectorType,
     required String outerHtml,
     String? textContent,
+    PreviewSelectedElementRect? rect,
+    String? xpath,
     String? sessionId,
   }) {
     _publishElementSelected(
@@ -880,8 +582,14 @@ class Server extends _$Server {
         selectorType: selectorType,
         outerHtml: outerHtml,
         textContent: textContent,
+        rect: rect,
+        xpath: xpath,
       ),
-      sessionId: sessionId ?? _previewSessions[previewSessionId]?.sessionId,
+      sessionId:
+          sessionId ??
+          _runtimeSessionCoordinator.sessionIdForPreviewSession(
+            previewSessionId,
+          ),
     );
   }
 
@@ -928,17 +636,20 @@ class Server extends _$Server {
     };
   }
 
-  static PreviewSessionController _defaultPreviewSessionControllerFactory({
-    required String previewSessionId,
-    required String url,
-    required String projectRootPath,
-    Talker? talker,
-  }) {
-    return _PreviewRunnerProcessSessionController(
-      previewSessionId: previewSessionId,
-      url: url,
-      projectRootPath: projectRootPath,
-      talker: talker,
+  RuntimeSessionCoordinator _createRuntimeSessionCoordinator() {
+    return RuntimeSessionCoordinatorImpl(
+      previewRunnerAdapter: _previewRunnerAdapterFactory(),
+      projectRootPath: Directory.current.path,
+      previewSessionIdGenerator: _previewSessionId,
+      publishSelectionState: _publishPreviewSelectionState,
+      publishElementSelected: _publishElementSelected,
+      talker: _talker,
+    );
+  }
+
+  static PreviewRunnerAdapter _defaultPreviewRunnerAdapterFactory() {
+    return DefaultPreviewRunnerAdapter(
+      controllerFactory: _previewSessionControllerFactory,
     );
   }
 
@@ -1048,420 +759,4 @@ class _BufferedWsMessage {
   final String? runId;
   final String? sessionId;
   final String? previewSessionId;
-}
-
-class _PreviewSession {
-  _PreviewSession({
-    required this.previewSessionId,
-    required this.url,
-    required this.sessionId,
-    required this.createdAt,
-    required this.controller,
-  }) : lastActivityAt = createdAt;
-
-  final String previewSessionId;
-  final String url;
-  final String? sessionId;
-  final DateTime createdAt;
-  final PreviewSessionController controller;
-  DateTime lastActivityAt;
-  bool isSelecting = false;
-  Timer? idleTimer;
-  StreamSubscription<PreviewRunnerEvent>? eventSubscription;
-
-  Future<void> cancelEventSubscription() async {
-    await eventSubscription?.cancel();
-    eventSubscription = null;
-  }
-
-  Future<void> dispose() async {
-    idleTimer?.cancel();
-    await cancelEventSubscription();
-  }
-}
-
-class _PreviewRunnerProcessSessionController
-    implements PreviewSessionController {
-  _PreviewRunnerProcessSessionController({
-    required this.previewSessionId,
-    required this.url,
-    required this.projectRootPath,
-    this.talker,
-  });
-
-  static const Duration _commandTimeout = Duration(seconds: 10);
-  static const Duration _startTimeout = Duration(seconds: 30);
-  static const Duration _closeTimeout = Duration(seconds: 5);
-
-  final String previewSessionId;
-  final String url;
-  final String projectRootPath;
-  final Talker? talker;
-
-  final StreamController<PreviewRunnerEvent> _eventsController =
-      StreamController<PreviewRunnerEvent>.broadcast();
-  final Map<String, Completer<Map<String, dynamic>>> _pendingCommands = {};
-  final List<String> _stderrBuffer = [];
-  int _nextCommandId = 0;
-  Process? _process;
-  bool _closed = false;
-  bool _ready = false;
-  bool _closedEventSent = false;
-  Future<PreviewSessionStartResult>? _startFuture;
-
-  @override
-  Stream<PreviewRunnerEvent> get events => _eventsController.stream;
-
-  @override
-  Future<PreviewSessionStartResult> start() {
-    return _startFuture ??= _startInternal();
-  }
-
-  Future<PreviewSessionStartResult> _startInternal() async {
-    final runnerFile = File(_runnerScriptPath());
-    if (!runnerFile.existsSync()) {
-      throw const PreviewRouteException(
-        statusCode: 500,
-        type: 'preview_runner_missing',
-        message: '找不到本地 Playwright 预览 runner',
-      );
-    }
-
-    try {
-      _process = await Process.start(
-        Platform.isWindows ? 'node.exe' : 'node',
-        [
-          runnerFile.path,
-          '--session-id',
-          previewSessionId,
-          '--url',
-          url,
-        ],
-        workingDirectory: projectRootPath,
-      );
-    } on ProcessException catch (error) {
-      throw PreviewRouteException(
-        statusCode: 500,
-        type: 'preview_runner_spawn_failed',
-        message: '启动 Node 预览 runner 失败: ${error.message}',
-      );
-    }
-
-    final readyCompleter = Completer<PreviewSessionStartResult>();
-    _process!.stdout
-        .transform(utf8.decoder)
-        .transform(const LineSplitter())
-        .listen(
-          (line) => _handleStdoutLine(line, readyCompleter),
-          onError: (Object error, StackTrace stackTrace) {
-            talker?.error('Preview runner stdout failed', error, stackTrace);
-          },
-        );
-    _process!.stderr
-        .transform(utf8.decoder)
-        .transform(const LineSplitter())
-        .listen(_handleStderrLine);
-
-    unawaited(
-      _process!.exitCode.then((exitCode) {
-        _handleProcessExit(exitCode, readyCompleter);
-      }),
-    );
-
-    return readyCompleter.future.timeout(
-      _startTimeout,
-      onTimeout: () {
-        throw const PreviewRouteException(
-          statusCode: 500,
-          type: 'preview_runner_start_timeout',
-          message: '等待 Chromium 预览窗口启动超时',
-        );
-      },
-    );
-  }
-
-  @override
-  Future<void> setSelectionMode({required bool enabled}) async {
-    await _sendCommand(
-      'set_selection_mode',
-      <String, dynamic>{'enabled': enabled},
-    );
-  }
-
-  @override
-  Future<PreviewSelectorTestResult> testSelector({
-    required String selectorType,
-    required String expression,
-  }) async {
-    final response = await _sendCommand(
-      'test_selector',
-      <String, dynamic>{
-        'selectorType': selectorType,
-        'expression': expression,
-      },
-    );
-    final elements = (response['elements'] as List<dynamic>? ?? const [])
-        .map((item) => Map<String, dynamic>.from(item as Map<Object?, Object?>))
-        .map(
-          (item) => PreviewSelectorMatchedElement(
-            text: item['text'] as String? ?? '',
-            html: item['html'] as String? ?? '',
-          ),
-        )
-        .toList();
-
-    return PreviewSelectorTestResult(
-      success: response['success'] as bool? ?? false,
-      count: response['count'] as int? ?? elements.length,
-      elements: elements,
-      error: response['error'] as String?,
-    );
-  }
-
-  @override
-  Future<void> close() async {
-    if (_closed) {
-      return;
-    }
-    _closed = true;
-
-    try {
-      if (_process != null) {
-        try {
-          await _sendCommand('close', const <String, dynamic>{});
-        } on Exception {
-          _process?.kill();
-        }
-        await _process!.exitCode.timeout(
-          _closeTimeout,
-          onTimeout: () {
-            _process?.kill();
-            return -1;
-          },
-        );
-      }
-    } finally {
-      for (final completer in _pendingCommands.values) {
-        if (!completer.isCompleted) {
-          completer.completeError(
-            const PreviewRouteException(
-              statusCode: 500,
-              type: 'preview_runner_closed',
-              message: '预览 runner 已关闭',
-            ),
-          );
-        }
-      }
-      _pendingCommands.clear();
-      await _eventsController.close();
-    }
-  }
-
-  Future<Map<String, dynamic>> _sendCommand(
-    String command,
-    Map<String, dynamic> payload,
-  ) async {
-    await start();
-    final process = _process;
-    if (process == null) {
-      throw const PreviewRouteException(
-        statusCode: 500,
-        type: 'preview_runner_unavailable',
-        message: '预览 runner 不可用',
-      );
-    }
-
-    final commandId = 'cmd_${_nextCommandId++}';
-    final completer = Completer<Map<String, dynamic>>();
-    _pendingCommands[commandId] = completer;
-    process.stdin.writeln(
-      jsonEncode({
-        'kind': 'command',
-        'id': commandId,
-        'command': command,
-        ...payload,
-      }),
-    );
-
-    return completer.future.timeout(
-      _commandTimeout,
-      onTimeout: () {
-        _pendingCommands.remove(commandId);
-        throw PreviewRouteException(
-          statusCode: 500,
-          type: 'preview_runner_command_timeout',
-          message: '等待预览 runner 执行 $command 超时',
-        );
-      },
-    );
-  }
-
-  void _handleStdoutLine(
-    String line,
-    Completer<PreviewSessionStartResult> readyCompleter,
-  ) {
-    if (line.trim().isEmpty) {
-      return;
-    }
-
-    try {
-      final message = Map<String, dynamic>.from(
-        jsonDecode(line) as Map<Object?, Object?>,
-      );
-      final kind = message['kind'] as String?;
-      switch (kind) {
-        case 'ready':
-          _ready = true;
-          if (!readyCompleter.isCompleted) {
-            readyCompleter.complete(
-              PreviewSessionStartResult(
-                debugUrl: message['debugUrl'] as String? ?? url,
-              ),
-            );
-          }
-        case 'response':
-          final commandId = message['id'] as String?;
-          if (commandId == null) {
-            return;
-          }
-          final completer = _pendingCommands.remove(commandId);
-          if (completer == null || completer.isCompleted) {
-            return;
-          }
-          if (message['ok'] == true) {
-            final result = message['result'];
-            final payload = result is Map<Object?, Object?>
-                ? Map<String, dynamic>.from(result)
-                : <String, dynamic>{};
-            completer.complete(payload);
-          } else {
-            completer.completeError(
-              PreviewRouteException(
-                statusCode: 500,
-                type: 'preview_runner_command_failed',
-                message: message['error'] as String? ?? '预览 runner 命令执行失败',
-              ),
-            );
-          }
-        case 'event':
-          _handleRunnerEventMessage(message);
-        default:
-          talker?.warning('Unknown preview runner message: $line');
-      }
-    } on Exception catch (error, stackTrace) {
-      talker?.error('Failed to parse preview runner stdout', error, stackTrace);
-    }
-  }
-
-  void _handleRunnerEventMessage(Map<String, dynamic> message) {
-    final event = message['event'] as String?;
-    final data = message['data'] is Map<Object?, Object?>
-        ? Map<String, dynamic>.from(message['data'] as Map<Object?, Object?>)
-        : const <String, dynamic>{};
-    switch (event) {
-      case 'element_selected':
-        final selector = data['selector'] as String? ?? '';
-        final xpath = data['xpath'] as String?;
-        final resolvedSelector = selector.isNotEmpty ? selector : xpath ?? '';
-        final selectorType = selector.isNotEmpty ? 'css' : 'xpath';
-        if (resolvedSelector.isEmpty) {
-          return;
-        }
-        _eventsController.add(
-          PreviewElementSelectedEvent(
-            previewSessionId: previewSessionId,
-            selector: resolvedSelector,
-            selectorType: selectorType,
-            outerHtml: data['outerHtml'] as String? ?? '',
-            textContent: data['textContent'] as String?,
-            rect: _parseRect(data['rect']),
-            xpath: xpath,
-          ),
-        );
-      case 'closed':
-        _emitClosedEvent(data['reason'] as String? ?? 'runner_closed');
-    }
-  }
-
-  PreviewSelectedElementRect? _parseRect(Object? rawRect) {
-    if (rawRect is! Map<Object?, Object?>) {
-      return null;
-    }
-    final rect = Map<String, dynamic>.from(rawRect);
-    final x = (rect['x'] as num?)?.toDouble();
-    final y = (rect['y'] as num?)?.toDouble();
-    final width = (rect['width'] as num?)?.toDouble();
-    final height = (rect['height'] as num?)?.toDouble();
-    if (x == null || y == null || width == null || height == null) {
-      return null;
-    }
-
-    return PreviewSelectedElementRect(
-      x: x,
-      y: y,
-      width: width,
-      height: height,
-    );
-  }
-
-  void _handleStderrLine(String line) {
-    if (_stderrBuffer.length >= 20) {
-      _stderrBuffer.removeAt(0);
-    }
-    _stderrBuffer.add(line);
-    talker?.debug(line);
-  }
-
-  void _handleProcessExit(
-    int exitCode,
-    Completer<PreviewSessionStartResult> readyCompleter,
-  ) {
-    if (!_ready && !readyCompleter.isCompleted) {
-      readyCompleter.completeError(
-        PreviewRouteException(
-          statusCode: 500,
-          type: 'preview_runner_start_failed',
-          message: _stderrBuffer.isEmpty
-              ? 'Chromium 预览 runner 启动失败（exitCode=$exitCode）'
-              : _stderrBuffer.last,
-        ),
-      );
-    }
-
-    for (final completer in _pendingCommands.values) {
-      if (!completer.isCompleted) {
-        completer.completeError(
-          PreviewRouteException(
-            statusCode: 500,
-            type: 'preview_runner_exited',
-            message: '预览 runner 已退出（exitCode=$exitCode）',
-          ),
-        );
-      }
-    }
-    _pendingCommands.clear();
-    _emitClosedEvent('process_exit_$exitCode');
-  }
-
-  void _emitClosedEvent(String reason) {
-    if (_closedEventSent || _eventsController.isClosed) {
-      return;
-    }
-    _closedEventSent = true;
-    _eventsController.add(
-      PreviewSessionClosedEvent(
-        previewSessionId: previewSessionId,
-        reason: reason,
-      ),
-    );
-  }
-
-  String _runnerScriptPath() {
-    return [
-      projectRootPath,
-      'tools',
-      'preview-runner',
-      'index.mjs',
-    ].join(Platform.pathSeparator);
-  }
 }

@@ -6,6 +6,13 @@ import 'package:spectra/core/database/drift/app_database.dart';
 import 'package:spectra/core/database/drift/rule_storage_cipher.dart';
 import 'package:spectra/core/rust/api.dart';
 
+/// Rules 路由的 WS 发布器。
+typedef RulesWsPublisher = void Function(
+  Map<String, dynamic> message, {
+  String? sessionId,
+  String? previewSessionId,
+});
+
 /// 规则 CRUD 路由。
 class RulesRoutes {
   /// 创建规则路由。
@@ -68,12 +75,7 @@ class RulesRoutes {
   final String Function() serverToken;
 
   /// 发布 WebSocket 消息。
-  final void Function(
-    Map<String, dynamic> message, {
-    String? sessionId,
-    String? previewSessionId,
-  })
-  publishWsMessage;
+  final RulesWsPublisher publishWsMessage;
 
   /// 创建包含所有规则接口的路由器。
   Router<Handler> get router => Router<Handler>()
@@ -88,6 +90,19 @@ class RulesRoutes {
 
   Handler _authorizationMiddleware(Handler innerHandler) {
     return (request) async {
+      // 检查 host-only 标记（仅 /execute 需要）
+      final path = request.url.path;
+      if (path.endsWith('/execute')) {
+        final hostOnly = request.headers['x-host-only']?.firstOrNull;
+        if (hostOnly != 'true') {
+          return _errorResponse(
+            statusCode: 403,
+            type: 'forbidden',
+            message: '此接口仅允许 Flutter 主机调用，Web 编辑器禁止访问',
+          );
+        }
+      }
+
       final authorization = request.headers.authorization;
       if (authorization is! BearerAuthorizationHeader ||
           authorization.token != serverToken()) {

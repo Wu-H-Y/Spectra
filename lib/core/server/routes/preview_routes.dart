@@ -87,6 +87,20 @@ class PreviewRouteException implements Exception {
   final List<Map<String, dynamic>> details;
 }
 
+/// 预览会话打开处理器。
+typedef PreviewOpenHandler = Future<PreviewOpenResult> Function({
+  required String url,
+  String? sessionId,
+});
+
+/// 预览选择器测试处理器。
+typedef PreviewSelectorTestHandler = Future<PreviewSelectorTestResult>
+    Function({
+      required String previewSessionId,
+      required String selectorType,
+      required String expression,
+    });
+
 /// 预览相关路由。
 class PreviewRoutes {
   /// 创建预览路由。
@@ -100,19 +114,10 @@ class PreviewRoutes {
   final String Function() serverToken;
 
   /// 打开预览会话。
-  final Future<PreviewOpenResult> Function({
-    required String url,
-    String? sessionId,
-  })
-  openPreview;
+  final PreviewOpenHandler openPreview;
 
   /// 测试预览选择器。
-  final Future<PreviewSelectorTestResult> Function({
-    required String previewSessionId,
-    required String selectorType,
-    required String expression,
-  })
-  testSelector;
+  final PreviewSelectorTestHandler testSelector;
 
   /// 创建包含预览接口的路由器。
   Router<Handler> get router => Router<Handler>()
@@ -120,8 +125,22 @@ class PreviewRoutes {
     ..post('/open', _openPreview)
     ..post('/test-selector', _testSelector);
 
+  /// Host-only 鉴权中间件。
+  ///
+  /// 预览/执行接口仅允许 Flutter 主机调用，Web 编辑器禁止调用。
+  /// 通过检查 `X-Host-Only` 头来验证请求来源。
   Handler _authorizationMiddleware(Handler innerHandler) {
     return (request) async {
+      // 检查 host-only 标记
+      final hostOnly = request.headers['x-host-only']?.firstOrNull;
+      if (hostOnly != 'true') {
+        return _errorResponse(
+          statusCode: 403,
+          type: 'forbidden',
+          message: '此接口仅允许 Flutter 主机调用，Web 编辑器禁止访问',
+        );
+      }
+
       final authorization = request.headers.authorization;
       if (authorization is! BearerAuthorizationHeader ||
           authorization.token != serverToken()) {
