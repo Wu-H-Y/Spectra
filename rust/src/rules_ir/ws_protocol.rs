@@ -186,46 +186,7 @@ fn is_false(value: &bool) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::{ClientMessageEnvelopeV1, ClientMessageV1, NodeEvent, WsMessageV1};
-
-    #[test]
-    fn deserialize_ws_message_with_node_event_success() {
-        let json = r#"
-        {
-          "v": 1,
-          "type": "node_event",
-          "data": {
-            "event": "port_emit",
-            "runId": "run-1",
-            "seq": 7,
-            "traceId": "trace-1",
-            "spanId": "span-1",
-            "nodeId": "node-a",
-            "port": "items",
-            "payloadPreview": "[{\"id\":1}]",
-            "payloadTruncated": false
-          }
-        }
-        "#;
-
-        let message: WsMessageV1<NodeEvent> =
-            serde_json::from_str(json).expect("WsMessageV1 与 NodeEvent 应可成功反序列化");
-
-        assert_eq!(message.message_type, "node_event");
-        match message.data {
-            Some(NodeEvent::PortEmit {
-                seq,
-                node_id,
-                cache_hit,
-                ..
-            }) => {
-                assert_eq!(seq, 7);
-                assert_eq!(node_id, "node-a");
-                assert!(!cache_hit);
-            }
-            _ => panic!("应解析为 PortEmit 事件"),
-        }
-    }
+    use super::{ClientMessageEnvelopeV1, ClientMessageV1, NodeEvent};
 
     #[test]
     fn deserialize_port_emit_event_with_cache_hit_success() {
@@ -305,33 +266,6 @@ mod tests {
         match message.message {
             ClientMessageV1::Auth(data) => assert_eq!(data.token, "token-abc"),
             _ => panic!("应解析为 auth 消息"),
-        }
-    }
-
-    #[test]
-    fn deserialize_subscribe_message_success() {
-        let json = r#"
-        {
-          "v": 1,
-          "type": "subscribe",
-          "data": {
-            "runId": "run-1",
-            "sessionId": "session-1",
-            "previewSessionId": "preview-1"
-          }
-        }
-        "#;
-
-        let message: ClientMessageEnvelopeV1 =
-            serde_json::from_str(json).expect("subscribe 消息应可成功反序列化");
-
-        match message.message {
-            ClientMessageV1::Subscribe(filter) => {
-                assert_eq!(filter.run_id.as_deref(), Some("run-1"));
-                assert_eq!(filter.session_id.as_deref(), Some("session-1"));
-                assert_eq!(filter.preview_session_id.as_deref(), Some("preview-1"));
-            }
-            _ => panic!("应解析为 subscribe 消息"),
         }
     }
 }

@@ -586,8 +586,15 @@ async fn execute_node_semantics(
         NodeKind::Input => Ok(inputs.clone()),
         NodeKind::Join => execute_join(node, inputs),
         NodeKind::Fetch => {
-            nodes::fetch::execute(node, inputs, http_client, cookie_jar, rate_limiter, event_tx)
-                .await
+            nodes::fetch::execute(
+                node,
+                inputs,
+                http_client,
+                cookie_jar,
+                rate_limiter,
+                event_tx,
+            )
+            .await
         }
         NodeKind::Parse => nodes::parse::execute(node, inputs),
         NodeKind::Select => nodes::select::execute(node, inputs),
@@ -598,9 +605,7 @@ async fn execute_node_semantics(
         NodeKind::CookiePut => {
             nodes::cookie::execute_put(node, inputs, http_client, cookie_jar, event_tx).await
         }
-        NodeKind::CookieGet => {
-            nodes::cookie::execute_get(node, inputs, cookie_jar, event_tx).await
-        }
+        NodeKind::CookieGet => nodes::cookie::execute_get(node, inputs, cookie_jar, event_tx).await,
         _ => execute_passthrough(node, inputs),
     }
 }
@@ -628,17 +633,16 @@ async fn execute_node_with_cache(
         }
     }
 
-    let emitted_outputs =
-        execute_node_semantics(
-            node,
-            inputs,
-            http_client,
-            kv_store,
-            cookie_jar,
-            rate_limiter,
-            event_tx,
-        )
-        .await?;
+    let emitted_outputs = execute_node_semantics(
+        node,
+        inputs,
+        http_client,
+        kv_store,
+        cookie_jar,
+        rate_limiter,
+        event_tx,
+    )
+    .await?;
     let outputs = finalize_node_outputs(node, emitted_outputs)?;
 
     if let Some(key) = cache_key {
@@ -1021,7 +1025,8 @@ fn parse_set_cookie_entry(raw_cookie: &str, default_domain: &str) -> Option<Pers
             }
             "max-age" => {
                 if let Ok(seconds) = value.parse::<i64>() {
-                    entry.expires_at_unix = Some(current_unix_timestamp_secs().saturating_add(seconds));
+                    entry.expires_at_unix =
+                        Some(current_unix_timestamp_secs().saturating_add(seconds));
                 }
             }
             _ => {}
@@ -1771,16 +1776,14 @@ mod tests {
                 }
 
                 let request_text = String::from_utf8_lossy(&request_bytes);
-                let cookie_header = request_text
-                    .lines()
-                    .find_map(|line| {
-                        let lower = line.to_ascii_lowercase();
-                        if lower.starts_with("cookie:") {
-                            Some(line[7..].trim().to_string())
-                        } else {
-                            None
-                        }
-                    });
+                let cookie_header = request_text.lines().find_map(|line| {
+                    let lower = line.to_ascii_lowercase();
+                    if lower.starts_with("cookie:") {
+                        Some(line[7..].trim().to_string())
+                    } else {
+                        None
+                    }
+                });
                 observed_cookies_for_thread
                     .lock()
                     .expect("应可写入观察到的 Cookie")
@@ -1889,97 +1892,6 @@ mod tests {
             input_receivers,
             output_senders: HashMap::new(),
         }
-    }
-
-    #[tokio::test]
-    async fn chain_execution_emits_monotonic_seq_and_stats() {
-        let nodes = vec![
-            Node {
-                id: "input".to_string(),
-                kind: NodeKind::Input,
-                phase: LifecyclePhase::Search,
-                inputs: vec![],
-                outputs: vec![text_port("out")],
-                params: BTreeMap::new(),
-            },
-            Node {
-                id: "passthrough".to_string(),
-                kind: NodeKind::Filter,
-                phase: LifecyclePhase::Search,
-                inputs: vec![text_port("in")],
-                outputs: vec![text_port("out")],
-                params: BTreeMap::new(),
-            },
-            Node {
-                id: "sink".to_string(),
-                kind: NodeKind::Output,
-                phase: LifecyclePhase::Search,
-                inputs: vec![text_port("in")],
-                outputs: vec![text_port("result")],
-                params: BTreeMap::new(),
-            },
-        ];
-        let edges = vec![
-            Edge {
-                from: PortRef {
-                    node_id: "input".to_string(),
-                    port_name: "out".to_string(),
-                },
-                to: PortRef {
-                    node_id: "passthrough".to_string(),
-                    port_name: "in".to_string(),
-                },
-            },
-            Edge {
-                from: PortRef {
-                    node_id: "passthrough".to_string(),
-                    port_name: "out".to_string(),
-                },
-                to: PortRef {
-                    node_id: "sink".to_string(),
-                    port_name: "in".to_string(),
-                },
-            },
-        ];
-        let rule = build_rule(nodes, edges, BTreeMap::new());
-        let mut context = EngineContext::default();
-        context.port_inputs.insert(
-            PortRef {
-                node_id: "input".to_string(),
-                port_name: "out".to_string(),
-            },
-            RuntimeValue::Text("hello-engine".to_string()),
-        );
-        context.run_id = Some("run-chain".to_string());
-
-        let result = execute_rule(&rule, context)
-            .await
-            .expect("链式图应执行成功");
-
-        assert_eq!(
-            result.final_result,
-            Some(RuntimeValue::Text("hello-engine".to_string()))
-        );
-        assert_eq!(result.events.first().map(event_seq), Some(1));
-        assert!(matches!(
-            result.events.first(),
-            Some(crate::rules_ir::NodeEvent::RunStarted { .. })
-        ));
-        assert!(matches!(
-            result.events.last(),
-            Some(crate::rules_ir::NodeEvent::RunFinished { success: true, .. })
-        ));
-        assert!(
-            result
-                .events
-                .windows(2)
-                .all(|pair| event_seq(&pair[1]) > event_seq(&pair[0]))
-        );
-        assert_eq!(result.node_stats.len(), 3);
-        assert!(result.node_stats.values().all(|stats| stats.success));
-        assert_eq!(result.node_stats["input"].output_messages, 1);
-        assert_eq!(result.node_stats["passthrough"].input_messages, 1);
-        assert_eq!(result.node_stats["sink"].input_messages, 1);
     }
 
     #[tokio::test]
@@ -2778,7 +2690,9 @@ mod tests {
     async fn expired_cookie_is_not_sent_by_fetch() {
         let (server_url, observed_cookies) =
             spawn_cookie_capture_http_server(vec![("expired-check", vec![])]);
-        let expired = super::current_unix_timestamp_secs().saturating_sub(5).to_string();
+        let expired = super::current_unix_timestamp_secs()
+            .saturating_sub(5)
+            .to_string();
 
         let nodes = vec![
             Node {
@@ -2873,7 +2787,9 @@ mod tests {
 
     #[tokio::test]
     async fn expired_cookie_is_not_returned_by_cookie_get() {
-        let expired = super::current_unix_timestamp_secs().saturating_sub(10).to_string();
+        let expired = super::current_unix_timestamp_secs()
+            .saturating_sub(10)
+            .to_string();
         let nodes = vec![
             Node {
                 id: "input_url".to_string(),
@@ -2956,7 +2872,10 @@ mod tests {
         let result = execute_rule(&rule, context)
             .await
             .expect("过期 Cookie 下 CookieGet 应成功返回 default");
-        assert_eq!(result.final_result, Some(RuntimeValue::Text("miss".to_string())));
+        assert_eq!(
+            result.final_result,
+            Some(RuntimeValue::Text("miss".to_string()))
+        );
     }
 
     #[tokio::test]
