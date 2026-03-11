@@ -9,9 +9,6 @@ import 'package:spectra/features/rules_execute/application/rules_runtime_workspa
 
 export 'package:spectra/features/rules_execute/application/rules_runtime_workspace_state.dart' show SelectedElementInfo;
 
-typedef _Now = DateTime Function();
-typedef _SessionIdFactory = String Function();
-
 /// Runtime 工作区客户端 Provider。
 final runtimeWorkspaceClientProvider = Provider<RuntimeWorkspaceClient>((ref) {
   final client = DefaultRuntimeWorkspaceClient();
@@ -20,7 +17,7 @@ final runtimeWorkspaceClientProvider = Provider<RuntimeWorkspaceClient>((ref) {
 });
 
 /// Runtime 工作区时间 Provider。
-final runtimeWorkspaceNowProvider = Provider<_Now>((_) {
+final runtimeWorkspaceNowProvider = Provider<DateTime Function()>((_) {
   return () => DateTime.now().toUtc();
 });
 
@@ -31,7 +28,8 @@ final runtimeWorkspaceSessionIdProvider = Provider<String>((_) {
 });
 
 /// Runtime 工作区控制器 Provider。
-final rulesRuntimeWorkspaceControllerProvider =
+final NotifierProvider<RulesRuntimeWorkspaceController,
+    RulesRuntimeWorkspaceState> rulesRuntimeWorkspaceControllerProvider =
     NotifierProvider.autoDispose<
       RulesRuntimeWorkspaceController,
       RulesRuntimeWorkspaceState
@@ -43,10 +41,10 @@ class RulesRuntimeWorkspaceController
   late final RuntimeWorkspaceClient _client = ref.read(
     runtimeWorkspaceClientProvider,
   );
-  late final _Now _now = ref.read(runtimeWorkspaceNowProvider);
-  late final _SessionIdFactory _sessionIdFactory = () => ref.read(
-    runtimeWorkspaceSessionIdProvider,
+  late final DateTime Function() _now = ref.read(
+    runtimeWorkspaceNowProvider,
   );
+  String _sessionIdFactory() => ref.read(runtimeWorkspaceSessionIdProvider);
 
   RuntimeSessionTimelineConnection? _timelineConnection;
   StreamSubscription<RuntimeTimelineMessage>? _timelineSubscription;
@@ -56,16 +54,17 @@ class RulesRuntimeWorkspaceController
 
   @override
   RulesRuntimeWorkspaceState build() {
-    ref.listen<ServerStatus>(serverProvider, (_, next) {
-      syncServerStatus(next);
-    });
-    ref.onDispose(() {
-      unawaited(_disconnectTimeline());
-    });
+    ref
+      ..listen<ServerStatus>(
+        serverProvider,
+        (_, next) => syncServerStatus(next),
+      )
+      ..onDispose(_disconnectTimeline);
 
+    final serverStatus = ref.read(serverProvider);
     return RulesRuntimeWorkspaceState(
       sessionId: _sessionIdFactory(),
-      serverStatus: ref.read(serverProvider),
+      serverStatus: serverStatus,
     );
   }
 
@@ -145,7 +144,9 @@ class RulesRuntimeWorkspaceController
 
   /// 切换元素选择模式。
   void toggleElementSelectionMode() {
-    state = state.copyWith(isElementSelectionMode: !state.isElementSelectionMode);
+    state = state.copyWith(
+      isElementSelectionMode: !state.isElementSelectionMode,
+    );
   }
 
   /// 设置选择器类型。
@@ -276,9 +277,7 @@ class RulesRuntimeWorkspaceController
         serverToken: _serverToken!,
         id: selectedRule.id,
       );
-      ruleDocumentResult.match((failure) {
-        _applyFailure(failure);
-      }, (document) {
+      ruleDocumentResult.match(_applyFailure, (document) {
         ruleDocument = document;
       });
       if (ruleDocument == null) {
@@ -352,9 +351,7 @@ class RulesRuntimeWorkspaceController
     final snapshotResult = await _client.fetchServerSnapshot(
       serverUrl: serverUrl,
     );
-    snapshotResult.match((failure) {
-      _applyFailure(failure);
-    }, (value) {
+    snapshotResult.match(_applyFailure, (value) {
       snapshot = value;
     });
     if (snapshot == null) {
@@ -465,7 +462,8 @@ class RulesRuntimeWorkspaceController
     }
 
     // 处理选择状态变更事件
-    if (message.type == 'selection_started' || message.type == 'selection_cancelled') {
+    if (message.type == 'selection_started' ||
+        message.type == 'selection_cancelled') {
       state = state.copyWith(
         isElementSelectionMode: message.type == 'selection_started',
       );

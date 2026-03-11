@@ -182,12 +182,19 @@ class _FakeRuntimeWorkspaceClient implements RuntimeWorkspaceClient {
         id: 1,
         ruleId: 'demo.runtime',
         enabled: true,
-        rule: {
+        rule: <String, dynamic>{
           'irVersion': '1.0.0',
-          'metadata': {'ruleId': 'demo.runtime', 'name': 'Runtime Rule'},
-          'graph': {'nodes': [], 'edges': [], 'phaseEntrypoints': {}},
-          'normalizedOutputs': {},
-          'capabilities': {
+          'metadata': <String, dynamic>{
+            'ruleId': 'demo.runtime',
+            'name': 'Runtime Rule',
+          },
+          'graph': <String, dynamic>{
+            'nodes': <Map<String, dynamic>>[],
+            'edges': <Map<String, dynamic>>[],
+            'phaseEntrypoints': <String, String>{},
+          },
+          'normalizedOutputs': <String, dynamic>{},
+          'capabilities': <String, bool>{
             'supportsPagination': false,
             'supportsConcurrency': false,
             'requiresAuth': false,

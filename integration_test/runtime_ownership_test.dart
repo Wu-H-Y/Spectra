@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:spectra/core/server/routes/server_routes.dart';
-import 'package:spectra/core/server/routes/preview_routes.dart';
-import 'package:spectra/core/server/routes/rules_routes.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +12,7 @@ void main() {
       int port() => 15421;
       String serverToken() => 'st_test_token';
 
-      final routes = ServerRoutes(
+      ServerRoutes(
         isRunning: isRunning,
         port: port,
         serverToken: serverToken,
@@ -65,7 +63,7 @@ void main() {
       // 服务端应该接受这种格式的 token 进行只读诊断附着
 
       const serverToken = 'st_8f2a0f6f';
-      final attachToken = 'attach_$serverToken';
+      const attachToken = 'attach_$serverToken';
 
       // 验证 attachToken 格式正确
       expect(attachToken, startsWith('attach_'));

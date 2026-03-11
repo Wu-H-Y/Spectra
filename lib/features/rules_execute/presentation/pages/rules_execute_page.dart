@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -31,8 +32,12 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
     super.initState();
     _previewUrlController = TextEditingController();
     _selectorExpressionController = TextEditingController();
-    Future<void>.microtask(
-      () => ref.read(rulesRuntimeWorkspaceControllerProvider.notifier).bootstrap(),
+    unawaited(
+      Future.microtask(() async {
+        await ref
+            .read(rulesRuntimeWorkspaceControllerProvider.notifier)
+            .bootstrap();
+      }),
     );
   }
 
@@ -90,7 +95,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                 _previewUrlController.text,
               ),
               onToggleSelectionMode: controller.toggleElementSelectionMode,
-              onOpenDebugUrl: (url) => _launchUrl(url),
+                onOpenDebugUrl: _launchUrl,
             ),
             AppSpacing.verticalGapMd,
             if (state.activePreview != null)
@@ -98,7 +103,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                 context,
                 l10n,
                 state,
-                onOpenDebugUrl: (url) => _launchUrl(url),
+              onOpenDebugUrl: _launchUrl,
               ),
             if (state.activePreview != null) AppSpacing.verticalGapMd,
             if (state.activePreview != null)
@@ -238,7 +243,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
             )
           else
             DropdownButtonFormField<int>(
-              value: selectedRuleId,
+              initialValue: selectedRuleId,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
                 hintText: l10n.rulesExecuteRuleLabel,
@@ -398,13 +403,17 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                       Icon(
                         Icons.web_outlined,
                         size: 64,
-                        color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                        color: colorScheme
+                            .onSurfaceVariant
+                            .withValues(alpha: 0.5),
                       ),
                       AppSpacing.verticalGapMd,
                       Text(
                         l10n.webViewPlaceholder,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                           color: colorScheme
+                               .onSurfaceVariant
+                               .withValues(alpha: 0.7),
                         ),
                       ),
                       AppSpacing.verticalGapSm,
@@ -445,9 +454,12 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                               AppSpacing.horizontalGapSm,
                               Text(
                                 l10n.tapToSelectElement,
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: colorScheme.onPrimaryContainer,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: colorScheme.onPrimaryContainer,
+                                    ),
                               ),
                             ],
                           ),
@@ -464,7 +476,8 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
             children: [
               Expanded(
                 child: Text(
-                  '${l10n.rulesExecuteActivePreviewLabel}: ${preview.previewSessionId}',
+                  '${l10n.rulesExecuteActivePreviewLabel}: '
+                  '${preview.previewSessionId}',
                   style: Theme.of(context).textTheme.bodySmall,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -550,7 +563,8 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
             value: element.selector,
           ),
           // XPath（如果有）
-          if (element.xpath != null && element.xpath!.isNotEmpty) ...[
+          if (element.xpath != null &&
+              element.xpath!.isNotEmpty) ...[
             AppSpacing.verticalGapSm,
             _buildLabelValueBlock(
               context,
@@ -559,7 +573,8 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
             ),
           ],
           // 文本内容预览
-          if (element.textContent != null && element.textContent!.isNotEmpty) ...[
+          if (element.textContent != null &&
+              element.textContent!.isNotEmpty) ...[
             AppSpacing.verticalGapSm,
             Text(
               l10n.textContent,
@@ -583,30 +598,30 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
               ),
             ),
           ],
-          // HTML 预览
-          AppSpacing.verticalGapSm,
-          Text(
-            l10n.selectorElementHtml,
-            style: Theme.of(context).textTheme.labelLarge,
-          ),
-          AppSpacing.verticalGapXs,
-          Container(
-            width: double.infinity,
-            padding: AppSpacing.paddingSm,
-            decoration: BoxDecoration(
-              color: colorScheme.surface,
-              borderRadius: AppRadius.borderRadiusSm,
-            ),
-            child: SelectableText(
-              element.outerHtml.length > 300
-                  ? '${element.outerHtml.substring(0, 300)}...'
-                  : element.outerHtml,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontFamily: 'monospace',
-              ),
-              maxLines: 5,
-            ),
-          ),
+           // HTML 预览
+           AppSpacing.verticalGapSm,
+           Text(
+             l10n.selectorElementHtml,
+             style: Theme.of(context).textTheme.labelLarge,
+           ),
+           AppSpacing.verticalGapXs,
+           Container(
+             width: double.infinity,
+             padding: AppSpacing.paddingSm,
+             decoration: BoxDecoration(
+               color: colorScheme.surface,
+               borderRadius: AppRadius.borderRadiusSm,
+             ),
+             child: SelectableText(
+               element.outerHtml.length > 300
+                   ? '${element.outerHtml.substring(0, 300)}...'
+                   : element.outerHtml,
+               style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                 fontFamily: 'monospace',
+               ),
+               maxLines: 5,
+             ),
+           ),
         ],
       ),
     );
@@ -663,7 +678,9 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
             onChanged: onExpressionChanged,
             decoration: InputDecoration(
               labelText: l10n.selectorExpressionLabel,
-              hintText: state.selectorType == 'css' ? l10n.selectorCssHint : l10n.selectorXPathHint,
+              hintText: state.selectorType == 'css'
+                  ? l10n.selectorCssHint
+                  : l10n.selectorXPathHint,
               border: const OutlineInputBorder(),
               suffixIcon: _selectorExpressionController.text.isNotEmpty
                   ? IconButton(
@@ -775,22 +792,24 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                             children: [
                               if (element.text.isNotEmpty)
                                 Text(
-                                  '${l10n.selectorElementText}: ${element.text.length > 100 ? '${element.text.substring(0, 100)}...' : element.text}',
+                                  '${l10n.selectorElementText}: '
+                                  '${element.text.length > 100
+                                      ? '${element.text.substring(0, 100)}...'
+                                      : element.text}',
                                   style: Theme.of(context).textTheme.bodySmall,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                              if (element.text.isNotEmpty && element.html.isNotEmpty)
+                              if (element.text.isNotEmpty &&
+                                  element.html.isNotEmpty)
                                 AppSpacing.verticalGapXs,
                               if (element.html.isNotEmpty)
                                 Text(
-                                  '${l10n.selectorElementHtml}: ${element.html.length > 100 ? '${element.html.substring(0, 100)}...' : element.html}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        fontFamily: 'monospace',
-                                      ),
+                                  '${l10n.selectorElementHtml}: '
+                                  '${element.html.length > 100
+                                      ? '${element.html.substring(0, 100)}...'
+                                      : element.html}',
+                                  style: Theme.of(context).textTheme.bodySmall,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
