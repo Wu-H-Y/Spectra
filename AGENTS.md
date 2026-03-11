@@ -71,3 +71,4 @@ bun run build:web
 
 - `rust_builder/` 是 Flutter-Rust 构建胶水层，默认只在桥接/构建问题时修改。
 - 协议约束以 `docs/api-contract-v1.md` 与 `docs/ws-protocol-v1.md` 为准。
+- 如果测试不了, 请让提示用户手动测试, flutter不支持构建web端具体支持什么平台查看README.md

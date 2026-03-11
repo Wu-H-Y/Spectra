@@ -26,6 +26,10 @@ function(apply_cargokit target manifest_dir lib_name any_symbol_name)
         set(OUTPUT_LIB "${CMAKE_CURRENT_BINARY_DIR}/${CARGOKIT_LIB_FULL_NAME}")
     endif()
     set(CARGOKIT_TEMP_DIR "${CMAKE_CURRENT_BINARY_DIR}/cargokit_build")
+    # Windows 上如果指定了 CARGOKIT_TARGET_TEMP_DIR，则优先使用
+    if(WIN32 AND DEFINED ENV{CARGOKIT_TARGET_TEMP_DIR})
+        set(CARGOKIT_TEMP_DIR "$ENV{CARGOKIT_TARGET_TEMP_DIR}")
+    endif()
 
     if (FLUTTER_TARGET_PLATFORM)
         set(CARGOKIT_TARGET_PLATFORM "${FLUTTER_TARGET_PLATFORM}")

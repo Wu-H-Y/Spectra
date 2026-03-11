@@ -47,7 +47,6 @@ migrate_working_dir/
 /build/
 /coverage/
 .cache
-.tmp
 
 # Symbolication related
 app.*.symbols
@@ -66,6 +65,10 @@ app.*.map.json
 .omc
 skills-lock.json
 .sisyphus/
+.tmp
+tmp
+**tmp
+tmp**
 
 # Web editor build outputs
 assets/editor/
