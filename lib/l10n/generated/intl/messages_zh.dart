@@ -32,6 +32,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(count) => "密码长度不能少于 ${count} 位";
 
+  static String m6(error) => "错误: ${error}";
+
+  static String m7(count) => "还有 ${count} 个匹配元素...";
+
+  static String m8(count) => "匹配成功 (${count} 个元素)";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("关于"),
@@ -95,26 +101,83 @@ class MessageLookup extends MessageLookupByLibrary {
     "ruleEditorDescription": MessageLookupByLibrary.simpleMessage(
       "打开网页端爬虫规则编辑器",
     ),
+    "rulesExecuteActivePreviewLabel": MessageLookupByLibrary.simpleMessage(
+      "活跃预览",
+    ),
     "rulesExecuteContentSection": MessageLookupByLibrary.simpleMessage(
       "Content",
     ),
+    "rulesExecuteDebugUrlLabel": MessageLookupByLibrary.simpleMessage("调试地址"),
     "rulesExecuteDetailSection": MessageLookupByLibrary.simpleMessage("Detail"),
     "rulesExecuteEmptyState": MessageLookupByLibrary.simpleMessage("当前分区暂无内容"),
+    "rulesExecuteNoActivePreview": MessageLookupByLibrary.simpleMessage(
+      "当前没有活跃预览",
+    ),
+    "rulesExecuteNoRules": MessageLookupByLibrary.simpleMessage(
+      "当前没有可执行规则，请先通过现有规则接口创建规则。",
+    ),
+    "rulesExecuteNoRuns": MessageLookupByLibrary.simpleMessage(
+      "当前 session 还没有运行记录",
+    ),
     "rulesExecuteNormalizedSection": MessageLookupByLibrary.simpleMessage(
       "规范化结果 JSON",
     ),
     "rulesExecutePageDescription": MessageLookupByLibrary.simpleMessage(
-      "执行现有规则接口，并从真实的 initialResultJson 渲染 Search、Detail、Toc、Content 四个固定模板分区。",
+      "在 Flutter 侧统一查看服务器状态、当前 session、活跃预览、执行结果与节点事件时间线，并直接发起预览与执行。",
     ),
-    "rulesExecutePageTitle": MessageLookupByLibrary.simpleMessage("固定模板渲染"),
+    "rulesExecutePageTitle": MessageLookupByLibrary.simpleMessage("运行时工作区"),
     "rulesExecuteResponseSection": MessageLookupByLibrary.simpleMessage(
       "执行响应 JSON",
     ),
+    "rulesExecuteRuleLabel": MessageLookupByLibrary.simpleMessage("执行规则"),
     "rulesExecuteRunButton": MessageLookupByLibrary.simpleMessage("执行规则"),
+    "rulesExecuteRunStatusAccepted": MessageLookupByLibrary.simpleMessage(
+      "已受理",
+    ),
+    "rulesExecuteRunStatusFinished": MessageLookupByLibrary.simpleMessage(
+      "已完成",
+    ),
+    "rulesExecuteRunStatusRunning": MessageLookupByLibrary.simpleMessage("执行中"),
+    "rulesExecuteRunsSection": MessageLookupByLibrary.simpleMessage("运行注册表"),
     "rulesExecuteSearchSection": MessageLookupByLibrary.simpleMessage("Search"),
+    "rulesExecuteSessionLabel": MessageLookupByLibrary.simpleMessage(
+      "当前 Session",
+    ),
+    "rulesExecuteTimelineConnected": MessageLookupByLibrary.simpleMessage(
+      "时间线已连接",
+    ),
+    "rulesExecuteTimelineDisconnected": MessageLookupByLibrary.simpleMessage(
+      "时间线未连接",
+    ),
+    "rulesExecuteTimelineEmpty": MessageLookupByLibrary.simpleMessage(
+      "当前 session 还没有时间线事件",
+    ),
+    "rulesExecuteTimelineSection": MessageLookupByLibrary.simpleMessage(
+      "节点事件时间线",
+    ),
     "rulesExecuteTocSection": MessageLookupByLibrary.simpleMessage("Toc"),
+    "rulesExecuteWorkspaceSection": MessageLookupByLibrary.simpleMessage(
+      "工作区上下文",
+    ),
     "selectElement": MessageLookupByLibrary.simpleMessage("选择元素"),
     "selectedElement": MessageLookupByLibrary.simpleMessage("已选元素"),
+    "selectorClearResult": MessageLookupByLibrary.simpleMessage("清除结果"),
+    "selectorCssHint": MessageLookupByLibrary.simpleMessage(
+      "例如: div.content > h1",
+    ),
+    "selectorElementHtml": MessageLookupByLibrary.simpleMessage("HTML"),
+    "selectorElementText": MessageLookupByLibrary.simpleMessage("文本"),
+    "selectorExpressionLabel": MessageLookupByLibrary.simpleMessage("选择器表达式"),
+    "selectorMatchError": m6,
+    "selectorMatchFailed": MessageLookupByLibrary.simpleMessage("匹配失败"),
+    "selectorMatchMore": m7,
+    "selectorMatchSamples": MessageLookupByLibrary.simpleMessage("匹配样本"),
+    "selectorMatchSuccess": m8,
+    "selectorTestButton": MessageLookupByLibrary.simpleMessage("测试选择器"),
+    "selectorTestSection": MessageLookupByLibrary.simpleMessage("选择器测试"),
+    "selectorXPathHint": MessageLookupByLibrary.simpleMessage(
+      "例如: //div[@class=\"content\"]",
+    ),
     "sendToEditor": MessageLookupByLibrary.simpleMessage("发送到编辑器"),
     "serverRunning": MessageLookupByLibrary.simpleMessage("运行中"),
     "serverStart": MessageLookupByLibrary.simpleMessage("启动服务器"),

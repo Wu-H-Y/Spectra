@@ -33,6 +33,12 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m5(count) =>
       "Password must be at least ${count} characters long.";
 
+  static String m6(error) => "Error: ${error}";
+
+  static String m7(count) => "${count} more matched elements...";
+
+  static String m8(count) => "Match Success (${count} elements)";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "about": MessageLookupByLibrary.simpleMessage("About"),
@@ -124,32 +130,103 @@ class MessageLookup extends MessageLookupByLibrary {
     "ruleEditorDescription": MessageLookupByLibrary.simpleMessage(
       "Open web-based rule editor for crawler rules",
     ),
+    "rulesExecuteActivePreviewLabel": MessageLookupByLibrary.simpleMessage(
+      "Active Preview",
+    ),
     "rulesExecuteContentSection": MessageLookupByLibrary.simpleMessage(
       "Content",
+    ),
+    "rulesExecuteDebugUrlLabel": MessageLookupByLibrary.simpleMessage(
+      "Debug URL",
     ),
     "rulesExecuteDetailSection": MessageLookupByLibrary.simpleMessage("Detail"),
     "rulesExecuteEmptyState": MessageLookupByLibrary.simpleMessage(
       "No content is available for this section yet",
     ),
+    "rulesExecuteNoActivePreview": MessageLookupByLibrary.simpleMessage(
+      "No active preview is attached to this session",
+    ),
+    "rulesExecuteNoRules": MessageLookupByLibrary.simpleMessage(
+      "No executable rules are available yet. Create one through the existing rules API first.",
+    ),
+    "rulesExecuteNoRuns": MessageLookupByLibrary.simpleMessage(
+      "No runs have been created for this session yet",
+    ),
     "rulesExecuteNormalizedSection": MessageLookupByLibrary.simpleMessage(
       "Normalized Result JSON",
     ),
     "rulesExecutePageDescription": MessageLookupByLibrary.simpleMessage(
-      "Execute the existing rules API and render the Search, Detail, Toc, and Content sections from the real initialResultJson payload.",
+      "Manage server status, the active Flutter session, preview state, run results, and node event timeline from one Flutter-owned runtime workspace.",
     ),
     "rulesExecutePageTitle": MessageLookupByLibrary.simpleMessage(
-      "Fixed Template Render",
+      "Runtime Workspace",
     ),
     "rulesExecuteResponseSection": MessageLookupByLibrary.simpleMessage(
       "Execute Response JSON",
     ),
+    "rulesExecuteRuleLabel": MessageLookupByLibrary.simpleMessage(
+      "Execution Rule",
+    ),
     "rulesExecuteRunButton": MessageLookupByLibrary.simpleMessage(
       "Execute Rule",
     ),
+    "rulesExecuteRunStatusAccepted": MessageLookupByLibrary.simpleMessage(
+      "Accepted",
+    ),
+    "rulesExecuteRunStatusFinished": MessageLookupByLibrary.simpleMessage(
+      "Finished",
+    ),
+    "rulesExecuteRunStatusRunning": MessageLookupByLibrary.simpleMessage(
+      "Running",
+    ),
+    "rulesExecuteRunsSection": MessageLookupByLibrary.simpleMessage(
+      "Run Registry",
+    ),
     "rulesExecuteSearchSection": MessageLookupByLibrary.simpleMessage("Search"),
+    "rulesExecuteSessionLabel": MessageLookupByLibrary.simpleMessage(
+      "Current Session",
+    ),
+    "rulesExecuteTimelineConnected": MessageLookupByLibrary.simpleMessage(
+      "Timeline connected",
+    ),
+    "rulesExecuteTimelineDisconnected": MessageLookupByLibrary.simpleMessage(
+      "Timeline disconnected",
+    ),
+    "rulesExecuteTimelineEmpty": MessageLookupByLibrary.simpleMessage(
+      "No timeline events are available for this session yet",
+    ),
+    "rulesExecuteTimelineSection": MessageLookupByLibrary.simpleMessage(
+      "Node Event Timeline",
+    ),
     "rulesExecuteTocSection": MessageLookupByLibrary.simpleMessage("Toc"),
+    "rulesExecuteWorkspaceSection": MessageLookupByLibrary.simpleMessage(
+      "Workspace Context",
+    ),
     "selectElement": MessageLookupByLibrary.simpleMessage("Select Element"),
     "selectedElement": MessageLookupByLibrary.simpleMessage("Selected Element"),
+    "selectorClearResult": MessageLookupByLibrary.simpleMessage("Clear Result"),
+    "selectorCssHint": MessageLookupByLibrary.simpleMessage(
+      "e.g., div.content > h1",
+    ),
+    "selectorElementHtml": MessageLookupByLibrary.simpleMessage("HTML"),
+    "selectorElementText": MessageLookupByLibrary.simpleMessage("Text"),
+    "selectorExpressionLabel": MessageLookupByLibrary.simpleMessage(
+      "Selector Expression",
+    ),
+    "selectorMatchError": m6,
+    "selectorMatchFailed": MessageLookupByLibrary.simpleMessage("Match Failed"),
+    "selectorMatchMore": m7,
+    "selectorMatchSamples": MessageLookupByLibrary.simpleMessage(
+      "Matched Samples",
+    ),
+    "selectorMatchSuccess": m8,
+    "selectorTestButton": MessageLookupByLibrary.simpleMessage("Test Selector"),
+    "selectorTestSection": MessageLookupByLibrary.simpleMessage(
+      "Selector Test",
+    ),
+    "selectorXPathHint": MessageLookupByLibrary.simpleMessage(
+      "e.g., //div[@class=\"content\"]",
+    ),
     "sendToEditor": MessageLookupByLibrary.simpleMessage("Send to Editor"),
     "serverRunning": MessageLookupByLibrary.simpleMessage("Running"),
     "serverStart": MessageLookupByLibrary.simpleMessage("Start Server"),

@@ -209,21 +209,61 @@ class S {
     );
   }
 
-  /// `固定模板渲染`
+  /// `运行时工作区`
   String get rulesExecutePageTitle {
     return Intl.message(
-      '固定模板渲染',
+      '运行时工作区',
       name: 'rulesExecutePageTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `执行现有规则接口，并从真实的 initialResultJson 渲染 Search、Detail、Toc、Content 四个固定模板分区。`
+  /// `在 Flutter 侧统一查看服务器状态、当前 session、活跃预览、执行结果与节点事件时间线，并直接发起预览与执行。`
   String get rulesExecutePageDescription {
     return Intl.message(
-      '执行现有规则接口，并从真实的 initialResultJson 渲染 Search、Detail、Toc、Content 四个固定模板分区。',
+      '在 Flutter 侧统一查看服务器状态、当前 session、活跃预览、执行结果与节点事件时间线，并直接发起预览与执行。',
       name: 'rulesExecutePageDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `工作区上下文`
+  String get rulesExecuteWorkspaceSection {
+    return Intl.message(
+      '工作区上下文',
+      name: 'rulesExecuteWorkspaceSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前 Session`
+  String get rulesExecuteSessionLabel {
+    return Intl.message(
+      '当前 Session',
+      name: 'rulesExecuteSessionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `执行规则`
+  String get rulesExecuteRuleLabel {
+    return Intl.message(
+      '执行规则',
+      name: 'rulesExecuteRuleLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前没有可执行规则，请先通过现有规则接口创建规则。`
+  String get rulesExecuteNoRules {
+    return Intl.message(
+      '当前没有可执行规则，请先通过现有规则接口创建规则。',
+      name: 'rulesExecuteNoRules',
       desc: '',
       args: [],
     );
@@ -244,6 +284,126 @@ class S {
     return Intl.message(
       '执行响应 JSON',
       name: 'rulesExecuteResponseSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `运行注册表`
+  String get rulesExecuteRunsSection {
+    return Intl.message(
+      '运行注册表',
+      name: 'rulesExecuteRunsSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前 session 还没有运行记录`
+  String get rulesExecuteNoRuns {
+    return Intl.message(
+      '当前 session 还没有运行记录',
+      name: 'rulesExecuteNoRuns',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `活跃预览`
+  String get rulesExecuteActivePreviewLabel {
+    return Intl.message(
+      '活跃预览',
+      name: 'rulesExecuteActivePreviewLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前没有活跃预览`
+  String get rulesExecuteNoActivePreview {
+    return Intl.message(
+      '当前没有活跃预览',
+      name: 'rulesExecuteNoActivePreview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `调试地址`
+  String get rulesExecuteDebugUrlLabel {
+    return Intl.message(
+      '调试地址',
+      name: 'rulesExecuteDebugUrlLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `节点事件时间线`
+  String get rulesExecuteTimelineSection {
+    return Intl.message(
+      '节点事件时间线',
+      name: 'rulesExecuteTimelineSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `当前 session 还没有时间线事件`
+  String get rulesExecuteTimelineEmpty {
+    return Intl.message(
+      '当前 session 还没有时间线事件',
+      name: 'rulesExecuteTimelineEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `时间线已连接`
+  String get rulesExecuteTimelineConnected {
+    return Intl.message(
+      '时间线已连接',
+      name: 'rulesExecuteTimelineConnected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `时间线未连接`
+  String get rulesExecuteTimelineDisconnected {
+    return Intl.message(
+      '时间线未连接',
+      name: 'rulesExecuteTimelineDisconnected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已受理`
+  String get rulesExecuteRunStatusAccepted {
+    return Intl.message(
+      '已受理',
+      name: 'rulesExecuteRunStatusAccepted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `执行中`
+  String get rulesExecuteRunStatusRunning {
+    return Intl.message(
+      '执行中',
+      name: 'rulesExecuteRunStatusRunning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `已完成`
+  String get rulesExecuteRunStatusFinished {
+    return Intl.message(
+      '已完成',
+      name: 'rulesExecuteRunStatusFinished',
       desc: '',
       args: [],
     );
@@ -639,6 +799,131 @@ class S {
     return Intl.message(
       'WebView 将在此显示',
       name: 'webViewPlaceholder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择器测试`
+  String get selectorTestSection {
+    return Intl.message(
+      '选择器测试',
+      name: 'selectorTestSection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `测试选择器`
+  String get selectorTestButton {
+    return Intl.message(
+      '测试选择器',
+      name: 'selectorTestButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `清除结果`
+  String get selectorClearResult {
+    return Intl.message(
+      '清除结果',
+      name: 'selectorClearResult',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `选择器表达式`
+  String get selectorExpressionLabel {
+    return Intl.message(
+      '选择器表达式',
+      name: 'selectorExpressionLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `例如: div.content > h1`
+  String get selectorCssHint {
+    return Intl.message(
+      '例如: div.content > h1',
+      name: 'selectorCssHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `例如: //div[@class="content"]`
+  String get selectorXPathHint {
+    return Intl.message(
+      '例如: //div[@class="content"]',
+      name: 'selectorXPathHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `匹配成功 ({count} 个元素)`
+  String selectorMatchSuccess(Object count) {
+    return Intl.message(
+      '匹配成功 ($count 个元素)',
+      name: 'selectorMatchSuccess',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `匹配失败`
+  String get selectorMatchFailed {
+    return Intl.message(
+      '匹配失败',
+      name: 'selectorMatchFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `错误: {error}`
+  String selectorMatchError(Object error) {
+    return Intl.message(
+      '错误: $error',
+      name: 'selectorMatchError',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `匹配样本`
+  String get selectorMatchSamples {
+    return Intl.message(
+      '匹配样本',
+      name: 'selectorMatchSamples',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `还有 {count} 个匹配元素...`
+  String selectorMatchMore(Object count) {
+    return Intl.message(
+      '还有 $count 个匹配元素...',
+      name: 'selectorMatchMore',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `文本`
+  String get selectorElementText {
+    return Intl.message('文本', name: 'selectorElementText', desc: '', args: []);
+  }
+
+  /// `HTML`
+  String get selectorElementHtml {
+    return Intl.message(
+      'HTML',
+      name: 'selectorElementHtml',
       desc: '',
       args: [],
     );
