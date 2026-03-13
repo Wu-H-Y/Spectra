@@ -4,6 +4,30 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
+const manualChunks = (id: string) => {
+  if (
+    id.includes('react-dom') ||
+    id.includes('react-router-dom') ||
+    id.includes(`${path.sep}react${path.sep}`)
+  ) {
+    return 'vendor-react';
+  }
+
+  if (id.includes('radix-ui') || id.includes('lucide-react')) {
+    return 'vendor-ui';
+  }
+
+  if (id.includes('@tanstack/react-query') || id.includes('zustand')) {
+    return 'vendor-data';
+  }
+
+  if (id.includes('@monaco-editor/react')) {
+    return 'vendor-editor';
+  }
+
+  return undefined;
+};
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -14,16 +38,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          // React 核心
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          // UI 组件库
-          'vendor-ui': ['radix-ui', 'lucide-react'],
-          // 数据获取和状态管理
-          'vendor-data': ['@tanstack/react-query', 'zustand'],
-          // 编辑器
-          'vendor-editor': ['@monaco-editor/react'],
-        },
+        manualChunks,
       },
     },
   },
