@@ -11,13 +11,34 @@ const normalizePath = (filePath) => filePath.replaceAll('\\', '/');
 
 const hasMatch = (files, pattern) => files.some((file) => pattern.test(file));
 
+const quoteArg = (filePath) => JSON.stringify(filePath);
+
+const buildCommand = (command, files) => {
+  if (files.length === 0) {
+    return null;
+  }
+
+  return `${command} ${files.map(quoteArg).join(' ')}`;
+};
+
 export default (allStagedFiles) => {
   const files = allStagedFiles.map(normalizePath);
   const commands = [];
+  const dartFiles = files.filter((file) => file.endsWith('.dart'));
 
   if (hasMatch(files, /\.dart$/)) {
-    commands.push('bun run format:check:dart');
-    commands.push('bun run lint:dart');
+    const formatCommand = buildCommand(
+      'dart format --output=none --set-exit-if-changed',
+      dartFiles,
+    );
+    const analyzeCommand = buildCommand('dart analyze --fatal-infos', dartFiles);
+
+    if (formatCommand) {
+      commands.push(formatCommand);
+    }
+    if (analyzeCommand) {
+      commands.push(analyzeCommand);
+    }
   }
 
   if (hasMatch(files, /^rust\/.*\.rs$/)) {
