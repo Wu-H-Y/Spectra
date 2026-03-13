@@ -88,14 +88,15 @@ class PreviewRouteException implements Exception {
 }
 
 /// 预览会话打开处理器。
-typedef PreviewOpenHandler = Future<PreviewOpenResult> Function({
-  required String url,
-  String? sessionId,
-});
+typedef PreviewOpenHandler =
+    Future<PreviewOpenResult> Function({
+      required String url,
+      String? sessionId,
+    });
 
 /// 预览选择器测试处理器。
-typedef PreviewSelectorTestHandler = Future<PreviewSelectorTestResult>
-    Function({
+typedef PreviewSelectorTestHandler =
+    Future<PreviewSelectorTestResult> Function({
       required String previewSessionId,
       required String selectorType,
       required String expression,

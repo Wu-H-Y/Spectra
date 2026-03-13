@@ -6,16 +6,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:spectra/core/errors/app_failure.dart';
+import 'package:spectra/core/i18n/strings.g.dart';
 import 'package:spectra/core/server/runtime_workspace_client.dart';
 import 'package:spectra/core/server/server_provider.dart';
 import 'package:spectra/features/rules_execute/application/rules_runtime_workspace_controller.dart';
 import 'package:spectra/features/rules_execute/presentation/pages/rules_execute_page.dart';
-import 'package:spectra/l10n/generated/l10n.dart';
 
 void main() {
-  testWidgets(
-    'renders runtime workspace state and run results',
-    (tester) async {
+  testWidgets('renders runtime workspace state and run results', (
+    tester,
+  ) async {
     final client = _FakeRuntimeWorkspaceClient();
 
     await tester.pumpWidget(
@@ -33,15 +33,12 @@ void main() {
             ),
           ),
         ],
-        child: MaterialApp(
-          localizationsDelegates: const [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: S.delegate.supportedLocales,
-          home: const RulesExecutePage(),
+        child: TranslationProvider(
+          child: MaterialApp(
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
+            supportedLocales: AppLocaleUtils.supportedLocales,
+            home: const RulesExecutePage(),
+          ),
         ),
       ),
     );
@@ -125,8 +122,8 @@ void main() {
     await tester.pump();
 
     final context = tester.element(find.byType(RulesExecutePage));
-    final l10n = S.of(context);
-    expect(find.text(l10n.rulesExecuteRunStatusFinished), findsOneWidget);
+    final t = Translations.of(context);
+    expect(find.text(t.rulesExecuteRunStatusFinished), findsOneWidget);
   });
 }
 

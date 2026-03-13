@@ -9,7 +9,16 @@ part 'app_database.g.dart';
 /// Spectra 应用数据库
 ///
 /// 使用 Drift (SQLite) 管理关系型数据
-@DriftDatabase(tables: [RulesV1, SessionsV1, FavoritesV1, SearchHistoryV1, DiscoverCacheV1, UserSettingsV1])
+@DriftDatabase(
+  tables: [
+    RulesV1,
+    SessionsV1,
+    FavoritesV1,
+    SearchHistoryV1,
+    DiscoverCacheV1,
+    UserSettingsV1,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
   /// 创建数据库实例
   ///
@@ -17,7 +26,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 1;
 
   /// 数据库初始化策略
   @override

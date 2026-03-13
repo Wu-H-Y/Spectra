@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:spectra/core/errors/app_failure.dart';
 import 'package:spectra/core/errors/app_failure_display_extension.dart';
+import 'package:spectra/core/i18n/strings.g.dart';
 import 'package:spectra/core/theme/theme.dart';
 import 'package:spectra/features/rules_execute/application/rules_runtime_workspace_controller.dart';
 import 'package:spectra/features/rules_execute/application/rules_runtime_workspace_state.dart';
-import 'package:spectra/l10n/generated/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // 导出 SelectedElementInfo 以便在 UI 中使用
-export 'package:spectra/features/rules_execute/application/rules_runtime_workspace_state.dart' show SelectedElementInfo;
+export 'package:spectra/features/rules_execute/application/rules_runtime_workspace_state.dart'
+    show SelectedElementInfo;
 
 /// Flutter 侧 runtime workspace 页面。
 class RulesExecutePage extends ConsumerStatefulWidget {
@@ -50,7 +51,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = S.of(context);
+    final t = context.t;
     final state = ref.watch(rulesRuntimeWorkspaceControllerProvider);
     final controller = ref.read(
       rulesRuntimeWorkspaceControllerProvider.notifier,
@@ -62,19 +63,19 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.rulesExecutePageTitle)),
+      appBar: AppBar(title: Text(t.rulesExecutePageTitle)),
       body: SafeArea(
         child: ListView(
           padding: AppSpacing.paddingMd,
           children: [
             Text(
-              l10n.rulesExecutePageDescription,
+              t.rulesExecutePageDescription,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             AppSpacing.verticalGapMd,
             _buildServerStatusCard(
               context,
-              l10n,
+              t,
               state,
               onToggleServer: controller.toggleServer,
               onRefreshWorkspace: controller.refreshWorkspace,
@@ -82,34 +83,34 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
             AppSpacing.verticalGapMd,
             _buildWorkspaceCard(
               context,
-              l10n,
+              t,
               state,
               onRuleSelected: controller.selectRule,
             ),
             AppSpacing.verticalGapMd,
             _buildPreviewCard(
               context,
-              l10n,
+              t,
               state,
               onOpenPreview: () => controller.openPreview(
                 _previewUrlController.text,
               ),
               onToggleSelectionMode: controller.toggleElementSelectionMode,
-                onOpenDebugUrl: _launchUrl,
+              onOpenDebugUrl: _launchUrl,
             ),
             AppSpacing.verticalGapMd,
             if (state.activePreview != null)
               _buildEmbeddedPreviewCard(
                 context,
-                l10n,
+                t,
                 state,
-              onOpenDebugUrl: _launchUrl,
+                onOpenDebugUrl: _launchUrl,
               ),
             if (state.activePreview != null) AppSpacing.verticalGapMd,
             if (state.activePreview != null)
               _buildSelectorTestCard(
                 context,
-                l10n,
+                t,
                 state,
                 onTypeChanged: controller.setSelectorType,
                 onExpressionChanged: controller.setSelectorExpression,
@@ -119,15 +120,15 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
             if (state.activePreview != null) AppSpacing.verticalGapMd,
             _buildRunsCard(
               context,
-              l10n,
+              t,
               state,
               onExecute: controller.executeSelectedRule,
             ),
             AppSpacing.verticalGapMd,
-            _buildTimelineCard(context, l10n, state),
+            _buildTimelineCard(context, t, state),
             if (state.failure != null) ...[
               AppSpacing.verticalGapMd,
-              _buildErrorCard(context, l10n, state.failure!),
+              _buildErrorCard(context, t, state.failure!),
             ],
           ],
         ),
@@ -144,7 +145,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
 
   Widget _buildServerStatusCard(
     BuildContext context,
-    S l10n,
+    Translations t,
     RulesRuntimeWorkspaceState state, {
     required Future<void> Function() onToggleServer,
     required Future<void> Function() onRefreshWorkspace,
@@ -155,7 +156,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
     return _buildSectionCard(
       context,
       sectionKey: const Key('rules_execute_server_section'),
-      title: l10n.serverStatus,
+      title: t.serverStatus,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -168,17 +169,17 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
               AppSpacing.horizontalGapSm,
               Expanded(
                 child: Text(
-                  isRunning ? l10n.serverRunning : l10n.serverStopped,
+                  isRunning ? t.serverRunning : t.serverStopped,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
               ),
-              _buildTimelineChip(context, l10n, state.timelineConnected),
+              _buildTimelineChip(context, t, state.timelineConnected),
             ],
           ),
           if (state.serverStatus.url != null) ...[
             AppSpacing.verticalGapSm,
             SelectableText(
-              '${l10n.serverUrl}: ${state.serverStatus.url}',
+              '${t.serverUrl}: ${state.serverStatus.url}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -193,7 +194,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                   isRunning ? Icons.stop_circle_outlined : Icons.play_arrow,
                 ),
                 label: Text(
-                  isRunning ? l10n.serverStop : l10n.serverStart,
+                  isRunning ? t.serverStop : t.serverStart,
                 ),
               ),
               OutlinedButton.icon(
@@ -201,7 +202,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                     ? null
                     : onRefreshWorkspace,
                 icon: const Icon(Icons.refresh),
-                label: Text(l10n.refresh),
+                label: Text(t.refresh),
               ),
             ],
           ),
@@ -212,7 +213,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
 
   Widget _buildWorkspaceCard(
     BuildContext context,
-    S l10n,
+    Translations t,
     RulesRuntimeWorkspaceState state, {
     required ValueChanged<int?> onRuleSelected,
   }) {
@@ -221,24 +222,24 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
     return _buildSectionCard(
       context,
       sectionKey: const Key('rules_execute_workspace_section'),
-      title: l10n.rulesExecuteWorkspaceSection,
+      title: t.rulesExecuteWorkspaceSection,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildLabelValueBlock(
             context,
-            label: l10n.rulesExecuteSessionLabel,
+            label: t.rulesExecuteSessionLabel,
             value: state.sessionId,
           ),
           AppSpacing.verticalGapMd,
           Text(
-            l10n.rulesExecuteRuleLabel,
+            t.rulesExecuteRuleLabel,
             style: Theme.of(context).textTheme.labelLarge,
           ),
           AppSpacing.verticalGapSm,
           if (state.rules.isEmpty)
             Text(
-              l10n.rulesExecuteNoRules,
+              t.rulesExecuteNoRules,
               style: Theme.of(context).textTheme.bodySmall,
             )
           else
@@ -246,7 +247,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
               initialValue: selectedRuleId,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
-                hintText: l10n.rulesExecuteRuleLabel,
+                hintText: t.rulesExecuteRuleLabel,
               ),
               items: state.rules
                   .map(
@@ -265,7 +266,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
 
   Widget _buildPreviewCard(
     BuildContext context,
-    S l10n,
+    Translations t,
     RulesRuntimeWorkspaceState state, {
     required VoidCallback onOpenPreview,
     required VoidCallback onToggleSelectionMode,
@@ -277,15 +278,15 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
     return _buildSectionCard(
       context,
       sectionKey: const Key('rules_execute_preview_section'),
-      title: l10n.previewPage,
+      title: t.previewPage,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
             controller: _previewUrlController,
             decoration: InputDecoration(
-              labelText: l10n.enterUrl,
-              hintText: l10n.enterUrlToPreview,
+              labelText: t.enterUrl,
+              hintText: t.enterUrlToPreview,
               border: const OutlineInputBorder(),
             ),
           ),
@@ -298,7 +299,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                 key: const Key('rules_execute_preview_button'),
                 onPressed: state.canOpenPreview ? onOpenPreview : null,
                 icon: const Icon(Icons.open_in_browser),
-                label: Text(l10n.go),
+                label: Text(t.go),
               ),
               if (preview != null)
                 OutlinedButton.icon(
@@ -310,8 +311,8 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                   ),
                   label: Text(
                     state.isElementSelectionMode
-                        ? l10n.cancelSelection
-                        : l10n.selectElement,
+                        ? t.cancelSelection
+                        : t.selectElement,
                   ),
                   style: state.isElementSelectionMode
                       ? OutlinedButton.styleFrom(
@@ -324,19 +325,19 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
           AppSpacing.verticalGapMd,
           if (preview == null)
             Text(
-              l10n.rulesExecuteNoActivePreview,
+              t.rulesExecuteNoActivePreview,
               style: Theme.of(context).textTheme.bodySmall,
             )
           else ...[
             _buildLabelValueBlock(
               context,
-              label: l10n.rulesExecuteActivePreviewLabel,
+              label: t.rulesExecuteActivePreviewLabel,
               value: preview.previewSessionId,
             ),
             AppSpacing.verticalGapSm,
             _buildLabelValueBlock(
               context,
-              label: l10n.enterUrl,
+              label: t.enterUrl,
               value: preview.previewUrl,
             ),
             AppSpacing.verticalGapSm,
@@ -345,14 +346,14 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                 Expanded(
                   child: _buildLabelValueBlock(
                     context,
-                    label: l10n.rulesExecuteDebugUrlLabel,
+                    label: t.rulesExecuteDebugUrlLabel,
                     value: preview.debugUrl,
                   ),
                 ),
                 IconButton(
                   onPressed: () => onOpenDebugUrl(preview.debugUrl),
                   icon: const Icon(Icons.open_in_new),
-                  tooltip: l10n.openInBrowser,
+                  tooltip: t.openInBrowser,
                 ),
               ],
             ),
@@ -364,7 +365,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
 
   Widget _buildEmbeddedPreviewCard(
     BuildContext context,
-    S l10n,
+    Translations t,
     RulesRuntimeWorkspaceState state, {
     required ValueChanged<String> onOpenDebugUrl,
   }) {
@@ -375,7 +376,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
     return _buildSectionCard(
       context,
       sectionKey: const Key('rules_execute_embedded_preview_section'),
-      title: l10n.previewPage,
+      title: t.previewPage,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -403,17 +404,17 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                       Icon(
                         Icons.web_outlined,
                         size: 64,
-                        color: colorScheme
-                            .onSurfaceVariant
-                            .withValues(alpha: 0.5),
+                        color: colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.5,
+                        ),
                       ),
                       AppSpacing.verticalGapMd,
                       Text(
-                        l10n.webViewPlaceholder,
+                        t.webViewPlaceholder,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                           color: colorScheme
-                               .onSurfaceVariant
-                               .withValues(alpha: 0.7),
+                          color: colorScheme.onSurfaceVariant.withValues(
+                            alpha: 0.7,
+                          ),
                         ),
                       ),
                       AppSpacing.verticalGapSm,
@@ -453,10 +454,8 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                               ),
                               AppSpacing.horizontalGapSm,
                               Text(
-                                l10n.tapToSelectElement,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
+                                t.tapToSelectElement,
+                                style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
                                       color: colorScheme.onPrimaryContainer,
                                     ),
@@ -476,7 +475,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
             children: [
               Expanded(
                 child: Text(
-                  '${l10n.rulesExecuteActivePreviewLabel}: '
+                  '${t.rulesExecuteActivePreviewLabel}: '
                   '${preview.previewSessionId}',
                   style: Theme.of(context).textTheme.bodySmall,
                   overflow: TextOverflow.ellipsis,
@@ -485,7 +484,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
               IconButton(
                 onPressed: () => onOpenDebugUrl(preview.debugUrl),
                 icon: const Icon(Icons.open_in_new, size: 18),
-                tooltip: l10n.openInBrowser,
+                tooltip: t.openInBrowser,
               ),
             ],
           ),
@@ -494,7 +493,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
             AppSpacing.verticalGapMd,
             const Divider(),
             AppSpacing.verticalGapMd,
-            _buildSelectedElementInfo(context, l10n, selectedElement),
+            _buildSelectedElementInfo(context, t, selectedElement),
           ],
         ],
       ),
@@ -503,7 +502,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
 
   Widget _buildSelectedElementInfo(
     BuildContext context,
-    S l10n,
+    Translations t,
     SelectedElementInfo element,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -530,7 +529,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
               ),
               AppSpacing.horizontalGapSm,
               Text(
-                l10n.selectedElement,
+                t.selectedElement,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   color: colorScheme.onPrimaryContainer,
                 ),
@@ -559,12 +558,11 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
           // 选择器表达式
           _buildLabelValueBlock(
             context,
-            label: l10n.selectorExpressionLabel,
+            label: t.selectorExpressionLabel,
             value: element.selector,
           ),
           // XPath（如果有）
-          if (element.xpath != null &&
-              element.xpath!.isNotEmpty) ...[
+          if (element.xpath != null && element.xpath!.isNotEmpty) ...[
             AppSpacing.verticalGapSm,
             _buildLabelValueBlock(
               context,
@@ -577,7 +575,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
               element.textContent!.isNotEmpty) ...[
             AppSpacing.verticalGapSm,
             Text(
-              l10n.textContent,
+              t.textContent,
               style: Theme.of(context).textTheme.labelLarge,
             ),
             AppSpacing.verticalGapXs,
@@ -598,30 +596,30 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
               ),
             ),
           ],
-           // HTML 预览
-           AppSpacing.verticalGapSm,
-           Text(
-             l10n.selectorElementHtml,
-             style: Theme.of(context).textTheme.labelLarge,
-           ),
-           AppSpacing.verticalGapXs,
-           Container(
-             width: double.infinity,
-             padding: AppSpacing.paddingSm,
-             decoration: BoxDecoration(
-               color: colorScheme.surface,
-               borderRadius: AppRadius.borderRadiusSm,
-             ),
-             child: SelectableText(
-               element.outerHtml.length > 300
-                   ? '${element.outerHtml.substring(0, 300)}...'
-                   : element.outerHtml,
-               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                 fontFamily: 'monospace',
-               ),
-               maxLines: 5,
-             ),
-           ),
+          // HTML 预览
+          AppSpacing.verticalGapSm,
+          Text(
+            t.selectorElementHtml,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+          AppSpacing.verticalGapXs,
+          Container(
+            width: double.infinity,
+            padding: AppSpacing.paddingSm,
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
+              borderRadius: AppRadius.borderRadiusSm,
+            ),
+            child: SelectableText(
+              element.outerHtml.length > 300
+                  ? '${element.outerHtml.substring(0, 300)}...'
+                  : element.outerHtml,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                fontFamily: 'monospace',
+              ),
+              maxLines: 5,
+            ),
+          ),
         ],
       ),
     );
@@ -629,7 +627,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
 
   Widget _buildSelectorTestCard(
     BuildContext context,
-    S l10n,
+    Translations t,
     RulesRuntimeWorkspaceState state, {
     required ValueChanged<String> onTypeChanged,
     required ValueChanged<String> onExpressionChanged,
@@ -642,7 +640,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
     return _buildSectionCard(
       context,
       sectionKey: const Key('rules_execute_selector_test_section'),
-      title: l10n.selectorTestSection,
+      title: t.selectorTestSection,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -677,10 +675,10 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
             controller: _selectorExpressionController,
             onChanged: onExpressionChanged,
             decoration: InputDecoration(
-              labelText: l10n.selectorExpressionLabel,
+              labelText: t.selectorExpressionLabel,
               hintText: state.selectorType == 'css'
-                  ? l10n.selectorCssHint
-                  : l10n.selectorXPathHint,
+                  ? t.selectorCssHint
+                  : t.selectorXPathHint,
               border: const OutlineInputBorder(),
               suffixIcon: _selectorExpressionController.text.isNotEmpty
                   ? IconButton(
@@ -706,14 +704,14 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.play_arrow),
-                label: Text(l10n.selectorTestButton),
+                label: Text(t.selectorTestButton),
               ),
               if (testResult != null) ...[
                 AppSpacing.horizontalGapSm,
                 OutlinedButton.icon(
                   onPressed: onClear,
                   icon: const Icon(Icons.clear),
-                  label: Text(l10n.selectorClearResult),
+                  label: Text(t.selectorClearResult),
                 ),
               ],
             ],
@@ -743,8 +741,8 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                       AppSpacing.horizontalGapSm,
                       Text(
                         testResult.success
-                            ? l10n.selectorMatchSuccess(testResult.count)
-                            : l10n.selectorMatchFailed,
+                            ? t.selectorMatchSuccess(count: testResult.count)
+                            : t.selectorMatchFailed,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: testResult.success
                               ? colorScheme.onPrimaryContainer
@@ -756,7 +754,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                   if (testResult.error != null) ...[
                     AppSpacing.verticalGapSm,
                     Text(
-                      l10n.selectorMatchError(testResult.error!),
+                      t.selectorMatchError(error: testResult.error!),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: colorScheme.onErrorContainer,
                       ),
@@ -767,7 +765,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                     const Divider(),
                     AppSpacing.verticalGapSm,
                     Text(
-                      l10n.selectorMatchSamples,
+                      t.selectorMatchSamples,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         color: testResult.success
                             ? colorScheme.onPrimaryContainer
@@ -781,37 +779,50 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                         child: Container(
                           padding: AppSpacing.paddingSm,
                           decoration: BoxDecoration(
-                            color: (testResult.success
-                                    ? colorScheme.surface
-                                    : colorScheme.surface)
-                                .withValues(alpha: 0.5),
+                            color:
+                                (testResult.success
+                                        ? colorScheme.surface
+                                        : colorScheme.surface)
+                                    .withValues(alpha: 0.5),
                             borderRadius: AppRadius.borderRadiusSm,
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               if (element.text.isNotEmpty)
-                                Text(
-                                  '${l10n.selectorElementText}: '
-                                  '${element.text.length > 100
-                                      ? '${element.text.substring(0, 100)}...'
-                                      : element.text}',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                Builder(
+                                  builder: (context) {
+                                    final preview = element.text.length > 100
+                                        ? '${element.text.substring(0, 100)}...'
+                                        : element.text;
+                                    return Text(
+                                      '${t.selectorElementText}: $preview',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    );
+                                  },
                                 ),
                               if (element.text.isNotEmpty &&
                                   element.html.isNotEmpty)
                                 AppSpacing.verticalGapXs,
                               if (element.html.isNotEmpty)
-                                Text(
-                                  '${l10n.selectorElementHtml}: '
-                                  '${element.html.length > 100
-                                      ? '${element.html.substring(0, 100)}...'
-                                      : element.html}',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                Builder(
+                                  builder: (context) {
+                                    final preview = element.html.length > 100
+                                        ? '${element.html.substring(0, 100)}...'
+                                        : element.html;
+                                    return Text(
+                                      '${t.selectorElementHtml}: $preview',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    );
+                                  },
                                 ),
                             ],
                           ),
@@ -820,7 +831,9 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                     }),
                     if (testResult.elements.length > 5)
                       Text(
-                        l10n.selectorMatchMore(testResult.elements.length - 5),
+                        t.selectorMatchMore(
+                          count: testResult.elements.length - 5,
+                        ),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -837,7 +850,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
 
   Widget _buildRunsCard(
     BuildContext context,
-    S l10n,
+    Translations t,
     RulesRuntimeWorkspaceState state, {
     required Future<void> Function() onExecute,
   }) {
@@ -846,7 +859,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
     return _buildSectionCard(
       context,
       sectionKey: const Key('rules_execute_runs_section'),
-      title: l10n.rulesExecuteRunsSection,
+      title: t.rulesExecuteRunsSection,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -854,7 +867,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
             key: const Key('rules_execute_run_button'),
             onPressed: state.canExecute ? onExecute : null,
             icon: const Icon(Icons.play_arrow),
-            label: Text(l10n.rulesExecuteRunButton),
+            label: Text(t.rulesExecuteRunButton),
           ),
           if (state.isExecuting) ...[
             AppSpacing.verticalGapSm,
@@ -863,7 +876,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
           AppSpacing.verticalGapMd,
           if (state.orderedRuns.isEmpty)
             Text(
-              l10n.rulesExecuteNoRuns,
+              t.rulesExecuteNoRuns,
               style: Theme.of(context).textTheme.bodySmall,
             )
           else
@@ -879,14 +892,14 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
                   leading: _buildRunStatusIcon(context, run),
                   title: Text(run.ruleName),
                   subtitle: Text(run.runId),
-                  trailing: Text(_runStatusLabel(l10n, run)),
+                  trailing: Text(_runStatusLabel(t, run)),
                 );
               },
             ),
           if (latestRun != null) ...[
             AppSpacing.verticalGapMd,
             Text(
-              l10n.rulesExecuteResponseSection,
+              t.rulesExecuteResponseSection,
               style: Theme.of(context).textTheme.labelLarge,
             ),
             AppSpacing.verticalGapSm,
@@ -902,16 +915,16 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
 
   Widget _buildTimelineCard(
     BuildContext context,
-    S l10n,
+    Translations t,
     RulesRuntimeWorkspaceState state,
   ) {
     return _buildSectionCard(
       context,
       sectionKey: const Key('rules_execute_timeline_section'),
-      title: l10n.rulesExecuteTimelineSection,
+      title: t.rulesExecuteTimelineSection,
       child: state.timeline.isEmpty
           ? Text(
-              l10n.rulesExecuteTimelineEmpty,
+              t.rulesExecuteTimelineEmpty,
               style: Theme.of(context).textTheme.bodySmall,
             )
           : ListView.separated(
@@ -942,7 +955,11 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
     );
   }
 
-  Widget _buildErrorCard(BuildContext context, S l10n, AppFailure failure) {
+  Widget _buildErrorCard(
+    BuildContext context,
+    Translations t,
+    AppFailure failure,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
@@ -969,7 +986,7 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
             onPressed: () => ref
                 .read(rulesRuntimeWorkspaceControllerProvider.notifier)
                 .refreshWorkspace(),
-            child: Text(l10n.retry),
+            child: Text(t.retry),
           ),
         ],
       ),
@@ -1029,7 +1046,11 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
     );
   }
 
-  Widget _buildTimelineChip(BuildContext context, S l10n, bool isConnected) {
+  Widget _buildTimelineChip(
+    BuildContext context,
+    Translations t,
+    bool isConnected,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
     final backgroundColor = isConnected
         ? colorScheme.primaryContainer
@@ -1049,8 +1070,8 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
       ),
       child: Text(
         isConnected
-            ? l10n.rulesExecuteTimelineConnected
-            : l10n.rulesExecuteTimelineDisconnected,
+            ? t.rulesExecuteTimelineConnected
+            : t.rulesExecuteTimelineDisconnected,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
           color: foregroundColor,
         ),
@@ -1079,14 +1100,11 @@ class _RulesExecutePageState extends ConsumerState<RulesExecutePage> {
     };
   }
 
-  String _runStatusLabel(S l10n, RuntimeWorkspaceRunState run) {
+  String _runStatusLabel(Translations t, RuntimeWorkspaceRunState run) {
     return switch (run.status) {
-      RuntimeWorkspaceRunStatus.accepted =>
-        l10n.rulesExecuteRunStatusAccepted,
-      RuntimeWorkspaceRunStatus.running =>
-        l10n.rulesExecuteRunStatusRunning,
-      RuntimeWorkspaceRunStatus.finished =>
-        l10n.rulesExecuteRunStatusFinished,
+      RuntimeWorkspaceRunStatus.accepted => t.rulesExecuteRunStatusAccepted,
+      RuntimeWorkspaceRunStatus.running => t.rulesExecuteRunStatusRunning,
+      RuntimeWorkspaceRunStatus.finished => t.rulesExecuteRunStatusFinished,
     };
   }
 

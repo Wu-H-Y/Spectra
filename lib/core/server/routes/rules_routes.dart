@@ -7,11 +7,12 @@ import 'package:spectra/core/database/drift/rule_storage_cipher.dart';
 import 'package:spectra/core/rust/api.dart';
 
 /// Rules 路由的 WS 发布器。
-typedef RulesWsPublisher = void Function(
-  Map<String, dynamic> message, {
-  String? sessionId,
-  String? previewSessionId,
-});
+typedef RulesWsPublisher =
+    void Function(
+      Map<String, dynamic> message, {
+      String? sessionId,
+      String? previewSessionId,
+    });
 
 /// 规则 CRUD 路由。
 class RulesRoutes {

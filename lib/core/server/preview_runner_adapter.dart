@@ -442,8 +442,7 @@ class _PreviewRunnerProcessSessionController
               PreviewRouteException(
                 statusCode: 500,
                 type: 'preview_runner_command_failed',
-                message:
-                    message['error'] as String? ?? '预览 runner 命令执行失败',
+                message: message['error'] as String? ?? '预览 runner 命令执行失败',
               ),
             );
           }

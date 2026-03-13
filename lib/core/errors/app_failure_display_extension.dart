@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import 'package:spectra/core/errors/app_failure.dart';
-import 'package:spectra/l10n/generated/l10n.dart';
+import 'package:spectra/core/i18n/strings.g.dart';
 
 /// AppFailure 扩展方法，提供错误到本地化文案的映射。
 ///
@@ -29,7 +29,7 @@ extension AppFailureDisplay on AppFailure {
   /// 如果无法获取本地化实例（例如在 Widget 树外），
   /// 会返回一个通用的错误消息。
   String localizedMessage(BuildContext context) {
-    final l10n = S.maybeOf(context);
+    final l10n = _getTranslations(context);
     if (l10n == null) {
       return _getFallbackMessage();
     }
@@ -38,7 +38,7 @@ extension AppFailureDisplay on AppFailure {
 
   /// 获取本地化的错误标题（用于对话框等场景）。
   String localizedTitle(BuildContext context) {
-    final l10n = S.maybeOf(context);
+    final l10n = _getTranslations(context);
     if (l10n == null) {
       return '错误';
     }
@@ -47,23 +47,32 @@ extension AppFailureDisplay on AppFailure {
 
   /// 获取不带 context 的错误消息（用于无法访问 Widget 树的场景）。
   ///
-  /// 注意：此方法会尝试使用 S.current，如果未初始化会返回通用消息。
+  /// 注意：此方法会尝试使用 LocaleSettings.instance.currentTranslations，如果未初始化会返回通用消息。
   /// 优先使用 [localizedMessage] 方法。
   String get message {
     try {
-      return _getLocalizedMessage(S.current);
+      return _getLocalizedMessage(LocaleSettings.instance.currentTranslations);
     } on Exception catch (_) {
       return _getFallbackMessage();
     }
   }
 
-  String _getLocalizedMessage(S l10n) {
+  /// 尝试从 context 获取 Translations 实例
+  Translations? _getTranslations(BuildContext context) {
+    try {
+      return Translations.of(context);
+    } on Exception catch (_) {
+      return null;
+    }
+  }
+
+  String _getLocalizedMessage(Translations l10n) {
     // 使用 freezed 生成的 map 方法进行模式匹配
     return map(
       // ============== 网络类错误 ==============
       networkUnreachable: (_) => l10n.errorNetworkUnreachable,
       connectionTimeout: (_) => l10n.errorConnectionTimeout,
-      serverError: (e) => l10n.errorServerError(e.statusCode ?? 500),
+      serverError: (e) => l10n.errorServerError(code: e.statusCode ?? 500),
       // ============== 业务类错误 ==============
       unauthorized: (_) => l10n.errorUnauthorized,
       forbidden: (_) => l10n.errorForbidden,
@@ -73,12 +82,13 @@ extension AppFailureDisplay on AppFailure {
       parseError: (_) => l10n.errorParseError,
       validationError: (e) => e.message,
       // ============== 爬虫规则类错误 ==============
-      ruleParseError: (e) => l10n.errorRuleParseError(e.message),
-      ruleExecutionError: (e) => l10n.errorRuleExecutionError(e.message),
-      selectorError: (e) => l10n.errorSelectorError(e.selector),
+      ruleParseError: (e) => l10n.errorRuleParseError(message: e.message),
+      ruleExecutionError: (e) =>
+          l10n.errorRuleExecutionError(message: e.message),
+      selectorError: (e) => l10n.errorSelectorError(selector: e.selector),
       // ============== 用户输入类错误 ==============
-      weakPassword: (e) => l10n.errorWeakPassword(e.minLength),
-      usernameExists: (e) => l10n.errorUsernameExists(e.username),
+      weakPassword: (e) => l10n.errorWeakPassword(count: e.minLength),
+      usernameExists: (e) => l10n.errorUsernameExists(username: e.username),
       // ============== 存储类错误 ==============
       databaseError: (_) => l10n.errorDatabaseError,
       cacheError: (_) => l10n.errorCacheError,
@@ -88,7 +98,7 @@ extension AppFailureDisplay on AppFailure {
     );
   }
 
-  String _getLocalizedTitle(S l10n) {
+  String _getLocalizedTitle(Translations l10n) {
     return map(
       // 网络错误
       networkUnreachable: (_) => l10n.errorTitleNetwork,

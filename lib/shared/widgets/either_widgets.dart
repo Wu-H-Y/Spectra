@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:spectra/core/functional/failures.dart';
-import 'package:spectra/l10n/generated/l10n.dart';
+import 'package:spectra/core/i18n/strings.g.dart';
 
 /// EitherBuilder - 简化 Either 处理的 Widget
 ///
@@ -153,7 +153,7 @@ class FailureWidget extends StatelessWidget {
               FilledButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: Text(S.of(context).retry),
+                label: Text(Translations.of(context).retry),
               ),
             ],
           ],

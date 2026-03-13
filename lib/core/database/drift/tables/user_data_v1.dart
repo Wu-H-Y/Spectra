@@ -38,7 +38,8 @@ class FavoritesV1 extends Table {
   TextColumn get metadataJson => text().nullable()();
 
   /// 收藏时间
-  DateTimeColumn get favoritedAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get favoritedAt =>
+      dateTime().withDefault(currentDateAndTime)();
 
   /// 最后观看/访问时间
   DateTimeColumn get lastAccessedAt => dateTime().nullable()();
@@ -75,7 +76,8 @@ class SearchHistoryV1 extends Table {
   IntColumn get searchCount => integer().withDefault(const Constant(1))();
 
   /// 最后搜索时间
-  DateTimeColumn get lastSearchedAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get lastSearchedAt =>
+      dateTime().withDefault(currentDateAndTime)();
 
   /// 创建时间
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();

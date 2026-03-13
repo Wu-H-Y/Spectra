@@ -7,7 +7,8 @@ import 'package:spectra/core/server/runtime_workspace_client.dart';
 import 'package:spectra/core/server/server_provider.dart';
 import 'package:spectra/features/rules_execute/application/rules_runtime_workspace_state.dart';
 
-export 'package:spectra/features/rules_execute/application/rules_runtime_workspace_state.dart' show SelectedElementInfo;
+export 'package:spectra/features/rules_execute/application/rules_runtime_workspace_state.dart'
+    show SelectedElementInfo;
 
 /// Runtime 工作区客户端 Provider。
 final runtimeWorkspaceClientProvider = Provider<RuntimeWorkspaceClient>((ref) {
@@ -28,8 +29,11 @@ final runtimeWorkspaceSessionIdProvider = Provider<String>((_) {
 });
 
 /// Runtime 工作区控制器 Provider。
-final NotifierProvider<RulesRuntimeWorkspaceController,
-    RulesRuntimeWorkspaceState> rulesRuntimeWorkspaceControllerProvider =
+final NotifierProvider<
+  RulesRuntimeWorkspaceController,
+  RulesRuntimeWorkspaceState
+>
+rulesRuntimeWorkspaceControllerProvider =
     NotifierProvider.autoDispose<
       RulesRuntimeWorkspaceController,
       RulesRuntimeWorkspaceState
@@ -293,18 +297,19 @@ class RulesRuntimeWorkspaceController
       );
 
       executeResult.match(_applyFailure, (accepted) {
-        final nextRuns = Map<String, RuntimeWorkspaceRunState>.from(
-          state.runsById,
-        )
-          ..[accepted.runId] = RuntimeWorkspaceRunState(
-            runId: accepted.runId,
-            ruleId: selectedRule.ruleId,
-            ruleName: selectedRule.name,
-            status: RuntimeWorkspaceRunStatus.accepted,
-            acceptedAt: _now(),
-            executeResponseJson: accepted.responseJson,
-            previewSessionId: state.activePreviewSessionId,
-          );
+        final nextRuns =
+            Map<String, RuntimeWorkspaceRunState>.from(
+                state.runsById,
+              )
+              ..[accepted.runId] = RuntimeWorkspaceRunState(
+                runId: accepted.runId,
+                ruleId: selectedRule.ruleId,
+                ruleName: selectedRule.name,
+                status: RuntimeWorkspaceRunStatus.accepted,
+                acceptedAt: _now(),
+                executeResponseJson: accepted.responseJson,
+                previewSessionId: state.activePreviewSessionId,
+              );
         state = state.copyWith(runsById: nextRuns, failure: null);
         _appendTimelineEntry(
           type: 'run_accepted',
@@ -383,7 +388,8 @@ class RulesRuntimeWorkspaceController
     );
     result.match(_applyFailure, (rules) {
       final selectedRuleId = state.selectedRuleId;
-      final hasSelectedRule = selectedRuleId != null &&
+      final hasSelectedRule =
+          selectedRuleId != null &&
           rules.any((item) => item.id == selectedRuleId);
       state = state.copyWith(
         rules: rules,
@@ -416,31 +422,34 @@ class RulesRuntimeWorkspaceController
     );
 
     var connected = false;
-    result.match((failure) {
-      _applyFailure(failure);
-      state = state.copyWith(timelineConnected: false);
-    }, (connection) {
-      _timelineConnection = connection;
-      _connectedServerUrl = serverUrl;
-      _timelineSubscription = connection.messages.listen(
-        _handleTimelineMessage,
-        onError: (Object error, StackTrace stackTrace) {
-          final failure = error is AppFailure
-              ? error
-              : AppFailure.unknown(error);
-          _applyFailure(failure);
-          state = state.copyWith(timelineConnected: false);
-          FlutterError.reportError(
-            FlutterErrorDetails(exception: error, stack: stackTrace),
-          );
-        },
-        onDone: () {
-          state = state.copyWith(timelineConnected: false);
-        },
-      );
-      state = state.copyWith(timelineConnected: true, failure: null);
-      connected = true;
-    });
+    result.match(
+      (failure) {
+        _applyFailure(failure);
+        state = state.copyWith(timelineConnected: false);
+      },
+      (connection) {
+        _timelineConnection = connection;
+        _connectedServerUrl = serverUrl;
+        _timelineSubscription = connection.messages.listen(
+          _handleTimelineMessage,
+          onError: (Object error, StackTrace stackTrace) {
+            final failure = error is AppFailure
+                ? error
+                : AppFailure.unknown(error);
+            _applyFailure(failure);
+            state = state.copyWith(timelineConnected: false);
+            FlutterError.reportError(
+              FlutterErrorDetails(exception: error, stack: stackTrace),
+            );
+          },
+          onDone: () {
+            state = state.copyWith(timelineConnected: false);
+          },
+        );
+        state = state.copyWith(timelineConnected: true, failure: null);
+        connected = true;
+      },
+    );
     return connected;
   }
 

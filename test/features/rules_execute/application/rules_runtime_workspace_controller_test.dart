@@ -13,108 +13,116 @@ void main() {
   test(
     'controller maps session preview and runs into workspace state',
     () async {
-    final client = _FakeRuntimeWorkspaceClient();
-    final container = ProviderContainer(
-      overrides: [
-        runtimeWorkspaceClientProvider.overrideWithValue(client),
-        runtimeWorkspaceSessionIdProvider.overrideWithValue(
-          'session_runtime_test',
-        ),
-        serverProvider.overrideWithValue(
-          const ServerStatus(
-            isRunning: true,
-            port: 8080,
-            url: 'http://localhost:8080',
+      final client = _FakeRuntimeWorkspaceClient();
+      final container = ProviderContainer(
+        overrides: [
+          runtimeWorkspaceClientProvider.overrideWithValue(client),
+          runtimeWorkspaceSessionIdProvider.overrideWithValue(
+            'session_runtime_test',
           ),
+          serverProvider.overrideWithValue(
+            const ServerStatus(
+              isRunning: true,
+              port: 8080,
+              url: 'http://localhost:8080',
+            ),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      final stateSubscription = container.listen(
+        rulesRuntimeWorkspaceControllerProvider,
+        (_, _) {},
+      );
+      addTearDown(stateSubscription.close);
+
+      final controller = container.read(
+        rulesRuntimeWorkspaceControllerProvider.notifier,
+      );
+
+      await controller.refreshWorkspace();
+
+      expect(
+        container.read(rulesRuntimeWorkspaceControllerProvider).sessionId,
+        'session_runtime_test',
+      );
+      expect(
+        container.read(rulesRuntimeWorkspaceControllerProvider).selectedRuleId,
+        1,
+      );
+      expect(
+        container
+            .read(rulesRuntimeWorkspaceControllerProvider)
+            .timelineConnected,
+        isTrue,
+      );
+
+      await controller.openPreview('https://example.com/story');
+
+      expect(
+        container
+            .read(rulesRuntimeWorkspaceControllerProvider)
+            .activePreview
+            ?.previewSessionId,
+        'preview_runtime_001',
+      );
+
+      await controller.executeSelectedRule();
+
+      var state = container.read(rulesRuntimeWorkspaceControllerProvider);
+      expect(state.runsById.keys, contains('run_runtime_001'));
+      expect(
+        state.runsById['run_runtime_001']?.status,
+        RuntimeWorkspaceRunStatus.accepted,
+      );
+
+      client.emit(
+        RuntimeTimelineMessage(
+          type: 'node_event',
+          data: const {
+            'event': 'run_started',
+            'runId': 'run_runtime_001',
+            'seq': 1,
+          },
+          receivedAt: _startedAt,
         ),
-      ],
-    );
-    addTearDown(container.dispose);
-    final stateSubscription = container.listen(
-      rulesRuntimeWorkspaceControllerProvider,
-      (_, _) {},
-    );
-    addTearDown(stateSubscription.close);
+      );
+      await Future<void>.delayed(Duration.zero);
 
-    final controller = container.read(
-      rulesRuntimeWorkspaceControllerProvider.notifier,
-    );
+      state = container.read(rulesRuntimeWorkspaceControllerProvider);
+      expect(
+        state.runsById['run_runtime_001']?.status,
+        RuntimeWorkspaceRunStatus.running,
+      );
 
-    await controller.refreshWorkspace();
+      client.emit(
+        RuntimeTimelineMessage(
+          type: 'node_event',
+          data: const {
+            'event': 'run_finished',
+            'runId': 'run_runtime_001',
+            'seq': 2,
+            'success': true,
+          },
+          receivedAt: _finishedAt,
+        ),
+      );
+      await Future<void>.delayed(Duration.zero);
 
-    expect(
-      container.read(rulesRuntimeWorkspaceControllerProvider).sessionId,
-      'session_runtime_test',
-    );
-    expect(
-      container.read(rulesRuntimeWorkspaceControllerProvider).selectedRuleId,
-      1,
-    );
-    expect(
-      container.read(rulesRuntimeWorkspaceControllerProvider).timelineConnected,
-      isTrue,
-    );
-
-    await controller.openPreview('https://example.com/story');
-
-    expect(
-      container.read(rulesRuntimeWorkspaceControllerProvider).activePreview
-          ?.previewSessionId,
-      'preview_runtime_001',
-    );
-
-    await controller.executeSelectedRule();
-
-    var state = container.read(rulesRuntimeWorkspaceControllerProvider);
-    expect(state.runsById.keys, contains('run_runtime_001'));
-    expect(
-      state.runsById['run_runtime_001']?.status,
-      RuntimeWorkspaceRunStatus.accepted,
-    );
-
-    client.emit(
-      RuntimeTimelineMessage(
-        type: 'node_event',
-        data: const {
-          'event': 'run_started',
-          'runId': 'run_runtime_001',
-          'seq': 1,
-        },
-        receivedAt: _startedAt,
-      ),
-    );
-    await Future<void>.delayed(Duration.zero);
-
-    state = container.read(rulesRuntimeWorkspaceControllerProvider);
-    expect(
-      state.runsById['run_runtime_001']?.status,
-      RuntimeWorkspaceRunStatus.running,
-    );
-
-    client.emit(
-      RuntimeTimelineMessage(
-        type: 'node_event',
-        data: const {
-          'event': 'run_finished',
-          'runId': 'run_runtime_001',
-          'seq': 2,
-          'success': true,
-        },
-        receivedAt: _finishedAt,
-      ),
-    );
-    await Future<void>.delayed(Duration.zero);
-
-    state = container.read(rulesRuntimeWorkspaceControllerProvider);
-    expect(
-      state.runsById['run_runtime_001']?.status,
-      RuntimeWorkspaceRunStatus.finished,
-    );
-    expect(state.runsById['run_runtime_001']?.success, isTrue);
-    expect(state.timeline.map((item) => item.type), contains('preview_opened'));
-    expect(state.timeline.map((item) => item.type), contains('run_accepted'));
-    expect(state.timeline.map((item) => item.type), contains('node_event'));
-  });
+      state = container.read(rulesRuntimeWorkspaceControllerProvider);
+      expect(
+        state.runsById['run_runtime_001']?.status,
+        RuntimeWorkspaceRunStatus.finished,
+      );
+      expect(state.runsById['run_runtime_001']?.success, isTrue);
+      expect(
+        state.timeline.map((item) => item.type),
+        contains('preview_opened'),
+      );
+      expect(state.timeline.map((item) => item.type), contains('run_accepted'));
+      expect(state.timeline.map((item) => item.type), contains('node_event'));
+    },
+  );
 }
 
 final _startedAt = DateTime.utc(2026, 3, 9, 12, 0, 1);

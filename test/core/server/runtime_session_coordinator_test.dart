@@ -10,27 +10,28 @@ void main() {
   test(
     'coordinator closes selecting session and publishes cancelled state',
     () async {
-    final adapter = _FakePreviewRunnerAdapter();
-    final selectionStates = <({String previewSessionId, bool isSelecting})>[];
+      final adapter = _FakePreviewRunnerAdapter();
+      final selectionStates = <({String previewSessionId, bool isSelecting})>[];
 
       final coordinator = RuntimeSessionCoordinatorImpl(
-      previewRunnerAdapter: adapter,
-      projectRootPath: 'D:/workspace/workspace_flutter/Spectra',
-      previewSessionIdGenerator: () => 'preview_runtime_001',
-      publishSelectionState: ({
-        required previewSessionId,
-        required sessionId,
-        required isSelecting,
-      }) {
-        selectionStates.add(
-          (
-            previewSessionId: previewSessionId,
-            isSelecting: isSelecting,
-          ),
-        );
-      },
-      publishElementSelected: (_, {required sessionId}) {},
-    );
+        previewRunnerAdapter: adapter,
+        projectRootPath: 'D:/workspace/workspace_flutter/Spectra',
+        previewSessionIdGenerator: () => 'preview_runtime_001',
+        publishSelectionState:
+            ({
+              required previewSessionId,
+              required sessionId,
+              required isSelecting,
+            }) {
+              selectionStates.add(
+                (
+                  previewSessionId: previewSessionId,
+                  isSelecting: isSelecting,
+                ),
+              );
+            },
+        publishElementSelected: (_, {required sessionId}) {},
+      );
 
       final openResult = await coordinator.openPreview(
         url: 'https://example.com/runtime',
@@ -98,11 +99,12 @@ void main() {
         index += 1;
         return 'preview_runtime_00$index';
       },
-      publishSelectionState: ({
-        required previewSessionId,
-        required sessionId,
-        required isSelecting,
-      }) {},
+      publishSelectionState:
+          ({
+            required previewSessionId,
+            required sessionId,
+            required isSelecting,
+          }) {},
       publishElementSelected: (_, {required sessionId}) {},
     );
 

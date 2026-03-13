@@ -6,17 +6,19 @@ import 'package:spectra/core/server/routes/preview_routes.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 /// 预览选择状态变更回调。
-typedef PublishSelectionStateCallback = void Function({
-  required String previewSessionId,
-  required String? sessionId,
-  required bool isSelecting,
-});
+typedef PublishSelectionStateCallback =
+    void Function({
+      required String previewSessionId,
+      required String? sessionId,
+      required bool isSelecting,
+    });
 
 /// 元素选中回调。
-typedef PublishElementSelectedCallback = void Function(
-  PreviewElementSelectedEvent event, {
-  required String? sessionId,
-});
+typedef PublishElementSelectedCallback =
+    void Function(
+      PreviewElementSelectedEvent event, {
+      required String? sessionId,
+    });
 
 /// Runtime 会话协调器配置。
 @immutable
