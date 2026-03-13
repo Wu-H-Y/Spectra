@@ -47,6 +47,8 @@ migrate_working_dir/
 /build/
 /coverage/
 .cache
+**/_missing_translations.json
+**/_unused_translations.json
 
 # Symbolication related
 app.*.symbols
