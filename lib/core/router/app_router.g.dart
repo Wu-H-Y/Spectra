@@ -10,6 +10,7 @@ List<RouteBase> get $appRoutes => [
   $favoritesRoute,
   $discoverRoute,
   $searchRoute,
+  $rulesRoute,
   $settingsRoute,
   $settingsAppearanceRoute,
   $settingsDataRoute,
@@ -72,6 +73,35 @@ mixin $SearchRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/search');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $rulesRoute =>
+    GoRouteData.$route(path: '/rules', factory: $RulesRoute._fromState);
+
+mixin $RulesRoute on GoRouteData {
+  static RulesRoute _fromState(GoRouterState state) =>
+      RulesRoute(url: state.uri.queryParameters['url']);
+
+  RulesRoute get _self => this as RulesRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/rules',
+    queryParams: {if (_self.url != null) 'url': _self.url},
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -282,4 +312,4 @@ final class RouterProvider
   }
 }
 
-String _$routerHash() => r'1db0f611e1d2a1dcae5e1daf350c379b66ea319f';
+String _$routerHash() => r'45f31f8eea02c55bfde9547be29cab3a631e942a';

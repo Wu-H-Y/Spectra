@@ -5,15 +5,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sizer/sizer.dart';
 import 'package:spectra/core/database/drift/app_database.dart';
 import 'package:spectra/core/database/hive/hive_service.dart';
+import 'package:spectra/core/i18n/strings.g.dart';
 import 'package:spectra/core/router/app_router.dart';
 import 'package:spectra/core/theme/theme.dart';
-import 'package:spectra/l10n/generated/l10n.dart';
 import 'package:spectra/shared/providers/settings_provider.dart';
 import 'package:spectra/shared/providers/talker_provider.dart';
 import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
 import 'package:window_manager/window_manager.dart';
 
-void main() async {
+void main(List<String> args) async {
   // 1. 确保 Flutter 绑定初始化
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
@@ -42,13 +42,17 @@ void main() async {
 
   // 5. 创建 Talker 实例并启动应用
   final talker = createTalker();
+  final launchRouteLocation = resolveLaunchRouteLocation(args);
   runApp(
     ProviderScope(
       observers: [TalkerRiverpodObserver(talker: talker)],
       overrides: [
         talkerProvider.overrideWithValue(talker),
+        launchRouteLocationProvider.overrideWithValue(launchRouteLocation),
       ],
-      child: const AppReadyHandler(child: SpectraApp()),
+      child: TranslationProvider(
+        child: const AppReadyHandler(child: SpectraApp()),
+      ),
     ),
   );
 }
@@ -88,23 +92,21 @@ class SpectraApp extends HookConsumerWidget {
     final themeMode = ref.watch(persistedThemeModeProvider);
     final locale = ref.watch(persistedLocaleProvider);
 
+    // 获取当前翻译实例
+    final t = Translations.of(context);
+
     return Sizer(
       builder: (context, orientation, screenType) {
         return MaterialApp.router(
-          title: 'Spectra',
+          title: t.appName,
           debugShowCheckedModeBanner: false,
 
           // 路由配置
           routerConfig: router,
 
           // 本地化配置
-          localizationsDelegates: const [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: S.delegate.supportedLocales,
+          localizationsDelegates: GlobalMaterialLocalizations.delegates,
+          supportedLocales: AppLocaleUtils.supportedLocales,
           locale: locale,
 
           // 主题配置

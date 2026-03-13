@@ -1,19 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart' show Provider;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:spectra/core/i18n/strings.g.dart';
 import 'package:spectra/features/discover/presentation/pages/discover_page.dart';
 import 'package:spectra/features/favorites/presentation/pages/favorites_page.dart';
+import 'package:spectra/features/rules/presentation/pages/rules_page.dart';
 import 'package:spectra/features/rules_execute/presentation/pages/rules_execute_page.dart';
 import 'package:spectra/features/search/presentation/pages/search_page.dart';
 import 'package:spectra/features/settings/presentation/pages/settings_appearance_page.dart';
 import 'package:spectra/features/settings/presentation/pages/settings_data_page.dart';
 import 'package:spectra/features/settings/presentation/pages/settings_page.dart';
 import 'package:spectra/features/settings/presentation/pages/settings_playback_page.dart';
-import 'package:spectra/l10n/generated/l10n.dart';
 import 'package:spectra/shared/providers/talker_provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 part 'app_router.g.dart';
+
+/// 启动时的深度链接路由位置。
+final launchRouteLocationProvider = Provider<String?>((_) => null);
+
+/// 规范化规则导入 deep link。
+String? normalizeRulesImportDeepLink(Uri uri) {
+  if (uri.scheme.toLowerCase() != 'spectra') {
+    return null;
+  }
+
+  final isRulesImport =
+      (uri.host == 'rules' && uri.path == '/import') ||
+      uri.path == '/rules/import';
+  if (!isRulesImport) {
+    return null;
+  }
+
+  final importUrl = uri.queryParameters['url'];
+  if (importUrl == null || importUrl.trim().isEmpty) {
+    return const RulesRoute().location;
+  }
+
+  return RulesRoute(url: importUrl).location;
+}
+
+/// 从启动参数中解析 deep link 路由位置。
+String? resolveLaunchRouteLocation(List<String> args) {
+  for (final arg in args.reversed) {
+    final uri = Uri.tryParse(arg.trim());
+    if (uri == null) {
+      continue;
+    }
+
+    final normalized = normalizeRulesImportDeepLink(uri);
+    if (normalized != null) {
+      return normalized;
+    }
+  }
+
+  return null;
+}
 
 /// 路由 Provider
 ///
@@ -25,13 +68,22 @@ part 'app_router.g.dart';
 @riverpod
 GoRouter router(Ref ref) {
   final talker = ref.watch(talkerProvider);
+  final launchRouteLocation = ref.watch(launchRouteLocationProvider);
 
   return GoRouter(
     routes: $appRoutes,
     errorBuilder: (context, state) => NotFoundPage(error: state.error),
     debugLogDiagnostics: true,
-    initialLocation: '/',
+    initialLocation: launchRouteLocation ?? '/',
     observers: [TalkerRouteObserver(talker)],
+    redirect: (context, state) {
+      final normalized = normalizeRulesImportDeepLink(state.uri);
+      if (normalized != null && normalized != state.uri.toString()) {
+        return normalized;
+      }
+
+      return null;
+    },
   );
 }
 
@@ -77,6 +129,23 @@ class SearchRoute extends GoRouteData with $SearchRoute {
   }
 }
 
+/// 规则管理页路由
+///
+/// 导航到规则列表与导入管理页面
+@TypedGoRoute<RulesRoute>(path: '/rules')
+class RulesRoute extends GoRouteData with $RulesRoute {
+  /// 创建规则管理页路由实例
+  const RulesRoute({this.url});
+
+  /// 预填充的规则 URL。
+  final String? url;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return RulesPage(initialImportUrl: url);
+  }
+}
+
 /// 设置路由
 ///
 /// 导航到设置页面
@@ -93,7 +162,9 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
 
 /// 外观设置路由
 @TypedGoRoute<SettingsAppearanceRoute>(path: '/settings/appearance')
-class SettingsAppearanceRoute extends GoRouteData with $SettingsAppearanceRoute {
+class SettingsAppearanceRoute extends GoRouteData
+    with $SettingsAppearanceRoute {
+  /// 构建外观设置页面
   const SettingsAppearanceRoute();
 
   @override
@@ -105,6 +176,7 @@ class SettingsAppearanceRoute extends GoRouteData with $SettingsAppearanceRoute 
 /// 数据存储设置路由
 @TypedGoRoute<SettingsDataRoute>(path: '/settings/data')
 class SettingsDataRoute extends GoRouteData with $SettingsDataRoute {
+  /// 构建数据存储设置页面
   const SettingsDataRoute();
 
   @override
@@ -116,6 +188,7 @@ class SettingsDataRoute extends GoRouteData with $SettingsDataRoute {
 /// 播放预览设置路由
 @TypedGoRoute<SettingsPlaybackRoute>(path: '/settings/playback')
 class SettingsPlaybackRoute extends GoRouteData with $SettingsPlaybackRoute {
+  /// 构建播放预览设置页面
   const SettingsPlaybackRoute();
 
   @override
@@ -157,11 +230,11 @@ class NotFoundPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = S.of(context);
+    final t = context.t;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.pageNotFound),
+        title: Text(t.pageNotFound),
       ),
       body: Center(
         child: Column(
@@ -174,7 +247,7 @@ class NotFoundPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              l10n.pageNotFound,
+              t.pageNotFound,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             if (error != null) ...[
@@ -188,7 +261,7 @@ class NotFoundPage extends StatelessWidget {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () => context.go('/'),
-              child: Text(l10n.goHome),
+              child: Text(t.goHome),
             ),
           ],
         ),
