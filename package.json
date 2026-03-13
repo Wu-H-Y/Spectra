@@ -16,9 +16,13 @@
     "lint:fix:rust": "cd rust && cargo clippy --fix --allow-dirty --allow-staged",
     "lint:fix": "bun run lint:fix:dart && bun run lint:fix:web && bun run lint:fix:rust",
     "format:dart": "dart format .",
+    "format:check:dart": "dart format --output=none --set-exit-if-changed .",
     "format:web": "cd web-editor && bun run fmt",
+    "format:check:web": "cd web-editor && bun run fmt:check",
     "format:rust": "cd rust && cargo +nightly fmt --all",
-    "format": "bun run format:dart && bun run format:web && bun run format:rust"
+    "format:check:rust": "cd rust && cargo +nightly fmt --all --check",
+    "format": "bun run format:dart && bun run format:web && bun run format:rust",
+    "format:check": "bun run format:check:dart && bun run format:check:web && bun run format:check:rust"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.4.2",
