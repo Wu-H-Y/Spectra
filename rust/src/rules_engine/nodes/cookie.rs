@@ -9,8 +9,7 @@ use super::{
 use crate::{
     rules_engine::{
         EngineError, EventCommand, RuntimeCookieJar, RuntimeValue, current_unix_timestamp_secs,
-        emit_node_log,
-        normalize_cookie_domain, normalize_cookie_path,
+        emit_node_log, normalize_cookie_domain, normalize_cookie_path,
     },
     rules_ir::Node,
 };
@@ -160,10 +159,12 @@ async fn resolve_cookie_domain_for_put(
         .unwrap_or_default();
 
     if requested_domain.is_empty() || requested_domain == "$current" {
-        return cookie_jar
-            .current_request_domain()
-            .await
-            .ok_or_else(|| node_failure(node, "CookiePut 默认域依赖当前请求域，但当前运行还没有 Fetch 域上下文"));
+        return cookie_jar.current_request_domain().await.ok_or_else(|| {
+            node_failure(
+                node,
+                "CookiePut 默认域依赖当前请求域，但当前运行还没有 Fetch 域上下文",
+            )
+        });
     }
 
     if !is_valid_cookie_domain(&requested_domain) {
@@ -270,6 +271,8 @@ fn is_valid_cookie_domain(domain: &str) -> bool {
             && label.len() <= 63
             && !label.starts_with('-')
             && !label.ends_with('-')
-            && label.chars().all(|char| char.is_ascii_alphanumeric() || char == '-')
+            && label
+                .chars()
+                .all(|char| char.is_ascii_alphanumeric() || char == '-')
     })
 }

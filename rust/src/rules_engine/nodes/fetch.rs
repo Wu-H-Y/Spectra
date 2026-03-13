@@ -9,8 +9,8 @@ use super::{
 };
 use crate::{
     rules_engine::{
-        EngineError, EventCommand, RuleRateLimiter, RuntimeCookieJar, RuntimeValue,
-        emit_node_log, extract_domain_from_url,
+        EngineError, EventCommand, RuleRateLimiter, RuntimeCookieJar, RuntimeValue, emit_node_log,
+        extract_domain_from_url,
     },
     rules_ir::{DataType, Node},
 };

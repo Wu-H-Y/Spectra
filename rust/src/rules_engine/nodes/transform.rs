@@ -1,23 +1,23 @@
 use std::{
     collections::BTreeMap,
     sync::{
-        atomic::{AtomicBool, Ordering},
         Arc,
+        atomic::{AtomicBool, Ordering},
     },
     time::{Duration, Instant},
 };
 
 use aes::{
-    cipher::{block_padding::Pkcs7, BlockDecryptMut, BlockEncryptMut, KeyInit, KeyIvInit},
     Aes128, Aes192, Aes256,
+    cipher::{BlockDecryptMut, BlockEncryptMut, KeyInit, KeyIvInit, block_padding::Pkcs7},
 };
-use base64::{engine::general_purpose::STANDARD as BASE64_STANDARD, Engine as _};
+use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64_STANDARD};
 use cbc::{Decryptor as AesCbcDecryptor, Encryptor as AesCbcEncryptor};
 use chrono::{DateTime, Utc};
 use ecb::{Decryptor as AesEcbDecryptor, Encryptor as AesEcbEncryptor};
 use encoding_rs::GBK;
-use percent_encoding::{utf8_percent_encode, AsciiSet, CONTROLS};
-use rquickjs::{context::intrinsic, Context, Ctx, Runtime};
+use percent_encoding::{AsciiSet, CONTROLS, utf8_percent_encode};
+use rquickjs::{Context, Ctx, Runtime, context::intrinsic};
 use url::Url;
 
 use super::{
@@ -182,7 +182,13 @@ fn execute_crypto(
                 .map_err(|error| {
                     node_failure(node, format!("AES 输入密文不是合法 Base64：{error}"))
                 })?;
-            let decrypted = aes_decrypt(node, transformation, &bytes, &key_bytes, iv_bytes.as_deref())?;
+            let decrypted = aes_decrypt(
+                node,
+                transformation,
+                &bytes,
+                &key_bytes,
+                iv_bytes.as_deref(),
+            )?;
             RuntimeValue::Text(String::from_utf8(decrypted).map_err(|error| {
                 node_failure(node, format!("AES 解密结果不是合法 UTF-8 文本：{error}"))
             })?)
@@ -286,7 +292,10 @@ fn resolve_secret_value_optional(
         KeyRefProvider::Inline => {
             let inline = key_ref.value.as_deref().unwrap_or_default().trim();
             if inline.is_empty() {
-                return Err(node_failure(node, format!("{key_ref_param}.value 不能为空")));
+                return Err(node_failure(
+                    node,
+                    format!("{key_ref_param}.value 不能为空"),
+                ));
             }
             inline.to_string()
         }
@@ -296,7 +305,10 @@ fn resolve_secret_value_optional(
                 return Err(node_failure(node, format!("{key_ref_param}.name 不能为空")));
             }
             std::env::var(name).map_err(|_| {
-                node_failure(node, format!("环境变量 `{name}` 未设置，无法解析 {key_ref_param}"))
+                node_failure(
+                    node,
+                    format!("环境变量 `{name}` 未设置，无法解析 {key_ref_param}"),
+                )
             })?
         }
         KeyRefProvider::SecureStore => {
@@ -769,12 +781,11 @@ fn normalize_space(input: &str) -> String {
 mod tests {
     use std::collections::BTreeMap;
 
+    use super::execute;
     use crate::{
         rules_engine::RuntimeValue,
         rules_ir::{DataType, LifecyclePhase, Node, NodeKind, Port},
     };
-
-    use super::execute;
 
     fn text_port(name: &str) -> Port {
         Port {
@@ -940,7 +951,10 @@ mod tests {
             ],
             "hello-spectra",
         );
-        assert_eq!(cbc, RuntimeValue::Text("UpvU71M71rJfGplhMzu/UQ==".to_string()));
+        assert_eq!(
+            cbc,
+            RuntimeValue::Text("UpvU71M71rJfGplhMzu/UQ==".to_string())
+        );
 
         let ecb = run_transform(
             &[
@@ -950,7 +964,10 @@ mod tests {
             ],
             "hello-spectra",
         );
-        assert_eq!(ecb, RuntimeValue::Text("DNNM4HLlUckSwVf6C6Qj0w==".to_string()));
+        assert_eq!(
+            ecb,
+            RuntimeValue::Text("DNNM4HLlUckSwVf6C6Qj0w==".to_string())
+        );
     }
 
     #[test]
@@ -962,10 +979,7 @@ mod tests {
                 "keyRef",
                 r#"{"provider":"secureStore","name":"secret.key"}"#,
             ),
-            (
-                "ivRef",
-                r#"{"provider":"secureStore","name":"secret.iv"}"#,
-            ),
+            ("ivRef", r#"{"provider":"secureStore","name":"secret.iv"}"#),
         ]);
         let mut inputs = BTreeMap::new();
         inputs.insert(
