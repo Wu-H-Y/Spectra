@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "husky",
     "build:web": "cd web-editor && bun run build",
-    "lint:dart": "dart analyze",
+    "lint:dart": "dart analyze --fatal-infos",
     "lint:web": "cd web-editor && bun run lint",
     "lint:rust": "cd rust && cargo clippy --all-targets --all-features -- -D warnings",
     "lint": "bun run lint:dart && bun run lint:web && bun run lint:rust",

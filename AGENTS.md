@@ -1,70 +1,56 @@
 # SPECTRA 项目知识库
 
-## OVERVIEW
+## 定位
 
-跨平台多媒体数据采集应用，主栈为 Flutter（`lib/`）+ Rust FFI（`rust/`）+ React Web 编辑器（`web-editor/`）。
+- 本文件只保留「导航与本仓特例」。
+- 项目只支持 Windows, MacOS, Linux, Android, IOS
+- flutter 应用测试优先升级使用测试框架测试，其次可以后台启用应用使用 dart mcp 进行测试
+- 当每次修改大量代码完成任务后必须先行提交代码
 
-## STRUCTURE
-
-```text
-Spectra/
-├── lib/             # Flutter 主应用
-├── rust/            # Rust workspace + FFI 逻辑
-├── web-editor/      # React + TypeScript 规则编辑器
-├── docs/            # 协议与规范文档
-├── test/            # Flutter 单测
-├── integration_test/# Flutter 集成测试
-└── rust_builder/    # Flutter-Rust 构建胶水层（非业务域）
-```
-
-## WHERE TO LOOK
+## 快速入口
 
 | 任务 | 位置 | 说明 |
 |------|------|------|
-| Flutter 入口 | `lib/main.dart` | 应用启动与依赖初始化 |
-| Rust workspace 定义 | `rust/Cargo.toml` | crate 拆分、成员与版本策略 |
-| Web Editor 入口 | `web-editor/src/main.tsx` | React 挂载与全局初始化 |
-| 仓库质量门禁 | `.github/workflows/ci.yml` | analyze/test/build 平台矩阵 |
-| 根脚本命令 | `package.json` | lint/format/build:web 聚合命令 |
+| Flutter 入口 | `lib/main.dart` | 启动与依赖初始化 |
+| Rust 入口 | `rust/Cargo.toml` | workspace 与 crate 边界 |
+| Web Editor 入口 | `web-editor/src/main.tsx` | React 挂载与初始化 |
+| CI 门禁 | `.github/workflows/ci.yml` | lint / analyze / test / build |
+| 根脚本 | `package.json` | 聚合命令与质量门禁入口 |
 
-## SKILLS 路由总则
+## 技能路由
 
-- `lib/`、`test/` 工作默认先读 `flutter` 相关技能。
-- `rust/` 工作默认先读 `rust-router` 做 Rust 问题路由。
-- `web-editor/` 工作默认先读 `react-web-editor-guide`。
-- 需要查找技能时，先读 `.agents/AGENTS.md` 的「发现/创建流程」，优先使用 `find-skills` 与 `skill-creator`。
-- 涉及 UI/UX 设计与主题系统时，优先补充：`frontend-design`、`ui-ux-pro-max`、`theme-factory`。
+- `lib/`、`test/`：优先 Flutter 相关技能。
+- `rust/`：优先 `rust-router`。
+- `web-editor/`：优先 `react-web-editor-guide`。
+- UI/UX 与主题任务：补充 `frontend-design`、`ui-ux-pro-max`、`theme-factory`。
 
-## CONVENTIONS
+## Rust 子域补充
+
+- Rust 编译错误按错误码路由：
+  - `E0382/E0597` → `m01-ownership`
+  - `E0499/E0502/E0596` → `m03-mutability`
+  - `E0277/E0308` → `m04-zero-cost`
+- FFI / `unsafe` / 裸指针问题：补充 `unsafe-checker`。
+- Rust 验收以 `cargo clippy` 为准，不以 `cargo check` 作为完成标准。
+- Rust 格式化使用 `cargo +nightly fmt`。
+- 与 Flutter 桥接联调时，优先核对 `flutter_rust_bridge.yaml` 与 `rust_builder/`。
+
+## 本仓硬约束
 
 - 注释与文档必须使用中文。
-- UI 逻辑严禁硬编码字符串，必须走平台 i18n 方案。
-- 文档禁止使用 Unicode 表情符号。
-- 依赖新增优先使用命令：`flutter pub add` / `cargo add` / `bun add`。
-- 仅在预览版、Git 依赖、Path 依赖或复杂冲突时手改依赖清单。
-
-## ANTI-PATTERNS
-
+- UI 字符串必须走 i18n，禁止硬编码。
+- 新增依赖优先命令：`flutter pub add` / `cargo add` / `bun add`。
 - 禁止直接编辑生成文件：`*.g.dart`、`*.freezed.dart`、`lib/l10n/generated/**`。
-- 禁止把 `research_tmp/` 内容当作业务代码规范来源。
-- 禁止跳过变更后的静态检查（Flutter analyze / Rust clippy / Web oxlint）。
+- 禁止将 `research_tmp/` 作为业务规范来源。
+- 变更后不得跳过静态检查（Flutter analyze / Rust clippy / Web oxlint）。
 
-## COMMANDS
+## 边界与参考
 
-```bash
-# 根目录常用命令
-flutter pub get
-bun install
-cd web-editor && bun install
+- `rust_builder/` 仅在桥接或构建问题时修改。
+- 协议约束：`docs/api-contract-v1.md`、`docs/ws-protocol-v1.md`。
+- 提交规范：`docs/COMMIT_CONVENTION.md`。
+- 平台支持与手动测试说明：`README.md`。
 
-bun run lint
-bun run format
-bun run build:web
-```
+## 常用命令
 
-## NOTES
-
-- `rust_builder/` 是 Flutter-Rust 构建胶水层，默认只在桥接/构建问题时修改。
-- 协议约束以 `docs/api-contract-v1.md` 与 `docs/ws-protocol-v1.md` 为准。
-- 如果测试不了, 请让提示用户手动测试, flutter不支持构建web端具体支持什么平台查看README.md
-- 用户让提交代码时参考@docs/COMMIT_CONVENTION.md
+- 统一查看 `package.json` 的 `scripts` 作为命令入口。

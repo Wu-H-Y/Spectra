@@ -14,6 +14,7 @@ dependencies:
   drift: ^2.22.1 # SQLite ORM 关系型数据库
   drift_flutter: ^0.2.4 # Drift Flutter 支持
   ffi: ^2.1.4 # FFI 支持库
+  file_picker: ^10.3.10
   flex_color_scheme: ^8.4.0 # Material 3 主题系统
   flutter:
     sdk: flutter
@@ -29,7 +30,6 @@ dependencies:
   hive_ce: ^2.19.3 # Hive CE 键值存储
   hive_ce_flutter: ^2.3.4 # Hive CE Flutter 支持
   hooks_riverpod: ^3.2.1 # Riverpod 状态管理 (带 hooks 支持)
-  intl: ^0.20.2 # 国际化
   json_annotation: ^4.11.0 # JSON 序列化注解
   meta: 1.17.0 # Dart 元数据注解
   mime: 2.0.0 # MIME 类型检测
@@ -40,6 +40,8 @@ dependencies:
   relic: ^1.0.0 # 现代 HTTP 服务器框架
   riverpod_annotation: ^4.0.2 # Riverpod 注解
   sizer: ^3.0.3 # 响应式 UI 布局
+  slang: ^4.13.0 # 国际化
+  slang_flutter: ^4.13.0 # slang Flutter 支持
   spectra_native:
     path: rust_builder
   squadron: ^7.4.0 # Isolate 并行执行器
@@ -63,9 +65,9 @@ dev_dependencies:
   hive_ce_generator: ^1.11.0 # Hive CE 类型适配器生成器
   integration_test:
     sdk: flutter
-  intl_utils: ^2.8.14 # Intl 代码生成
   json_serializable: ^6.12.0 # JSON 序列化代码生成器
   riverpod_generator: ^4.0.3 # Riverpod 代码生成器
+  slang_build_runner: ^4.13.0 # slang 代码生成
   squadron_builder: ^9.1.0 # Squadron 代码生成器
   very_good_analysis: ^10.2.0 # Very Good Analysis Lint 规则
 
@@ -102,10 +104,3 @@ flutter_native_splash:
   android_12:
     image: assets/splash.png
     color: "#0B0E14"
-
-flutter_intl:
-  enabled: true
-  class_name: S # 生成的类名
-  main_locale: zh # 默认语言
-  arb_dir: lib/l10n # ARB文件目录
-  output_dir: lib/l10n/generated # 生成代码的目录

@@ -18,7 +18,7 @@ analyzer:
     - "**/*.freezed.dart"
     - "**/*.gen.dart"
     # 排除本地化生成文件
-    - "lib/l10n/generated/**"
+    - "lib/core/i18n/**"
     # 排除 FRB 生成的 Rust FFI 代码
     - "lib/core/rust/**"
     - "lib/src/rust/**"

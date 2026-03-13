@@ -51,3 +51,14 @@ targets:
       squadron_builder:worker_builder:
         generate_for:
           - lib/core/crawler/executor/workers/*.dart
+
+      # slang i18n generator
+      slang_build_runner:
+        enabled: false
+        options:
+          base_locale: zh
+          fallback_strategy: base_locale
+          input_directory: lib/core/i18n
+          input_file_pattern: .i18n.json
+          output_directory: lib/core/i18n
+          output_file_name: strings.g.dart
