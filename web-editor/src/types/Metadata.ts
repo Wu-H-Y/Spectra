@@ -3,16 +3,17 @@
 /**
  * 规则元信息。
  */
-export type Metadata = { 
-/**
- * 规则唯一标识。
- */
-ruleId: string, 
-/**
- * 规则展示名称。
- */
-name: string, 
-/**
- * 可选说明。
- */
-description?: string | null, };
+export type Metadata = {
+  /**
+   * 规则唯一标识。
+   */
+  ruleId: string;
+  /**
+   * 规则展示名称。
+   */
+  name: string;
+  /**
+   * 可选说明。
+   */
+  description?: string | null;
+};

@@ -3,12 +3,13 @@
 /**
  * 章节项模型。
  */
-export type ChapterItem = { 
-/**
- * 章节标题。
- */
-title: string, 
-/**
- * 章节链接。
- */
-url?: string | null, };
+export type ChapterItem = {
+  /**
+   * 章节标题。
+   */
+  title: string;
+  /**
+   * 章节链接。
+   */
+  url?: string | null;
+};

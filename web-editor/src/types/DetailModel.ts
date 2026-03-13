@@ -3,24 +3,25 @@
 /**
  * 详情阶段模型。
  */
-export type DetailModel = { 
-/**
- * 标题。
- */
-title: string, 
-/**
- * 封面。
- */
-cover?: string | null, 
-/**
- * 作者。
- */
-author?: string | null, 
-/**
- * 描述。
- */
-description?: string | null, 
-/**
- * 标签。
- */
-tags: Array<string>, };
+export type DetailModel = {
+  /**
+   * 标题。
+   */
+  title: string;
+  /**
+   * 封面。
+   */
+  cover?: string | null;
+  /**
+   * 作者。
+   */
+  author?: string | null;
+  /**
+   * 描述。
+   */
+  description?: string | null;
+  /**
+   * 标签。
+   */
+  tags: Array<string>;
+};

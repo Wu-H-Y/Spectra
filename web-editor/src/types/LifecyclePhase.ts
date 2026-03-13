@@ -3,4 +3,9 @@
 /**
  * 生命周期阶段。
  */
-export type LifecyclePhase = "explore" | "search" | "detail" | "toc" | "content";
+export type LifecyclePhase =
+  | 'explore'
+  | 'search'
+  | 'detail'
+  | 'toc'
+  | 'content';

@@ -3,4 +3,4 @@
 /**
  * 密钥来源类型。
  */
-export type KeyRefProvider = "inline" | "variable" | "secureStore";
+export type KeyRefProvider = 'inline' | 'variable' | 'secureStore';

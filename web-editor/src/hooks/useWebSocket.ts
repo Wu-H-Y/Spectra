@@ -246,9 +246,7 @@ export interface RuntimeDiagnosticsEvent {
 
 const MAX_RUNTIME_EVENTS = 200;
 
-const toMessageRecord = (
-  value: unknown,
-): Record<string, unknown> | null => {
+const toMessageRecord = (value: unknown): Record<string, unknown> | null => {
   if (!value || typeof value !== 'object') {
     return null;
   }
@@ -285,9 +283,7 @@ const normalizeSubscriptionFilter = (
     previewSessionId: filter.previewSessionId?.trim() || undefined,
   } satisfies RuntimeSubscriptionFilter;
 
-  return normalized.runId ||
-    normalized.sessionId ||
-    normalized.previewSessionId
+  return normalized.runId || normalized.sessionId || normalized.previewSessionId
     ? normalized
     : null;
 };
@@ -332,46 +328,42 @@ export function useRuntimeDiagnostics(
   >(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [attachment, setAttachment] = useState<RuntimeSubscriptionFilter | null>(
-    null,
-  );
+  const [attachment, setAttachment] =
+    useState<RuntimeSubscriptionFilter | null>(null);
   const [events, setEvents] = useState<RuntimeDiagnosticsEvent[]>([]);
   const subscribedFilterRef = useRef<RuntimeSubscriptionFilter | null>(null);
 
-  const handleMessage = useCallback(
-    (message: WebSocketMessage) => {
-      switch (message.type) {
-        case 'auth_ok':
-          setIsAuthenticated(true);
-          break;
+  const handleMessage = useCallback((message: WebSocketMessage) => {
+    switch (message.type) {
+      case 'auth_ok':
+        setIsAuthenticated(true);
+        break;
 
-        case 'element_selected': {
-          const data = message.data as ElementSelectedMessage['data'];
-          setSelectedElement(data);
-          setIsSelecting(false);
-          break;
-        }
-
-        case 'selection_started':
-          setIsSelecting(true);
-          break;
-
-        case 'selection_cancelled':
-          setIsSelecting(false);
-          break;
+      case 'element_selected': {
+        const data = message.data as ElementSelectedMessage['data'];
+        setSelectedElement(data);
+        setIsSelecting(false);
+        break;
       }
 
-      if (message.type === 'auth_ok') {
-        return;
-      }
+      case 'selection_started':
+        setIsSelecting(true);
+        break;
 
-      setEvents((currentEvents) => {
-        const nextEvents = [...currentEvents, toDiagnosticsEvent(message)];
-        return nextEvents.slice(-MAX_RUNTIME_EVENTS);
-      });
-    },
-    [],
-  );
+      case 'selection_cancelled':
+        setIsSelecting(false);
+        break;
+    }
+
+    if (message.type === 'auth_ok') {
+      return;
+    }
+
+    setEvents((currentEvents) => {
+      const nextEvents = [...currentEvents, toDiagnosticsEvent(message)];
+      return nextEvents.slice(-MAX_RUNTIME_EVENTS);
+    });
+  }, []);
 
   const wsUrl = server?.url
     ? server.url.replace('http://', 'ws://').replace('https://', 'wss://') +

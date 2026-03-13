@@ -3,4 +3,22 @@
 /**
  * 节点类别。
  */
-export type NodeKind = { "type": "fetch" } | { "type": "parse" } | { "type": "select" } | { "type": "transform" } | { "type": "cachePut" } | { "type": "cacheGet" } | { "type": "cookiePut" } | { "type": "cookieGet" } | { "type": "join" } | { "type": "branch" } | { "type": "mapToModel" } | { "type": "loop" } | { "type": "filter" } | { "type": "assert" } | { "type": "input" } | { "type": "extract" } | { "type": "normalize" } | { "type": "output" };
+export type NodeKind =
+  | { type: 'fetch' }
+  | { type: 'parse' }
+  | { type: 'select' }
+  | { type: 'transform' }
+  | { type: 'cachePut' }
+  | { type: 'cacheGet' }
+  | { type: 'cookiePut' }
+  | { type: 'cookieGet' }
+  | { type: 'join' }
+  | { type: 'branch' }
+  | { type: 'mapToModel' }
+  | { type: 'loop' }
+  | { type: 'filter' }
+  | { type: 'assert' }
+  | { type: 'input' }
+  | { type: 'extract' }
+  | { type: 'normalize' }
+  | { type: 'output' };

@@ -3,4 +3,4 @@
 /**
  * 媒体类型。
  */
-export type MediaType = "video" | "music" | "novel" | "comic" | "image";
+export type MediaType = 'video' | 'music' | 'novel' | 'comic' | 'image';

@@ -3,8 +3,9 @@
 /**
  * 规则加密能力声明。
  */
-export type CryptoCapabilities = { 
-/**
- * 是否允许使用 AES 变换。
- */
-aes: boolean, };
+export type CryptoCapabilities = {
+  /**
+   * 是否允许使用 AES 变换。
+   */
+  aes: boolean;
+};

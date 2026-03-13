@@ -3,12 +3,13 @@
 /**
  * 端口引用。
  */
-export type PortRef = { 
-/**
- * 节点 ID。
- */
-nodeId: string, 
-/**
- * 端口名称。
- */
-portName: string, };
+export type PortRef = {
+  /**
+   * 节点 ID。
+   */
+  nodeId: string;
+  /**
+   * 端口名称。
+   */
+  portName: string;
+};

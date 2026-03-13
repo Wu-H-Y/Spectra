@@ -3,12 +3,13 @@
 /**
  * 规则级限速配置。
  */
-export type RuleRateLimit = { 
-/**
- * 时间窗口内允许的请求数。
- */
-count: number, 
-/**
- * 时间窗口（毫秒）。
- */
-periodMs: bigint, };
+export type RuleRateLimit = {
+  /**
+   * 时间窗口内允许的请求数。
+   */
+  count: number;
+  /**
+   * 时间窗口（毫秒）。
+   */
+  periodMs: bigint;
+};

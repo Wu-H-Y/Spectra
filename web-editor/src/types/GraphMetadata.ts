@@ -3,16 +3,17 @@
 /**
  * 图元信息。
  */
-export type GraphMetadata = { 
-/**
- * 图名称。
- */
-name?: string | null, 
-/**
- * 图描述。
- */
-description?: string | null, 
-/**
- * 任意标签。
- */
-tags: Array<string>, };
+export type GraphMetadata = {
+  /**
+   * 图名称。
+   */
+  name?: string | null;
+  /**
+   * 图描述。
+   */
+  description?: string | null;
+  /**
+   * 任意标签。
+   */
+  tags: Array<string>;
+};
