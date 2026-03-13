@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:spectra/l10n/generated/l10n.dart';
+import 'package:spectra/core/i18n/strings.g.dart';
 import 'package:spectra/shared/widgets/adaptive_scaffold.dart';
 
 /// 数据存储设置子页面
+/// 管理应用的缓存、数据导出和导入功能
 class SettingsDataPage extends HookConsumerWidget {
+  /// 创建数据存储设置页面
   const SettingsDataPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = S.of(context);
+    final t = context.t;
 
     return AdaptiveScaffold(
       currentIndex: 3,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            title: Text(l10n.settingsDataStorage),
+            title: Text(t.settingsDataStorage),
             pinned: true,
           ),
           SliverPadding(
             padding: const EdgeInsets.all(16),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                _buildCacheSection(context, l10n),
+                _buildCacheSection(context, t),
                 const SizedBox(height: 24),
-                _buildExportImportSection(context, l10n),
+                _buildExportImportSection(context, t),
               ]),
             ),
           ),
@@ -34,45 +36,45 @@ class SettingsDataPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildCacheSection(BuildContext context, S l10n) {
+  Widget _buildCacheSection(BuildContext context, Translations t) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          l10n.settingsCacheSize,
+          t.settingsCacheSize,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
         ListTile(
           leading: const Icon(Icons.storage_outlined),
-          title: const Text('128 MB'), // TODO: 从实际获取
+          title: const Text('128 MB'),
           trailing: TextButton(
-            onPressed: () => _showClearCacheDialog(context, l10n),
-            child: Text(l10n.settingsClearCache),
+            onPressed: () => _showClearCacheDialog(context, t),
+            child: Text(t.settingsClearCache),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildExportImportSection(BuildContext context, S l10n) {
+  Widget _buildExportImportSection(BuildContext context, Translations t) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '导入/导出', // TODO: 添加 i18n
+          '导入/导出',
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
         ListTile(
           leading: const Icon(Icons.upload_outlined),
-          title: Text(l10n.settingsExportFavorites),
+          title: Text(t.settingsExportFavorites),
           trailing: const Icon(Icons.chevron_right),
           onTap: () => _exportFavorites(context),
         ),
         ListTile(
           leading: const Icon(Icons.download_outlined),
-          title: Text(l10n.settingsImportFavorites),
+          title: Text(t.settingsImportFavorites),
           trailing: const Icon(Icons.chevron_right),
           onTap: () => _importFavorites(context),
         ),
@@ -80,26 +82,26 @@ class SettingsDataPage extends HookConsumerWidget {
     );
   }
 
-  void _showClearCacheDialog(BuildContext context, S l10n) {
-    showDialog(
+  void _showClearCacheDialog(BuildContext context, Translations t) {
+    // ignore: discarded_futures - 显示对话框不需要等待结果
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(l10n.settingsClearCache),
-        content: Text(l10n.settingsClearCacheConfirm),
+        title: Text(t.settingsClearCache),
+        content: Text(t.settingsClearCacheConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(l10n.actionCancel),
+            child: Text(t.actionCancel),
           ),
           FilledButton(
             onPressed: () {
-              // TODO: 实现清除缓存
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(l10n.settingsCacheCleared)),
+                SnackBar(content: Text(t.settingsCacheCleared)),
               );
             },
-            child: Text(l10n.actionConfirm),
+            child: Text(t.actionConfirm),
           ),
         ],
       ),
@@ -107,10 +109,10 @@ class SettingsDataPage extends HookConsumerWidget {
   }
 
   void _exportFavorites(BuildContext context) {
-    // TODO: 实现导出功能
+    // TODO(WuHaiYue): 实现导出功能
   }
 
   void _importFavorites(BuildContext context) {
-    // TODO: 实现导入功能
+    // TODO(WuHaiYue): 实现导入功能
   }
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sizer/sizer.dart';
+import 'package:spectra/core/i18n/strings.g.dart';
 import 'package:spectra/core/theme/theme.dart';
-import 'package:spectra/l10n/generated/l10n.dart';
 import 'package:spectra/shared/widgets/adaptive_scaffold.dart';
 
 /// 搜索页面
@@ -15,7 +15,7 @@ class SearchPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = S.of(context);
+    final t = context.t;
     final colorScheme = Theme.of(context).colorScheme;
     final searchController = useTextEditingController();
     final searchQuery = useState('');
@@ -31,21 +31,21 @@ class SearchPage extends HookConsumerWidget {
 
     // 热门搜索（示例数据）
     final hotSearches = [
-      '热门视频',
-      '流行音乐',
-      '最新小说',
-      '经典漫画',
-      '高清图片',
+      t.searchTabVideo,
+      t.searchTabMusic,
+      t.searchTabNovel,
+      t.searchTabComic,
+      t.searchTabImage,
     ];
 
     // Tab 选项
     final tabs = [
-      l10n.searchTabAll,
-      l10n.searchTabVideo,
-      l10n.searchTabMusic,
-      l10n.searchTabNovel,
-      l10n.searchTabComic,
-      l10n.searchTabImage,
+      t.searchTabAll,
+      t.searchTabVideo,
+      t.searchTabMusic,
+      t.searchTabNovel,
+      t.searchTabComic,
+      t.searchTabImage,
     ];
 
     return AdaptiveScaffold(
@@ -55,7 +55,7 @@ class SearchPage extends HookConsumerWidget {
           // 搜索栏
           _buildSearchBar(
             context,
-            l10n,
+            t,
             colorScheme,
             searchController,
             searchQuery,
@@ -67,7 +67,7 @@ class SearchPage extends HookConsumerWidget {
             child: searchQuery.value.isEmpty
                 ? _buildSearchSuggestions(
                     context,
-                    l10n,
+                    t,
                     colorScheme,
                     searchHistory,
                     hotSearches,
@@ -75,7 +75,7 @@ class SearchPage extends HookConsumerWidget {
                   )
                 : _buildSearchResults(
                     context,
-                    l10n,
+                    t,
                     colorScheme,
                     tabs,
                     selectedTab,
@@ -89,7 +89,7 @@ class SearchPage extends HookConsumerWidget {
 
   Widget _buildSearchBar(
     BuildContext context,
-    S l10n,
+    Translations t,
     ColorScheme colorScheme,
     TextEditingController controller,
     ValueNotifier<String> query,
@@ -112,7 +112,7 @@ class SearchPage extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              l10n.searchPageTitle,
+              t.searchPageTitle,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -130,7 +130,7 @@ class SearchPage extends HookConsumerWidget {
               child: TextField(
                 controller: controller,
                 decoration: InputDecoration(
-                  hintText: l10n.searchHint,
+                  hintText: t.searchHint,
                   prefixIcon: Icon(
                     Icons.search,
                     color: colorScheme.onSurface.withValues(alpha: 0.5),
@@ -161,7 +161,7 @@ class SearchPage extends HookConsumerWidget {
                     if (!history.value.contains(value)) {
                       history.value = [value, ...history.value.take(9)];
                     }
-                    // TODO: 执行搜索
+                    // TODO(WuHaiYue): 执行搜索
                     Future.delayed(const Duration(seconds: 1), () {
                       isSearching.value = false;
                     });
@@ -177,7 +177,7 @@ class SearchPage extends HookConsumerWidget {
 
   Widget _buildSearchSuggestions(
     BuildContext context,
-    S l10n,
+    Translations t,
     ColorScheme colorScheme,
     ValueNotifier<List<String>> history,
     List<String> hotSearches,
@@ -190,10 +190,10 @@ class SearchPage extends HookConsumerWidget {
         if (history.value.isNotEmpty) ...[
           _buildSectionHeader(
             context,
-            l10n.searchHistory,
+            t.searchHistory,
             trailing: TextButton(
               onPressed: () => history.value = [],
-              child: Text(l10n.searchClearHistory),
+              child: Text(t.searchClearHistory),
             ),
           ),
           SizedBox(height: 2.h),
@@ -205,10 +205,12 @@ class SearchPage extends HookConsumerWidget {
                 label: item,
                 onTap: () {
                   controller.text = item;
-                  // TODO: 执行搜索
+                  // TODO(WuHaiYue): 执行搜索
                 },
                 onDelete: () {
-                  history.value = history.value.where((h) => h != item).toList();
+                  history.value = history.value
+                      .where((h) => h != item)
+                      .toList();
                 },
               );
             }).toList(),
@@ -216,7 +218,7 @@ class SearchPage extends HookConsumerWidget {
           SizedBox(height: 4.h),
         ],
         // 热门搜索
-        _buildSectionHeader(context, l10n.searchHot),
+        _buildSectionHeader(context, t.searchHot),
         SizedBox(height: 2.h),
         Wrap(
           spacing: 2.w,
@@ -229,7 +231,7 @@ class SearchPage extends HookConsumerWidget {
               label: item,
               onTap: () {
                 controller.text = item;
-                // TODO: 执行搜索
+                // TODO(WuHaiYue): 执行搜索
               },
             );
           }).toList(),
@@ -243,8 +245,6 @@ class SearchPage extends HookConsumerWidget {
     String title, {
     Widget? trailing,
   }) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Row(
       children: [
         Container(
@@ -264,14 +264,14 @@ class SearchPage extends HookConsumerWidget {
             ),
           ),
         ),
-        if (trailing != null) trailing,
+        ?trailing,
       ],
     );
   }
 
   Widget _buildSearchResults(
     BuildContext context,
-    S l10n,
+    Translations t,
     ColorScheme colorScheme,
     List<String> tabs,
     ValueNotifier<int> selectedTab,
@@ -283,7 +283,7 @@ class SearchPage extends HookConsumerWidget {
       );
     }
 
-    // TODO: 从状态管理获取搜索结果
+    // TODO(WuHaiYue): 从状态管理获取搜索结果
     final results = <_SearchResult>[];
 
     return Column(
@@ -295,7 +295,7 @@ class SearchPage extends HookConsumerWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: tabs.length,
-            separatorBuilder: (_, __) => SizedBox(width: 2.w),
+            separatorBuilder: (_, _) => SizedBox(width: 2.w),
             itemBuilder: (context, index) {
               final isSelected = selectedTab.value == index;
               return _TabChip(
@@ -309,7 +309,7 @@ class SearchPage extends HookConsumerWidget {
         // 结果列表
         Expanded(
           child: results.isEmpty
-              ? _buildNoResults(context, l10n, colorScheme)
+              ? _buildNoResults(context, t, colorScheme)
               : ListView.builder(
                   padding: EdgeInsets.all(4.w),
                   itemCount: results.length,
@@ -322,7 +322,11 @@ class SearchPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildNoResults(BuildContext context, S l10n, ColorScheme colorScheme) {
+  Widget _buildNoResults(
+    BuildContext context,
+    Translations t,
+    ColorScheme colorScheme,
+  ) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -334,7 +338,7 @@ class SearchPage extends HookConsumerWidget {
           ),
           SizedBox(height: 2.h),
           Text(
-            l10n.searchNoResults,
+            t.searchNoResults,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: colorScheme.onSurface.withValues(alpha: 0.6),
             ),
@@ -444,7 +448,9 @@ class _HotSearchChip extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w600,
-                    color: isTop3 ? ColorTokens.cyberCyan : colorScheme.onSurface.withValues(alpha: 0.6),
+                    color: isTop3
+                        ? ColorTokens.cyberCyan
+                        : colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
               ),
@@ -532,21 +538,15 @@ class _TabChip extends StatelessWidget {
 
 /// 搜索结果数据
 class _SearchResult {
-  const _SearchResult({
+  _SearchResult({
     required this.id,
     required this.title,
     required this.type,
-    this.coverUrl,
-    this.author,
-    this.description,
   });
 
   final String id;
   final String title;
   final String type;
-  final String? coverUrl;
-  final String? author;
-  final String? description;
 }
 
 /// 搜索结果卡片
@@ -563,7 +563,7 @@ class _SearchResultCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          // TODO: 导航到详情页
+          // TODO(WuHaiYue): 导航到详情页
         },
         borderRadius: BorderRadius.circular(AppRadius.lg),
         child: Container(
@@ -585,13 +585,7 @@ class _SearchResultCard extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(AppRadius.md),
-                  child: item.coverUrl != null && item.coverUrl!.isNotEmpty
-                      ? Image.network(
-                          item.coverUrl!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => _buildPlaceholder(),
-                        )
-                      : _buildPlaceholder(),
+                  child: _buildPlaceholder(),
                 ),
               ),
               SizedBox(width: 3.w),
@@ -610,28 +604,6 @@ class _SearchResultCard extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    if (item.author != null) ...[
-                      SizedBox(height: 0.5.h),
-                      Text(
-                        item.author!,
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          color: colorScheme.onSurface.withValues(alpha: 0.6),
-                        ),
-                      ),
-                    ],
-                    if (item.description != null) ...[
-                      SizedBox(height: 1.h),
-                      Text(
-                        item.description!,
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          color: colorScheme.onSurface.withValues(alpha: 0.5),
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
                     SizedBox(height: 1.h),
                     // 类型标签
                     Container(
@@ -663,7 +635,7 @@ class _SearchResultCard extends StatelessWidget {
   }
 
   Widget _buildPlaceholder() {
-    return Container(
+    return ColoredBox(
       color: Colors.grey.withValues(alpha: 0.2),
       child: Center(
         child: Icon(
@@ -693,20 +665,20 @@ class _SearchResultCard extends StatelessWidget {
   }
 
   String _getTypeLabel(BuildContext context, String type) {
-    final l10n = S.of(context);
+    final t = context.t;
     switch (type) {
       case 'video':
-        return l10n.mediaTypeVideo;
+        return t.mediaTypeVideo;
       case 'music':
-        return l10n.mediaTypeMusic;
+        return t.mediaTypeMusic;
       case 'novel':
-        return l10n.mediaTypeNovel;
+        return t.mediaTypeNovel;
       case 'comic':
-        return l10n.mediaTypeComic;
+        return t.mediaTypeComic;
       case 'image':
-        return l10n.mediaTypeImage;
+        return t.mediaTypeImage;
       default:
-        return l10n.mediaTypeAll;
+        return t.mediaTypeAll;
     }
   }
 }

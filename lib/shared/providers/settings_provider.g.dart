@@ -117,7 +117,7 @@ final class PersistedLocaleProvider
   }
 }
 
-String _$persistedLocaleHash() => r'5ca45e3910be130dbbd110cba1316744a57ddee2';
+String _$persistedLocaleHash() => r'8f3ec41182d40aab897ea15d85d5ef6b8a75b3f7';
 
 /// 持久化的语言 Provider
 ///

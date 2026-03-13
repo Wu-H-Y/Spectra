@@ -2,26 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:spectra/core/i18n/strings.g.dart';
 import 'package:spectra/core/server/server_provider.dart';
 import 'package:spectra/core/theme/theme.dart';
-import 'package:spectra/l10n/generated/l10n.dart';
+import 'package:spectra/shared/providers/settings_provider.dart';
 import 'package:spectra/shared/widgets/adaptive_scaffold.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 /// 设置页面 - 分组卡片结构
+/// 应用的设置主页面，包含外观、数据、播放等子设置入口
 class SettingsPage extends HookConsumerWidget {
+  /// 构建设置页面
   const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = S.of(context);
+    final t = context.t;
 
     return AdaptiveScaffold(
       currentIndex: 3,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            title: Text(l10n.settingsTitle),
+            title: Text(t.settingsTitle),
             pinned: true,
           ),
           SliverPadding(
@@ -32,8 +34,8 @@ class SettingsPage extends HookConsumerWidget {
                 _SettingsGroupCard(
                   icon: Icons.palette_outlined,
                   iconColor: Theme.of(context).colorScheme.primary,
-                  title: l10n.appearanceSettings,
-                  subtitle: _getCurrentThemeSubtitle(context, ref, l10n),
+                  title: t.appearanceSettings,
+                  subtitle: _getCurrentThemeSubtitle(context, ref, t),
                   onTap: () => context.go('/settings/appearance'),
                 ),
                 const SizedBox(height: 12),
@@ -41,8 +43,8 @@ class SettingsPage extends HookConsumerWidget {
                 _SettingsGroupCard(
                   icon: Icons.storage_outlined,
                   iconColor: Theme.of(context).colorScheme.secondary,
-                  title: l10n.settingsDataStorage,
-                  subtitle: '128 MB', // TODO: 从实际获取
+                  title: t.settingsDataStorage,
+                  subtitle: '128 MB', // TODO(WuHaiYue): 从实际获取
                   onTap: () => context.go('/settings/data'),
                 ),
                 const SizedBox(height: 12),
@@ -50,16 +52,16 @@ class SettingsPage extends HookConsumerWidget {
                 _SettingsGroupCard(
                   icon: Icons.play_circle_outlined,
                   iconColor: Theme.of(context).colorScheme.tertiary,
-                  title: l10n.settingsPlayback,
-                  subtitle: '自动播放: 关闭', // TODO: 从实际获取
+                  title: t.settingsPlayback,
+                  subtitle: '自动播放: 关闭', // TODO(WuHaiYue): 从实际获取
                   onTap: () => context.go('/settings/playback'),
                 ),
                 const SizedBox(height: 12),
                 // 开发者工具分组（保留）
-                _buildDeveloperToolsCard(context, ref, l10n),
+                _buildDeveloperToolsCard(context, ref, t),
                 const SizedBox(height: 12),
                 // 关于分组
-                _buildAboutCard(context, l10n),
+                _buildAboutCard(context, t),
               ]),
             ),
           ),
@@ -68,21 +70,29 @@ class SettingsPage extends HookConsumerWidget {
     );
   }
 
-  String _getCurrentThemeSubtitle(BuildContext context, WidgetRef ref, S l10n) {
+  String _getCurrentThemeSubtitle(
+    BuildContext context,
+    WidgetRef ref,
+    Translations t,
+  ) {
     final themeMode = ref.watch(persistedThemeModeProvider);
     final locale = ref.watch(persistedLocaleProvider);
     final themeName = switch (themeMode) {
-      AppThemeMode.dark => l10n.themeModeDark,
-      AppThemeMode.light => l10n.themeModeLight,
-      AppThemeMode.system => l10n.themeModeSystem,
+      AppThemeMode.dark => t.themeModeDark,
+      AppThemeMode.light => t.themeModeLight,
+      AppThemeMode.system => t.themeModeSystem,
     };
     final languageName = locale.languageCode == 'zh'
-        ? l10n.languageChinese
-        : l10n.languageEnglish;
+        ? t.languageChinese
+        : t.languageEnglish;
     return '$themeName · $languageName';
   }
 
-  Widget _buildDeveloperToolsCard(BuildContext context, WidgetRef ref, S l10n) {
+  Widget _buildDeveloperToolsCard(
+    BuildContext context,
+    WidgetRef ref,
+    Translations t,
+  ) {
     final serverStatus = ref.watch(serverProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -122,15 +132,18 @@ class SettingsPage extends HookConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            l10n.developerTools,
+                            t.developerTools,
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            l10n.ruleEditorDescription,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurface.withValues(alpha: 0.6),
-                            ),
+                            t.ruleEditorDescription,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: colorScheme.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
+                                ),
                           ),
                         ],
                       ),
@@ -170,13 +183,16 @@ class SettingsPage extends HookConsumerWidget {
                           const SizedBox(width: 6),
                           Text(
                             serverStatus.isRunning
-                                ? l10n.serverRunning
-                                : l10n.serverStopped,
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: serverStatus.isRunning
-                                  ? Colors.green
-                                  : colorScheme.onSurface.withValues(alpha: 0.6),
-                            ),
+                                ? t.serverRunning
+                                : t.serverStopped,
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(
+                                  color: serverStatus.isRunning
+                                      ? Colors.green
+                                      : colorScheme.onSurface.withValues(
+                                          alpha: 0.6,
+                                        ),
+                                ),
                           ),
                         ],
                       ),
@@ -192,9 +208,7 @@ class SettingsPage extends HookConsumerWidget {
                         }
                       },
                       child: Text(
-                        serverStatus.isRunning
-                            ? l10n.serverStop
-                            : l10n.serverStart,
+                        serverStatus.isRunning ? t.serverStop : t.serverStart,
                       ),
                     ),
                   ],
@@ -207,7 +221,7 @@ class SettingsPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildAboutCard(BuildContext context, S l10n) {
+  Widget _buildAboutCard(BuildContext context, Translations t) {
     return FutureBuilder<PackageInfo>(
       future: PackageInfo.fromPlatform(),
       builder: (context, snapshot) {
@@ -215,33 +229,34 @@ class SettingsPage extends HookConsumerWidget {
         return _SettingsGroupCard(
           icon: Icons.info_outline,
           iconColor: Theme.of(context).colorScheme.outline,
-          title: l10n.about,
-          subtitle: '${l10n.version}: $version',
-          onTap: () => _showAboutDialog(context, l10n, version),
+          title: t.about,
+          subtitle: '${t.version}: $version',
+          onTap: () => _showAboutDialog(context, t, version),
         );
       },
     );
   }
 
-  void _showAboutDialog(BuildContext context, S l10n, String version) {
-    showDialog(
+  void _showAboutDialog(BuildContext context, Translations t, String version) {
+    // ignore: discarded_futures - 显示对话框不需要等待结果
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(l10n.about),
+        title: Text(t.about),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Spectra'),
-            Text('${l10n.version}: $version'),
+            Text(t.appName),
+            Text('${t.version}: $version'),
             const SizedBox(height: 16),
-            const Text('一款现代化的多媒体数据采集应用'),
+            Text(t.appDescription),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(l10n.actionClose),
+            child: Text(t.actionClose),
           ),
         ],
       ),
@@ -251,12 +266,6 @@ class SettingsPage extends HookConsumerWidget {
 
 /// 设置分组卡片组件
 class _SettingsGroupCard extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-
   const _SettingsGroupCard({
     required this.icon,
     required this.iconColor,
@@ -264,6 +273,11 @@ class _SettingsGroupCard extends StatelessWidget {
     required this.subtitle,
     required this.onTap,
   });
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

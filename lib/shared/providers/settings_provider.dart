@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:spectra/core/database/hive/hive_service.dart';
 import 'package:spectra/core/database/hive/settings_keys.dart';
+import 'package:spectra/core/i18n/strings.g.dart';
 import 'package:spectra/core/theme/theme.dart';
 
 part 'settings_provider.g.dart';
@@ -85,6 +86,13 @@ class PersistedLocale extends _$PersistedLocale {
       SettingsKeys.locale,
       '${locale.languageCode}_${locale.countryCode ?? ''}',
     );
+
+    // 同步到 slang
+    final appLocale = AppLocale.values.firstWhere(
+      (l) => l.languageCode == locale.languageCode,
+      orElse: () => AppLocale.zh,
+    );
+    await LocaleSettings.setLocale(appLocale);
   }
 
   /// 字符串转 Locale

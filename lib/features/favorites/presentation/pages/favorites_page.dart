@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sizer/sizer.dart';
-import 'package:spectra/core/theme/app_breakpoints.dart';
+import 'package:spectra/core/i18n/strings.g.dart';
 import 'package:spectra/core/theme/theme.dart';
-import 'package:spectra/l10n/generated/l10n.dart';
 import 'package:spectra/shared/widgets/adaptive_scaffold.dart';
 
 /// 收藏页面
@@ -17,18 +15,38 @@ class FavoritesPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = S.of(context);
+    final t = context.t;
     final colorScheme = Theme.of(context).colorScheme;
     final selectedType = useState<String?>('all');
 
     // 媒体类型筛选选项
     final mediaTypes = [
-      _MediaTypeFilter(id: 'all', label: l10n.mediaTypeAll, icon: Icons.apps),
-      _MediaTypeFilter(id: 'video', label: l10n.mediaTypeVideo, icon: Icons.video_library_outlined),
-      _MediaTypeFilter(id: 'music', label: l10n.mediaTypeMusic, icon: Icons.music_note_outlined),
-      _MediaTypeFilter(id: 'novel', label: l10n.mediaTypeNovel, icon: Icons.menu_book_outlined),
-      _MediaTypeFilter(id: 'comic', label: l10n.mediaTypeComic, icon: Icons.image_outlined),
-      _MediaTypeFilter(id: 'image', label: l10n.mediaTypeImage, icon: Icons.photo_library_outlined),
+      _MediaTypeFilter(id: 'all', label: t.mediaTypeAll, icon: Icons.apps),
+      _MediaTypeFilter(
+        id: 'video',
+        label: t.mediaTypeVideo,
+        icon: Icons.video_library_outlined,
+      ),
+      _MediaTypeFilter(
+        id: 'music',
+        label: t.mediaTypeMusic,
+        icon: Icons.music_note_outlined,
+      ),
+      _MediaTypeFilter(
+        id: 'novel',
+        label: t.mediaTypeNovel,
+        icon: Icons.menu_book_outlined,
+      ),
+      _MediaTypeFilter(
+        id: 'comic',
+        label: t.mediaTypeComic,
+        icon: Icons.image_outlined,
+      ),
+      _MediaTypeFilter(
+        id: 'image',
+        label: t.mediaTypeImage,
+        icon: Icons.photo_library_outlined,
+      ),
     ];
 
     return AdaptiveScaffold(
@@ -37,7 +55,7 @@ class FavoritesPage extends HookConsumerWidget {
         slivers: [
           // 顶部标题栏
           SliverToBoxAdapter(
-            child: _buildHeader(context, l10n, colorScheme),
+            child: _buildHeader(context, t, colorScheme),
           ),
           // 媒体类型筛选器
           SliverToBoxAdapter(
@@ -51,15 +69,15 @@ class FavoritesPage extends HookConsumerWidget {
           ),
           // 最近观看区域
           SliverToBoxAdapter(
-            child: _buildSectionTitle(context, l10n.favoritesRecent, colorScheme),
+            child: _buildSectionTitle(context, t.favoritesRecent, colorScheme),
           ),
           // 最近观看内容（横向滚动）
           SliverToBoxAdapter(
-            child: _buildRecentContent(context, colorScheme, l10n),
+            child: _buildRecentContent(context, colorScheme, t),
           ),
           // 全部收藏标题
           SliverToBoxAdapter(
-            child: _buildSectionTitle(context, l10n.favoritesAll, colorScheme),
+            child: _buildSectionTitle(context, t.favoritesAll, colorScheme),
           ),
           // 收藏内容网格
           _buildFavoritesGrid(context, colorScheme),
@@ -68,21 +86,25 @@ class FavoritesPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context, S l10n, ColorScheme colorScheme) {
+  Widget _buildHeader(
+    BuildContext context,
+    Translations t,
+    ColorScheme colorScheme,
+  ) {
     return Container(
       padding: EdgeInsets.all(4.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10n.favoritesPageTitle,
+            t.favoritesPageTitle,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 1.h),
           Text(
-            l10n.favoritesPageSubtitle,
+            t.favoritesPageSubtitle,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurface.withValues(alpha: 0.7),
             ),
@@ -96,7 +118,7 @@ class FavoritesPage extends HookConsumerWidget {
     BuildContext context,
     List<_MediaTypeFilter> types,
     String? selectedId,
-    Function(String?) onSelect,
+    void Function(String?) onSelect,
     ColorScheme colorScheme,
   ) {
     return Container(
@@ -105,7 +127,7 @@ class FavoritesPage extends HookConsumerWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: types.length,
-        separatorBuilder: (_, __) => SizedBox(width: 2.w),
+        separatorBuilder: (_, _) => SizedBox(width: 2.w),
         itemBuilder: (context, index) {
           final type = types[index];
           final isSelected = selectedId == type.id;
@@ -121,7 +143,11 @@ class FavoritesPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildSectionTitle(BuildContext context, String title, ColorScheme colorScheme) {
+  Widget _buildSectionTitle(
+    BuildContext context,
+    String title,
+    ColorScheme colorScheme,
+  ) {
     return Padding(
       padding: EdgeInsets.fromLTRB(4.w, 3.h, 4.w, 2.h),
       child: Row(
@@ -146,8 +172,12 @@ class FavoritesPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildRecentContent(BuildContext context, ColorScheme colorScheme, S l10n) {
-    // TODO: 从状态管理获取最近观看数据
+  Widget _buildRecentContent(
+    BuildContext context,
+    ColorScheme colorScheme,
+    Translations t,
+  ) {
+    // TODO(WuHaiYue): 从状态管理获取最近观看数据
     final recentItems = <_ContentItem>[];
 
     if (recentItems.isEmpty) {
@@ -169,7 +199,7 @@ class FavoritesPage extends HookConsumerWidget {
               ),
               SizedBox(height: 1.h),
               Text(
-                l10n.noRecentHistory,
+                t.noRecentHistory,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
@@ -186,7 +216,7 @@ class FavoritesPage extends HookConsumerWidget {
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 4.w),
         itemCount: recentItems.length,
-        separatorBuilder: (_, __) => SizedBox(width: 3.w),
+        separatorBuilder: (_, _) => SizedBox(width: 3.w),
         itemBuilder: (context, index) {
           return _RecentCard(item: recentItems[index]);
         },
@@ -195,7 +225,7 @@ class FavoritesPage extends HookConsumerWidget {
   }
 
   Widget _buildFavoritesGrid(BuildContext context, ColorScheme colorScheme) {
-    // TODO: 从状态管理获取收藏数据
+    // TODO(WuHaiYue): 从状态管理获取收藏数据
     final favorites = <_ContentItem>[];
 
     if (favorites.isEmpty) {
@@ -223,7 +253,7 @@ class FavoritesPage extends HookConsumerWidget {
         ),
         itemCount: favorites.length,
         itemBuilder: (context, index) {
-          return _ContentCard(item: favorites[index]);
+          return _ContentCard(item: favorites[index], t: t);
         },
       ),
     );
@@ -245,21 +275,17 @@ class _MediaTypeFilter {
 
 /// 内容项数据
 class _ContentItem {
-  const _ContentItem({
+  _ContentItem({
     required this.id,
     required this.title,
     required this.coverUrl,
     required this.type,
-    this.author,
-    this.updateTime,
   });
 
   final String id;
   final String title;
   final String coverUrl;
   final String type;
-  final String? author;
-  final DateTime? updateTime;
 }
 
 /// 筛选芯片组件
@@ -353,8 +379,6 @@ class _RecentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Container(
       width: 25.w,
       decoration: BoxDecoration(
@@ -391,14 +415,6 @@ class _RecentCard extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            if (item.author != null)
-              Text(
-                item.author!,
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  color: Colors.white.withValues(alpha: 0.7),
-                ),
-              ),
           ],
         ),
       ),
@@ -408,21 +424,21 @@ class _RecentCard extends StatelessWidget {
 
 /// 内容卡片
 class _ContentCard extends StatelessWidget {
-  const _ContentCard({required this.item});
+  const _ContentCard({required this.item, required this.t});
 
   final _ContentItem item;
+  final Translations t;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Material(
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(AppRadius.lg),
       child: InkWell(
         onTap: () {
-          // TODO: 导航到详情页
+          // TODO(WuHaiYue): 导航到详情页
         },
         borderRadius: BorderRadius.circular(AppRadius.lg),
         child: Container(
@@ -438,16 +454,16 @@ class _ContentCard extends StatelessWidget {
                 flex: 3,
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(
+                    borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(AppRadius.lg),
                     ),
                     color: colorScheme.surfaceContainerHighest,
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.vertical(
+                    borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(AppRadius.lg),
                     ),
-                    child: Container(
+                    child: ColoredBox(
                       color: colorScheme.surfaceContainerHighest,
                       child: Center(
                         child: Icon(
@@ -478,18 +494,7 @@ class _ContentCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 0.5.h),
-                      if (item.author != null)
-                        Text(
-                          item.author!,
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            color: colorScheme.onSurface.withValues(alpha: 0.6),
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      Spacer(),
+                      const Spacer(),
                       Row(
                         children: [
                           Container(
@@ -498,11 +503,13 @@ class _ContentCard extends StatelessWidget {
                               vertical: 0.5.h,
                             ),
                             decoration: BoxDecoration(
-                              color: ColorTokens.cyberCyan.withValues(alpha: 0.1),
+                              color: ColorTokens.cyberCyan.withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(AppRadius.sm),
                             ),
                             child: Text(
-                              _getTypeLabel(item.type),
+                              _getTypeLabel(item.type, t),
                               style: TextStyle(
                                 fontSize: 9.sp,
                                 color: ColorTokens.cyberCyan,
@@ -540,20 +547,20 @@ class _ContentCard extends StatelessWidget {
     }
   }
 
-  String _getTypeLabel(String type) {
+  String _getTypeLabel(String type, Translations t) {
     switch (type) {
       case 'video':
-        return '视频';
+        return t.mediaTypeVideo;
       case 'music':
-        return '音乐';
+        return t.mediaTypeMusic;
       case 'novel':
-        return '小说';
+        return t.mediaTypeNovel;
       case 'comic':
-        return '漫画';
+        return t.mediaTypeComic;
       case 'image':
-        return '图片';
+        return t.mediaTypeImage;
       default:
-        return '其他';
+        return t.mediaTypeAll;
     }
   }
 }
@@ -562,7 +569,7 @@ class _ContentCard extends StatelessWidget {
 class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final l10n = S.of(context);
+    final t = context.t;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Center(
@@ -584,14 +591,14 @@ class _EmptyState extends StatelessWidget {
           ),
           SizedBox(height: 3.h),
           Text(
-            l10n.favoritesEmptyTitle,
+            t.favoritesEmptyTitle,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
           SizedBox(height: 1.h),
           Text(
-            l10n.favoritesEmptySubtitle,
+            t.favoritesEmptySubtitle,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurface.withValues(alpha: 0.6),
             ),
@@ -600,10 +607,10 @@ class _EmptyState extends StatelessWidget {
           SizedBox(height: 4.h),
           FilledButton.icon(
             onPressed: () {
-              // TODO: 导航到发现页
+              // TODO(WuHaiYue): 导航到发现页
             },
             icon: const Icon(Icons.explore),
-            label: Text(l10n.goToDiscover),
+            label: Text(t.goToDiscover),
             style: FilledButton.styleFrom(
               backgroundColor: ColorTokens.cyberCyan,
               foregroundColor: Colors.white,

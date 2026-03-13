@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sizer/sizer.dart';
-import 'package:spectra/core/theme/app_breakpoints.dart';
+import 'package:spectra/core/i18n/strings.g.dart';
 import 'package:spectra/core/theme/theme.dart';
-import 'package:spectra/l10n/generated/l10n.dart';
 import 'package:spectra/shared/widgets/adaptive_scaffold.dart';
 
 /// 发现页面
@@ -17,17 +15,37 @@ class DiscoverPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = S.of(context);
+    final t = context.t;
     final colorScheme = Theme.of(context).colorScheme;
     final selectedRule = useState<String?>(null);
     final isLoading = useState(false);
 
-    // TODO: 从状态管理获取可用规则列表
+    // TODO(WuHaiYue): 从状态管理获取可用规则列表
     final rules = <_RuleItem>[
-      _RuleItem(id: 'bilibili', name: 'Bilibili 热门', icon: Icons.video_library, type: 'video'),
-      _RuleItem(id: 'netease', name: '网易云音乐', icon: Icons.music_note, type: 'music'),
-      _RuleItem(id: 'qidian', name: '起点中文网', icon: Icons.menu_book, type: 'novel'),
-      _RuleItem(id: 'bilibili_comic', name: 'Bilibili 漫画', icon: Icons.image, type: 'comic'),
+      _RuleItem(
+        id: 'bilibili',
+        name: 'Bilibili ${t.mediaTypeVideo}',
+        icon: Icons.video_library,
+        type: 'video',
+      ),
+      _RuleItem(
+        id: 'netease',
+        name: t.mediaTypeMusic,
+        icon: Icons.music_note,
+        type: 'music',
+      ),
+      _RuleItem(
+        id: 'qidian',
+        name: t.mediaTypeNovel,
+        icon: Icons.menu_book,
+        type: 'novel',
+      ),
+      _RuleItem(
+        id: 'bilibili_comic',
+        name: t.mediaTypeComic,
+        icon: Icons.image,
+        type: 'comic',
+      ),
     ];
 
     return AdaptiveScaffold(
@@ -36,17 +54,22 @@ class DiscoverPage extends HookConsumerWidget {
         slivers: [
           // 顶部标题栏
           SliverToBoxAdapter(
-            child: _buildHeader(context, l10n, colorScheme, rules, selectedRule),
+            child: _buildHeader(context, t, colorScheme, rules, selectedRule),
           ),
           // 规则选择器
           SliverToBoxAdapter(
-            child: _buildRuleSelector(context, rules, selectedRule, colorScheme),
+            child: _buildRuleSelector(
+              context,
+              rules,
+              selectedRule,
+              colorScheme,
+            ),
           ),
           // 内容区域
           if (selectedRule.value == null)
             SliverFillRemaining(
               hasScrollBody: false,
-              child: _buildNoRuleSelected(context, l10n, colorScheme),
+              child: _buildNoRuleSelected(context, t, colorScheme),
             )
           else if (isLoading.value)
             const SliverFillRemaining(
@@ -62,7 +85,7 @@ class DiscoverPage extends HookConsumerWidget {
 
   Widget _buildHeader(
     BuildContext context,
-    S l10n,
+    Translations t,
     ColorScheme colorScheme,
     List<_RuleItem> rules,
     ValueNotifier<String?> selectedRule,
@@ -79,14 +102,15 @@ class DiscoverPage extends HookConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      l10n.discoverPageTitle,
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      t.discoverPageTitle,
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     SizedBox(height: 1.h),
                     Text(
-                      l10n.discoverPageSubtitle,
+                      t.discoverPageSubtitle,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
@@ -110,11 +134,6 @@ class DiscoverPage extends HookConsumerWidget {
     ValueNotifier<String?> selectedRule,
     ColorScheme colorScheme,
   ) {
-    final selected = rules.firstWhere(
-      (r) => r.id == selectedRule.value,
-      orElse: () => rules.first,
-    );
-
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
       decoration: BoxDecoration(
@@ -176,7 +195,7 @@ class DiscoverPage extends HookConsumerWidget {
         padding: EdgeInsets.all(4.w),
         child: Center(
           child: Text(
-            S.of(context).discoverNoRules,
+            Translations.of(context).discoverNoRules,
             style: TextStyle(
               fontSize: 12.sp,
               color: colorScheme.onSurface.withValues(alpha: 0.6),
@@ -192,7 +211,7 @@ class DiscoverPage extends HookConsumerWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: rules.length,
-        separatorBuilder: (_, __) => SizedBox(width: 3.w),
+        separatorBuilder: (_, _) => SizedBox(width: 3.w),
         itemBuilder: (context, index) {
           final rule = rules[index];
           final isSelected = selectedRule.value == rule.id;
@@ -207,7 +226,11 @@ class DiscoverPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildNoRuleSelected(BuildContext context, S l10n, ColorScheme colorScheme) {
+  Widget _buildNoRuleSelected(
+    BuildContext context,
+    Translations t,
+    ColorScheme colorScheme,
+  ) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -227,14 +250,14 @@ class DiscoverPage extends HookConsumerWidget {
           ),
           SizedBox(height: 3.h),
           Text(
-            S.of(context).discoverSelectRuleHint,
+            Translations.of(context).discoverSelectRuleHint,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
           SizedBox(height: 1.h),
           Text(
-            S.of(context).discoverSelectRuleDescription,
+            Translations.of(context).discoverSelectRuleDescription,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurface.withValues(alpha: 0.6),
             ),
@@ -246,9 +269,9 @@ class DiscoverPage extends HookConsumerWidget {
   }
 
   Widget _buildContentGrid(BuildContext context, ColorScheme colorScheme) {
-    // TODO: 从状态管理获取发现数据
+    // TODO(WuHaiYue): 从状态管理获取发现数据
     final items = <_DiscoverItem>[
-      _DiscoverItem(
+      const _DiscoverItem(
         id: '1',
         title: '示例内容 1',
         coverUrl: '',
@@ -256,7 +279,7 @@ class DiscoverPage extends HookConsumerWidget {
         views: '10万',
         type: 'video',
       ),
-      _DiscoverItem(
+      const _DiscoverItem(
         id: '2',
         title: '示例内容 2',
         coverUrl: '',
@@ -264,7 +287,7 @@ class DiscoverPage extends HookConsumerWidget {
         views: '5万',
         type: 'video',
       ),
-      _DiscoverItem(
+      const _DiscoverItem(
         id: '3',
         title: '示例内容 3',
         coverUrl: '',
@@ -286,16 +309,17 @@ class DiscoverPage extends HookConsumerWidget {
       sliver: SliverGrid.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: columns,
-          childAspectRatio: 1.0,
           crossAxisSpacing: 3.w,
           mainAxisSpacing: 3.w,
         ),
         itemCount: items.length + 1,
         itemBuilder: (context, index) {
           if (index == items.length) {
-            return _LoadMoreCard(onTap: () {
-              // TODO: 加载更多
-            });
+            return _LoadMoreCard(
+              onTap: () {
+                // TODO(WuHaiYue): 加载更多
+              },
+            );
           }
           return _DiscoverCard(item: items[index]);
         },
@@ -325,9 +349,9 @@ class _DiscoverItem {
     required this.id,
     required this.title,
     required this.coverUrl,
+    required this.type,
     this.author,
     this.views,
-    required this.type,
   });
 
   final String id;
@@ -438,7 +462,7 @@ class _DiscoverCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(AppRadius.lg),
       child: InkWell(
         onTap: () {
-          // TODO: 导航到详情页
+          // TODO(WuHaiYue): 导航到详情页
         },
         borderRadius: BorderRadius.circular(AppRadius.lg),
         child: Container(
@@ -454,16 +478,16 @@ class _DiscoverCard extends StatelessWidget {
                 flex: 3,
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(
+                    borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(AppRadius.lg),
                     ),
                     color: colorScheme.surfaceContainerHighest,
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.vertical(
+                    borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(AppRadius.lg),
                     ),
-                    child: Container(
+                    child: ColoredBox(
                       color: colorScheme.surfaceContainerHighest,
                       child: Center(
                         child: Icon(
@@ -505,7 +529,7 @@ class _DiscoverCard extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                      Spacer(),
+                      const Spacer(),
                       Row(
                         children: [
                           Icon(
@@ -518,7 +542,9 @@ class _DiscoverCard extends StatelessWidget {
                             item.views ?? '0',
                             style: TextStyle(
                               fontSize: 10.sp,
-                              color: colorScheme.onSurface.withValues(alpha: 0.5),
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
                           ),
                         ],
@@ -561,6 +587,7 @@ class _LoadMoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final t = context.t;
 
     return Material(
       color: Colors.transparent,
@@ -573,7 +600,6 @@ class _LoadMoreCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppRadius.lg),
             border: Border.all(
               color: colorScheme.outline.withValues(alpha: 0.2),
-              style: BorderStyle.solid,
             ),
           ),
           child: Column(
@@ -586,7 +612,7 @@ class _LoadMoreCard extends StatelessWidget {
               ),
               SizedBox(height: 1.h),
               Text(
-                '加载更多',
+                t.discoverLoadMore,
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: colorScheme.onSurface.withValues(alpha: 0.6),

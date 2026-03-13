@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:spectra/core/i18n/strings.g.dart';
 import 'package:spectra/core/theme/theme.dart';
-import 'package:spectra/l10n/generated/l10n.dart';
 
 /// 自适应脚手架
 ///
@@ -33,7 +33,7 @@ class AdaptiveScaffold extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = S.of(context);
+    final t = context.t;
     final colorScheme = Theme.of(context).colorScheme;
 
     // 使用 LayoutBuilder 检测屏幕尺寸
@@ -45,14 +45,14 @@ class AdaptiveScaffold extends HookConsumerWidget {
           return _DesktopLayout(
             currentIndex: currentIndex,
             body: body,
-            l10n: l10n,
+            t: t,
             colorScheme: colorScheme,
           );
         } else {
           return _MobileLayout(
             currentIndex: currentIndex,
             body: body,
-            l10n: l10n,
+            t: t,
             colorScheme: colorScheme,
           );
         }
@@ -66,13 +66,13 @@ class _DesktopLayout extends StatelessWidget {
   const _DesktopLayout({
     required this.currentIndex,
     required this.body,
-    required this.l10n,
+    required this.t,
     required this.colorScheme,
   });
 
   final int currentIndex;
   final Widget body;
-  final S l10n;
+  final Translations t;
   final ColorScheme colorScheme;
 
   @override
@@ -83,7 +83,7 @@ class _DesktopLayout extends StatelessWidget {
           // 侧边栏
           _Sidebar(
             currentIndex: currentIndex,
-            l10n: l10n,
+            t: t,
             colorScheme: colorScheme,
           ),
           // 主内容区
@@ -99,13 +99,13 @@ class _MobileLayout extends StatelessWidget {
   const _MobileLayout({
     required this.currentIndex,
     required this.body,
-    required this.l10n,
+    required this.t,
     required this.colorScheme,
   });
 
   final int currentIndex;
   final Widget body;
-  final S l10n;
+  final Translations t;
   final ColorScheme colorScheme;
 
   @override
@@ -114,7 +114,7 @@ class _MobileLayout extends StatelessWidget {
       body: body,
       bottomNavigationBar: _BottomNavBar(
         currentIndex: currentIndex,
-        l10n: l10n,
+        t: t,
         colorScheme: colorScheme,
       ),
     );
@@ -125,12 +125,12 @@ class _MobileLayout extends StatelessWidget {
 class _Sidebar extends StatelessWidget {
   const _Sidebar({
     required this.currentIndex,
-    required this.l10n,
+    required this.t,
     required this.colorScheme,
   });
 
   final int currentIndex;
-  final S l10n;
+  final Translations t;
   final ColorScheme colorScheme;
 
   @override
@@ -163,7 +163,7 @@ class _Sidebar extends StatelessWidget {
                     currentIndex: currentIndex,
                     icon: Icons.favorite_outline,
                     activeIcon: Icons.favorite,
-                    tooltip: l10n.navFavorites,
+                    tooltip: t.navFavorites,
                     route: '/',
                     colorScheme: colorScheme,
                   ),
@@ -173,7 +173,7 @@ class _Sidebar extends StatelessWidget {
                     currentIndex: currentIndex,
                     icon: Icons.explore_outlined,
                     activeIcon: Icons.explore,
-                    tooltip: l10n.navDiscover,
+                    tooltip: t.navDiscover,
                     route: '/discover',
                     colorScheme: colorScheme,
                   ),
@@ -183,7 +183,7 @@ class _Sidebar extends StatelessWidget {
                     currentIndex: currentIndex,
                     icon: Icons.search_outlined,
                     activeIcon: Icons.search,
-                    tooltip: l10n.navSearch,
+                    tooltip: t.navSearch,
                     route: '/search',
                     colorScheme: colorScheme,
                   ),
@@ -198,7 +198,7 @@ class _Sidebar extends StatelessWidget {
             currentIndex: currentIndex,
             icon: Icons.settings_outlined,
             activeIcon: Icons.settings,
-            tooltip: l10n.settingsTitle,
+            tooltip: t.settingsTitle,
             route: '/settings',
             colorScheme: colorScheme,
           ),
@@ -322,12 +322,12 @@ class _NavItem extends StatelessWidget {
 class _BottomNavBar extends StatelessWidget {
   const _BottomNavBar({
     required this.currentIndex,
-    required this.l10n,
+    required this.t,
     required this.colorScheme,
   });
 
   final int currentIndex;
-  final S l10n;
+  final Translations t;
   final ColorScheme colorScheme;
 
   @override
@@ -363,7 +363,7 @@ class _BottomNavBar extends StatelessWidget {
                 currentIndex: currentIndex,
                 icon: Icons.favorite_outline,
                 activeIcon: Icons.favorite,
-                label: l10n.navFavorites,
+                label: t.navFavorites,
                 route: '/',
                 colorScheme: colorScheme,
               ),
@@ -372,7 +372,7 @@ class _BottomNavBar extends StatelessWidget {
                 currentIndex: currentIndex,
                 icon: Icons.explore_outlined,
                 activeIcon: Icons.explore,
-                label: l10n.navDiscover,
+                label: t.navDiscover,
                 route: '/discover',
                 colorScheme: colorScheme,
               ),
@@ -383,7 +383,7 @@ class _BottomNavBar extends StatelessWidget {
                 currentIndex: currentIndex,
                 icon: Icons.search_outlined,
                 activeIcon: Icons.search,
-                label: l10n.navSearch,
+                label: t.navSearch,
                 route: '/search',
                 colorScheme: colorScheme,
               ),
@@ -392,7 +392,7 @@ class _BottomNavBar extends StatelessWidget {
                 currentIndex: currentIndex,
                 icon: Icons.settings_outlined,
                 activeIcon: Icons.settings,
-                label: l10n.settingsTitle,
+                label: t.settingsTitle,
                 route: '/settings',
                 colorScheme: colorScheme,
               ),
@@ -495,7 +495,7 @@ class CenterFAB extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         child: InkWell(
           onTap: () {
-            // TODO: 打开快速操作菜单
+            // 打开快速操作菜单
           },
           borderRadius: BorderRadius.circular(28),
           child: const Icon(
