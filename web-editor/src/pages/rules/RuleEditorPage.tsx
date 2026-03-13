@@ -13,10 +13,7 @@ import { useRuleEditorResource } from '@/hooks/useRuleEditorResource';
 import { useRuleEditorRuntime } from '@/hooks/useRuleEditorRuntime';
 import { useRuleEditorTransformFields } from '@/hooks/useRuleEditorTransformFields';
 import { useRuleEditorTransformNode } from '@/hooks/useRuleEditorTransformNode';
-import {
-  createEmptyRuleEnvelope,
-  parseRuleEnvelope,
-} from '@/lib/ruleEditorEnvelope';
+import { parseRuleEnvelope } from '@/lib/ruleEditorEnvelope';
 import { useEditorStore } from '@/stores';
 
 /**
@@ -28,7 +25,6 @@ export const RuleEditorPage = () => {
   const { id } = useParams<{ id: string }>();
   const isNew = !id;
 
-  const initialRule = useMemo(() => createEmptyRuleEnvelope(), []);
   const jsonValue = useEditorStore((state) => state.jsonValue);
   const setJsonValue = useEditorStore((state) => state.setJsonValue);
   const graphNodes = useEditorStore((state) => state.graphNodes);
@@ -53,7 +49,6 @@ export const RuleEditorPage = () => {
   } = useRuleEditorResource({
     id,
     isNew,
-    initialRule,
     jsonValue,
     navigate,
     setJsonValue,
