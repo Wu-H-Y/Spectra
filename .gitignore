@@ -65,11 +65,13 @@ app.*.map.json
 .claude
 _bmad
 _bmad-output
+.sisyphus
 .playwright-mcp
 .tmp
 tmp
 **tmp
 tmp**
+**/AGENTS.md
 
 # Web editor build outputs
 assets/editor/
